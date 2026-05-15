@@ -22,17 +22,6 @@ export default function HomePage() {
       {/* CONTENT */}
       <div className="w-full max-w-6xl mx-auto text-center pt-24">
 
-        {/* LOGO */}
-        <div className="mb-12">
-
-          <img
-            src="/tts-logo.jpg"
-            alt="TikTok Stars"
-            className="w-full max-w-md mx-auto"
-          />
-
-        </div>
-
         {/* BUTTONS */}
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
 
