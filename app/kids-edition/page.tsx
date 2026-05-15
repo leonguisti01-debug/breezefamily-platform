@@ -13,7 +13,7 @@ export default function KidsEditionPage() {
       }}
     >
       {/* OVERLAY */}
-      <div className="min-h-screen bg-black/55">
+      <div className="min-h-screen bg-black/45">
 
         {/* HEADER */}
         <header className="w-full px-6 py-8">
@@ -114,7 +114,7 @@ export default function KidsEditionPage() {
             <div className="mt-14">
 
               <Link
-                href="/entry-form"
+                href="/register"
                 className="inline-block px-12 py-5 rounded-2xl bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white font-black text-lg md:text-2xl shadow-[0_0_50px_rgba(255,0,140,0.5)] hover:scale-105 transition duration-300"
               >
                 ENTER HERE
