@@ -120,7 +120,7 @@ export default function KidsEditionPage() {
             <div className="mt-12 flex flex-wrap gap-5">
 
               <Link
-                href="/kids-edition/register"
+                href="/entry-form"
                 className="px-10 py-5 rounded-2xl bg-pink-500 hover:bg-pink-400 transition text-white font-black text-lg shadow-[0_0_40px_rgba(255,0,150,0.5)]"
               >
                 ENTER NOW
