@@ -1,160 +1,149 @@
 import Link from "next/link";
-import TopButtons from "../components/TopButtons";
 
 export default function KidsEditionPage() {
-
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden">
-        <TopButtons />
+    <main
+      className="min-h-screen text-white"
+      style={{
+        backgroundImage: "url('/bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      {/* OVERLAY */}
+      <div className="min-h-screen bg-black/55">
 
-      {/* BACKGROUND */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
+        {/* HEADER */}
+        <header className="w-full px-6 py-8">
 
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-pink-500/20 blur-[160px] rounded-full"></div>
+          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-8">
 
-        <div className="absolute top-[20%] right-0 w-[500px] h-[500px] bg-cyan-500/20 blur-[160px] rounded-full"></div>
+            {/* LOGO */}
+            <div className="flex items-center gap-5">
 
-        <div className="absolute bottom-0 left-[20%] w-[600px] h-[600px] bg-yellow-500/10 blur-[180px] rounded-full"></div>
+              <img
+                src="/logo.png"
+                alt="TikTok Stars"
+                className="w-[90px] md:w-[110px]"
+              />
 
-      </div>
+              <div>
 
-      {/* HOME BUTTON */}
-      <div className="p-6">
+                <h1 className="text-2xl md:text-4xl font-black leading-none">
+                  <span className="text-cyan-300">TIKTOK</span>{" "}
+                  <span className="text-pink-400">STARS</span>
+                </h1>
 
-        <Link
-          href="/"
-          className="inline-flex px-6 py-3 rounded-2xl bg-white/5 border border-white/10 hover:border-pink-500 transition font-bold"
-        >
-          HOME
-        </Link>
+                <p className="text-xs md:text-sm tracking-[4px] uppercase text-white/80 mt-2">
+                  Kids Talent Search
+                </p>
 
-      </div>
-
-      {/* HERO */}
-      <section className="px-6 lg:px-16 pb-20">
-
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-
-          {/* LEFT */}
-          <div>
-
-            <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-pink-500/30 bg-pink-500/10 mb-8">
-
-              <div className="w-3 h-3 bg-pink-400 rounded-full animate-pulse"></div>
-
-              <span className="font-bold text-pink-300">
-                ENTRIES NOW OPEN
-              </span>
+              </div>
 
             </div>
 
-            <h1 className="text-5xl md:text-8xl font-black leading-[0.9]">
+            {/* MENU */}
+            <nav className="flex flex-wrap justify-center gap-6 md:gap-10 text-xs md:text-sm font-bold uppercase tracking-[2px] text-center">
 
-              <span className="text-white">
-                TikTok
-              </span>
+              <Link
+                href="/"
+                className="hover:text-cyan-300 transition"
+              >
+                Home
+              </Link>
 
-              <br />
-
-              <span className="text-yellow-400">
-                STARS
-              </span>
-
-              <br />
-
-              <span className="text-pink-400">
+              <Link
+                href="/kids-edition"
+                className="text-pink-400 hover:text-cyan-300 transition"
+              >
                 Kids Edition
+              </Link>
+
+              <Link
+                href="/season-2-finale"
+                className="hover:text-cyan-300 transition"
+              >
+                Season 2
+              </Link>
+
+              <Link
+                href="/fan-favorite-judge"
+                className="hover:text-cyan-300 transition"
+              >
+                Favorite Judge Vote
+              </Link>
+
+            </nav>
+
+          </div>
+
+        </header>
+
+        {/* HERO */}
+        <section className="w-full px-6 py-20 md:py-32">
+
+          <div className="max-w-5xl mx-auto text-center">
+
+            <div className="inline-block px-5 py-2 rounded-full border border-pink-400/40 bg-black/30 backdrop-blur-md text-sm uppercase tracking-[4px] text-pink-300 mb-8">
+              Kids Edition Entries
+            </div>
+
+            <h2 className="text-5xl md:text-8xl font-black uppercase leading-[0.95]">
+
+              ENTER THE
+
+              <br />
+
+              <span className="bg-gradient-to-r from-cyan-300 via-white to-pink-400 text-transparent bg-clip-text">
+                COMPETITION
               </span>
 
-            </h1>
+            </h2>
 
-            <p className="mt-8 text-2xl text-gray-300 leading-relaxed max-w-2xl">
-
-              South Africa’s brightest young stars compete for fame,
-              prizes and the spotlight.
-
+            <p className="mt-8 text-2xl md:text-3xl font-black uppercase">
+              Your Talent. Your Moment.
             </p>
 
-            {/* INFO */}
-            <div className="mt-10 grid sm:grid-cols-3 gap-5">
+            <p className="mt-6 text-lg md:text-2xl text-white/90 leading-relaxed max-w-3xl mx-auto">
+              Submit your performance video and stand a chance to become South Africa’s next TikTok Star.
+            </p>
 
-              <div className="rounded-3xl border border-pink-500/20 bg-pink-500/10 p-6">
-
-                <h3 className="text-4xl font-black text-pink-400">
-                  R10K
-                </h3>
-
-                <p className="mt-2 text-gray-300">
-                  Starting Prize
-                </p>
-
-              </div>
-
-              <div className="rounded-3xl border border-cyan-500/20 bg-cyan-500/10 p-6">
-
-                <h3 className="text-4xl font-black text-cyan-400">
-                  2-17
-                </h3>
-
-                <p className="mt-2 text-gray-300">
-                  Ages Open
-                </p>
-
-              </div>
-
-              <div className="rounded-3xl border border-yellow-500/20 bg-yellow-500/10 p-6">
-
-                <h3 className="text-4xl font-black text-yellow-400">
-                  MAY 29
-                </h3>
-
-                <p className="mt-2 text-gray-300">
-                  Entries Close
-                </p>
-
-              </div>
-
-            </div>
-
-            {/* BUTTONS */}
-            <div className="mt-12 flex flex-wrap gap-5">
+            {/* BUTTON */}
+            <div className="mt-14">
 
               <Link
                 href="/entry-form"
-                className="px-10 py-5 rounded-2xl bg-pink-500 hover:bg-pink-400 transition text-white font-black text-lg shadow-[0_0_40px_rgba(255,0,150,0.5)]"
+                className="inline-block px-12 py-5 rounded-2xl bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white font-black text-lg md:text-2xl shadow-[0_0_50px_rgba(255,0,140,0.5)] hover:scale-105 transition duration-300"
               >
-                ENTER NOW
-              </Link>
-
-              <Link
-                href="/leaderboard"
-                className="px-10 py-5 rounded-2xl border border-white/10 bg-white/5 hover:border-cyan-400 transition font-black text-lg"
-              >
-                VIEW ENTRIES
+                ENTER HERE
               </Link>
 
             </div>
 
           </div>
 
-          {/* RIGHT */}
-          <div className="relative">
+        </section>
 
-            <div className="rounded-[50px] overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(255,0,150,0.3)]">
+        {/* FOOTER */}
+        <footer className="border-t border-white/20 mt-10">
 
-              <img
-                src="/poster.jpg"
-                alt="TikTok Stars"
-                className="w-full h-auto object-cover"
-              />
+          <div className="max-w-7xl mx-auto px-6 py-10 text-center text-white">
 
-            </div>
+            <p className="text-lg">
+              © 2026 TikTok Stars Kids Talent Search
+            </p>
+
+            <p className="mt-4 uppercase tracking-[5px] text-sm">
+              Powered by The Breeze Family
+            </p>
 
           </div>
 
-        </div>
+        </footer>
 
-      </section>
+      </div>
 
     </main>
   );
