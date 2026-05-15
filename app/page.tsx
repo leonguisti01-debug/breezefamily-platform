@@ -4,15 +4,17 @@ export default function HomePage() {
   return (
     <main className="min-h-screen text-white overflow-hidden relative">
 
-      {/* BACKGROUND IMAGE */}
-      <img
-        src="/background.jpg"
-        alt="Background"
-        className="fixed inset-0 w-full h-full object-cover -z-30"
-      />
+      {/* BACKGROUND */}
+      <div className="fixed inset-0 -z-50">
+        <img
+          src="/bg.jpg"
+          alt="Background"
+          className="w-full h-full object-cover"
+        />
+      </div>
 
       {/* DARK OVERLAY */}
-      <div className="fixed inset-0 bg-black/75 -z-20"></div>
+      <div className="fixed inset-0 bg-black/75 -z-40"></div>
 
       {/* GLOWS */}
       <div className="absolute top-[-200px] right-[-200px] w-[600px] h-[600px] bg-pink-500/20 blur-[180px] rounded-full -z-10"></div>
@@ -49,31 +51,19 @@ export default function HomePage() {
         {/* MENU */}
         <nav className="flex flex-wrap justify-center items-center gap-5 text-xs md:text-sm uppercase font-bold tracking-[2px]">
 
-          <Link
-            href="/"
-            className="text-pink-500 hover:text-cyan-400 transition"
-          >
+          <Link href="/" className="text-pink-500 hover:text-cyan-400 transition">
             Home
           </Link>
 
-          <Link
-            href="/kids-edition"
-            className="hover:text-cyan-400 transition"
-          >
+          <Link href="/kids-edition" className="hover:text-cyan-400 transition">
             Kids Edition
           </Link>
 
-          <Link
-            href="/season-2-finale"
-            className="hover:text-cyan-400 transition"
-          >
+          <Link href="/season-2-finale" className="hover:text-cyan-400 transition">
             Season 2
           </Link>
 
-          <Link
-            href="/fan-favorite-judge"
-            className="hover:text-cyan-400 transition"
-          >
+          <Link href="/fan-favorite-judge" className="hover:text-cyan-400 transition">
             Favorite Judge Vote
           </Link>
 
