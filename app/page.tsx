@@ -4,13 +4,12 @@ export default function HomePage() {
   return (
     <main className="min-h-screen text-white overflow-hidden relative">
 
-      {/* FIXED BACKGROUND IMAGE */}
-      <div
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-30"
-        style={{
-          backgroundImage: "url(/background.jpg)",
-        }}
-      ></div>
+      {/* BACKGROUND IMAGE */}
+      <img
+        src="/background.jpg"
+        alt="Background"
+        className="fixed inset-0 w-full h-full object-cover -z-30"
+      />
 
       {/* DARK OVERLAY */}
       <div className="fixed inset-0 bg-black/75 -z-20"></div>
@@ -83,7 +82,7 @@ export default function HomePage() {
       </header>
 
       {/* HERO */}
-      <section className="w-full max-w-7xl mx-auto px-6 pt-10 pb-24 grid lg:grid-cols-2 gap-20 items-center">
+      <section className="w-full max-w-7xl mx-auto px-6 pt-10 pb-24 grid lg:grid-cols-2 gap-20 items-center relative z-10">
 
         {/* LEFT */}
         <div>
@@ -164,10 +163,6 @@ export default function HomePage() {
 
           </div>
 
-          <p className="mt-8 text-gray-400 text-base md:text-lg">
-            Entries open from 1 June – 30 September 2026
-          </p>
-
         </div>
 
         {/* RIGHT IMAGE */}
@@ -185,81 +180,8 @@ export default function HomePage() {
 
       </section>
 
-      {/* CARDS */}
-      <section className="w-full max-w-7xl mx-auto px-6 pb-20">
-
-        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-8">
-
-          <div className="rounded-[35px] border border-cyan-500/20 bg-white/5 backdrop-blur-xl p-10 text-center">
-
-            <div className="text-6xl mb-6">
-              👥
-            </div>
-
-            <h3 className="text-3xl font-black text-cyan-400 uppercase">
-              Who Can Enter?
-            </h3>
-
-            <p className="mt-5 text-gray-300 text-lg leading-relaxed">
-              Kids and teens aged 2–17 years from anywhere in South Africa.
-            </p>
-
-          </div>
-
-          <div className="rounded-[35px] border border-pink-500/20 bg-white/5 backdrop-blur-xl p-10 text-center">
-
-            <div className="text-6xl mb-6">
-              🎤
-            </div>
-
-            <h3 className="text-3xl font-black text-pink-400 uppercase">
-              Show Your Talent
-            </h3>
-
-            <p className="mt-5 text-gray-300 text-lg leading-relaxed">
-              Singing, dancing, comedy, magic, instruments and more.
-            </p>
-
-          </div>
-
-          <div className="rounded-[35px] border border-cyan-500/20 bg-white/5 backdrop-blur-xl p-10 text-center">
-
-            <div className="text-6xl mb-6">
-              ☁️
-            </div>
-
-            <h3 className="text-3xl font-black text-cyan-400 uppercase">
-              Upload Videos
-            </h3>
-
-            <p className="mt-5 text-gray-300 text-lg leading-relaxed">
-              Submit your 60–90 second video through the online form.
-            </p>
-
-          </div>
-
-          <div className="rounded-[35px] border border-pink-500/20 bg-white/5 backdrop-blur-xl p-10 text-center">
-
-            <div className="text-6xl mb-6">
-              🏆
-            </div>
-
-            <h3 className="text-3xl font-black text-pink-400 uppercase">
-              Win Big!
-            </h3>
-
-            <p className="mt-5 text-gray-300 text-lg leading-relaxed">
-              Great prizes, trophies and the chance to become a TikTok Star.
-            </p>
-
-          </div>
-
-        </div>
-
-      </section>
-
       {/* FOOTER */}
-      <footer className="border-t border-white/10 py-10 text-center text-gray-400">
+      <footer className="border-t border-white/10 py-10 text-center text-gray-400 relative z-10">
 
         <p>
           © 2026 TikTok Stars Kids Talent Search
