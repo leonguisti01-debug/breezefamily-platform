@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen text-white overflow-hidden relative">
+    <main className="min-h-screen text-white overflow-hidden relative bg-transparent">
 
       {/* BACKGROUND */}
       <div className="fixed inset-0 -z-50">
@@ -13,8 +13,8 @@ export default function HomePage() {
         />
       </div>
 
-      {/* DARK OVERLAY */}
-      <div className="fixed inset-0 bg-black/75 -z-40"></div>
+      {/* LIGHT OVERLAY */}
+      <div className="fixed inset-0 bg-black/45 -z-40"></div>
 
       {/* GLOWS */}
       <div className="absolute top-[-200px] right-[-200px] w-[600px] h-[600px] bg-pink-500/20 blur-[180px] rounded-full -z-10"></div>
@@ -40,7 +40,7 @@ export default function HomePage() {
               <span className="text-pink-500">STARS</span>
             </h1>
 
-            <p className="text-xs uppercase tracking-[3px] text-gray-400 mt-1">
+            <p className="text-xs uppercase tracking-[3px] text-gray-300 mt-1">
               Kids Talent Search
             </p>
 
@@ -51,7 +51,7 @@ export default function HomePage() {
         {/* MENU */}
         <nav className="flex flex-wrap justify-center items-center gap-5 text-xs md:text-sm uppercase font-bold tracking-[2px]">
 
-          <Link href="/" className="text-pink-500 hover:text-cyan-400 transition">
+          <Link href="/" className="text-pink-400 hover:text-cyan-400 transition">
             Home
           </Link>
 
@@ -72,9 +72,9 @@ export default function HomePage() {
       </header>
 
       {/* HERO */}
-      <section className="w-full max-w-7xl mx-auto px-6 pt-16 pb-24 relative z-10">
+      <section className="w-full max-w-7xl mx-auto px-6 pt-20 pb-24 relative z-10">
 
-        <div className="max-w-3xl">
+        <div className="max-w-3xl backdrop-blur-[2px]">
 
           <h2 className="text-5xl md:text-8xl font-black uppercase leading-[0.95]">
 
@@ -82,7 +82,7 @@ export default function HomePage() {
 
             <br />
 
-            <span className="bg-gradient-to-r from-cyan-400 to-pink-500 text-transparent bg-clip-text">
+            <span className="bg-gradient-to-r from-cyan-300 to-pink-400 text-transparent bg-clip-text">
               TIKTOK STAR!
             </span>
 
@@ -92,7 +92,7 @@ export default function HomePage() {
             Sing. Dance. Perform. Shine!
           </p>
 
-          <p className="mt-6 text-lg md:text-xl text-gray-300 max-w-xl leading-relaxed">
+          <p className="mt-6 text-lg md:text-xl text-gray-200 max-w-xl leading-relaxed">
             South Africa’s ultimate live talent competition for young stars.
           </p>
 
@@ -137,7 +137,7 @@ export default function HomePage() {
 
             <Link
               href="/season-2-finale"
-              className="px-8 md:px-10 py-4 md:py-5 rounded-2xl border border-cyan-400 text-cyan-400 font-black text-lg md:text-xl hover:bg-cyan-400 hover:text-black transition"
+              className="px-8 md:px-10 py-4 md:py-5 rounded-2xl border border-cyan-300 text-cyan-300 font-black text-lg md:text-xl hover:bg-cyan-300 hover:text-black transition"
             >
               LIVE VOTING
             </Link>
@@ -149,7 +149,7 @@ export default function HomePage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-white/10 py-10 text-center text-gray-400 relative z-10">
+      <footer className="border-t border-white/20 py-10 text-center text-gray-300 relative z-10">
 
         <p>
           © 2026 TikTok Stars Kids Talent Search
