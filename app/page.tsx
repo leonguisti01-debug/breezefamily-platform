@@ -1,78 +1,172 @@
-export default function Home() {
+import Link from "next/link";
+
+export default function HomePage() {
+
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden">
 
-      {/* Background Glow */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-lime-400/20 blur-[140px] rounded-full"></div>
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-green-400/10 blur-[140px] rounded-full"></div>
+      {/* BACKGROUND */}
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+
+        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-pink-500/20 blur-[160px] rounded-full"></div>
+
+        <div className="absolute top-[20%] right-0 w-[500px] h-[500px] bg-cyan-500/20 blur-[160px] rounded-full"></div>
+
+        <div className="absolute bottom-0 left-[20%] w-[600px] h-[600px] bg-yellow-500/10 blur-[180px] rounded-full"></div>
+
       </div>
 
       {/* NAVBAR */}
-      <nav className="w-full px-6 lg:px-16 py-6 border-b border-white/10 backdrop-blur-md fixed top-0 left-0 z-50 bg-black/40">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-xl">
 
-          <h1 className="text-3xl font-black tracking-wider text-lime-400 drop-shadow-[0_0_20px_rgba(185,255,0,0.6)]">
-            BREEZE FAMILY
-          </h1>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-5 flex items-center justify-between">
 
-          <div className="hidden md:flex items-center gap-8 font-semibold">
-            <a href="#" className="hover:text-lime-400 transition">HOME</a>
-            <a href="#merch" className="hover:text-lime-400 transition">MERCH</a>
-            <a href="/kids-edition" className="hover:text-lime-400 transition">
-              KIDS EDITION
-            </a>
-            <a href="#" className="hover:text-lime-400 transition">CONTACT</a>
+          <div>
+
+            <h1 className="text-3xl font-black leading-none">
+
+              <span className="text-white">
+                TikTok
+              </span>
+
+              <span className="text-yellow-400">
+                Stars
+              </span>
+
+            </h1>
+
+            <p className="text-pink-400 font-bold text-sm">
+              Kids Edition
+            </p>
+
           </div>
 
+          <nav className="hidden lg:flex items-center gap-8 font-bold text-sm">
+
+            <Link href="/vote" className="hover:text-pink-400 transition">
+              Vote
+            </Link>
+
+            <Link href="/leaderboard" className="hover:text-cyan-400 transition">
+              Leaderboard
+            </Link>
+
+            <Link href="/kids-edition" className="hover:text-yellow-400 transition">
+              Enter
+            </Link>
+
+            <Link href="/admin-login" className="hover:text-red-400 transition">
+              Admin
+            </Link>
+
+          </nav>
+
         </div>
-      </nav>
+
+      </header>
 
       {/* HERO */}
-      <section className="min-h-screen flex items-center px-6 lg:px-16 pt-40">
+      <section className="relative px-6 lg:px-16 pt-20 pb-28">
 
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
 
           {/* LEFT */}
           <div>
 
-            <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-lime-400/20 bg-white/5 backdrop-blur-md mb-8">
-              <div className="w-3 h-3 rounded-full bg-lime-400 animate-pulse"></div>
-              <span className="text-sm tracking-widest text-lime-300 font-semibold">
-                EMPOWERING TALENT
+            <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-pink-500/30 bg-pink-500/10 mb-8">
+
+              <div className="w-3 h-3 bg-pink-400 rounded-full animate-pulse"></div>
+
+              <span className="font-bold text-pink-300">
+                AUDITIONS NOW OPEN
               </span>
+
             </div>
 
-            <h2 className="text-6xl md:text-8xl font-black leading-[0.9] uppercase">
-              WELCOME TO
-              <br />
-              <span className="text-lime-400 drop-shadow-[0_0_30px_rgba(185,255,0,0.6)]">
-                BREEZE
-              </span>
-              <br />
-              FAMILY
-            </h2>
+            <h1 className="text-6xl md:text-8xl font-black leading-[0.9]">
 
-            <p className="mt-8 text-gray-300 text-xl leading-9 max-w-xl">
-              Creating platforms where stars shine and destinies are changed.
-              Entertainment. Talent. Culture. Movement.
+              <span className="text-white">
+                TikTok
+              </span>
+
+              <br />
+
+              <span className="text-yellow-400 drop-shadow-[0_0_30px_rgba(255,215,0,0.6)]">
+                STARS
+              </span>
+
+              <br />
+
+              <span className="text-pink-400">
+                Kids Edition
+              </span>
+
+            </h1>
+
+            <p className="mt-8 text-2xl text-gray-300 leading-relaxed max-w-2xl">
+
+              South Africa’s brightest young stars compete for fame,
+              prizes and the spotlight.
+
             </p>
 
-            <div className="flex flex-wrap gap-5 mt-10">
+            {/* INFO */}
+            <div className="mt-10 grid sm:grid-cols-3 gap-5">
 
-              <a
+              <div className="rounded-3xl border border-pink-500/20 bg-pink-500/10 p-6">
+
+                <h3 className="text-4xl font-black text-pink-400">
+                  R10K
+                </h3>
+
+                <p className="mt-2 text-gray-300">
+                  Starting Prize
+                </p>
+
+              </div>
+
+              <div className="rounded-3xl border border-cyan-500/20 bg-cyan-500/10 p-6">
+
+                <h3 className="text-4xl font-black text-cyan-400">
+                  2-17
+                </h3>
+
+                <p className="mt-2 text-gray-300">
+                  Ages Open
+                </p>
+
+              </div>
+
+              <div className="rounded-3xl border border-yellow-500/20 bg-yellow-500/10 p-6">
+
+                <h3 className="text-4xl font-black text-yellow-400">
+                  MAY 29
+                </h3>
+
+                <p className="mt-2 text-gray-300">
+                  Entries Close
+                </p>
+
+              </div>
+
+            </div>
+
+            {/* BUTTONS */}
+            <div className="mt-12 flex flex-wrap gap-5">
+
+              <Link
                 href="/kids-edition"
-                className="px-8 py-5 rounded-2xl bg-lime-400 text-black font-black text-lg hover:scale-105 transition shadow-[0_0_40px_rgba(185,255,0,0.4)]"
+                className="px-10 py-5 rounded-2xl bg-pink-500 hover:bg-pink-400 transition text-white font-black text-lg shadow-[0_0_40px_rgba(255,0,150,0.5)]"
               >
                 ENTER NOW
-              </a>
+              </Link>
 
-              <a
-                href="#merch"
-                className="px-8 py-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md font-bold hover:border-lime-400 transition"
+              <Link
+                href="/vote"
+                className="px-10 py-5 rounded-2xl border border-white/10 bg-white/5 hover:border-cyan-400 transition font-black text-lg"
               >
-                VIEW MERCH
-              </a>
+                VOTE NOW
+              </Link>
 
             </div>
 
@@ -81,19 +175,38 @@ export default function Home() {
           {/* RIGHT */}
           <div className="relative">
 
-            <div className="absolute inset-0 bg-lime-400/20 blur-[120px] rounded-full"></div>
+            <div className="rounded-[50px] overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(255,0,150,0.3)]">
 
-            <div className="relative rounded-[40px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl p-10">
+              <img
+                src="/poster.jpg"
+                alt="TikTok Stars"
+                className="w-full h-auto object-cover"
+              />
 
-              <div className="aspect-square rounded-[30px] bg-gradient-to-br from-lime-400/20 to-green-500/10 flex items-center justify-center">
+            </div>
 
-                <h3 className="text-5xl font-black text-center text-lime-400 leading-tight drop-shadow-[0_0_20px_rgba(185,255,0,0.6)]">
-                  BREEZE
-                  <br />
-                  FAMILY
-                </h3>
+            {/* FLOATING CARDS */}
+            <div className="absolute -bottom-10 -left-10 rounded-3xl bg-black/70 border border-pink-500/20 backdrop-blur-xl p-6">
 
-              </div>
+              <h3 className="text-4xl font-black text-pink-400">
+                LIVE
+              </h3>
+
+              <p className="mt-2 text-gray-300">
+                Voting Open
+              </p>
+
+            </div>
+
+            <div className="absolute -top-10 -right-10 rounded-3xl bg-black/70 border border-yellow-500/20 backdrop-blur-xl p-6">
+
+              <h3 className="text-4xl font-black text-yellow-400">
+                2026
+              </h3>
+
+              <p className="mt-2 text-gray-300">
+                Competition
+              </p>
 
             </div>
 
@@ -103,121 +216,83 @@ export default function Home() {
 
       </section>
 
-      {/* COMPETITIONS */}
-      <section className="px-6 lg:px-16 py-24">
+      {/* CATEGORIES */}
+      <section className="px-6 lg:px-16 pb-28">
 
         <div className="max-w-7xl mx-auto">
 
-          <div className="text-center mb-20">
-            <h3 className="text-5xl font-black text-lime-400">
-              OUR COMPETITIONS
-            </h3>
+          <div className="text-center mb-16">
 
-            <p className="mt-4 text-gray-400 text-lg">
-              Platforms where stars are born.
+            <h2 className="text-6xl font-black text-white">
+              CATEGORIES
+            </h2>
+
+            <p className="mt-5 text-xl text-gray-400">
+              Every young star deserves a stage.
             </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-10">
-
-            {/* TIKTOK STARS */}
-            <div className="rounded-[35px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl hover:-translate-y-2 transition duration-300">
-
-              <div className="h-[320px] bg-gradient-to-br from-blue-500/20 to-black flex flex-col items-center justify-center p-10">
-
-                <h4 className="text-5xl font-black text-blue-400 text-center">
-                  TIKTOK
-                  <br />
-                  STARS
-                </h4>
-
-                <p className="mt-6 text-gray-300 text-center">
-                  THE ULTIMATE TALENT SEARCH
-                </p>
-
-                <button className="mt-8 px-7 py-4 rounded-2xl bg-blue-500 text-white font-black shadow-[0_0_30px_rgba(59,130,246,0.4)]">
-                  COMING SOON
-                </button>
-
-              </div>
-
-            </div>
-
-            {/* KIDS EDITION */}
-            <div className="rounded-[35px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl hover:-translate-y-2 transition duration-300">
-
-              <div className="h-[320px] bg-gradient-to-br from-pink-500/20 to-black flex flex-col items-center justify-center p-10">
-
-                <h4 className="text-5xl font-black text-pink-400 text-center">
-                  TIKTOK
-                  <br />
-                  STARS
-                  <br />
-                  KIDS EDITION
-                </h4>
-
-                <p className="mt-6 text-gray-300 text-center">
-                  AGES 2 – 17
-                </p>
-
-                <a
-                  href="/kids-edition"
-                  className="mt-8 px-7 py-4 rounded-2xl bg-pink-500 text-white font-black shadow-[0_0_30px_rgba(236,72,153,0.4)]"
-                >
-                  ENTER NOW
-                </a>
-
-              </div>
-
-            </div>
 
           </div>
 
-        </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
 
-      </section>
+            {[
+              "Dance",
+              "Singing",
+              "Comedy",
+              "Influencer",
+              "Model",
+            ].map((category) => (
 
-      {/* MERCH */}
-      <section id="merch" className="px-6 lg:px-16 py-24">
-
-        <div className="max-w-7xl mx-auto">
-
-          <div className="text-center mb-20">
-            <h3 className="text-5xl font-black text-lime-400">
-              OFFICIAL MERCH
-            </h3>
-
-            <p className="mt-4 text-gray-400 text-lg">
-              Premium drops coming soon.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-
-            {['HOODIES', 'CAPS', 'T-SHIRTS'].map((item) => (
               <div
-                key={item}
-                className="rounded-[30px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl"
+                key={category}
+                className="rounded-[35px] border border-white/10 bg-white/5 backdrop-blur-xl p-10 text-center hover:-translate-y-3 hover:border-pink-500 transition duration-300"
               >
 
-                <div className="h-[260px] bg-gradient-to-br from-lime-400/10 to-black flex items-center justify-center">
+                <h3 className="text-3xl font-black text-pink-400">
+                  {category}
+                </h3>
 
-                  <h4 className="text-4xl font-black text-lime-400">
-                    {item}
-                  </h4>
-
-                </div>
-
-                <div className="p-8 text-center">
-
-                  <p className="text-gray-300 text-lg">
-                    COMING SOON
-                  </p>
-
-                </div>
+                <p className="mt-4 text-gray-300">
+                  Shine on stage
+                </p>
 
               </div>
+
             ))}
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* CTA */}
+      <section className="px-6 lg:px-16 pb-32">
+
+        <div className="max-w-5xl mx-auto rounded-[50px] border border-pink-500/20 bg-gradient-to-r from-pink-500/20 to-cyan-500/20 backdrop-blur-xl p-16 text-center">
+
+          <h2 className="text-5xl md:text-7xl font-black text-white leading-tight">
+
+            SHOW YOUR TALENT.
+            <br />
+            SHINE LIKE A STAR.
+
+          </h2>
+
+          <p className="mt-8 text-2xl text-gray-300">
+
+            This is your moment to be seen.
+
+          </p>
+
+          <div className="mt-12">
+
+            <Link
+              href="/kids-edition"
+              className="inline-flex px-12 py-6 rounded-2xl bg-pink-500 hover:bg-pink-400 transition text-white font-black text-2xl shadow-[0_0_50px_rgba(255,0,150,0.5)]"
+            >
+              ENTER COMPETITION
+            </Link>
 
           </div>
 
