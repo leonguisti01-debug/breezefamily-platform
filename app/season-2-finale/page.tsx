@@ -1,5 +1,13 @@
-import Link from "next/link";
+"use client";
+
+import { useEffect, useState } from "react";
 import TopButtons from "../components/TopButtons";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 const finalists = [
   {
@@ -56,9 +64,79 @@ const finalists = [
 
 export default function Season2FinalePage() {
 
+  const [votes, setVotes] = useState<any>({});
+  const [hasVoted, setHasVoted] = useState(false);
+
+  useEffect(() => {
+
+    fetchVotes();
+
+    const voted = localStorage.getItem("season2-voted");
+
+    if (voted === "true") {
+      setHasVoted(true);
+    }
+
+  }, []);
+
+  const fetchVotes = async () => {
+
+    const { data } = await supabase
+      .from("season2_votes")
+      .select("*");
+
+    if (!data) return;
+
+    const totals: any = {};
+
+    finalists.forEach((f) => {
+      totals[f.id] = 0;
+    });
+
+    data.forEach((vote) => {
+      totals[vote.finalist_id]++;
+    });
+
+    setVotes(totals);
+  };
+
+  const voteForFinalist = async (id: number) => {
+
+    if (hasVoted) {
+      alert("You have already voted.");
+      return;
+    }
+
+    const { error } = await supabase
+      .from("season2_votes")
+      .insert([
+        {
+          finalist_id: id,
+        },
+      ]);
+
+    if (error) {
+
+      console.log(error);
+      alert("Something went wrong.");
+
+    } else {
+
+      localStorage.setItem("season2-voted", "true");
+
+      setHasVoted(true);
+
+      fetchVotes();
+
+      alert("Vote submitted!");
+
+    }
+  };
+
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden px-6 py-16">
-        <TopButtons />
+
+      <TopButtons />
 
       {/* BACKGROUND */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
@@ -69,20 +147,8 @@ export default function Season2FinalePage() {
 
       </div>
 
-      {/* HOME */}
-      <div className="mb-12">
-
-        <Link
-          href="/"
-          className="inline-flex px-6 py-3 rounded-2xl bg-white/5 border border-white/10 hover:border-pink-500 transition font-bold"
-        >
-          HOME
-        </Link>
-
-      </div>
-
       {/* HEADER */}
-      <div className="max-w-6xl mx-auto text-center mb-16">
+      <div className="max-w-6xl mx-auto text-center mb-16 pt-24">
 
         <h1 className="text-5xl md:text-8xl font-black text-cyan-400">
           SEASON 2 FINALE
@@ -104,6 +170,7 @@ export default function Season2FinalePage() {
             className="rounded-[35px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl hover:-translate-y-2 transition duration-300"
           >
 
+            {/* IMAGE */}
             <div className="h-[320px] overflow-hidden">
 
               <img
@@ -114,15 +181,28 @@ export default function Season2FinalePage() {
 
             </div>
 
+            {/* INFO */}
             <div className="p-6 text-center">
 
               <h2 className="text-2xl font-black text-white">
                 {finalist.name}
               </h2>
 
-              <button className="mt-6 w-full px-5 py-4 rounded-2xl bg-pink-500 hover:bg-pink-400 transition font-black">
+              <p className="mt-3 text-cyan-400 font-bold">
+                Votes: {votes[finalist.id] || 0}
+              </p>
 
-                VOTE NOW
+              <button
+                onClick={() => voteForFinalist(finalist.id)}
+                disabled={hasVoted}
+                className={`mt-6 w-full px-5 py-4 rounded-2xl font-black transition ${
+                  hasVoted
+                    ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                    : "bg-pink-500 hover:bg-pink-400"
+                }`}
+              >
+
+                {hasVoted ? "VOTED" : "VOTE NOW"}
 
               </button>
 
