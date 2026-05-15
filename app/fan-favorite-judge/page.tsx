@@ -13,11 +13,13 @@ export default function FanFavoriteJudgePage() {
   const [judges, setJudges] = useState<any[]>([]);
   const [votes, setVotes] = useState<any>({});
   const [hasVoted, setHasVoted] = useState(false);
+  const [votingStatus, setVotingStatus] = useState("closed");
 
   useEffect(() => {
 
     fetchJudges();
     fetchVotes();
+    fetchVotingStatus();
 
     const voted = localStorage.getItem("judge-voted");
 
@@ -26,6 +28,20 @@ export default function FanFavoriteJudgePage() {
     }
 
   }, []);
+
+  const fetchVotingStatus = async () => {
+
+    const { data } = await supabase
+      .from("site_settings")
+      .select("*")
+      .eq("key", "judge_voting")
+      .single();
+
+    if (data) {
+      setVotingStatus(data.value);
+    }
+
+  };
 
   const fetchJudges = async () => {
 
@@ -68,6 +84,13 @@ export default function FanFavoriteJudgePage() {
   const voteForJudge = async (
     id: number
   ) => {
+
+    if (votingStatus !== "open") {
+
+      alert("Voting is currently closed.");
+      return;
+
+    }
 
     if (hasVoted) {
 
@@ -115,7 +138,6 @@ export default function FanFavoriteJudgePage() {
       {/* TOP BUTTONS */}
       <div className="fixed top-6 left-6 right-6 z-50 flex justify-between">
 
-        {/* HOME */}
         <a
           href="/"
           className="px-6 py-3 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 hover:border-yellow-400 transition font-black text-white"
@@ -123,7 +145,6 @@ export default function FanFavoriteJudgePage() {
           HOME
         </a>
 
-        {/* ADMIN */}
         <a
           href="/judge-admin-login"
           className="px-6 py-3 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 hover:border-yellow-400 transition font-black text-white"
@@ -141,11 +162,30 @@ export default function FanFavoriteJudgePage() {
       </div>
 
       {/* HEADER */}
-      <div className="max-w-6xl mx-auto text-center mb-16 pt-24">
+      <div className="max-w-6xl mx-auto text-center mb-10 pt-24">
 
         <h1 className="text-5xl md:text-8xl font-black text-yellow-400">
           FAN FAVORITE JUDGE
         </h1>
+
+      </div>
+
+      {/* VOTING STATUS */}
+      <div className="text-center mb-16">
+
+        <div
+          className={`inline-block px-10 py-5 rounded-2xl font-black text-2xl ${
+            votingStatus === "open"
+              ? "bg-green-500 text-black"
+              : "bg-red-500 text-white"
+          }`}
+        >
+
+          {votingStatus === "open"
+            ? "VOTING OPEN"
+            : "VOTING CLOSED"}
+
+        </div>
 
       </div>
 
@@ -242,15 +282,22 @@ export default function FanFavoriteJudgePage() {
                 onClick={() =>
                   voteForJudge(judge.id)
                 }
-                disabled={hasVoted}
+                disabled={
+                  hasVoted ||
+                  votingStatus !== "open"
+                }
                 className={`mt-6 w-full px-5 py-4 rounded-2xl font-black transition ${
-                  hasVoted
+                  hasVoted || votingStatus !== "open"
                     ? "bg-gray-700 text-gray-400 cursor-not-allowed"
                     : "bg-yellow-500 hover:bg-yellow-400 text-black"
                 }`}
               >
 
-                {hasVoted ? "VOTED" : "VOTE NOW"}
+                {votingStatus !== "open"
+                  ? "VOTING CLOSED"
+                  : hasVoted
+                  ? "VOTED"
+                  : "VOTE NOW"}
 
               </button>
 

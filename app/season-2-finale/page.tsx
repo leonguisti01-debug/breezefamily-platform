@@ -14,11 +14,13 @@ export default function Season2FinalePage() {
   const [finalists, setFinalists] = useState<any[]>([]);
   const [votes, setVotes] = useState<any>({});
   const [hasVoted, setHasVoted] = useState(false);
+  const [votingStatus, setVotingStatus] = useState("closed");
 
   useEffect(() => {
 
     fetchFinalists();
     fetchVotes();
+    fetchVotingStatus();
 
     const voted = localStorage.getItem("season2-voted");
 
@@ -27,6 +29,20 @@ export default function Season2FinalePage() {
     }
 
   }, []);
+
+  const fetchVotingStatus = async () => {
+
+    const { data } = await supabase
+      .from("site_settings")
+      .select("*")
+      .eq("key", "season2_voting")
+      .single();
+
+    if (data) {
+      setVotingStatus(data.value);
+    }
+
+  };
 
   const fetchFinalists = async () => {
 
@@ -69,6 +85,13 @@ export default function Season2FinalePage() {
   const voteForFinalist = async (
     id: number
   ) => {
+
+    if (votingStatus !== "open") {
+
+      alert("Voting is currently closed.");
+      return;
+
+    }
 
     if (hasVoted) {
 
@@ -125,11 +148,30 @@ export default function Season2FinalePage() {
       </div>
 
       {/* HEADER */}
-      <div className="max-w-6xl mx-auto text-center mb-16 pt-24">
+      <div className="max-w-6xl mx-auto text-center mb-10 pt-24">
 
         <h1 className="text-5xl md:text-8xl font-black text-cyan-400">
           SEASON 2 FINALE
         </h1>
+
+      </div>
+
+      {/* VOTING STATUS */}
+      <div className="text-center mb-16">
+
+        <div
+          className={`inline-block px-10 py-5 rounded-2xl font-black text-2xl ${
+            votingStatus === "open"
+              ? "bg-green-500 text-black"
+              : "bg-red-500 text-white"
+          }`}
+        >
+
+          {votingStatus === "open"
+            ? "VOTING OPEN"
+            : "VOTING CLOSED"}
+
+        </div>
 
       </div>
 
@@ -187,7 +229,6 @@ export default function Season2FinalePage() {
             className="rounded-[35px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl"
           >
 
-            {/* IMAGE */}
             <div className="h-[320px] overflow-hidden">
 
               <img
@@ -198,7 +239,6 @@ export default function Season2FinalePage() {
 
             </div>
 
-            {/* INFO */}
             <div className="p-6 text-center">
 
               <h2 className="text-2xl font-black text-white">
@@ -213,15 +253,22 @@ export default function Season2FinalePage() {
                 onClick={() =>
                   voteForFinalist(finalist.id)
                 }
-                disabled={hasVoted}
+                disabled={
+                  hasVoted ||
+                  votingStatus !== "open"
+                }
                 className={`mt-6 w-full px-5 py-4 rounded-2xl font-black transition ${
-                  hasVoted
+                  hasVoted || votingStatus !== "open"
                     ? "bg-gray-700 text-gray-400 cursor-not-allowed"
                     : "bg-pink-500 hover:bg-pink-400"
                 }`}
               >
 
-                {hasVoted ? "VOTED" : "VOTE NOW"}
+                {votingStatus !== "open"
+                  ? "VOTING CLOSED"
+                  : hasVoted
+                  ? "VOTED"
+                  : "VOTE NOW"}
 
               </button>
 

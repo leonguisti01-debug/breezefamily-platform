@@ -14,6 +14,7 @@ export default function JudgeAdminPage() {
   const router = useRouter();
 
   const [judges, setJudges] = useState<any[]>([]);
+  const [votingStatus, setVotingStatus] = useState("closed");
 
   useEffect(() => {
 
@@ -26,8 +27,41 @@ export default function JudgeAdminPage() {
     }
 
     fetchJudges();
+    fetchVotingStatus();
 
   }, []);
+
+  const fetchVotingStatus = async () => {
+
+    const { data } = await supabase
+      .from("site_settings")
+      .select("*")
+      .eq("key", "judge_voting")
+      .single();
+
+    if (data) {
+      setVotingStatus(data.value);
+    }
+
+  };
+
+  const toggleVoting = async () => {
+
+    const newStatus =
+      votingStatus === "open"
+        ? "closed"
+        : "open";
+
+    await supabase
+      .from("site_settings")
+      .update({
+        value: newStatus,
+      })
+      .eq("key", "judge_voting");
+
+    setVotingStatus(newStatus);
+
+  };
 
   const fetchJudges = async () => {
 
@@ -134,6 +168,49 @@ export default function JudgeAdminPage() {
         JUDGE ADMIN
       </h1>
 
+      {/* VOTING CONTROL */}
+      <div className="max-w-3xl mx-auto mb-16">
+
+        <div className="rounded-[35px] border border-white/10 bg-white/5 backdrop-blur-xl p-10 text-center">
+
+          <h2 className="text-3xl font-black text-white mb-6">
+            VOTING CONTROL
+          </h2>
+
+          <div
+            className={`text-3xl font-black mb-8 ${
+              votingStatus === "open"
+                ? "text-green-400"
+                : "text-red-400"
+            }`}
+          >
+
+            {votingStatus === "open"
+              ? "VOTING OPEN"
+              : "VOTING CLOSED"}
+
+          </div>
+
+          <button
+            onClick={toggleVoting}
+            className={`px-10 py-5 rounded-2xl font-black text-xl transition ${
+              votingStatus === "open"
+                ? "bg-red-500 hover:bg-red-400"
+                : "bg-green-500 hover:bg-green-400"
+            }`}
+          >
+
+            {votingStatus === "open"
+              ? "CLOSE VOTING"
+              : "OPEN VOTING"}
+
+          </button>
+
+        </div>
+
+      </div>
+
+      {/* JUDGES */}
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
 
         {judges.map((judge) => (
@@ -144,7 +221,7 @@ export default function JudgeAdminPage() {
           >
 
             {/* VIDEO */}
-            <div className="h-[420px] overflow-hidden bg-black">
+            <div className="aspect-video overflow-hidden bg-black">
 
               {judge.video_url ? (
 
@@ -154,7 +231,7 @@ export default function JudgeAdminPage() {
                   muted
                   loop
                   playsInline
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain bg-black"
                 />
 
               ) : (
