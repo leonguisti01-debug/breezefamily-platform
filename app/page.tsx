@@ -15,9 +15,6 @@ export default function HomePage() {
         }}
       />
 
-      {/* SOFT OVERLAY */}
-      <div className="fixed inset-0 bg-black/30 -z-40"></div>
-
       {/* PAGE CONTENT */}
       <div className="relative z-10">
 
@@ -40,7 +37,7 @@ export default function HomePage() {
                 <span className="text-pink-400">STARS</span>
               </h1>
 
-              <p className="text-xs uppercase tracking-[3px] text-white/80 mt-1">
+              <p className="text-xs uppercase tracking-[3px] text-white mt-1">
                 Kids Talent Search
               </p>
 
@@ -104,7 +101,7 @@ export default function HomePage() {
               Sing. Dance. Perform. Shine!
             </p>
 
-            <p className="mt-6 text-lg md:text-xl text-white/90 max-w-xl leading-relaxed">
+            <p className="mt-6 text-lg md:text-xl text-white max-w-xl leading-relaxed">
               South Africa’s ultimate live talent competition for young stars.
             </p>
 
@@ -161,7 +158,7 @@ export default function HomePage() {
         </section>
 
         {/* FOOTER */}
-        <footer className="border-t border-white/20 py-10 text-center text-white/80">
+        <footer className="border-t border-white/20 py-10 text-center text-white">
 
           <p>
             © 2026 TikTok Stars Kids Talent Search
