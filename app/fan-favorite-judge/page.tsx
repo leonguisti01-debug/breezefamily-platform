@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import TopButtons from "../components/TopButtons";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -113,7 +112,26 @@ export default function FanFavoriteJudgePage() {
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden px-6 py-16">
 
-      <TopButtons />
+      {/* TOP BUTTONS */}
+      <div className="fixed top-6 left-6 right-6 z-50 flex justify-between">
+
+        {/* HOME */}
+        <a
+          href="/"
+          className="px-6 py-3 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 hover:border-yellow-400 transition font-black text-white"
+        >
+          HOME
+        </a>
+
+        {/* ADMIN */}
+        <a
+          href="/judge-admin-login"
+          className="px-6 py-3 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 hover:border-yellow-400 transition font-black text-white"
+        >
+          ADMIN
+        </a>
+
+      </div>
 
       {/* BACKGROUND */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
