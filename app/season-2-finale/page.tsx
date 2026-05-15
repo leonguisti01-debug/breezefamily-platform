@@ -1,4 +1,5 @@
 import Link from "next/link";
+import TopButtons from "../components/TopButtons";
 
 const finalists = [
   {
@@ -57,6 +58,7 @@ export default function Season2FinalePage() {
 
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden px-6 py-16">
+        <TopButtons />
 
       {/* BACKGROUND */}
       <div className="fixed inset-0 -z-10 overflow-hidden">

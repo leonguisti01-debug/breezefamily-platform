@@ -1,9 +1,11 @@
 import Link from "next/link";
+import TopButtons from "../components/TopButtons";
 
 export default function KidsEditionPage() {
 
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden">
+        <TopButtons />
 
       {/* BACKGROUND */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
