@@ -18,9 +18,7 @@ export default function AdminPage() {
   const [contestants, setContestants] = useState<any[]>([]);
 
   useEffect(() => {
-
     checkAuth();
-
   }, []);
 
   const checkAuth = async () => {
@@ -60,11 +58,18 @@ export default function AdminPage() {
     }
   };
 
-  const approveContestant = async (id: number) => {
+  const updateStatus = async (
+    id: number,
+    status: string
+  ) => {
 
     const { error } = await supabase
       .from("contestants")
-      .update({ approved: true })
+      .update({
+        status,
+        status_updated_at: new Date().toISOString(),
+        approved: status === "APPROVED",
+      })
       .eq("id", id);
 
     if (error) {
@@ -95,10 +100,6 @@ export default function AdminPage() {
           <h1 className="text-5xl font-black text-pink-400 animate-pulse">
             Loading Admin...
           </h1>
-
-          <p className="mt-5 text-gray-400">
-            Preparing dashboard
-          </p>
 
         </div>
 
@@ -137,57 +138,8 @@ export default function AdminPage() {
 
       </div>
 
-      {/* STATS */}
-      <div className="grid md:grid-cols-3 gap-6 mb-12">
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-
-          <h2 className="text-5xl font-black text-pink-400">
-            {contestants.length}
-          </h2>
-
-          <p className="mt-3 text-gray-300">
-            Total Entries
-          </p>
-
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-
-          <h2 className="text-5xl font-black text-cyan-400">
-            LIVE
-          </h2>
-
-          <p className="mt-3 text-gray-300">
-            Competition Status
-          </p>
-
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-
-          <h2 className="text-5xl font-black text-lime-400">
-            2026
-          </h2>
-
-          <p className="mt-3 text-gray-300">
-            Season
-          </p>
-
-        </div>
-
-      </div>
-
       {/* TABLE */}
       <div className="rounded-[40px] border border-white/10 bg-white/5 overflow-hidden">
-
-        <div className="p-8 border-b border-white/10">
-
-          <h2 className="text-3xl font-black text-white">
-            Contestant Entries
-          </h2>
-
-        </div>
 
         <div className="overflow-x-auto">
 
@@ -198,13 +150,12 @@ export default function AdminPage() {
               <tr className="text-left">
 
                 <th className="p-5">ID</th>
-                <th className="p-5">Child Name</th>
-                <th className="p-5">Age</th>
-                <th className="p-5">Parent</th>
+                <th className="p-5">Contestant</th>
                 <th className="p-5">Category</th>
-                <th className="p-5">Email</th>
+                <th className="p-5">Votes</th>
                 <th className="p-5">Status</th>
-                <th className="p-5">Action</th>
+                <th className="p-5">Updated</th>
+                <th className="p-5">Actions</th>
 
               </tr>
 
@@ -216,23 +167,23 @@ export default function AdminPage() {
 
                 <tr
                   key={contestant.id}
-                  className="border-t border-white/5 hover:bg-white/5"
+                  className="border-t border-white/5 hover:bg-white/5 align-top"
                 >
 
                   <td className="p-5 text-gray-400">
                     {contestant.id}
                   </td>
 
-                  <td className="p-5 font-bold text-pink-400">
-                    {contestant.child_name}
-                  </td>
-
                   <td className="p-5">
-                    {contestant.age}
-                  </td>
 
-                  <td className="p-5">
-                    {contestant.parent_name}
+                    <div className="font-bold text-pink-400">
+                      {contestant.child_name}
+                    </div>
+
+                    <div className="text-sm text-gray-500 mt-1">
+                      {contestant.parent_name}
+                    </div>
+
                   </td>
 
                   <td className="p-5">
@@ -240,33 +191,82 @@ export default function AdminPage() {
                   </td>
 
                   <td className="p-5">
-                    {contestant.email}
+                    {contestant.votes || 0}
                   </td>
 
                   <td className="p-5">
 
-                    {contestant.approved ? (
-                      <span className="text-lime-400 font-bold">
-                        APPROVED
-                      </span>
-                    ) : (
-                      <span className="text-yellow-400 font-bold">
-                        PENDING
-                      </span>
-                    )}
+                    <span className="font-bold">
+
+                      {contestant.status || "PENDING"}
+
+                    </span>
+
+                  </td>
+
+                  <td className="p-5 text-sm text-gray-400">
+
+                    {contestant.status_updated_at
+                      ? new Date(
+                          contestant.status_updated_at
+                        ).toLocaleString()
+                      : "-"}
 
                   </td>
 
                   <td className="p-5">
 
-                    {!contestant.approved && (
+                    <div className="flex flex-wrap gap-2">
+
                       <button
-                        onClick={() => approveContestant(contestant.id)}
-                        className="px-5 py-3 rounded-xl bg-lime-400 text-black font-bold hover:scale-105 transition"
+                        onClick={() =>
+                          updateStatus(
+                            contestant.id,
+                            "APPROVED"
+                          )
+                        }
+                        className="px-4 py-2 rounded-xl bg-lime-400 text-black font-bold"
                       >
                         APPROVE
                       </button>
-                    )}
+
+                      <button
+                        onClick={() =>
+                          updateStatus(
+                            contestant.id,
+                            "DISQUALIFIED"
+                          )
+                        }
+                        className="px-4 py-2 rounded-xl bg-red-500 text-white font-bold"
+                      >
+                        DISQUALIFY
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateStatus(
+                            contestant.id,
+                            "PASSED"
+                          )
+                        }
+                        className="px-4 py-2 rounded-xl bg-cyan-500 text-white font-bold"
+                      >
+                        PASS
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateStatus(
+                            contestant.id,
+                            "VOTED OUT"
+                          )
+                        }
+                        className="px-4 py-2 rounded-xl bg-yellow-500 text-black font-bold"
+                      >
+                        VOTED OUT
+                      </button>
+
+                    </div>
 
                   </td>
 
