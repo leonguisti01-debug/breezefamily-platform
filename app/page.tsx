@@ -162,10 +162,10 @@ export default function HomePage() {
               </Link>
 
               <Link
-                href="/vote"
+                href="/leaderboard"
                 className="px-10 py-5 rounded-2xl border border-white/10 bg-white/5 hover:border-cyan-400 transition font-black text-lg"
               >
-                VOTE NOW
+                VIEW LEADERBOARD
               </Link>
 
             </div>
@@ -193,7 +193,7 @@ export default function HomePage() {
               </h3>
 
               <p className="mt-2 text-gray-300">
-                Voting Open
+                Auditions Open
               </p>
 
             </div>
@@ -209,56 +209,6 @@ export default function HomePage() {
               </p>
 
             </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* CATEGORIES */}
-      <section className="px-6 lg:px-16 pb-28">
-
-        <div className="max-w-7xl mx-auto">
-
-          <div className="text-center mb-16">
-
-            <h2 className="text-6xl font-black text-white">
-              CATEGORIES
-            </h2>
-
-            <p className="mt-5 text-xl text-gray-400">
-              Every young star deserves a stage.
-            </p>
-
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
-
-            {[
-              "Dance",
-              "Singing",
-              "Comedy",
-              "Influencer",
-              "Model",
-            ].map((category) => (
-
-              <div
-                key={category}
-                className="rounded-[35px] border border-white/10 bg-white/5 backdrop-blur-xl p-10 text-center hover:-translate-y-3 hover:border-pink-500 transition duration-300"
-              >
-
-                <h3 className="text-3xl font-black text-pink-400">
-                  {category}
-                </h3>
-
-                <p className="mt-4 text-gray-300">
-                  Shine on stage
-                </p>
-
-              </div>
-
-            ))}
 
           </div>
 
