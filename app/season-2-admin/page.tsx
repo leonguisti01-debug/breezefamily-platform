@@ -14,6 +14,7 @@ export default function Season2AdminPage() {
   const router = useRouter();
 
   const [finalists, setFinalists] = useState<any[]>([]);
+  const [votingStatus, setVotingStatus] = useState("closed");
 
   useEffect(() => {
 
@@ -26,8 +27,41 @@ export default function Season2AdminPage() {
     }
 
     fetchFinalists();
+    fetchVotingStatus();
 
   }, []);
+
+  const fetchVotingStatus = async () => {
+
+    const { data } = await supabase
+      .from("site_settings")
+      .select("*")
+      .eq("key", "season2_voting")
+      .single();
+
+    if (data) {
+      setVotingStatus(data.value);
+    }
+
+  };
+
+  const toggleVoting = async () => {
+
+    const newStatus =
+      votingStatus === "open"
+        ? "closed"
+        : "open";
+
+    await supabase
+      .from("site_settings")
+      .update({
+        value: newStatus,
+      })
+      .eq("key", "season2_voting");
+
+    setVotingStatus(newStatus);
+
+  };
 
   const fetchFinalists = async () => {
 
@@ -42,187 +76,68 @@ export default function Season2AdminPage() {
 
   };
 
-  const uploadImage = async (
-    e: any,
-    finalistId: number
-  ) => {
-
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    const fileExt = file.name.split(".").pop();
-
-    const fileName = `finalist-${finalistId}-${Date.now()}.${fileExt}`;
-
-    const { error } = await supabase.storage
-      .from("season2")
-      .upload(fileName, file, {
-        cacheControl: "3600",
-        upsert: true,
-      });
-
-    if (error) {
-
-      console.log(error);
-      alert(error.message);
-      return;
-
-    }
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage
-      .from("season2")
-      .getPublicUrl(fileName);
-
-    const { error: updateError } = await supabase
-      .from("season2_finalists")
-      .update({
-        image_url: publicUrl,
-      })
-      .eq("id", finalistId);
-
-    if (updateError) {
-
-      console.log(updateError);
-      alert(updateError.message);
-      return;
-
-    }
-
-    fetchFinalists();
-
-    alert("Image uploaded successfully");
-
-  };
-
-  const eliminateContestant = async (
-    finalistId: number
-  ) => {
-
-    await supabase
-      .from("season2_finalists")
-      .update({
-        eliminated: true,
-      })
-      .eq("id", finalistId);
-
-    fetchFinalists();
-
-  };
-
-  const reinstateContestant = async (
-    finalistId: number
-  ) => {
-
-    await supabase
-      .from("season2_finalists")
-      .update({
-        eliminated: false,
-      })
-      .eq("id", finalistId);
-
-    fetchFinalists();
-
-  };
-
   return (
     <main className="min-h-screen bg-black text-white px-6 py-16">
 
-      <h1 className="text-5xl font-black text-cyan-400 text-center mb-16">
+      <h1 className="text-5xl font-black text-cyan-400 text-center mb-10">
         SEASON 2 ADMIN
       </h1>
 
+      {/* VOTING CONTROL */}
+      <div className="max-w-3xl mx-auto mb-16">
+
+        <div className="rounded-[35px] border border-white/10 bg-white/5 backdrop-blur-xl p-10 text-center">
+
+          <h2 className="text-3xl font-black text-white mb-6">
+            VOTING CONTROL
+          </h2>
+
+          <div
+            className={`text-3xl font-black mb-8 ${
+              votingStatus === "open"
+                ? "text-green-400"
+                : "text-red-400"
+            }`}
+          >
+
+            {votingStatus === "open"
+              ? "VOTING OPEN"
+              : "VOTING CLOSED"}
+
+          </div>
+
+          <button
+            onClick={toggleVoting}
+            className={`px-10 py-5 rounded-2xl font-black text-xl transition ${
+              votingStatus === "open"
+                ? "bg-red-500 hover:bg-red-400"
+                : "bg-green-500 hover:bg-green-400"
+            }`}
+          >
+
+            {votingStatus === "open"
+              ? "CLOSE VOTING"
+              : "OPEN VOTING"}
+
+          </button>
+
+        </div>
+
+      </div>
+
+      {/* FINALISTS */}
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
 
         {finalists.map((finalist) => (
 
           <div
             key={finalist.id}
-            className="rounded-[35px] border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden"
+            className="rounded-[35px] border border-white/10 bg-white/5 backdrop-blur-xl p-6"
           >
 
-            {/* IMAGE */}
-            <div className="h-[320px] overflow-hidden bg-black/30">
-
-              {finalist.image_url ? (
-
-                <img
-                  src={finalist.image_url}
-                  alt={finalist.name}
-                  className="w-full h-full object-cover"
-                />
-
-              ) : (
-
-                <div className="w-full h-full flex items-center justify-center text-gray-500 font-bold">
-                  NO IMAGE
-                </div>
-
-              )}
-
-            </div>
-
-            {/* INFO */}
-            <div className="p-6">
-
-              <h2 className="text-3xl font-black text-white">
-                {finalist.name}
-              </h2>
-
-              {/* UPLOAD */}
-              <div className="mt-6">
-
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) =>
-                    uploadImage(e, finalist.id)
-                  }
-                  className="w-full"
-                />
-
-              </div>
-
-              {/* STATUS */}
-              <div className="mt-6">
-
-                {finalist.eliminated ? (
-
-                  <div className="space-y-4">
-
-                    <div className="w-full px-5 py-4 rounded-2xl bg-gray-700 text-gray-300 font-black text-center">
-                      ELIMINATED
-                    </div>
-
-                    <button
-                      onClick={() =>
-                        reinstateContestant(finalist.id)
-                      }
-                      className="w-full px-5 py-4 rounded-2xl bg-green-500 hover:bg-green-400 transition font-black"
-                    >
-                      RE-INSTATE
-                    </button>
-
-                  </div>
-
-                ) : (
-
-                  <button
-                    onClick={() =>
-                      eliminateContestant(finalist.id)
-                    }
-                    className="w-full px-5 py-4 rounded-2xl bg-red-500 hover:bg-red-400 transition font-black"
-                  >
-                    ELIMINATE CONTESTANT
-                  </button>
-
-                )}
-
-              </div>
-
-            </div>
+            <h2 className="text-3xl font-black text-white">
+              {finalist.name}
+            </h2>
 
           </div>
 
