@@ -67,7 +67,7 @@ export default function HomePage() {
               </Link>
 
               <Link
-                href="/kids-edition"
+                href="/kids-edition/register"
                 className="hover:text-cyan-300 transition duration-300"
               >
                 Kids Edition
@@ -160,25 +160,6 @@ export default function HomePage() {
                   Be seen. Be heard. Be a Star!
 
                 </div>
-
-              </div>
-
-              {/* BUTTONS */}
-              <div className="mt-14 flex flex-wrap gap-6">
-
-                <Link
-                  href="/kids-edition"
-                  className="px-10 py-5 rounded-2xl bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white font-black text-lg md:text-xl shadow-[0_0_50px_rgba(255,0,140,0.5)] hover:scale-105 transition duration-300"
-                >
-                  ENTER NOW
-                </Link>
-
-                <Link
-                  href="/season-2-finale"
-                  className="px-10 py-5 rounded-2xl border-2 border-cyan-300 text-cyan-300 font-black text-lg md:text-xl bg-black/20 backdrop-blur-md hover:bg-cyan-300 hover:text-black transition duration-300"
-                >
-                  LIVE VOTING
-                </Link>
 
               </div>
 
