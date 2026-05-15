@@ -34,7 +34,7 @@ export default function Season2FinalePage() {
       .from("season2_finalists")
       .select("*")
       .eq("eliminated", false)
-      .order("id");
+      .order("name", { ascending: true });
 
     if (data) {
       setFinalists(data);
