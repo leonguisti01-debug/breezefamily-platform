@@ -9,66 +9,15 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-const finalists = [
-  {
-    id: 1,
-    name: "Contestant 1",
-    image: "/finalist1.jpg",
-  },
-  {
-    id: 2,
-    name: "Contestant 2",
-    image: "/finalist2.jpg",
-  },
-  {
-    id: 3,
-    name: "Contestant 3",
-    image: "/finalist3.jpg",
-  },
-  {
-    id: 4,
-    name: "Contestant 4",
-    image: "/finalist4.jpg",
-  },
-  {
-    id: 5,
-    name: "Contestant 5",
-    image: "/finalist5.jpg",
-  },
-  {
-    id: 6,
-    name: "Contestant 6",
-    image: "/finalist6.jpg",
-  },
-  {
-    id: 7,
-    name: "Contestant 7",
-    image: "/finalist7.jpg",
-  },
-  {
-    id: 8,
-    name: "Contestant 8",
-    image: "/finalist8.jpg",
-  },
-  {
-    id: 9,
-    name: "Contestant 9",
-    image: "/finalist9.jpg",
-  },
-  {
-    id: 10,
-    name: "Contestant 10",
-    image: "/finalist10.jpg",
-  },
-];
-
 export default function Season2FinalePage() {
 
+  const [finalists, setFinalists] = useState<any[]>([]);
   const [votes, setVotes] = useState<any>({});
   const [hasVoted, setHasVoted] = useState(false);
 
   useEffect(() => {
 
+    fetchFinalists();
     fetchVotes();
 
     const voted = localStorage.getItem("season2-voted");
@@ -78,6 +27,20 @@ export default function Season2FinalePage() {
     }
 
   }, []);
+
+  const fetchFinalists = async () => {
+
+    const { data } = await supabase
+      .from("season2_finalists")
+      .select("*")
+      .eq("eliminated", false)
+      .order("id");
+
+    if (data) {
+      setFinalists(data);
+    }
+
+  };
 
   const fetchVotes = async () => {
 
@@ -89,22 +52,29 @@ export default function Season2FinalePage() {
 
     const totals: any = {};
 
-    finalists.forEach((f) => {
-      totals[f.id] = 0;
-    });
-
     data.forEach((vote) => {
+
+      if (!totals[vote.finalist_id]) {
+        totals[vote.finalist_id] = 0;
+      }
+
       totals[vote.finalist_id]++;
+
     });
 
     setVotes(totals);
+
   };
 
-  const voteForFinalist = async (id: number) => {
+  const voteForFinalist = async (
+    id: number
+  ) => {
 
     if (hasVoted) {
+
       alert("You have already voted.");
       return;
+
     }
 
     const { error } = await supabase
@@ -161,10 +131,6 @@ export default function Season2FinalePage() {
           SEASON 2 FINALE
         </h1>
 
-        <p className="mt-6 text-xl text-gray-300">
-          Vote for South Africa's Top 10 finalists.
-        </p>
-
       </div>
 
       {/* LEADERBOARD */}
@@ -191,13 +157,9 @@ export default function Season2FinalePage() {
                     #{index + 1}
                   </div>
 
-                  <div>
-
-                    <h3 className="text-xl font-black text-white">
-                      {contestant.name}
-                    </h3>
-
-                  </div>
+                  <h3 className="text-xl font-black text-white">
+                    {contestant.name}
+                  </h3>
 
                 </div>
 
@@ -222,14 +184,14 @@ export default function Season2FinalePage() {
 
           <div
             key={finalist.id}
-            className="rounded-[35px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl hover:-translate-y-2 transition duration-300"
+            className="rounded-[35px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl"
           >
 
             {/* IMAGE */}
             <div className="h-[320px] overflow-hidden">
 
               <img
-                src={finalist.image}
+                src={finalist.image_url}
                 alt={finalist.name}
                 className="w-full h-full object-cover"
               />
@@ -248,7 +210,9 @@ export default function Season2FinalePage() {
               </p>
 
               <button
-                onClick={() => voteForFinalist(finalist.id)}
+                onClick={() =>
+                  voteForFinalist(finalist.id)
+                }
                 disabled={hasVoted}
                 className={`mt-6 w-full px-5 py-4 rounded-2xl font-black transition ${
                   hasVoted

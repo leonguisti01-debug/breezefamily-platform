@@ -9,24 +9,11 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-const finalists = [
-  "Contestant 1",
-  "Contestant 2",
-  "Contestant 3",
-  "Contestant 4",
-  "Contestant 5",
-  "Contestant 6",
-  "Contestant 7",
-  "Contestant 8",
-  "Contestant 9",
-  "Contestant 10",
-];
-
 export default function Season2AdminPage() {
 
   const router = useRouter();
 
-  const [votes, setVotes] = useState<any>({});
+  const [finalists, setFinalists] = useState<any[]>([]);
 
   useEffect(() => {
 
@@ -38,29 +25,82 @@ export default function Season2AdminPage() {
 
     }
 
-    fetchVotes();
+    fetchFinalists();
 
   }, []);
 
-  const fetchVotes = async () => {
+  const fetchFinalists = async () => {
 
     const { data } = await supabase
-      .from("season2_votes")
-      .select("*");
+      .from("season2_finalists")
+      .select("*")
+      .order("id");
 
-    if (!data) return;
+    if (data) {
+      setFinalists(data);
+    }
 
-    const totals: any = {};
+  };
 
-    finalists.forEach((_, index) => {
-      totals[index + 1] = 0;
-    });
+  const uploadImage = async (
+    e: any,
+    finalistId: number
+  ) => {
 
-    data.forEach((vote) => {
-      totals[vote.finalist_id]++;
-    });
+    const file = e.target.files[0];
 
-    setVotes(totals);
+    if (!file) return;
+
+    const fileName = `finalist-${finalistId}-${Date.now()}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("season2")
+      .upload(fileName, file);
+
+    if (uploadError) {
+
+      console.log(uploadError);
+      alert("Upload failed");
+      return;
+
+    }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage
+      .from("season2")
+      .getPublicUrl(fileName);
+
+    await supabase
+      .from("season2_finalists")
+      .update({
+        image_url: publicUrl,
+      })
+      .eq("id", finalistId);
+
+    fetchFinalists();
+
+  };
+
+  const eliminateContestant = async (
+    finalistId: number
+  ) => {
+
+    const confirmElimination = confirm(
+      "Eliminate contestant?"
+    );
+
+    if (!confirmElimination) return;
+
+    await supabase
+      .from("season2_finalists")
+      .update({
+        eliminated: true,
+      })
+      .eq("id", finalistId);
+
+    fetchFinalists();
+
   };
 
   return (
@@ -70,21 +110,73 @@ export default function Season2AdminPage() {
         SEASON 2 ADMIN
       </h1>
 
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
 
-        {finalists.map((name, index) => (
+        {finalists.map((finalist) => (
 
           <div
-            key={index}
-            className="rounded-[30px] border border-white/10 bg-white/5 p-8 flex justify-between items-center"
+            key={finalist.id}
+            className="rounded-[35px] border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden"
           >
 
-            <h2 className="text-2xl font-black text-white">
-              {name}
-            </h2>
+            {/* IMAGE */}
+            <div className="h-[320px] overflow-hidden bg-black/30">
 
-            <div className="text-3xl font-black text-pink-400">
-              {votes[index + 1] || 0} Votes
+              {finalist.image_url ? (
+
+                <img
+                  src={finalist.image_url}
+                  alt={finalist.name}
+                  className="w-full h-full object-cover"
+                />
+
+              ) : (
+
+                <div className="w-full h-full flex items-center justify-center text-gray-500 font-bold">
+                  NO IMAGE
+                </div>
+
+              )}
+
+            </div>
+
+            {/* INFO */}
+            <div className="p-6">
+
+              <h2 className="text-3xl font-black text-white">
+                {finalist.name}
+              </h2>
+
+              <div className="mt-6">
+
+                <input
+                  type="file"
+                  onChange={(e) =>
+                    uploadImage(e, finalist.id)
+                  }
+                  className="w-full"
+                />
+
+              </div>
+
+              <button
+                onClick={() =>
+                  eliminateContestant(finalist.id)
+                }
+                disabled={finalist.eliminated}
+                className={`w-full mt-6 px-5 py-4 rounded-2xl font-black transition ${
+                  finalist.eliminated
+                    ? "bg-gray-700 text-gray-400"
+                    : "bg-red-500 hover:bg-red-400"
+                }`}
+              >
+
+                {finalist.eliminated
+                  ? "ELIMINATED"
+                  : "ELIMINATE CONTESTANT"}
+
+              </button>
+
             </div>
 
           </div>
