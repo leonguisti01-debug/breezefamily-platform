@@ -176,7 +176,7 @@ export default function FanFavoriteJudgePage() {
       </div>
 
       {/* JUDGES */}
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-3 gap-10">
 
         {judges.map((judge) => (
 
@@ -186,7 +186,7 @@ export default function FanFavoriteJudgePage() {
           >
 
             {/* VIDEO */}
-            <div className="h-[420px] overflow-hidden bg-black">
+            <div className="aspect-video overflow-hidden bg-black">
 
               {judge.video_url ? (
 
@@ -196,7 +196,7 @@ export default function FanFavoriteJudgePage() {
                   muted
                   loop
                   playsInline
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain bg-black"
                 />
 
               ) : (
