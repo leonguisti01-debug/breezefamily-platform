@@ -8,7 +8,7 @@ export default function HomePage() {
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-30"
         style={{
-          backgroundImage: "url('/background.jpg')",
+          backgroundImage: "url(/background.jpg)",
         }}
       ></div>
 
