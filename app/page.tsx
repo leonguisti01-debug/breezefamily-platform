@@ -72,7 +72,7 @@ export default function HomePage() {
       </header>
 
       {/* HERO */}
-      <section className="w-full max-w-7xl mx-auto px-6 pt-10 pb-24 relative z-10">
+      <section className="w-full max-w-7xl mx-auto px-6 pt-16 pb-24 relative z-10">
 
         <div className="max-w-3xl">
 
