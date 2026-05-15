@@ -123,14 +123,6 @@ export default function HomePage() {
                 ✓
               </div>
 
-              Upload your video & get discovered
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="w-7 h-7 rounded-full bg-pink-500 flex items-center justify-center">
-                ✓
-              </div>
-
               Win amazing prizes and sponsorships
             </div>
 
