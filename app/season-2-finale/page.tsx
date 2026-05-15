@@ -133,6 +133,13 @@ export default function Season2FinalePage() {
     }
   };
 
+  const leaderboard = finalists
+    .map((finalist) => ({
+      ...finalist,
+      totalVotes: votes[finalist.id] || 0,
+    }))
+    .sort((a, b) => b.totalVotes - a.totalVotes);
+
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden px-6 py-16">
 
@@ -157,6 +164,54 @@ export default function Season2FinalePage() {
         <p className="mt-6 text-xl text-gray-300">
           Vote for South Africa's Top 10 finalists.
         </p>
+
+      </div>
+
+      {/* LEADERBOARD */}
+      <div className="max-w-5xl mx-auto mb-20">
+
+        <div className="rounded-[40px] border border-white/10 bg-white/5 backdrop-blur-xl p-8">
+
+          <h2 className="text-4xl font-black text-pink-400 mb-8 text-center">
+            LIVE LEADERBOARD
+          </h2>
+
+          <div className="space-y-4">
+
+            {leaderboard.map((contestant, index) => (
+
+              <div
+                key={contestant.id}
+                className="flex items-center justify-between rounded-2xl bg-black/40 border border-white/10 px-6 py-5"
+              >
+
+                <div className="flex items-center gap-5">
+
+                  <div className="text-3xl font-black text-cyan-400 w-[60px]">
+                    #{index + 1}
+                  </div>
+
+                  <div>
+
+                    <h3 className="text-xl font-black text-white">
+                      {contestant.name}
+                    </h3>
+
+                  </div>
+
+                </div>
+
+                <div className="text-2xl font-black text-pink-400">
+                  {contestant.totalVotes} Votes
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
 
       </div>
 
