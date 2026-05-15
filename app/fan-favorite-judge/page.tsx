@@ -176,7 +176,7 @@ export default function FanFavoriteJudgePage() {
       </div>
 
       {/* JUDGES */}
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
 
         {judges.map((judge) => (
 
@@ -185,16 +185,31 @@ export default function FanFavoriteJudgePage() {
             className="rounded-[35px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl"
           >
 
-            <div className="h-[320px] overflow-hidden">
+            {/* VIDEO */}
+            <div className="h-[420px] overflow-hidden bg-black">
 
-              <img
-                src={judge.image_url}
-                alt={judge.name}
-                className="w-full h-full object-cover"
-              />
+              {judge.video_url ? (
+
+                <video
+                  src={judge.video_url}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
+
+              ) : (
+
+                <div className="w-full h-full flex items-center justify-center text-gray-500 font-bold">
+                  NO VIDEO
+                </div>
+
+              )}
 
             </div>
 
+            {/* INFO */}
             <div className="p-6 text-center">
 
               <h2 className="text-2xl font-black text-white">
