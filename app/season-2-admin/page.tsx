@@ -86,16 +86,25 @@ export default function Season2AdminPage() {
     finalistId: number
   ) => {
 
-    const confirmElimination = confirm(
-      "Eliminate contestant?"
-    );
-
-    if (!confirmElimination) return;
-
     await supabase
       .from("season2_finalists")
       .update({
         eliminated: true,
+      })
+      .eq("id", finalistId);
+
+    fetchFinalists();
+
+  };
+
+  const reinstateContestant = async (
+    finalistId: number
+  ) => {
+
+    await supabase
+      .from("season2_finalists")
+      .update({
+        eliminated: false,
       })
       .eq("id", finalistId);
 
@@ -159,23 +168,42 @@ export default function Season2AdminPage() {
 
               </div>
 
-              <button
-                onClick={() =>
-                  eliminateContestant(finalist.id)
-                }
-                disabled={finalist.eliminated}
-                className={`w-full mt-6 px-5 py-4 rounded-2xl font-black transition ${
-                  finalist.eliminated
-                    ? "bg-gray-700 text-gray-400"
-                    : "bg-red-500 hover:bg-red-400"
-                }`}
-              >
+              {/* STATUS */}
+              <div className="mt-6">
 
-                {finalist.eliminated
-                  ? "ELIMINATED"
-                  : "ELIMINATE CONTESTANT"}
+                {finalist.eliminated ? (
 
-              </button>
+                  <div className="space-y-4">
+
+                    <div className="w-full px-5 py-4 rounded-2xl bg-gray-700 text-gray-300 font-black text-center">
+                      ELIMINATED
+                    </div>
+
+                    <button
+                      onClick={() =>
+                        reinstateContestant(finalist.id)
+                      }
+                      className="w-full px-5 py-4 rounded-2xl bg-green-500 hover:bg-green-400 transition font-black"
+                    >
+                      RE-INSTATE
+                    </button>
+
+                  </div>
+
+                ) : (
+
+                  <button
+                    onClick={() =>
+                      eliminateContestant(finalist.id)
+                    }
+                    className="w-full px-5 py-4 rounded-2xl bg-red-500 hover:bg-red-400 transition font-black"
+                  >
+                    ELIMINATE CONTESTANT
+                  </button>
+
+                )}
+
+              </div>
 
             </div>
 
