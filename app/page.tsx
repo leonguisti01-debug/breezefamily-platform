@@ -4,34 +4,20 @@ import TopButtons from "./components/TopButtons";
 export default function HomePage() {
 
   return (
-    <main className="min-h-screen text-white overflow-hidden relative">
+    <main
+      className="min-h-screen text-white relative bg-cover bg-center bg-fixed"
+      style={{
+        backgroundImage: "url('/background.jpg')",
+      }}
+    >
 
       <TopButtons />
 
-      {/* FIXED BACKGROUND IMAGE */}
-      <div
-        className="fixed inset-0 -z-20 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('/background.jpg')",
-        }}
-      />
-
       {/* DARK OVERLAY */}
-      <div className="fixed inset-0 -z-10 bg-black/70" />
-
-      {/* NEON GLOW */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-pink-500/20 blur-[160px] rounded-full"></div>
-
-        <div className="absolute top-[20%] right-0 w-[500px] h-[500px] bg-cyan-500/20 blur-[160px] rounded-full"></div>
-
-        <div className="absolute bottom-0 left-[20%] w-[600px] h-[600px] bg-yellow-500/10 blur-[180px] rounded-full"></div>
-
-      </div>
+      <div className="absolute inset-0 bg-black/70 z-0"></div>
 
       {/* CONTENT */}
-      <div className="w-full max-w-6xl mx-auto text-center px-6 py-32">
+      <div className="relative z-10 w-full max-w-6xl mx-auto text-center px-6 py-32">
 
         {/* BUTTONS */}
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
