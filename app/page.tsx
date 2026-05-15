@@ -72,10 +72,9 @@ export default function HomePage() {
       </header>
 
       {/* HERO */}
-      <section className="w-full max-w-7xl mx-auto px-6 pt-10 pb-24 grid lg:grid-cols-2 gap-20 items-center relative z-10">
+      <section className="w-full max-w-7xl mx-auto px-6 pt-10 pb-24 relative z-10">
 
-        {/* LEFT */}
-        <div>
+        <div className="max-w-3xl">
 
           <h2 className="text-5xl md:text-8xl font-black uppercase leading-[0.95]">
 
@@ -144,19 +143,6 @@ export default function HomePage() {
             </Link>
 
           </div>
-
-        </div>
-
-        {/* RIGHT IMAGE */}
-        <div className="relative">
-
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-cyan-500/20 blur-[120px] rounded-full"></div>
-
-          <img
-            src="/hero-kids.png"
-            alt="TikTok Stars"
-            className="relative z-10 w-full"
-          />
 
         </div>
 
