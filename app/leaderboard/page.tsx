@@ -83,7 +83,7 @@ export default function LeaderboardPage() {
                   </h2>
 
                   <p className="text-gray-400 mt-2">
-                    Ranking
+                    Entry
                   </p>
 
                 </div>
@@ -125,24 +125,10 @@ export default function LeaderboardPage() {
                 <div className="mt-5 space-y-3 text-gray-300">
 
                   <p>
-                    <span className="text-pink-400 font-bold">
-                      Category:
-                    </span>{" "}
-                    {contestant.category}
-                  </p>
-
-                  <p>
                     <span className="text-cyan-400 font-bold">
                       Age:
                     </span>{" "}
                     {contestant.age}
-                  </p>
-
-                  <p>
-                    <span className="text-lime-400 font-bold">
-                      Votes:
-                    </span>{" "}
-                    {contestant.votes || 0}
                   </p>
 
                 </div>
