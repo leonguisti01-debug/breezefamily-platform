@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function HomePage() {
 
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden">
+    <main className="min-h-screen bg-black text-white overflow-hidden flex items-center justify-center px-6 py-16">
 
       {/* BACKGROUND */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
@@ -16,205 +16,98 @@ export default function HomePage() {
 
       </div>
 
-      {/* NAVBAR */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-xl">
+      {/* CONTENT */}
+      <div className="w-full max-w-5xl text-center">
 
-        <div className="max-w-7xl mx-auto px-4 lg:px-10 py-5">
+        {/* LOGO */}
+        <div className="mb-14">
 
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-5">
-
-            {/* LOGO */}
-            <div className="text-center lg:text-left">
-
-              <h1 className="text-3xl font-black leading-none">
-
-                <span className="text-white">
-                  TikTok
-                </span>
-
-                <span className="text-yellow-400">
-                  Stars
-                </span>
-
-              </h1>
-
-              <p className="text-pink-400 font-bold text-sm">
-                Kids Edition
-              </p>
-
-            </div>
-
-            {/* NAV */}
-            <nav className="flex flex-wrap justify-center gap-3 text-sm font-bold">
-
-              <Link
-                href="/"
-                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-pink-500 transition"
-              >
-                HOME
-              </Link>
-
-              <Link
-                href="/vote"
-                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-pink-500 transition"
-              >
-                VOTE
-              </Link>
-
-              <Link
-                href="/leaderboard"
-                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400 transition"
-              >
-                LEADERBOARD
-              </Link>
-
-              <Link
-                href="/kids-edition"
-                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-yellow-400 transition"
-              >
-                ENTER
-              </Link>
-
-              <Link
-                href="/admin-login"
-                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-red-400 transition"
-              >
-                ADMIN
-              </Link>
-
-            </nav>
-
-          </div>
+          <img
+            src="/poster.jpg"
+            alt="TikTok Stars"
+            className="w-full max-w-2xl mx-auto rounded-[40px] border border-white/10 shadow-[0_0_80px_rgba(255,0,150,0.3)]"
+          />
 
         </div>
 
-      </header>
+        {/* TITLE */}
+        <div className="mb-14">
 
-      {/* HERO */}
-      <section className="relative px-6 lg:px-16 pt-20 pb-28">
+          <h1 className="text-5xl md:text-7xl font-black text-white leading-tight">
 
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+            SOUTH AFRICA'S
+            <br />
 
-          {/* LEFT */}
-          <div>
+            <span className="text-pink-400">
+              BIGGEST YOUTH
+            </span>
 
-            <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-pink-500/30 bg-pink-500/10 mb-8">
+            <br />
 
-              <div className="w-3 h-3 bg-pink-400 rounded-full animate-pulse"></div>
+            TALENT PLATFORM
 
-              <span className="font-bold text-pink-300">
-                AUDITIONS NOW OPEN
-              </span>
+          </h1>
 
+        </div>
+
+        {/* BUTTONS */}
+        <div className="grid md:grid-cols-2 gap-8">
+
+          {/* SEASON 2 */}
+          <Link
+            href="/leaderboard"
+            className="group rounded-[40px] border border-cyan-500/20 bg-cyan-500/10 backdrop-blur-xl p-12 hover:-translate-y-2 hover:border-cyan-400 transition duration-300 shadow-[0_0_50px_rgba(0,255,255,0.15)]"
+          >
+
+            <div className="text-6xl mb-6">
+              ⭐
             </div>
 
-            <h1 className="text-5xl md:text-8xl font-black leading-[0.9]">
+            <h2 className="text-4xl font-black text-cyan-400 leading-tight">
 
-              <span className="text-white">
-                TikTok
-              </span>
-
+              TikTok Stars
               <br />
+              Season 2 Finale
 
-              <span className="text-yellow-400 drop-shadow-[0_0_30px_rgba(255,215,0,0.6)]">
-                STARS
-              </span>
+            </h2>
 
-              <br />
+            <p className="mt-6 text-gray-300 text-lg">
 
-              <span className="text-pink-400">
-                Kids Edition
-              </span>
-
-            </h1>
-
-            <p className="mt-8 text-xl md:text-2xl text-gray-300 leading-relaxed max-w-2xl">
-
-              South Africa’s brightest young stars compete for fame,
-              prizes and the spotlight.
+              View finalists, rankings and competition updates.
 
             </p>
 
-            {/* INFO */}
-            <div className="mt-10 grid sm:grid-cols-3 gap-5">
+          </Link>
 
-              <div className="rounded-3xl border border-pink-500/20 bg-pink-500/10 p-6">
+          {/* KIDS EDITION */}
+          <Link
+            href="/kids-edition"
+            className="group rounded-[40px] border border-pink-500/20 bg-pink-500/10 backdrop-blur-xl p-12 hover:-translate-y-2 hover:border-pink-400 transition duration-300 shadow-[0_0_50px_rgba(255,0,150,0.15)]"
+          >
 
-                <h3 className="text-4xl font-black text-pink-400">
-                  R10K
-                </h3>
-
-                <p className="mt-2 text-gray-300">
-                  Starting Prize
-                </p>
-
-              </div>
-
-              <div className="rounded-3xl border border-cyan-500/20 bg-cyan-500/10 p-6">
-
-                <h3 className="text-4xl font-black text-cyan-400">
-                  2-17
-                </h3>
-
-                <p className="mt-2 text-gray-300">
-                  Ages Open
-                </p>
-
-              </div>
-
-              <div className="rounded-3xl border border-yellow-500/20 bg-yellow-500/10 p-6">
-
-                <h3 className="text-4xl font-black text-yellow-400">
-                  MAY 29
-                </h3>
-
-                <p className="mt-2 text-gray-300">
-                  Entries Close
-                </p>
-
-              </div>
-
+            <div className="text-6xl mb-6">
+              🎤
             </div>
 
-            {/* BUTTONS */}
-            <div className="mt-12 flex flex-wrap gap-5">
+            <h2 className="text-4xl font-black text-pink-400 leading-tight">
 
-              <Link
-                href="/kids-edition"
-                className="px-10 py-5 rounded-2xl bg-pink-500 hover:bg-pink-400 transition text-white font-black text-lg shadow-[0_0_40px_rgba(255,0,150,0.5)]"
-              >
-                ENTER NOW
-              </Link>
+              TikTok Stars
+              <br />
+              Kids Edition
 
-              <Link
-                href="/leaderboard"
-                className="px-10 py-5 rounded-2xl border border-white/10 bg-white/5 hover:border-cyan-400 transition font-black text-lg"
-              >
-                VIEW LEADERBOARD
-              </Link>
+            </h2>
 
-            </div>
+            <p className="mt-6 text-gray-300 text-lg">
 
-          </div>
+              Entries are officially open now.
 
-          {/* RIGHT */}
-          <div className="relative">
+            </p>
 
-            <div className="rounded-[50px] overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(255,0,150,0.3)]">
-
-              <img
-                src="/poster.jpg"
-                alt="TikTok Stars"
-                className="w-full h-auto object-cover"
-              />
-
-            </div>
-
-          </div>
+          </Link>
 
         </div>
 
-      </section>
+      </div>
 
     </main>
   );
