@@ -34,7 +34,7 @@ export default function Season2AdminPage() {
     const { data } = await supabase
       .from("season2_finalists")
       .select("*")
-      .order("id");
+      .order("name", { ascending: true });
 
     if (data) {
       setFinalists(data);
@@ -51,16 +51,21 @@ export default function Season2AdminPage() {
 
     if (!file) return;
 
-    const fileName = `finalist-${finalistId}-${Date.now()}`;
+    const fileExt = file.name.split(".").pop();
 
-    const { error: uploadError } = await supabase.storage
+    const fileName = `finalist-${finalistId}-${Date.now()}.${fileExt}`;
+
+    const { error } = await supabase.storage
       .from("season2")
-      .upload(fileName, file);
+      .upload(fileName, file, {
+        cacheControl: "3600",
+        upsert: true,
+      });
 
-    if (uploadError) {
+    if (error) {
 
-      console.log(uploadError);
-      alert("Upload failed");
+      console.log(error);
+      alert(error.message);
       return;
 
     }
@@ -71,14 +76,24 @@ export default function Season2AdminPage() {
       .from("season2")
       .getPublicUrl(fileName);
 
-    await supabase
+    const { error: updateError } = await supabase
       .from("season2_finalists")
       .update({
         image_url: publicUrl,
       })
       .eq("id", finalistId);
 
+    if (updateError) {
+
+      console.log(updateError);
+      alert(updateError.message);
+      return;
+
+    }
+
     fetchFinalists();
+
+    alert("Image uploaded successfully");
 
   };
 
@@ -156,10 +171,12 @@ export default function Season2AdminPage() {
                 {finalist.name}
               </h2>
 
+              {/* UPLOAD */}
               <div className="mt-6">
 
                 <input
                   type="file"
+                  accept="image/*"
                   onChange={(e) =>
                     uploadImage(e, finalist.id)
                   }
