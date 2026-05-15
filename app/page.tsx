@@ -23,12 +23,12 @@ export default function HomePage() {
       <div className="w-full max-w-6xl mx-auto text-center pt-24">
 
         {/* LOGO */}
-        <div className="mb-16">
+        <div className="mb-12">
 
           <img
             src="/tts-logo.jpg"
             alt="TikTok Stars"
-            className="w-full max-w-4xl mx-auto"
+            className="w-full max-w-md mx-auto"
           />
 
         </div>
