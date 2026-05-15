@@ -67,7 +67,7 @@ export default function HomePage() {
               </Link>
 
               <Link
-                href="/kids-edition/register"
+                href="/kids-edition"
                 className="hover:text-cyan-300 transition duration-300"
               >
                 Kids Edition
