@@ -12,7 +12,6 @@ const supabase = createClient(
 export default function VotePage() {
 
   const [contestants, setContestants] = useState<any[]>([]);
-  const [loadingVote, setLoadingVote] = useState<number | null>(null);
 
   useEffect(() => {
     fetchContestants();
@@ -33,46 +32,6 @@ export default function VotePage() {
     }
   };
 
-  const voteForContestant = async (
-    id: number,
-    currentVotes: number
-  ) => {
-
-    const voteKey = `voted_${id}`;
-
-    const alreadyVoted = localStorage.getItem(voteKey);
-
-    if (alreadyVoted) {
-      alert("You have already voted for this contestant today.");
-      return;
-    }
-
-    setLoadingVote(id);
-
-    const { error } = await supabase
-      .from("contestants")
-      .update({
-        votes: currentVotes + 1,
-      })
-      .eq("id", id);
-
-    if (error) {
-
-      console.log(error);
-      alert("Vote failed.");
-
-    } else {
-
-      localStorage.setItem(voteKey, "true");
-
-      alert("Vote submitted successfully!");
-
-      fetchContestants();
-    }
-
-    setLoadingVote(null);
-  };
-
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden">
 
@@ -86,17 +45,25 @@ export default function VotePage() {
       </div>
 
       {/* HEADER */}
-      <section className="px-6 lg:px-16 pt-20 pb-10">
+      <section className="px-6 lg:px-16 pt-20 pb-10 text-center">
 
-        <div className="max-w-7xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto">
 
           <h1 className="text-6xl md:text-8xl font-black text-pink-400">
-            VOTE NOW
+            PUBLIC VOTING
           </h1>
 
-          <p className="mt-6 text-xl text-gray-300">
-            Support your favourite contestants.
+          <p className="mt-6 text-2xl text-gray-300">
+            Voting will officially open soon.
           </p>
+
+          <div className="mt-8 inline-flex px-8 py-4 rounded-full border border-yellow-500/30 bg-yellow-500/10">
+
+            <span className="font-bold text-yellow-300 text-lg">
+              🚀 Stay tuned for voting announcements
+            </span>
+
+          </div>
 
         </div>
 
@@ -111,7 +78,7 @@ export default function VotePage() {
 
             <div
               key={contestant.id}
-              className="rounded-[35px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl hover:-translate-y-2 transition duration-300"
+              className="rounded-[35px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl"
             >
 
               {/* IMAGE */}
@@ -168,13 +135,6 @@ export default function VotePage() {
                     {contestant.category}
                   </p>
 
-                  <p>
-                    <span className="text-lime-400 font-bold">
-                      Votes:
-                    </span>{" "}
-                    {contestant.votes || 0}
-                  </p>
-
                 </div>
 
                 {/* BUTTONS */}
@@ -188,20 +148,10 @@ export default function VotePage() {
                   </Link>
 
                   <button
-                    onClick={() =>
-                      voteForContestant(
-                        contestant.id,
-                        contestant.votes || 0
-                      )
-                    }
-                    disabled={loadingVote === contestant.id}
-                    className="flex-1 px-5 py-4 rounded-2xl bg-pink-500 hover:bg-pink-400 transition font-black disabled:opacity-50"
+                    disabled
+                    className="flex-1 px-5 py-4 rounded-2xl bg-gray-700 text-gray-400 font-black cursor-not-allowed"
                   >
-
-                    {loadingVote === contestant.id
-                      ? "VOTING..."
-                      : "VOTE"}
-
+                    VOTING CLOSED
                   </button>
 
                 </div>
