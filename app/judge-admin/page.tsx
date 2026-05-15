@@ -42,7 +42,7 @@ export default function JudgeAdminPage() {
 
   };
 
-  const uploadImage = async (
+  const uploadVideo = async (
     e: any,
     judgeId: number
   ) => {
@@ -79,7 +79,7 @@ export default function JudgeAdminPage() {
     const { error: updateError } = await supabase
       .from("fan_favorite_judges")
       .update({
-        image_url: publicUrl,
+        video_url: publicUrl,
       })
       .eq("id", judgeId);
 
@@ -93,7 +93,7 @@ export default function JudgeAdminPage() {
 
     fetchJudges();
 
-    alert("Image uploaded successfully");
+    alert("Video uploaded successfully");
 
   };
 
@@ -143,21 +143,24 @@ export default function JudgeAdminPage() {
             className="rounded-[35px] border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden"
           >
 
-            {/* IMAGE */}
-            <div className="h-[320px] overflow-hidden bg-black/30">
+            {/* VIDEO */}
+            <div className="h-[420px] overflow-hidden bg-black">
 
-              {judge.image_url ? (
+              {judge.video_url ? (
 
-                <img
-                  src={judge.image_url}
-                  alt={judge.name}
+                <video
+                  src={judge.video_url}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
                   className="w-full h-full object-cover"
                 />
 
               ) : (
 
                 <div className="w-full h-full flex items-center justify-center text-gray-500 font-bold">
-                  NO IMAGE
+                  NO VIDEO
                 </div>
 
               )}
@@ -176,9 +179,9 @@ export default function JudgeAdminPage() {
 
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="video/mp4,video/mov"
                   onChange={(e) =>
-                    uploadImage(e, judge.id)
+                    uploadVideo(e, judge.id)
                   }
                   className="w-full"
                 />
