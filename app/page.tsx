@@ -4,7 +4,8 @@ import TopButtons from "./components/TopButtons";
 export default function HomePage() {
 
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden flex items-center justify-center px-6 py-16">
+    <main className="min-h-screen bg-black text-white overflow-hidden px-6 py-16">
+
       <TopButtons />
 
       {/* BACKGROUND */}
@@ -19,41 +20,21 @@ export default function HomePage() {
       </div>
 
       {/* CONTENT */}
-      <div className="w-full max-w-5xl text-center">
+      <div className="w-full max-w-6xl mx-auto text-center pt-24">
 
         {/* LOGO */}
-        <div className="mb-14">
+        <div className="mb-16">
 
           <img
-            src="/poster.jpg"
+            src="/tts-logo.jpg"
             alt="TikTok Stars"
-            className="w-full max-w-2xl mx-auto rounded-[40px] border border-white/10 shadow-[0_0_80px_rgba(255,0,150,0.3)]"
+            className="w-full max-w-4xl mx-auto"
           />
 
         </div>
 
-        {/* TITLE */}
-        <div className="mb-14">
-
-          <h1 className="text-5xl md:text-7xl font-black text-white leading-tight">
-
-            SOUTH AFRICA'S
-            <br />
-
-            <span className="text-pink-400">
-              BIGGEST
-            </span>
-
-            <br />
-
-            TALENT PLATFORM
-
-          </h1>
-
-        </div>
-
         {/* BUTTONS */}
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
 
           {/* SEASON 2 */}
           <Link
@@ -106,6 +87,17 @@ export default function HomePage() {
             </p>
 
           </Link>
+
+        </div>
+
+        {/* POSTER */}
+        <div className="mt-20">
+
+          <img
+            src="/poster.jpg"
+            alt="TikTok Stars Poster"
+            className="w-full max-w-2xl mx-auto rounded-[40px] border border-white/10 shadow-[0_0_80px_rgba(255,0,150,0.3)]"
+          />
 
         </div>
 
