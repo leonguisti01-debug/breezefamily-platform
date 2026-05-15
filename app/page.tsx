@@ -4,11 +4,22 @@ import TopButtons from "./components/TopButtons";
 export default function HomePage() {
 
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden px-6 py-16">
+    <main className="min-h-screen text-white overflow-hidden relative">
 
       <TopButtons />
 
-      {/* BACKGROUND */}
+      {/* FIXED BACKGROUND IMAGE */}
+      <div
+        className="fixed inset-0 -z-20 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/background.jpg')",
+        }}
+      />
+
+      {/* DARK OVERLAY */}
+      <div className="fixed inset-0 -z-10 bg-black/70" />
+
+      {/* NEON GLOW */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
 
         <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-pink-500/20 blur-[160px] rounded-full"></div>
@@ -20,7 +31,7 @@ export default function HomePage() {
       </div>
 
       {/* CONTENT */}
-      <div className="w-full max-w-6xl mx-auto text-center pt-24">
+      <div className="w-full max-w-6xl mx-auto text-center px-6 py-32">
 
         {/* BUTTONS */}
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
