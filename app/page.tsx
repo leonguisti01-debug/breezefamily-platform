@@ -19,47 +19,72 @@ export default function HomePage() {
       {/* NAVBAR */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-xl">
 
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-5 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 lg:px-10 py-5">
 
-          <div>
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-5">
 
-            <h1 className="text-3xl font-black leading-none">
+            {/* LOGO */}
+            <div className="text-center lg:text-left">
 
-              <span className="text-white">
-                TikTok
-              </span>
+              <h1 className="text-3xl font-black leading-none">
 
-              <span className="text-yellow-400">
-                Stars
-              </span>
+                <span className="text-white">
+                  TikTok
+                </span>
 
-            </h1>
+                <span className="text-yellow-400">
+                  Stars
+                </span>
 
-            <p className="text-pink-400 font-bold text-sm">
-              Kids Edition
-            </p>
+              </h1>
+
+              <p className="text-pink-400 font-bold text-sm">
+                Kids Edition
+              </p>
+
+            </div>
+
+            {/* NAV */}
+            <nav className="flex flex-wrap justify-center gap-3 text-sm font-bold">
+
+              <Link
+                href="/"
+                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-pink-500 transition"
+              >
+                HOME
+              </Link>
+
+              <Link
+                href="/vote"
+                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-pink-500 transition"
+              >
+                VOTE
+              </Link>
+
+              <Link
+                href="/leaderboard"
+                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400 transition"
+              >
+                LEADERBOARD
+              </Link>
+
+              <Link
+                href="/kids-edition"
+                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-yellow-400 transition"
+              >
+                ENTER
+              </Link>
+
+              <Link
+                href="/admin-login"
+                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-red-400 transition"
+              >
+                ADMIN
+              </Link>
+
+            </nav>
 
           </div>
-
-          <nav className="hidden lg:flex items-center gap-8 font-bold text-sm">
-
-            <Link href="/vote" className="hover:text-pink-400 transition">
-              Vote
-            </Link>
-
-            <Link href="/leaderboard" className="hover:text-cyan-400 transition">
-              Leaderboard
-            </Link>
-
-            <Link href="/kids-edition" className="hover:text-yellow-400 transition">
-              Enter
-            </Link>
-
-            <Link href="/admin-login" className="hover:text-red-400 transition">
-              Admin
-            </Link>
-
-          </nav>
 
         </div>
 
@@ -83,7 +108,7 @@ export default function HomePage() {
 
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-black leading-[0.9]">
+            <h1 className="text-5xl md:text-8xl font-black leading-[0.9]">
 
               <span className="text-white">
                 TikTok
@@ -103,7 +128,7 @@ export default function HomePage() {
 
             </h1>
 
-            <p className="mt-8 text-2xl text-gray-300 leading-relaxed max-w-2xl">
+            <p className="mt-8 text-xl md:text-2xl text-gray-300 leading-relaxed max-w-2xl">
 
               South Africa’s brightest young stars compete for fame,
               prizes and the spotlight.
@@ -184,65 +209,6 @@ export default function HomePage() {
               />
 
             </div>
-
-            {/* FLOATING CARDS */}
-            <div className="absolute -bottom-10 -left-10 rounded-3xl bg-black/70 border border-pink-500/20 backdrop-blur-xl p-6">
-
-              <h3 className="text-4xl font-black text-pink-400">
-                LIVE
-              </h3>
-
-              <p className="mt-2 text-gray-300">
-                Auditions Open
-              </p>
-
-            </div>
-
-            <div className="absolute -top-10 -right-10 rounded-3xl bg-black/70 border border-yellow-500/20 backdrop-blur-xl p-6">
-
-              <h3 className="text-4xl font-black text-yellow-400">
-                2026
-              </h3>
-
-              <p className="mt-2 text-gray-300">
-                Competition
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* CTA */}
-      <section className="px-6 lg:px-16 pb-32">
-
-        <div className="max-w-5xl mx-auto rounded-[50px] border border-pink-500/20 bg-gradient-to-r from-pink-500/20 to-cyan-500/20 backdrop-blur-xl p-16 text-center">
-
-          <h2 className="text-5xl md:text-7xl font-black text-white leading-tight">
-
-            SHOW YOUR TALENT.
-            <br />
-            SHINE LIKE A STAR.
-
-          </h2>
-
-          <p className="mt-8 text-2xl text-gray-300">
-
-            This is your moment to be seen.
-
-          </p>
-
-          <div className="mt-12">
-
-            <Link
-              href="/kids-edition"
-              className="inline-flex px-12 py-6 rounded-2xl bg-pink-500 hover:bg-pink-400 transition text-white font-black text-2xl shadow-[0_0_50px_rgba(255,0,150,0.5)]"
-            >
-              ENTER COMPETITION
-            </Link>
 
           </div>
 
