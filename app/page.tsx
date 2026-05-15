@@ -2,24 +2,20 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen text-white relative overflow-hidden">
-
-      {/* FULL BACKGROUND */}
-      <div
-        className="fixed inset-0 -z-50"
-        style={{
-          backgroundImage: "url('/bg.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      />
-
-      {/* PAGE CONTENT */}
-      <div className="relative z-10">
+    <main
+      className="min-h-screen text-white"
+      style={{
+        backgroundImage: "url('/bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      {/* DARK OVERLAY */}
+      <div className="min-h-screen bg-black/55">
 
         {/* NAVBAR */}
-        <header className="w-full max-w-7xl mx-auto px-6 py-8 flex flex-col lg:flex-row items-center justify-between gap-8">
+        <header className="max-w-7xl mx-auto px-6 py-8 flex flex-col lg:flex-row items-center justify-between gap-8">
 
           {/* LOGO */}
           <div className="flex items-center gap-5">
@@ -27,17 +23,17 @@ export default function HomePage() {
             <img
               src="/logo.png"
               alt="TikTok Stars"
-              className="w-[120px] h-auto"
+              className="w-[110px]"
             />
 
             <div>
 
-              <h1 className="text-3xl font-black leading-none">
+              <h1 className="text-3xl font-black">
                 <span className="text-cyan-300">TIKTOK</span>{" "}
                 <span className="text-pink-400">STARS</span>
               </h1>
 
-              <p className="text-xs uppercase tracking-[3px] text-white mt-1">
+              <p className="text-sm tracking-[4px] uppercase text-white/80">
                 Kids Talent Search
               </p>
 
@@ -46,11 +42,11 @@ export default function HomePage() {
           </div>
 
           {/* MENU */}
-          <nav className="flex flex-wrap justify-center items-center gap-5 text-xs md:text-sm uppercase font-bold tracking-[2px]">
+          <nav className="flex flex-wrap justify-center gap-8 text-sm font-bold uppercase tracking-[2px]">
 
             <Link
               href="/"
-              className="text-pink-300 hover:text-cyan-300 transition"
+              className="text-pink-400 hover:text-cyan-300 transition"
             >
               Home
             </Link>
@@ -81,32 +77,29 @@ export default function HomePage() {
         </header>
 
         {/* HERO */}
-        <section className="w-full max-w-7xl mx-auto px-6 pt-20 pb-24">
+        <section className="max-w-7xl mx-auto px-6 py-24">
 
           <div className="max-w-3xl">
 
             <h2 className="text-5xl md:text-8xl font-black uppercase leading-[0.95]">
-
               BE THE NEXT
-
               <br />
 
               <span className="bg-gradient-to-r from-cyan-300 to-pink-400 text-transparent bg-clip-text">
                 TIKTOK STAR!
               </span>
-
             </h2>
 
             <p className="mt-8 text-2xl md:text-3xl font-black uppercase">
               Sing. Dance. Perform. Shine!
             </p>
 
-            <p className="mt-6 text-lg md:text-xl text-white max-w-xl leading-relaxed">
+            <p className="mt-6 text-lg md:text-xl text-white/90 leading-relaxed max-w-xl">
               South Africa’s ultimate live talent competition for young stars.
             </p>
 
             {/* FEATURES */}
-            <div className="mt-10 space-y-5 text-base md:text-lg">
+            <div className="mt-10 space-y-5 text-lg">
 
               <div className="flex items-center gap-4">
                 <div className="w-7 h-7 rounded-full bg-pink-500 flex items-center justify-center">
@@ -139,14 +132,14 @@ export default function HomePage() {
 
               <Link
                 href="/kids-edition"
-                className="px-8 md:px-10 py-4 md:py-5 rounded-2xl bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white font-black text-lg md:text-xl hover:scale-105 transition"
+                className="px-10 py-5 rounded-2xl bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white font-black text-xl hover:scale-105 transition"
               >
                 ENTER NOW
               </Link>
 
               <Link
                 href="/season-2-finale"
-                className="px-8 md:px-10 py-4 md:py-5 rounded-2xl border border-cyan-300 text-cyan-300 font-black text-lg md:text-xl hover:bg-cyan-300 hover:text-black transition"
+                className="px-10 py-5 rounded-2xl border border-cyan-300 text-cyan-300 font-black text-xl hover:bg-cyan-300 hover:text-black transition"
               >
                 LIVE VOTING
               </Link>
@@ -164,7 +157,7 @@ export default function HomePage() {
             © 2026 TikTok Stars Kids Talent Search
           </p>
 
-          <p className="mt-3 uppercase tracking-[3px] text-sm">
+          <p className="mt-3 uppercase tracking-[4px] text-sm">
             Powered by The Breeze Family
           </p>
 
