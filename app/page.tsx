@@ -12,8 +12,8 @@ export default function HomePage() {
         backgroundAttachment: "fixed",
       }}
     >
-      {/* PREMIUM OVERLAY */}
-      <div className="min-h-screen bg-black/45 backdrop-blur-[1px]">
+      {/* DARK OVERLAY */}
+      <div className="min-h-screen bg-black/45">
 
         {/* GLOW EFFECTS */}
         <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-pink-500/20 blur-[180px] rounded-full"></div>
@@ -57,7 +57,7 @@ export default function HomePage() {
             </div>
 
             {/* MENU */}
-            <nav className="flex flex-wrap justify-center gap-6 md:gap-10 text-xs md:text-sm uppercase font-bold tracking-[2px]">
+            <nav className="flex flex-wrap justify-center gap-8 md:gap-10 text-xs md:text-sm uppercase font-bold tracking-[2px]">
 
               <Link
                 href="/"
@@ -100,11 +100,13 @@ export default function HomePage() {
 
             <div className="max-w-3xl">
 
+              {/* TOP TAG */}
               <div className="inline-block px-5 py-2 rounded-full border border-pink-400/40 bg-black/30 backdrop-blur-md text-sm uppercase tracking-[4px] text-pink-300 mb-8">
                 South Africa's Ultimate Talent Search
               </div>
 
-              <h2 className="text-5xl md:text-8xl font-black uppercase leading-[0.92]">
+              {/* MAIN TITLE */}
+              <h2 className="text-6xl md:text-8xl font-black uppercase leading-[0.92]">
 
                 BE THE NEXT
 
@@ -116,10 +118,12 @@ export default function HomePage() {
 
               </h2>
 
+              {/* SUBTITLE */}
               <p className="mt-8 text-2xl md:text-3xl font-black uppercase text-white">
                 Sing. Dance. Perform. Shine!
               </p>
 
+              {/* DESCRIPTION */}
               <p className="mt-6 text-lg md:text-2xl text-white/90 leading-relaxed max-w-2xl">
                 South Africa’s ultimate live talent competition for young stars.
               </p>
