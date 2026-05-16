@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.breezefamily.co.za
+
+# Sitemaps
+Sitemap: https://www.breezefamily.co.za/sitemap.xml
