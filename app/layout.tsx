@@ -1,8 +1,9 @@
 import "./globals.css";
+import TopButtons from "./components/TopButtons";
 
 export const metadata = {
-  title: "TikTok Stars",
-  description: "Kids Talent Search",
+  title: "Breeze Family",
+  description: "Entertainment • Media • Merch",
 };
 
 export default function RootLayout({
@@ -12,7 +13,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+
+      <body className="bg-black text-white">
+
+        {/* GLOBAL NAVIGATION */}
+        <TopButtons />
+
+        {/* PAGE CONTENT */}
+        {children}
+
+      </body>
+
     </html>
   );
 }
