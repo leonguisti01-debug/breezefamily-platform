@@ -11,33 +11,30 @@ const supabase = createClient(
 export default function Season2FinalePage() {
   const [contestants, setContestants] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
   const [message, setMessage] = useState("");
 
-  /* LOAD */
   useEffect(() => {
     fetchContestants();
   }, []);
 
   const fetchContestants = async () => {
     const { data } = await supabase
-      .from("season2_contestants")
+      .from("season2_finalists")
       .select("*")
-      .eq("active", true)
-      .order("votes", { ascending: false })
-      .limit(10);
+      .eq("eliminated", false)
+      .order("votes", { ascending: false });
 
-    if (data) setContestants(data);
+    if (data) {
+      setContestants(data);
+    }
 
     setLoading(false);
   };
 
-  /* VOTE */
   const voteForContestant = async (
     contestantId: number,
     currentVotes: number
   ) => {
-    /* LOCAL PROTECTION */
     const hasVoted =
       localStorage.getItem("season2_voted");
 
@@ -53,27 +50,13 @@ export default function Season2FinalePage() {
       return;
     }
 
-    /* SAVE VOTE */
-    const { error } = await supabase
-      .from("season2_votes")
-      .insert([
-        {
-          contestant_id: contestantId,
-          ip_address: "browser_vote",
-        },
-      ]);
-
-    if (error) return;
-
-    /* UPDATE COUNT */
     await supabase
-      .from("season2_contestants")
+      .from("season2_finalists")
       .update({
         votes: currentVotes + 1,
       })
       .eq("id", contestantId);
 
-    /* LOCK */
     localStorage.setItem(
       "season2_voted",
       "true"
@@ -111,7 +94,6 @@ export default function Season2FinalePage() {
         backgroundAttachment: "fixed",
       }}
     >
-      {/* OVERLAY */}
       <div className="min-h-screen bg-black/50">
 
         {/* MESSAGE */}
@@ -167,7 +149,6 @@ export default function Season2FinalePage() {
                   className="flex items-center justify-between gap-4 p-4 rounded-2xl bg-black/30 border border-white/10"
                 >
 
-                  {/* LEFT */}
                   <div className="flex items-center gap-4">
 
                     <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400 to-pink-500 text-black font-black flex items-center justify-center">
@@ -176,24 +157,27 @@ export default function Season2FinalePage() {
 
                     <img
                       src={
-                        contestant.photo_url ||
+                        contestant.image_url ||
                         "/contestant-placeholder.jpg"
                       }
-                      alt={contestant.full_name}
+                      alt={contestant.name}
                       className="w-14 h-14 rounded-full object-cover"
                     />
 
                     <div>
 
                       <h3 className="font-black uppercase text-lg">
-                        {contestant.full_name}
+                        {contestant.name}
                       </h3>
+
+                      <p className="text-white/60 text-sm uppercase">
+                        {contestant.status || "safe"}
+                      </p>
 
                     </div>
 
                   </div>
 
-                  {/* VOTES */}
                   <div className="text-right">
 
                     <p className="text-white/60 uppercase text-xs tracking-[3px]">
@@ -215,7 +199,7 @@ export default function Season2FinalePage() {
 
         </section>
 
-        {/* TOP 10 */}
+        {/* TOP 10 CARDS */}
         <section className="relative z-20 px-4 md:px-6 pb-24">
 
           <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
@@ -234,19 +218,28 @@ export default function Season2FinalePage() {
                 {/* IMAGE */}
                 <img
                   src={
-                    contestant.photo_url ||
+                    contestant.image_url ||
                     "/contestant-placeholder.jpg"
                   }
-                  alt={contestant.full_name}
+                  alt={contestant.name}
                   className="w-full max-w-[180px] sm:max-w-[220px] md:max-w-[300px] rounded-3xl object-cover"
                 />
 
                 {/* NAME */}
                 <h2 className="mt-5 text-2xl md:text-3xl font-black uppercase">
-                  {contestant.full_name}
+                  {contestant.name}
                 </h2>
 
-                {/* VOTES */}
+                {/* STATUS */}
+                <div className="mt-3 px-5 py-2 rounded-2xl bg-white/10 border border-white/10">
+
+                  <p className="uppercase tracking-[3px] text-xs text-white">
+                    {contestant.status || "safe"}
+                  </p>
+
+                </div>
+
+                {/* LIVE VOTES */}
                 <div className="mt-5 px-6 py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20">
 
                   <p className="text-cyan-300 uppercase tracking-[3px] text-xs">
