@@ -1,311 +1,87 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import TopButtons from "@/components/TopButtons";
 
 export default function FanFavoriteJudgePage() {
-
-  const [judges, setJudges] = useState<any[]>([]);
-  const [votes, setVotes] = useState<any>({});
-  const [hasVoted, setHasVoted] = useState(false);
-  const [votingStatus, setVotingStatus] = useState("closed");
-
-  useEffect(() => {
-
-    fetchJudges();
-    fetchVotes();
-    fetchVotingStatus();
-
-    const voted = localStorage.getItem("judge-voted");
-
-    if (voted === "true") {
-      setHasVoted(true);
-    }
-
-  }, []);
-
-  const fetchVotingStatus = async () => {
-
-    const { data } = await supabase
-      .from("site_settings")
-      .select("*")
-      .eq("key", "judge_voting")
-      .single();
-
-    if (data) {
-      setVotingStatus(data.value);
-    }
-
-  };
-
-  const fetchJudges = async () => {
-
-    const { data } = await supabase
-      .from("fan_favorite_judges")
-      .select("*")
-      .eq("eliminated", false)
-      .order("name", { ascending: true });
-
-    if (data) {
-      setJudges(data);
-    }
-
-  };
-
-  const fetchVotes = async () => {
-
-    const { data } = await supabase
-      .from("fan_favorite_votes")
-      .select("*");
-
-    if (!data) return;
-
-    const totals: any = {};
-
-    data.forEach((vote) => {
-
-      if (!totals[vote.judge_id]) {
-        totals[vote.judge_id] = 0;
-      }
-
-      totals[vote.judge_id]++;
-
-    });
-
-    setVotes(totals);
-
-  };
-
-  const voteForJudge = async (
-    id: number
-  ) => {
-
-    if (votingStatus !== "open") {
-
-      alert("Voting is currently closed.");
-      return;
-
-    }
-
-    if (hasVoted) {
-
-      alert("You have already voted.");
-      return;
-
-    }
-
-    const { error } = await supabase
-      .from("fan_favorite_votes")
-      .insert([
-        {
-          judge_id: id,
-        },
-      ]);
-
-    if (error) {
-
-      console.log(error);
-      alert("Something went wrong.");
-
-    } else {
-
-      localStorage.setItem("judge-voted", "true");
-
-      setHasVoted(true);
-
-      fetchVotes();
-
-      alert("Vote submitted!");
-
-    }
-  };
-
-  const leaderboard = judges
-    .map((judge) => ({
-      ...judge,
-      totalVotes: votes[judge.id] || 0,
-    }))
-    .sort((a, b) => b.totalVotes - a.totalVotes);
-
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden px-6 py-16">
+    <main
+      className="min-h-screen text-white overflow-hidden"
+      style={{
+        backgroundImage: "url('/bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      {/* NAVBAR */}
+      <TopButtons />
 
-      {/* TOP BUTTONS */}
-      <div className="fixed top-6 left-6 right-6 z-50 flex justify-between">
+      {/* OVERLAY */}
+      <div className="min-h-screen bg-black/45">
 
-        <a
-          href="/"
-          className="px-6 py-3 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 hover:border-yellow-400 transition font-black text-white"
-        >
-          HOME
-        </a>
+        {/* HERO */}
+        <section className="relative z-20 px-6 pt-20 md:pt-32 pb-24">
 
-        <a
-          href="/judge-admin-login"
-          className="px-6 py-3 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 hover:border-yellow-400 transition font-black text-white"
-        >
-          ADMIN
-        </a>
+          <div className="max-w-7xl mx-auto text-center">
 
-      </div>
+            {/* TAG */}
+            <div className="inline-block px-5 py-2 rounded-full border border-green-400/40 bg-black/30 backdrop-blur-md text-sm uppercase tracking-[4px] text-green-300 mb-8">
+              Favorite Judge Vote
+            </div>
 
-      {/* BACKGROUND */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
+            {/* TITLE */}
+            <h1 className="text-5xl md:text-8xl font-black uppercase leading-[0.92]">
 
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-yellow-500/20 blur-[160px] rounded-full"></div>
+              VOTE FOR
 
-      </div>
+              <br />
 
-      {/* HEADER */}
-      <div className="max-w-6xl mx-auto text-center mb-10 pt-24">
+              <span className="bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
+                YOUR JUDGE
+              </span>
 
-        <h1 className="text-5xl md:text-8xl font-black text-yellow-400">
-          FAN FAVORITE JUDGE
-        </h1>
+            </h1>
 
-      </div>
+            {/* SUBTITLE */}
+            <p className="mt-8 text-2xl md:text-3xl font-black uppercase text-white">
+              Choose The Judge You Love Most
+            </p>
 
-      {/* VOTING STATUS */}
-      <div className="text-center mb-16">
-
-        <div
-          className={`inline-block px-10 py-5 rounded-2xl font-black text-2xl ${
-            votingStatus === "open"
-              ? "bg-green-500 text-black"
-              : "bg-red-500 text-white"
-          }`}
-        >
-
-          {votingStatus === "open"
-            ? "VOTING OPEN"
-            : "VOTING CLOSED"}
-
-        </div>
-
-      </div>
-
-      {/* LEADERBOARD */}
-      <div className="max-w-5xl mx-auto mb-20">
-
-        <div className="rounded-[40px] border border-white/10 bg-white/5 backdrop-blur-xl p-8">
-
-          <h2 className="text-4xl font-black text-yellow-400 mb-8 text-center">
-            LIVE LEADERBOARD
-          </h2>
-
-          <div className="space-y-4">
-
-            {leaderboard.map((judge, index) => (
-
-              <div
-                key={judge.id}
-                className="flex items-center justify-between rounded-2xl bg-black/40 border border-white/10 px-6 py-5"
-              >
-
-                <div className="flex items-center gap-5">
-
-                  <div className="text-3xl font-black text-yellow-400 w-[60px]">
-                    #{index + 1}
-                  </div>
-
-                  <h3 className="text-xl font-black text-white">
-                    {judge.name}
-                  </h3>
-
-                </div>
-
-                <div className="text-2xl font-black text-yellow-400">
-                  {judge.totalVotes} Votes
-                </div>
-
-              </div>
-
-            ))}
+            {/* DESCRIPTION */}
+            <p className="mt-6 text-lg md:text-2xl text-white/80 leading-relaxed max-w-3xl mx-auto">
+              Support your favorite judge and help crown the ultimate fan favorite.
+            </p>
 
           </div>
 
-        </div>
+        </section>
 
-      </div>
+        {/* JUDGES SECTION */}
+        <section className="relative z-20 px-6 pb-24">
 
-      {/* JUDGES */}
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-3 gap-10">
+          <div className="max-w-7xl mx-auto">
 
-        {judges.map((judge) => (
-
-          <div
-            key={judge.id}
-            className="rounded-[35px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl"
-          >
-
-            {/* VIDEO */}
-            <div className="aspect-video overflow-hidden bg-black">
-
-              {judge.video_url ? (
-
-                <video
-                  src={judge.video_url}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="w-full h-full object-contain bg-black"
-                />
-
-              ) : (
-
-                <div className="w-full h-full flex items-center justify-center text-gray-500 font-bold">
-                  NO VIDEO
-                </div>
-
-              )}
-
-            </div>
-
-            {/* INFO */}
-            <div className="p-6 text-center">
-
-              <h2 className="text-2xl font-black text-white">
-                {judge.name}
-              </h2>
-
-              <p className="mt-3 text-yellow-400 font-bold">
-                Votes: {votes[judge.id] || 0}
-              </p>
-
-              <button
-                onClick={() =>
-                  voteForJudge(judge.id)
-                }
-                disabled={
-                  hasVoted ||
-                  votingStatus !== "open"
-                }
-                className={`mt-6 w-full px-5 py-4 rounded-2xl font-black transition ${
-                  hasVoted || votingStatus !== "open"
-                    ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                    : "bg-yellow-500 hover:bg-yellow-400 text-black"
-                }`}
-              >
-
-                {votingStatus !== "open"
-                  ? "VOTING CLOSED"
-                  : hasVoted
-                  ? "VOTED"
-                  : "VOTE NOW"}
-
-              </button>
-
-            </div>
+            {/* KEEP YOUR EXISTING JUDGES CONTENT HERE */}
 
           </div>
 
-        ))}
+        </section>
+
+        {/* FOOTER */}
+        <footer className="relative z-20 border-t border-white/10 mt-10 bg-black/20 backdrop-blur-md">
+
+          <div className="max-w-7xl mx-auto px-6 py-10 text-center">
+
+            <p className="text-lg text-white/90">
+              © 2026 Favorite Judge Vote
+            </p>
+
+            <p className="mt-4 uppercase tracking-[5px] text-sm text-white/70">
+              Powered by The Breeze Family
+            </p>
+
+          </div>
+
+        </footer>
 
       </div>
 

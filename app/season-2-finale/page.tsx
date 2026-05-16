@@ -1,282 +1,87 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import TopButtons from "../components/TopButtons";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import TopButtons from "@/components/TopButtons";
 
 export default function Season2FinalePage() {
-
-  const [finalists, setFinalists] = useState<any[]>([]);
-  const [votes, setVotes] = useState<any>({});
-  const [hasVoted, setHasVoted] = useState(false);
-  const [votingStatus, setVotingStatus] = useState("closed");
-
-  useEffect(() => {
-
-    fetchFinalists();
-    fetchVotes();
-    fetchVotingStatus();
-
-    const voted = localStorage.getItem("season2-voted");
-
-    if (voted === "true") {
-      setHasVoted(true);
-    }
-
-  }, []);
-
-  const fetchVotingStatus = async () => {
-
-    const { data } = await supabase
-      .from("site_settings")
-      .select("*")
-      .eq("key", "season2_voting")
-      .single();
-
-    if (data) {
-      setVotingStatus(data.value);
-    }
-
-  };
-
-  const fetchFinalists = async () => {
-
-    const { data } = await supabase
-      .from("season2_finalists")
-      .select("*")
-      .eq("eliminated", false)
-      .order("name", { ascending: true });
-
-    if (data) {
-      setFinalists(data);
-    }
-
-  };
-
-  const fetchVotes = async () => {
-
-    const { data } = await supabase
-      .from("season2_votes")
-      .select("*");
-
-    if (!data) return;
-
-    const totals: any = {};
-
-    data.forEach((vote) => {
-
-      if (!totals[vote.finalist_id]) {
-        totals[vote.finalist_id] = 0;
-      }
-
-      totals[vote.finalist_id]++;
-
-    });
-
-    setVotes(totals);
-
-  };
-
-  const voteForFinalist = async (
-    id: number
-  ) => {
-
-    if (votingStatus !== "open") {
-
-      alert("Voting is currently closed.");
-      return;
-
-    }
-
-    if (hasVoted) {
-
-      alert("You have already voted.");
-      return;
-
-    }
-
-    const { error } = await supabase
-      .from("season2_votes")
-      .insert([
-        {
-          finalist_id: id,
-        },
-      ]);
-
-    if (error) {
-
-      console.log(error);
-      alert("Something went wrong.");
-
-    } else {
-
-      localStorage.setItem("season2-voted", "true");
-
-      setHasVoted(true);
-
-      fetchVotes();
-
-      alert("Vote submitted!");
-
-    }
-  };
-
-  const leaderboard = finalists
-    .map((finalist) => ({
-      ...finalist,
-      totalVotes: votes[finalist.id] || 0,
-    }))
-    .sort((a, b) => b.totalVotes - a.totalVotes);
-
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden px-6 py-16">
-
+    <main
+      className="min-h-screen text-white overflow-hidden"
+      style={{
+        backgroundImage: "url('/bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      {/* NAVBAR */}
       <TopButtons />
 
-      {/* BACKGROUND */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
+      {/* OVERLAY */}
+      <div className="min-h-screen bg-black/45">
 
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-cyan-500/20 blur-[160px] rounded-full"></div>
+        {/* HERO */}
+        <section className="relative z-20 px-6 pt-20 md:pt-32 pb-24">
 
-        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-pink-500/20 blur-[160px] rounded-full"></div>
+          <div className="max-w-7xl mx-auto text-center">
 
-      </div>
+            {/* TAG */}
+            <div className="inline-block px-5 py-2 rounded-full border border-cyan-400/40 bg-black/30 backdrop-blur-md text-sm uppercase tracking-[4px] text-cyan-300 mb-8">
+              Season 2 Finale
+            </div>
 
-      {/* HEADER */}
-      <div className="max-w-6xl mx-auto text-center mb-10 pt-24">
+            {/* TITLE */}
+            <h1 className="text-5xl md:text-8xl font-black uppercase leading-[0.92]">
 
-        <h1 className="text-5xl md:text-8xl font-black text-cyan-400">
-          SEASON 2 FINALE
-        </h1>
+              LIVE
 
-      </div>
+              <br />
 
-      {/* VOTING STATUS */}
-      <div className="text-center mb-16">
+              <span className="bg-gradient-to-r from-cyan-300 via-white to-pink-400 text-transparent bg-clip-text">
+                VOTING
+              </span>
 
-        <div
-          className={`inline-block px-10 py-5 rounded-2xl font-black text-2xl ${
-            votingStatus === "open"
-              ? "bg-green-500 text-black"
-              : "bg-red-500 text-white"
-          }`}
-        >
+            </h1>
 
-          {votingStatus === "open"
-            ? "VOTING OPEN"
-            : "VOTING CLOSED"}
+            {/* SUBTITLE */}
+            <p className="mt-8 text-2xl md:text-3xl font-black uppercase text-white">
+              Vote For Your Favorite Contestant
+            </p>
 
-        </div>
-
-      </div>
-
-      {/* LEADERBOARD */}
-      <div className="max-w-5xl mx-auto mb-20">
-
-        <div className="rounded-[40px] border border-white/10 bg-white/5 backdrop-blur-xl p-8">
-
-          <h2 className="text-4xl font-black text-pink-400 mb-8 text-center">
-            LIVE LEADERBOARD
-          </h2>
-
-          <div className="space-y-4">
-
-            {leaderboard.map((contestant, index) => (
-
-              <div
-                key={contestant.id}
-                className="flex items-center justify-between rounded-2xl bg-black/40 border border-white/10 px-6 py-5"
-              >
-
-                <div className="flex items-center gap-5">
-
-                  <div className="text-3xl font-black text-cyan-400 w-[60px]">
-                    #{index + 1}
-                  </div>
-
-                  <h3 className="text-xl font-black text-white">
-                    {contestant.name}
-                  </h3>
-
-                </div>
-
-                <div className="text-2xl font-black text-pink-400">
-                  {contestant.totalVotes} Votes
-                </div>
-
-              </div>
-
-            ))}
+            {/* DESCRIPTION */}
+            <p className="mt-6 text-lg md:text-2xl text-white/80 leading-relaxed max-w-3xl mx-auto">
+              Support your favorite performer and help decide who becomes the next TikTok Stars champion.
+            </p>
 
           </div>
 
-        </div>
+        </section>
 
-      </div>
+        {/* CONTESTANTS SECTION */}
+        <section className="relative z-20 px-6 pb-24">
 
-      {/* FINALISTS */}
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
+          <div className="max-w-7xl mx-auto">
 
-        {finalists.map((finalist) => (
-
-          <div
-            key={finalist.id}
-            className="rounded-[35px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl"
-          >
-
-            <div className="h-[320px] overflow-hidden">
-
-              <img
-                src={finalist.image_url}
-                alt={finalist.name}
-                className="w-full h-full object-cover"
-              />
-
-            </div>
-
-            <div className="p-6 text-center">
-
-              <h2 className="text-2xl font-black text-white">
-                {finalist.name}
-              </h2>
-
-              <p className="mt-3 text-cyan-400 font-bold">
-                Votes: {votes[finalist.id] || 0}
-              </p>
-
-              <button
-                onClick={() =>
-                  voteForFinalist(finalist.id)
-                }
-                disabled={
-                  hasVoted ||
-                  votingStatus !== "open"
-                }
-                className={`mt-6 w-full px-5 py-4 rounded-2xl font-black transition ${
-                  hasVoted || votingStatus !== "open"
-                    ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                    : "bg-pink-500 hover:bg-pink-400"
-                }`}
-              >
-
-                {votingStatus !== "open"
-                  ? "VOTING CLOSED"
-                  : hasVoted
-                  ? "VOTED"
-                  : "VOTE NOW"}
-
-              </button>
-
-            </div>
+            {/* KEEP YOUR EXISTING CONTESTANT CONTENT HERE */}
 
           </div>
 
-        ))}
+        </section>
+
+        {/* FOOTER */}
+        <footer className="relative z-20 border-t border-white/10 mt-10 bg-black/20 backdrop-blur-md">
+
+          <div className="max-w-7xl mx-auto px-6 py-10 text-center">
+
+            <p className="text-lg text-white/90">
+              © 2026 TikTok Stars Season 2
+            </p>
+
+            <p className="mt-4 uppercase tracking-[5px] text-sm text-white/70">
+              Powered by The Breeze Family
+            </p>
+
+          </div>
+
+        </footer>
 
       </div>
 
