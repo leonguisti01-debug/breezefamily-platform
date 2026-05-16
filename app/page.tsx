@@ -1,3 +1,5 @@
+import TopButtons from "./components/TopButtons";
+
 export default function HomePage() {
   return (
     <main
@@ -7,6 +9,9 @@ export default function HomePage() {
           "radial-gradient(circle at top, rgba(50,255,50,0.18), transparent 35%), #050505",
       }}
     >
+      {/* HEADER */}
+      <TopButtons />
+
       {/* GLOW EFFECTS */}
       <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] bg-green-500/20 blur-[180px] rounded-full"></div>
 
@@ -96,41 +101,6 @@ export default function HomePage() {
               >
                 SHOP MERCH — COMING SOON
               </button>
-
-            </div>
-
-            {/* FEATURES */}
-            <div className="mt-14 space-y-5 text-lg">
-
-              <div className="flex items-center gap-4 bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl px-5 py-4">
-
-                <div className="w-8 h-8 rounded-full bg-green-400 text-black flex items-center justify-center font-black">
-                  ✓
-                </div>
-
-                Live Talent Competitions
-
-              </div>
-
-              <div className="flex items-center gap-4 bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl px-5 py-4">
-
-                <div className="w-8 h-8 rounded-full bg-green-400 text-black flex items-center justify-center font-black">
-                  ✓
-                </div>
-
-                Exclusive Breeze Family Merch
-
-              </div>
-
-              <div className="flex items-center gap-4 bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl px-5 py-4">
-
-                <div className="w-8 h-8 rounded-full bg-green-400 text-black flex items-center justify-center font-black">
-                  ✓
-                </div>
-
-                Creator Community & Fan Voting
-
-              </div>
 
             </div>
 
