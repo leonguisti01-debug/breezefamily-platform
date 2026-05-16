@@ -37,7 +37,7 @@ export default function AdminPage() {
   /* SEASON 2 */
   const fetchSeason2Contestants = async () => {
     const { data } = await supabase
-      .from("season2_contestants")
+      .from("season2_finalists")
       .select("*")
       .order("votes", { ascending: false });
 
@@ -46,7 +46,7 @@ export default function AdminPage() {
     setLoading(false);
   };
 
-  /* UPDATE STATUS */
+  /* UPDATE KIDS STATUS */
   const updateStatus = async (
     id: number,
     status: string
@@ -59,7 +59,7 @@ export default function AdminPage() {
     fetchContestants();
   };
 
-  /* ADD SEASON 2 */
+  /* ADD SEASON 2 FINALIST */
   const addSeason2Contestant = async (
     e: React.FormEvent
   ) => {
@@ -84,11 +84,14 @@ export default function AdminPage() {
     }
 
     await supabase
-      .from("season2_contestants")
+      .from("season2_finalists")
       .insert([
         {
-          full_name: name,
-          photo_url: photoUrl,
+          name: name,
+          image_url: photoUrl,
+          votes: 0,
+          eliminated: false,
+          status: "safe",
         },
       ]);
 
@@ -96,6 +99,47 @@ export default function AdminPage() {
     setPhoto(null);
 
     fetchSeason2Contestants();
+  };
+
+  /* UPDATE FINALIST STATUS */
+  const updateFinalistStatus = async (
+    id: number,
+    status: string,
+    eliminated: boolean
+  ) => {
+    await supabase
+      .from("season2_finalists")
+      .update({
+        status,
+        eliminated,
+      })
+      .eq("id", id);
+
+    fetchSeason2Contestants();
+  };
+
+  /* RESET VOTES */
+  const resetVotes = async () => {
+    const confirmReset = window.confirm(
+      "Are you sure you want to reset ALL Season 2 votes?"
+    );
+
+    if (!confirmReset) return;
+
+    await supabase
+      .from("season2_finalists")
+      .update({
+        votes: 0,
+      })
+      .neq("id", 0);
+
+    localStorage.removeItem(
+      "season2_voted"
+    );
+
+    fetchSeason2Contestants();
+
+    alert("All votes have been reset.");
   };
 
   if (loading) {
@@ -134,9 +178,21 @@ export default function AdminPage() {
         {/* SEASON 2 */}
         <section className="mt-20">
 
-          <h2 className="text-4xl font-black uppercase">
-            Season 2 Top 10
-          </h2>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+
+            <h2 className="text-4xl font-black uppercase">
+              Season 2 Top 10
+            </h2>
+
+            {/* RESET BUTTON */}
+            <button
+              onClick={resetVotes}
+              className="px-8 py-4 rounded-2xl bg-red-500/10 border border-red-400/20 text-red-300 font-black hover:bg-red-500/20 transition"
+            >
+              RESET ALL VOTES
+            </button>
+
+          </div>
 
           {/* FORM */}
           <form
@@ -148,7 +204,7 @@ export default function AdminPage() {
             <div>
 
               <label className="block mb-3 uppercase text-sm tracking-[3px] text-white/70">
-                Contestant Name
+                Finalist Name
               </label>
 
               <input
@@ -189,12 +245,12 @@ export default function AdminPage() {
               type="submit"
               className="w-full py-5 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-500 text-black font-black text-lg"
             >
-              ADD TO TOP 10
+              ADD FINALIST
             </button>
 
           </form>
 
-          {/* TOP 10 GRID */}
+          {/* FINALISTS */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
 
             {season2Contestants.map((contestant) => (
@@ -208,10 +264,10 @@ export default function AdminPage() {
 
                   <img
                     src={
-                      contestant.photo_url ||
+                      contestant.image_url ||
                       "/contestant-placeholder.jpg"
                     }
-                    alt={contestant.full_name}
+                    alt={contestant.name}
                     className="w-full h-full object-cover"
                   />
 
@@ -220,10 +276,27 @@ export default function AdminPage() {
                 {/* CONTENT */}
                 <div className="p-6 text-center">
 
-                  <h3 className="text-3xl font-black uppercase">
-                    {contestant.full_name}
+                  {/* STATUS */}
+                  <div
+                    className={`inline-block px-4 py-2 rounded-full text-xs uppercase tracking-[3px] border ${
+                      contestant.status === "safe"
+                        ? "bg-green-500/10 border-green-400/20 text-green-300"
+                        : contestant.status === "eliminated"
+                        ? "bg-red-500/10 border-red-400/20 text-red-300"
+                        : contestant.status === "re-instated"
+                        ? "bg-cyan-500/10 border-cyan-400/20 text-cyan-300"
+                        : "bg-white/10 border-white/10 text-white"
+                    }`}
+                  >
+                    {contestant.status || "safe"}
+                  </div>
+
+                  {/* NAME */}
+                  <h3 className="mt-5 text-3xl font-black uppercase">
+                    {contestant.name}
                   </h3>
 
+                  {/* VOTES */}
                   <div className="mt-5 px-5 py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20">
 
                     <p className="text-cyan-300 uppercase tracking-[3px] text-xs">
@@ -233,6 +306,53 @@ export default function AdminPage() {
                     <p className="text-3xl font-black mt-2">
                       {contestant.votes || 0}
                     </p>
+
+                  </div>
+
+                  {/* BUTTONS */}
+                  <div className="mt-8 grid grid-cols-1 gap-3">
+
+                    {/* SAFE */}
+                    <button
+                      onClick={() =>
+                        updateFinalistStatus(
+                          contestant.id,
+                          "safe",
+                          false
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-green-500/10 border border-green-400/20 hover:bg-green-500/20 transition"
+                    >
+                      Safe
+                    </button>
+
+                    {/* ELIMINATED */}
+                    <button
+                      onClick={() =>
+                        updateFinalistStatus(
+                          contestant.id,
+                          "eliminated",
+                          true
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-red-500/10 border border-red-400/20 hover:bg-red-500/20 transition"
+                    >
+                      Eliminated
+                    </button>
+
+                    {/* RE-INSTATED */}
+                    <button
+                      onClick={() =>
+                        updateFinalistStatus(
+                          contestant.id,
+                          "re-instated",
+                          false
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20 hover:bg-cyan-500/20 transition"
+                    >
+                      Re-Instated
+                    </button>
 
                   </div>
 
