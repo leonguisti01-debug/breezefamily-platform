@@ -10,43 +10,99 @@ const supabase = createClient(
 
 export default function AdminPage() {
   const [contestants, setContestants] = useState<any[]>([]);
+  const [season2Contestants, setSeason2Contestants] = useState<any[]>([]);
+
   const [loading, setLoading] = useState(true);
 
-  /* LOAD CONTESTANTS */
+  /* SEASON 2 FORM */
+  const [name, setName] = useState("");
+  const [photo, setPhoto] = useState<File | null>(null);
+
+  /* LOAD */
   useEffect(() => {
     fetchContestants();
+    fetchSeason2Contestants();
   }, []);
 
+  /* KIDS */
   const fetchContestants = async () => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("contestants")
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (!error && data) {
-      setContestants(data);
-    }
+    if (data) setContestants(data);
+  };
+
+  /* SEASON 2 */
+  const fetchSeason2Contestants = async () => {
+    const { data } = await supabase
+      .from("season2_contestants")
+      .select("*")
+      .order("votes", { ascending: false });
+
+    if (data) setSeason2Contestants(data);
 
     setLoading(false);
   };
 
   /* UPDATE STATUS */
-  const updateStatus = async (id: number, status: string) => {
-    const { error } = await supabase
+  const updateStatus = async (
+    id: number,
+    status: string
+  ) => {
+    await supabase
       .from("contestants")
       .update({ status })
       .eq("id", id);
 
-    if (!error) {
-      fetchContestants();
+    fetchContestants();
+  };
+
+  /* ADD SEASON 2 */
+  const addSeason2Contestant = async (
+    e: React.FormEvent
+  ) => {
+    e.preventDefault();
+
+    let photoUrl = "";
+
+    if (photo) {
+      const fileName = `${Date.now()}-${photo.name}`;
+
+      await supabase.storage
+        .from("contestant-photos")
+        .upload(fileName, photo);
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage
+        .from("contestant-photos")
+        .getPublicUrl(fileName);
+
+      photoUrl = publicUrl;
     }
+
+    await supabase
+      .from("season2_contestants")
+      .insert([
+        {
+          full_name: name,
+          photo_url: photoUrl,
+        },
+      ]);
+
+    setName("");
+    setPhoto(null);
+
+    fetchSeason2Contestants();
   };
 
   if (loading) {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
-        <h1 className="text-3xl font-black uppercase animate-pulse">
-          Loading Contestants...
+        <h1 className="text-3xl font-black uppercase">
+          Loading Admin...
         </h1>
       </main>
     );
@@ -54,158 +110,272 @@ export default function AdminPage() {
 
   return (
     <main
-      className="min-h-screen text-white overflow-hidden"
+      className="min-h-screen text-white"
       style={{
         background:
           "radial-gradient(circle at top, rgba(50,255,50,0.18), transparent 35%), #050505",
       }}
     >
-      {/* GLOW */}
-      <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] bg-green-500/20 blur-[180px] rounded-full"></div>
-
-      <div className="relative z-20 px-6 py-20 max-w-7xl mx-auto">
+      <div className="px-6 py-20 max-w-7xl mx-auto">
 
         {/* HEADER */}
-        <div className="mb-16">
+        <div>
 
           <p className="uppercase tracking-[4px] text-green-300 text-sm">
             Breeze Family
           </p>
 
           <h1 className="mt-3 text-5xl md:text-7xl font-black uppercase">
-            Contestant Management
+            Admin Dashboard
           </h1>
 
-          <p className="mt-5 text-white/70 text-xl">
-            Approve, manage and moderate contestant entries.
-          </p>
-
         </div>
 
-        {/* GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+        {/* SEASON 2 */}
+        <section className="mt-20">
 
-          {contestants.map((contestant) => (
-            <div
-              key={contestant.id}
-              className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden"
-            >
+          <h2 className="text-4xl font-black uppercase">
+            Season 2 Top 10
+          </h2>
 
-              {/* PHOTO */}
-              <div className="w-full aspect-square overflow-hidden">
+          {/* FORM */}
+          <form
+            onSubmit={addSeason2Contestant}
+            className="mt-10 bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-8 space-y-6"
+          >
 
-                <img
-                  src={
-                    contestant.photo_url ||
-                    "/contestant-placeholder.jpg"
-                  }
-                  alt={contestant.full_name}
-                  className="w-full h-full object-cover"
-                />
+            {/* NAME */}
+            <div>
 
-              </div>
+              <label className="block mb-3 uppercase text-sm tracking-[3px] text-white/70">
+                Contestant Name
+              </label>
 
-              {/* CONTENT */}
-              <div className="p-6">
-
-                {/* STATUS */}
-                <div className="inline-block px-4 py-2 rounded-full bg-green-500/10 border border-green-400/20 text-green-300 text-xs uppercase tracking-[3px]">
-                  {contestant.status || "pending"}
-                </div>
-
-                {/* NAME */}
-                <h2 className="mt-5 text-3xl font-black uppercase">
-                  {contestant.full_name}
-                </h2>
-
-                {/* INFO */}
-                <div className="mt-5 space-y-3 text-white/70">
-
-                  <p>
-                    <span className="text-white font-bold">Age:</span>{" "}
-                    {contestant.age}
-                  </p>
-
-                  <p>
-                    <span className="text-white font-bold">Talent:</span>{" "}
-                    {contestant.talent_category}
-                  </p>
-
-                  <p>
-                    <span className="text-white font-bold">
-                      TikTok:
-                    </span>{" "}
-                    @{contestant.tiktok_username}
-                  </p>
-
-                  <p>
-                    <span className="text-white font-bold">
-                      Guardian:
-                    </span>{" "}
-                    {contestant.guardian_name}
-                  </p>
-
-                </div>
-
-                {/* BUTTONS */}
-                <div className="mt-8 grid grid-cols-2 gap-3">
-
-                  <button
-                    onClick={() =>
-                      updateStatus(contestant.id, "approved")
-                    }
-                    className="py-3 rounded-2xl bg-green-500/10 border border-green-400/20 hover:bg-green-500/20 transition"
-                  >
-                    Approve
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      updateStatus(contestant.id, "declined")
-                    }
-                    className="py-3 rounded-2xl bg-red-500/10 border border-red-400/20 hover:bg-red-500/20 transition"
-                  >
-                    Decline
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      updateStatus(contestant.id, "through")
-                    }
-                    className="py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20 hover:bg-cyan-500/20 transition"
-                  >
-                    Through
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      updateStatus(contestant.id, "out")
-                    }
-                    className="py-3 rounded-2xl bg-yellow-500/10 border border-yellow-400/20 hover:bg-yellow-500/20 transition"
-                  >
-                    Out
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      updateStatus(
-                        contestant.id,
-                        "disqualified"
-                      )
-                    }
-                    className="col-span-2 py-3 rounded-2xl bg-pink-500/10 border border-pink-400/20 hover:bg-pink-500/20 transition"
-                  >
-                    Disqualified
-                  </button>
-
-                </div>
-
-              </div>
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) =>
+                  setName(e.target.value)
+                }
+                className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
+              />
 
             </div>
-          ))}
 
-        </div>
+            {/* PHOTO */}
+            <div>
+
+              <label className="block mb-3 uppercase text-sm tracking-[3px] text-white/70">
+                Upload Photo
+              </label>
+
+              <input
+                type="file"
+                required
+                accept="image/*"
+                onChange={(e) =>
+                  setPhoto(
+                    e.target.files?.[0] || null
+                  )
+                }
+                className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
+              />
+
+            </div>
+
+            {/* BUTTON */}
+            <button
+              type="submit"
+              className="w-full py-5 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-500 text-black font-black text-lg"
+            >
+              ADD TO TOP 10
+            </button>
+
+          </form>
+
+          {/* TOP 10 GRID */}
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+
+            {season2Contestants.map((contestant) => (
+              <div
+                key={contestant.id}
+                className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden"
+              >
+
+                {/* IMAGE */}
+                <div className="aspect-square overflow-hidden">
+
+                  <img
+                    src={
+                      contestant.photo_url ||
+                      "/contestant-placeholder.jpg"
+                    }
+                    alt={contestant.full_name}
+                    className="w-full h-full object-cover"
+                  />
+
+                </div>
+
+                {/* CONTENT */}
+                <div className="p-6 text-center">
+
+                  <h3 className="text-3xl font-black uppercase">
+                    {contestant.full_name}
+                  </h3>
+
+                  <div className="mt-5 px-5 py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20">
+
+                    <p className="text-cyan-300 uppercase tracking-[3px] text-xs">
+                      Live Votes
+                    </p>
+
+                    <p className="text-3xl font-black mt-2">
+                      {contestant.votes || 0}
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+            ))}
+
+          </div>
+
+        </section>
+
+        {/* KIDS */}
+        <section className="mt-24">
+
+          <h2 className="text-4xl font-black uppercase">
+            Kids Contestants
+          </h2>
+
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+
+            {contestants.map((contestant) => (
+              <div
+                key={contestant.id}
+                className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden"
+              >
+
+                {/* PHOTO */}
+                <div className="aspect-square overflow-hidden">
+
+                  <img
+                    src={
+                      contestant.photo_url ||
+                      "/contestant-placeholder.jpg"
+                    }
+                    alt={contestant.full_name}
+                    className="w-full h-full object-cover"
+                  />
+
+                </div>
+
+                {/* CONTENT */}
+                <div className="p-6">
+
+                  <div className="inline-block px-4 py-2 rounded-full bg-green-500/10 border border-green-400/20 text-green-300 text-xs uppercase tracking-[3px]">
+                    {contestant.status || "pending"}
+                  </div>
+
+                  <h2 className="mt-5 text-3xl font-black uppercase">
+                    {contestant.full_name}
+                  </h2>
+
+                  <div className="mt-5 space-y-3 text-white/70">
+
+                    <p>
+                      <span className="text-white font-bold">
+                        Age:
+                      </span>{" "}
+                      {contestant.age}
+                    </p>
+
+                    <p>
+                      <span className="text-white font-bold">
+                        TikTok:
+                      </span>{" "}
+                      @{contestant.tiktok_username}
+                    </p>
+
+                  </div>
+
+                  {/* BUTTONS */}
+                  <div className="mt-8 grid grid-cols-2 gap-3">
+
+                    <button
+                      onClick={() =>
+                        updateStatus(
+                          contestant.id,
+                          "approved"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-green-500/10 border border-green-400/20"
+                    >
+                      Approve
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateStatus(
+                          contestant.id,
+                          "declined"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-red-500/10 border border-red-400/20"
+                    >
+                      Decline
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateStatus(
+                          contestant.id,
+                          "through"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20"
+                    >
+                      Through
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateStatus(
+                          contestant.id,
+                          "out"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-yellow-500/10 border border-yellow-400/20"
+                    >
+                      Out
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateStatus(
+                          contestant.id,
+                          "disqualified"
+                        )
+                      }
+                      className="col-span-2 py-3 rounded-2xl bg-pink-500/10 border border-pink-400/20"
+                    >
+                      Disqualified
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+            ))}
+
+          </div>
+
+        </section>
 
       </div>
 

@@ -12,41 +12,82 @@ export default function Season2FinalePage() {
   const [contestants, setContestants] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  /* LOAD CONTESTANTS */
+  const [message, setMessage] = useState("");
+
+  /* LOAD */
   useEffect(() => {
     fetchContestants();
   }, []);
 
   const fetchContestants = async () => {
-    const { data, error } = await supabase
-      .from("contestants")
+    const { data } = await supabase
+      .from("season2_contestants")
       .select("*")
-      .in("status", ["approved", "through"])
+      .eq("active", true)
       .order("votes", { ascending: false })
       .limit(10);
 
-    if (!error && data) {
-      setContestants(data);
-    }
+    if (data) setContestants(data);
 
     setLoading(false);
   };
 
-  /* LIVE VOTE */
+  /* VOTE */
   const voteForContestant = async (
     contestantId: number,
     currentVotes: number
   ) => {
+    /* LOCAL PROTECTION */
+    const hasVoted =
+      localStorage.getItem("season2_voted");
+
+    if (hasVoted) {
+      setMessage(
+        "You have already voted in the Season 2 Finale."
+      );
+
+      setTimeout(() => {
+        setMessage("");
+      }, 4000);
+
+      return;
+    }
+
+    /* SAVE VOTE */
     const { error } = await supabase
-      .from("contestants")
+      .from("season2_votes")
+      .insert([
+        {
+          contestant_id: contestantId,
+          ip_address: "browser_vote",
+        },
+      ]);
+
+    if (error) return;
+
+    /* UPDATE COUNT */
+    await supabase
+      .from("season2_contestants")
       .update({
         votes: currentVotes + 1,
       })
       .eq("id", contestantId);
 
-    if (!error) {
-      fetchContestants();
-    }
+    /* LOCK */
+    localStorage.setItem(
+      "season2_voted",
+      "true"
+    );
+
+    setMessage(
+      "Your vote has been successfully submitted!"
+    );
+
+    setTimeout(() => {
+      setMessage("");
+    }, 4000);
+
+    fetchContestants();
   };
 
   if (loading) {
@@ -73,6 +114,13 @@ export default function Season2FinalePage() {
       {/* OVERLAY */}
       <div className="min-h-screen bg-black/50">
 
+        {/* MESSAGE */}
+        {message && (
+          <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[999] px-8 py-4 rounded-2xl bg-black/80 border border-cyan-400/30 backdrop-blur-xl text-white font-bold">
+            {message}
+          </div>
+        )}
+
         {/* HERO */}
         <section className="relative z-20 px-4 md:px-6 pt-20 md:pt-32 pb-16">
 
@@ -96,10 +144,6 @@ export default function Season2FinalePage() {
 
             <p className="mt-6 md:mt-8 text-xl md:text-3xl font-black uppercase text-white">
               Public Leaderboard
-            </p>
-
-            <p className="mt-5 text-base md:text-2xl text-white/80 leading-relaxed max-w-3xl mx-auto px-4">
-              Watch the rankings change live as fans vote for their favorite contestants.
             </p>
 
           </div>
@@ -126,12 +170,10 @@ export default function Season2FinalePage() {
                   {/* LEFT */}
                   <div className="flex items-center gap-4">
 
-                    {/* RANK */}
                     <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400 to-pink-500 text-black font-black flex items-center justify-center">
                       #{index + 1}
                     </div>
 
-                    {/* PHOTO */}
                     <img
                       src={
                         contestant.photo_url ||
@@ -141,16 +183,11 @@ export default function Season2FinalePage() {
                       className="w-14 h-14 rounded-full object-cover"
                     />
 
-                    {/* NAME */}
                     <div>
 
                       <h3 className="font-black uppercase text-lg">
                         {contestant.full_name}
                       </h3>
-
-                      <p className="text-cyan-300 text-sm">
-                        @{contestant.tiktok_username}
-                      </p>
 
                     </div>
 
@@ -178,7 +215,7 @@ export default function Season2FinalePage() {
 
         </section>
 
-        {/* TOP 10 CARDS */}
+        {/* TOP 10 */}
         <section className="relative z-20 px-4 md:px-6 pb-24">
 
           <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
@@ -186,7 +223,7 @@ export default function Season2FinalePage() {
             {contestants.map((contestant, index) => (
               <div
                 key={contestant.id}
-                className="relative flex flex-col items-center text-center bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-5 md:p-6 hover:scale-[1.02] transition duration-300"
+                className="relative flex flex-col items-center text-center bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-5 md:p-6"
               >
 
                 {/* RANK */}
@@ -195,35 +232,21 @@ export default function Season2FinalePage() {
                 </div>
 
                 {/* IMAGE */}
-                <div className="w-full flex justify-center">
-
-                  <img
-                    src={
-                      contestant.photo_url ||
-                      "/contestant-placeholder.jpg"
-                    }
-                    alt={contestant.full_name}
-                    className="w-full max-w-[180px] sm:max-w-[220px] md:max-w-[300px] rounded-3xl object-cover"
-                  />
-
-                </div>
+                <img
+                  src={
+                    contestant.photo_url ||
+                    "/contestant-placeholder.jpg"
+                  }
+                  alt={contestant.full_name}
+                  className="w-full max-w-[180px] sm:max-w-[220px] md:max-w-[300px] rounded-3xl object-cover"
+                />
 
                 {/* NAME */}
                 <h2 className="mt-5 text-2xl md:text-3xl font-black uppercase">
                   {contestant.full_name}
                 </h2>
 
-                {/* TALENT */}
-                <p className="mt-2 text-white/70 text-base md:text-lg">
-                  {contestant.talent_category}
-                </p>
-
-                {/* TIKTOK */}
-                <p className="mt-2 text-cyan-300 text-sm">
-                  @{contestant.tiktok_username}
-                </p>
-
-                {/* LIVE VOTES */}
+                {/* VOTES */}
                 <div className="mt-5 px-6 py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20">
 
                   <p className="text-cyan-300 uppercase tracking-[3px] text-xs">
