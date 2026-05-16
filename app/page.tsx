@@ -44,21 +44,14 @@ export default function HomePage() {
               The Breeze Family is building a next-generation entertainment platform for creators, performers and fans across South Africa.
             </p>
 
-            <div className="mt-14 flex flex-wrap gap-6">
+            {/* COMING SOON BUTTON */}
+            <div className="mt-14">
 
-              <a
-                href="/kids-edition"
-                className="px-10 py-5 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black text-lg md:text-xl shadow-[0_0_50px_rgba(0,255,120,0.45)] hover:scale-105 transition duration-300"
+              <button
+                className="px-10 py-5 rounded-2xl border-2 border-green-300 text-green-300 font-black text-lg md:text-xl bg-black/20 backdrop-blur-md"
               >
-                ENTER KIDS EDITION
-              </a>
-
-              <a
-                href="/shop"
-                className="px-10 py-5 rounded-2xl border-2 border-green-300 text-green-300 font-black text-lg md:text-xl bg-black/20 backdrop-blur-md hover:bg-green-300 hover:text-black transition duration-300"
-              >
-                SHOP MERCH
-              </a>
+                SHOP MERCH — COMING SOON
+              </button>
 
             </div>
 
@@ -115,6 +108,23 @@ export default function HomePage() {
         </div>
 
       </section>
+
+      {/* FOOTER */}
+      <footer className="relative z-20 border-t border-white/10 bg-black/30 backdrop-blur-md">
+
+        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+
+          <p className="text-white/60 text-sm uppercase tracking-[3px]">
+            Powered by The Breeze Team
+          </p>
+
+          <p className="text-white/40 text-sm">
+            © Copyright 2026
+          </p>
+
+        </div>
+
+      </footer>
 
     </main>
   );
