@@ -160,6 +160,7 @@ export default function FanFavoriteJudgePage() {
                     className="flex items-center justify-between gap-4 p-4 rounded-2xl bg-black/30 border border-white/10"
                   >
 
+                    {/* LEFT */}
                     <div className="flex items-center gap-4">
 
                       <div className="w-12 h-12 rounded-full bg-gradient-to-r from-pink-400 to-cyan-400 text-black font-black flex items-center justify-center">
@@ -176,6 +177,7 @@ export default function FanFavoriteJudgePage() {
 
                     </div>
 
+                    {/* VOTES */}
                     <div className="text-right">
 
                       <p className="text-white/60 uppercase text-xs tracking-[3px]">
@@ -205,11 +207,11 @@ export default function FanFavoriteJudgePage() {
             {judges.map((judge) => (
               <div
                 key={judge.id}
-                className="flex flex-col items-center text-center bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden"
+                className="flex flex-col bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden"
               >
 
                 {/* VIDEO */}
-                <div className="w-full aspect-[9/16] bg-black">
+                <div className="w-full bg-black flex items-center justify-center overflow-hidden">
 
                   {judge.video_url ? (
                     <video
@@ -218,10 +220,10 @@ export default function FanFavoriteJudgePage() {
                       muted
                       loop
                       playsInline
-                      className="w-full h-full object-cover"
+                      className="w-full h-auto max-h-[750px] object-contain"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white/40">
+                    <div className="w-full h-[500px] flex items-center justify-center text-white/40">
                       No Video Uploaded
                     </div>
                   )}
@@ -229,8 +231,9 @@ export default function FanFavoriteJudgePage() {
                 </div>
 
                 {/* CONTENT */}
-                <div className="p-6 w-full">
+                <div className="p-6 text-center">
 
+                  {/* NAME */}
                   <h2 className="text-2xl md:text-3xl font-black uppercase">
                     {judge.name}
                   </h2>
@@ -256,7 +259,7 @@ export default function FanFavoriteJudgePage() {
                         judge.votes || 0
                       )
                     }
-                    className="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 to-cyan-500 text-white font-black text-lg shadow-[0_0_50px_rgba(255,0,140,0.4)]"
+                    className="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 to-cyan-500 text-white font-black text-lg shadow-[0_0_50px_rgba(255,0,140,0.4)] hover:scale-[1.02] transition duration-300"
                   >
                     Vote Judge
                   </button>
