@@ -176,38 +176,33 @@ export default function HomePage() {
           {/* MERCH GRID */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
 
-            {/* ITEM */}
             {[
               {
                 title: "Breeze Hoodie",
-                image:
-                  "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1200&auto=format&fit=crop",
+                image: "/merch-hoodie.jpg",
                 desc:
-                  "Oversized premium hoodie with neon Breeze branding.",
+                  "Premium oversized hoodie with iconic neon Breeze branding.",
               },
 
               {
-                title: "Oversized Tee",
-                image:
-                  "https://images.unsplash.com/photo-1503341504253-dff4815485f1?q=80&w=1200&auto=format&fit=crop",
+                title: "Oversized Tees",
+                image: "/merch-shirt.jpg",
                 desc:
-                  "Minimal black-and-neon Breeze Family streetwear tee.",
+                  "Black and white Breeze Family streetwear collection.",
               },
 
               {
-                title: "Breeze Cap",
-                image:
-                  "https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=1200&auto=format&fit=crop",
+                title: "Thermal Flask",
+                image: "/merch-bottle.png",
                 desc:
-                  "Premium fitted cap with embroidered neon Breeze logo.",
+                  "Premium insulated Breeze Family thermal flask.",
               },
 
               {
-                title: "Accessories",
-                image:
-                  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop",
+                title: "Tote Bag",
+                image: "/merch-bag.png",
                 desc:
-                  "Lifestyle accessories inspired by creators and music culture.",
+                  "Minimal premium tote bag with neon Breeze artwork.",
               },
             ].map((item, index) => (
               <div
