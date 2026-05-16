@@ -11,17 +11,15 @@ const supabase = createClient(
 export default function AdminPage() {
   const [contestants, setContestants] = useState<any[]>([]);
   const [season2Contestants, setSeason2Contestants] = useState<any[]>([]);
+  const [judges, setJudges] = useState<any[]>([]);
 
   const [loading, setLoading] = useState(true);
-
-  /* SEASON 2 FORM */
-  const [name, setName] = useState("");
-  const [photo, setPhoto] = useState<File | null>(null);
 
   /* LOAD */
   useEffect(() => {
     fetchContestants();
     fetchSeason2Contestants();
+    fetchJudges();
   }, []);
 
   /* KIDS */
@@ -34,7 +32,7 @@ export default function AdminPage() {
     if (data) setContestants(data);
   };
 
-  /* SEASON 2 */
+  /* FINALISTS */
   const fetchSeason2Contestants = async () => {
     const { data } = await supabase
       .from("season2_finalists")
@@ -42,11 +40,21 @@ export default function AdminPage() {
       .order("votes", { ascending: false });
 
     if (data) setSeason2Contestants(data);
+  };
+
+  /* JUDGES */
+  const fetchJudges = async () => {
+    const { data } = await supabase
+      .from("fan_favorite_judges")
+      .select("*")
+      .order("votes", { ascending: false });
+
+    if (data) setJudges(data);
 
     setLoading(false);
   };
 
-  /* UPDATE KIDS STATUS */
+  /* KIDS STATUS */
   const updateStatus = async (
     id: number,
     status: string
@@ -59,49 +67,7 @@ export default function AdminPage() {
     fetchContestants();
   };
 
-  /* ADD SEASON 2 FINALIST */
-  const addSeason2Contestant = async (
-    e: React.FormEvent
-  ) => {
-    e.preventDefault();
-
-    let photoUrl = "";
-
-    if (photo) {
-      const fileName = `${Date.now()}-${photo.name}`;
-
-      await supabase.storage
-        .from("contestant-photos")
-        .upload(fileName, photo);
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage
-        .from("contestant-photos")
-        .getPublicUrl(fileName);
-
-      photoUrl = publicUrl;
-    }
-
-    await supabase
-      .from("season2_finalists")
-      .insert([
-        {
-          name: name,
-          image_url: photoUrl,
-          votes: 0,
-          eliminated: false,
-          status: "safe",
-        },
-      ]);
-
-    setName("");
-    setPhoto(null);
-
-    fetchSeason2Contestants();
-  };
-
-  /* UPDATE FINALIST STATUS */
+  /* FINALIST STATUS */
   const updateFinalistStatus = async (
     id: number,
     status: string,
@@ -118,10 +84,27 @@ export default function AdminPage() {
     fetchSeason2Contestants();
   };
 
-  /* RESET VOTES */
-  const resetVotes = async () => {
+  /* JUDGE STATUS */
+  const updateJudgeStatus = async (
+    id: number,
+    status: string,
+    eliminated: boolean
+  ) => {
+    await supabase
+      .from("fan_favorite_judges")
+      .update({
+        status,
+        eliminated,
+      })
+      .eq("id", id);
+
+    fetchJudges();
+  };
+
+  /* RESET FINALIST VOTES */
+  const resetFinalistVotes = async () => {
     const confirmReset = window.confirm(
-      "Are you sure you want to reset ALL Season 2 votes?"
+      "Reset ALL finalist votes?"
     );
 
     if (!confirmReset) return;
@@ -133,13 +116,29 @@ export default function AdminPage() {
       })
       .neq("id", 0);
 
-    localStorage.removeItem(
-      "season2_voted"
-    );
+    alert("Finalist votes reset.");
 
     fetchSeason2Contestants();
+  };
 
-    alert("All votes have been reset.");
+  /* RESET JUDGE VOTES */
+  const resetJudgeVotes = async () => {
+    const confirmReset = window.confirm(
+      "Reset ALL judge votes?"
+    );
+
+    if (!confirmReset) return;
+
+    await supabase
+      .from("fan_favorite_judges")
+      .update({
+        votes: 0,
+      })
+      .neq("id", 0);
+
+    alert("Judge votes reset.");
+
+    fetchJudges();
   };
 
   if (loading) {
@@ -175,7 +174,7 @@ export default function AdminPage() {
 
         </div>
 
-        {/* SEASON 2 */}
+        {/* FINALISTS */}
         <section className="mt-20">
 
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -184,73 +183,15 @@ export default function AdminPage() {
               Season 2 Top 10
             </h2>
 
-            {/* RESET BUTTON */}
             <button
-              onClick={resetVotes}
-              className="px-8 py-4 rounded-2xl bg-red-500/10 border border-red-400/20 text-red-300 font-black hover:bg-red-500/20 transition"
+              onClick={resetFinalistVotes}
+              className="px-8 py-4 rounded-2xl bg-red-500/10 border border-red-400/20 text-red-300 font-black"
             >
-              RESET ALL VOTES
+              RESET FINALIST VOTES
             </button>
 
           </div>
 
-          {/* FORM */}
-          <form
-            onSubmit={addSeason2Contestant}
-            className="mt-10 bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-8 space-y-6"
-          >
-
-            {/* NAME */}
-            <div>
-
-              <label className="block mb-3 uppercase text-sm tracking-[3px] text-white/70">
-                Finalist Name
-              </label>
-
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) =>
-                  setName(e.target.value)
-                }
-                className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
-              />
-
-            </div>
-
-            {/* PHOTO */}
-            <div>
-
-              <label className="block mb-3 uppercase text-sm tracking-[3px] text-white/70">
-                Upload Photo
-              </label>
-
-              <input
-                type="file"
-                required
-                accept="image/*"
-                onChange={(e) =>
-                  setPhoto(
-                    e.target.files?.[0] || null
-                  )
-                }
-                className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
-              />
-
-            </div>
-
-            {/* BUTTON */}
-            <button
-              type="submit"
-              className="w-full py-5 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-500 text-black font-black text-lg"
-            >
-              ADD FINALIST
-            </button>
-
-          </form>
-
-          {/* FINALISTS */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
 
             {season2Contestants.map((contestant) => (
@@ -259,48 +200,30 @@ export default function AdminPage() {
                 className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden"
               >
 
-                {/* IMAGE */}
                 <div className="aspect-square overflow-hidden">
 
                   <img
-                    src={
-                      contestant.image_url ||
-                      "/contestant-placeholder.jpg"
-                    }
+                    src={contestant.image_url}
                     alt={contestant.name}
                     className="w-full h-full object-cover"
                   />
 
                 </div>
 
-                {/* CONTENT */}
                 <div className="p-6 text-center">
 
-                  {/* STATUS */}
-                  <div
-                    className={`inline-block px-4 py-2 rounded-full text-xs uppercase tracking-[3px] border ${
-                      contestant.status === "safe"
-                        ? "bg-green-500/10 border-green-400/20 text-green-300"
-                        : contestant.status === "eliminated"
-                        ? "bg-red-500/10 border-red-400/20 text-red-300"
-                        : contestant.status === "re-instated"
-                        ? "bg-cyan-500/10 border-cyan-400/20 text-cyan-300"
-                        : "bg-white/10 border-white/10 text-white"
-                    }`}
-                  >
+                  <div className="inline-block px-4 py-2 rounded-full bg-white/10 border border-white/10 text-xs uppercase tracking-[3px]">
                     {contestant.status || "safe"}
                   </div>
 
-                  {/* NAME */}
                   <h3 className="mt-5 text-3xl font-black uppercase">
                     {contestant.name}
                   </h3>
 
-                  {/* VOTES */}
                   <div className="mt-5 px-5 py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20">
 
                     <p className="text-cyan-300 uppercase tracking-[3px] text-xs">
-                      Live Votes
+                      Votes
                     </p>
 
                     <p className="text-3xl font-black mt-2">
@@ -309,10 +232,8 @@ export default function AdminPage() {
 
                   </div>
 
-                  {/* BUTTONS */}
                   <div className="mt-8 grid grid-cols-1 gap-3">
 
-                    {/* SAFE */}
                     <button
                       onClick={() =>
                         updateFinalistStatus(
@@ -321,12 +242,11 @@ export default function AdminPage() {
                           false
                         )
                       }
-                      className="py-3 rounded-2xl bg-green-500/10 border border-green-400/20 hover:bg-green-500/20 transition"
+                      className="py-3 rounded-2xl bg-green-500/10 border border-green-400/20"
                     >
                       Safe
                     </button>
 
-                    {/* ELIMINATED */}
                     <button
                       onClick={() =>
                         updateFinalistStatus(
@@ -335,12 +255,11 @@ export default function AdminPage() {
                           true
                         )
                       }
-                      className="py-3 rounded-2xl bg-red-500/10 border border-red-400/20 hover:bg-red-500/20 transition"
+                      className="py-3 rounded-2xl bg-red-500/10 border border-red-400/20"
                     >
                       Eliminated
                     </button>
 
-                    {/* RE-INSTATED */}
                     <button
                       onClick={() =>
                         updateFinalistStatus(
@@ -349,7 +268,128 @@ export default function AdminPage() {
                           false
                         )
                       }
-                      className="py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20 hover:bg-cyan-500/20 transition"
+                      className="py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20"
+                    >
+                      Re-Instated
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+            ))}
+
+          </div>
+
+        </section>
+
+        {/* JUDGES */}
+        <section className="mt-24">
+
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+
+            <h2 className="text-4xl font-black uppercase">
+              Fan Favorite Judges
+            </h2>
+
+            <button
+              onClick={resetJudgeVotes}
+              className="px-8 py-4 rounded-2xl bg-pink-500/10 border border-pink-400/20 text-pink-300 font-black"
+            >
+              RESET JUDGE VOTES
+            </button>
+
+          </div>
+
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+
+            {judges.map((judge) => (
+              <div
+                key={judge.id}
+                className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden"
+              >
+
+                {/* VIDEO */}
+                <div className="w-full bg-black flex items-center justify-center overflow-hidden">
+
+                  {judge.video_url ? (
+                    <video
+                      src={judge.video_url}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="w-full h-auto max-h-[750px] object-contain"
+                    />
+                  ) : (
+                    <div className="w-full h-[500px] flex items-center justify-center text-white/40">
+                      No Video
+                    </div>
+                  )}
+
+                </div>
+
+                {/* CONTENT */}
+                <div className="p-6 text-center">
+
+                  <div className="inline-block px-4 py-2 rounded-full bg-white/10 border border-white/10 text-xs uppercase tracking-[3px]">
+                    {judge.status || "active"}
+                  </div>
+
+                  <h3 className="mt-5 text-3xl font-black uppercase">
+                    {judge.name}
+                  </h3>
+
+                  <div className="mt-5 px-5 py-3 rounded-2xl bg-pink-500/10 border border-pink-400/20">
+
+                    <p className="text-pink-300 uppercase tracking-[3px] text-xs">
+                      Votes
+                    </p>
+
+                    <p className="text-3xl font-black mt-2">
+                      {judge.votes || 0}
+                    </p>
+
+                  </div>
+
+                  <div className="mt-8 grid grid-cols-1 gap-3">
+
+                    <button
+                      onClick={() =>
+                        updateJudgeStatus(
+                          judge.id,
+                          "active",
+                          false
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-green-500/10 border border-green-400/20"
+                    >
+                      Active
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateJudgeStatus(
+                          judge.id,
+                          "eliminated",
+                          true
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-red-500/10 border border-red-400/20"
+                    >
+                      Eliminated
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateJudgeStatus(
+                          judge.id,
+                          "re-instated",
+                          false
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20"
                     >
                       Re-Instated
                     </button>
@@ -380,21 +420,16 @@ export default function AdminPage() {
                 className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden"
               >
 
-                {/* PHOTO */}
                 <div className="aspect-square overflow-hidden">
 
                   <img
-                    src={
-                      contestant.photo_url ||
-                      "/contestant-placeholder.jpg"
-                    }
+                    src={contestant.photo_url}
                     alt={contestant.full_name}
                     className="w-full h-full object-cover"
                   />
 
                 </div>
 
-                {/* CONTENT */}
                 <div className="p-6">
 
                   <div className="inline-block px-4 py-2 rounded-full bg-green-500/10 border border-green-400/20 text-green-300 text-xs uppercase tracking-[3px]">
@@ -423,7 +458,6 @@ export default function AdminPage() {
 
                   </div>
 
-                  {/* BUTTONS */}
                   <div className="mt-8 grid grid-cols-2 gap-3">
 
                     <button
