@@ -1,4 +1,5 @@
 import "./globals.css";
+import TopButtons from "./components/TopButtons";
 
 export const metadata = {
   title: "Breeze Family | Entertainment • Talent • Media",
@@ -20,8 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en">
 
-      <body>
+      <body className="bg-black text-white">
 
+        {/* GLOBAL HEADER */}
+        <TopButtons />
+
+        {/* PAGE CONTENT */}
         {children}
 
       </body>
