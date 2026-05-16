@@ -1,5 +1,3 @@
-import TopButtons from "./components/TopButtons";
-
 export default function HomePage() {
   return (
     <main
@@ -9,15 +7,13 @@ export default function HomePage() {
           "radial-gradient(circle at top, rgba(50,255,50,0.18), transparent 35%), #050505",
       }}
     >
-      {/* HEADER */}
-      
       {/* GLOW EFFECTS */}
       <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] bg-green-500/20 blur-[180px] rounded-full"></div>
 
       <div className="absolute bottom-[-200px] right-[-200px] w-[600px] h-[600px] bg-lime-400/20 blur-[180px] rounded-full"></div>
 
       {/* HERO */}
-      <section className="relative z-20 px-6 pt-20 md:pt-32 pb-24">
+      <section className="relative z-20 px-6 pt-32 md:pt-40 pb-24">
 
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
 
@@ -103,6 +99,41 @@ export default function HomePage() {
 
             </div>
 
+            {/* FEATURES */}
+            <div className="mt-14 space-y-5 text-lg">
+
+              <div className="flex items-center gap-4 bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl px-5 py-4">
+
+                <div className="w-8 h-8 rounded-full bg-green-400 text-black flex items-center justify-center font-black">
+                  ✓
+                </div>
+
+                Live Talent Competitions
+
+              </div>
+
+              <div className="flex items-center gap-4 bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl px-5 py-4">
+
+                <div className="w-8 h-8 rounded-full bg-green-400 text-black flex items-center justify-center font-black">
+                  ✓
+                </div>
+
+                Exclusive Breeze Family Merch
+
+              </div>
+
+              <div className="flex items-center gap-4 bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl px-5 py-4">
+
+                <div className="w-8 h-8 rounded-full bg-green-400 text-black flex items-center justify-center font-black">
+                  ✓
+                </div>
+
+                Creator Community & Fan Voting
+
+              </div>
+
+            </div>
+
           </div>
 
           {/* RIGHT SIDE */}
@@ -115,6 +146,42 @@ export default function HomePage() {
               alt="Breeze Family"
               className="relative z-10 w-full max-w-[700px] drop-shadow-[0_0_60px_rgba(0,255,100,0.45)]"
             />
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* SPOTIFY PLAYLIST */}
+      <section className="relative z-20 px-6 pb-24">
+
+        <div className="max-w-5xl mx-auto">
+
+          <div className="rounded-3xl border border-white/10 bg-black/30 backdrop-blur-xl p-6 md:p-10">
+
+            <div className="text-center mb-8">
+
+              <p className="uppercase tracking-[4px] text-green-300 text-sm">
+                Breeze Vibes
+              </p>
+
+              <h2 className="mt-4 text-4xl md:text-6xl font-black uppercase">
+                Official Playlist
+              </h2>
+
+            </div>
+
+            <iframe
+              style={{ borderRadius: "24px" }}
+              src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator"
+              width="100%"
+              height="352"
+              frameBorder="0"
+              allowFullScreen
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>
 
           </div>
 
