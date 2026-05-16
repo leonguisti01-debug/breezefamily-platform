@@ -27,7 +27,7 @@ export default function HomePage() {
               <a
                 href="https://www.tiktok.com/@itskentbreeze?_r=1&_t=ZS-96PJ9wohRtE"
                 target="_blank"
-                className="w-14 h-14 rounded-2xl bg-black/30 border border-white/10 backdrop-blur-md flex items-center justify-center hover:scale-110 transition duration-300"
+                className="w-14 h-14 rounded-2xl bg-black/30 border border-green-400/20 backdrop-blur-md flex items-center justify-center hover:scale-110 transition duration-300"
               >
                 <img
                   src="/tiktok-icon.png"
@@ -39,7 +39,7 @@ export default function HomePage() {
               {/* EMAIL */}
               <a
                 href="mailto:admin@breezefamily.co.za"
-                className="w-14 h-14 rounded-2xl bg-black/30 border border-white/10 backdrop-blur-md flex items-center justify-center hover:scale-110 transition duration-300"
+                className="w-14 h-14 rounded-2xl bg-black/30 border border-green-400/20 backdrop-blur-md flex items-center justify-center hover:scale-110 transition duration-300"
               >
                 <img
                   src="/email-icon.png"
@@ -52,7 +52,7 @@ export default function HomePage() {
               <a
                 href="https://whatsapp.com/channel/0029VbD9d4P9sBI9ue1ekp2z"
                 target="_blank"
-                className="w-14 h-14 rounded-2xl bg-black/30 border border-white/10 backdrop-blur-md flex items-center justify-center hover:scale-110 transition duration-300"
+                className="w-14 h-14 rounded-2xl bg-black/30 border border-green-400/20 backdrop-blur-md flex items-center justify-center hover:scale-110 transition duration-300"
               >
                 <img
                   src="/whatsapp-icon.png"
@@ -74,7 +74,7 @@ export default function HomePage() {
 
               <br />
 
-              <span className="bg-gradient-to-r from-green-300 via-lime-200 to-green-500 text-transparent bg-clip-text">
+              <span className="bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
                 BREEZE ERA
               </span>
 
@@ -87,52 +87,6 @@ export default function HomePage() {
             <p className="mt-6 text-lg md:text-2xl text-white/80 leading-relaxed max-w-2xl">
               The Breeze Family is building a next-generation entertainment platform for creators, performers and fans across South Africa.
             </p>
-
-            {/* COMING SOON BUTTON */}
-            <div className="mt-14">
-
-              <button
-                className="px-10 py-5 rounded-2xl border-2 border-green-300 text-green-300 font-black text-lg md:text-xl bg-black/20 backdrop-blur-md"
-              >
-                SHOP MERCH — COMING SOON
-              </button>
-
-            </div>
-
-            {/* FEATURES */}
-            <div className="mt-14 space-y-5 text-lg">
-
-              <div className="flex items-center gap-4 bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl px-5 py-4">
-
-                <div className="w-8 h-8 rounded-full bg-green-400 text-black flex items-center justify-center font-black">
-                  ✓
-                </div>
-
-                Live Talent Competitions
-
-              </div>
-
-              <div className="flex items-center gap-4 bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl px-5 py-4">
-
-                <div className="w-8 h-8 rounded-full bg-green-400 text-black flex items-center justify-center font-black">
-                  ✓
-                </div>
-
-                Exclusive Breeze Family Merch
-
-              </div>
-
-              <div className="flex items-center gap-4 bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl px-5 py-4">
-
-                <div className="w-8 h-8 rounded-full bg-green-400 text-black flex items-center justify-center font-black">
-                  ✓
-                </div>
-
-                Creator Community & Fan Voting
-
-              </div>
-
-            </div>
 
           </div>
 
@@ -158,7 +112,7 @@ export default function HomePage() {
 
         <div className="max-w-5xl mx-auto">
 
-          <div className="rounded-3xl border border-white/10 bg-black/30 backdrop-blur-xl p-6 md:p-10">
+          <div className="rounded-3xl border border-green-400/20 bg-black/30 backdrop-blur-xl p-6 md:p-10">
 
             <div className="text-center mb-8">
 
@@ -189,8 +143,121 @@ export default function HomePage() {
 
       </section>
 
+      {/* MERCH SECTION */}
+      <section className="relative z-20 px-6 pb-24">
+
+        <div className="max-w-7xl mx-auto">
+
+          {/* HEADER */}
+          <div className="text-center mb-16">
+
+            <p className="uppercase tracking-[4px] text-green-300 text-sm">
+              Limited Drop
+            </p>
+
+            <h2 className="mt-4 text-5xl md:text-7xl font-black uppercase leading-[0.95]">
+
+              Official
+
+              <br />
+
+              <span className="bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
+                Breeze Merch
+              </span>
+
+            </h2>
+
+            <p className="mt-6 text-lg md:text-2xl text-white/70 max-w-3xl mx-auto">
+              Premium streetwear inspired by entertainment, creators, music and fan culture.
+            </p>
+
+          </div>
+
+          {/* MERCH GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+
+            {/* ITEM */}
+            {[
+              {
+                title: "Breeze Hoodie",
+                image:
+                  "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1200&auto=format&fit=crop",
+                desc:
+                  "Oversized premium hoodie with neon Breeze branding.",
+              },
+
+              {
+                title: "Oversized Tee",
+                image:
+                  "https://images.unsplash.com/photo-1503341504253-dff4815485f1?q=80&w=1200&auto=format&fit=crop",
+                desc:
+                  "Minimal black-and-neon Breeze Family streetwear tee.",
+              },
+
+              {
+                title: "Breeze Cap",
+                image:
+                  "https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=1200&auto=format&fit=crop",
+                desc:
+                  "Premium fitted cap with embroidered neon Breeze logo.",
+              },
+
+              {
+                title: "Accessories",
+                image:
+                  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop",
+                desc:
+                  "Lifestyle accessories inspired by creators and music culture.",
+              },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="group rounded-3xl overflow-hidden border border-green-400/20 bg-black/40 backdrop-blur-xl hover:border-green-300/40 transition duration-500 hover:scale-[1.02]"
+              >
+
+                <div className="relative overflow-hidden">
+
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-[420px] object-cover group-hover:scale-110 transition duration-700"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+
+                  <div className="absolute top-4 left-4 px-4 py-2 rounded-full bg-green-400 text-black font-black uppercase text-xs tracking-[2px]">
+                    Coming Soon
+                  </div>
+
+                </div>
+
+                <div className="p-6">
+
+                  <h3 className="text-2xl font-black uppercase">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-3 text-white/60">
+                    {item.desc}
+                  </p>
+
+                  <button className="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black uppercase hover:scale-[1.02] transition duration-300 shadow-[0_0_40px_rgba(0,255,120,0.25)]">
+                    Notify Me
+                  </button>
+
+                </div>
+
+              </div>
+            ))}
+
+          </div>
+
+        </div>
+
+      </section>
+
       {/* FOOTER */}
-      <footer className="relative z-20 border-t border-white/10 bg-black/30 backdrop-blur-md">
+      <footer className="relative z-20 border-t border-green-400/10 bg-black/30 backdrop-blur-md">
 
         <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
 
@@ -203,192 +270,7 @@ export default function HomePage() {
           </p>
 
         </div>
-{/* MERCH SECTION */}
-<section className="relative z-20 px-6 pb-24">
 
-  <div className="max-w-7xl mx-auto">
-
-    {/* HEADER */}
-    <div className="text-center mb-16">
-
-      <p className="uppercase tracking-[4px] text-green-300 text-sm">
-        Limited Drop
-      </p>
-
-      <h2 className="mt-4 text-5xl md:text-7xl font-black uppercase leading-[0.95]">
-
-        Official
-
-        <br />
-
-        <span className="bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
-          Breeze Merch
-        </span>
-
-      </h2>
-
-      <p className="mt-6 text-lg md:text-2xl text-white/70 max-w-3xl mx-auto">
-        Premium streetwear inspired by entertainment, creators, music and fan culture.
-      </p>
-
-    </div>
-
-    {/* MERCH GRID */}
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-
-      {/* ITEM 1 */}
-      <div className="group rounded-3xl overflow-hidden border border-green-400/20 bg-black/40 backdrop-blur-xl hover:border-green-300/40 transition duration-500 hover:scale-[1.02]">
-
-        <div className="relative overflow-hidden">
-
-          <img
-            src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1200&auto=format&fit=crop"
-            alt="Breeze Hoodie"
-            className="w-full h-[420px] object-cover group-hover:scale-110 transition duration-700"
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-
-          <div className="absolute top-4 left-4 px-4 py-2 rounded-full bg-green-400 text-black font-black uppercase text-xs tracking-[2px]">
-            Coming Soon
-          </div>
-
-        </div>
-
-        <div className="p-6">
-
-          <h3 className="text-2xl font-black uppercase">
-            Breeze Hoodie
-          </h3>
-
-          <p className="mt-3 text-white/60">
-            Oversized premium hoodie with neon Breeze branding.
-          </p>
-
-          <button className="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black uppercase hover:scale-[1.02] transition duration-300 shadow-[0_0_40px_rgba(0,255,120,0.25)]">
-            Notify Me
-          </button>
-
-        </div>
-
-      </div>
-
-      {/* ITEM 2 */}
-      <div className="group rounded-3xl overflow-hidden border border-green-400/20 bg-black/40 backdrop-blur-xl hover:border-green-300/40 transition duration-500 hover:scale-[1.02]">
-
-        <div className="relative overflow-hidden">
-
-          <img
-            src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?q=80&w=1200&auto=format&fit=crop"
-            alt="Breeze T-Shirt"
-            className="w-full h-[420px] object-cover group-hover:scale-110 transition duration-700"
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-
-          <div className="absolute top-4 left-4 px-4 py-2 rounded-full bg-green-400 text-black font-black uppercase text-xs tracking-[2px]">
-            Limited Drop
-          </div>
-
-        </div>
-
-        <div className="p-6">
-
-          <h3 className="text-2xl font-black uppercase">
-            Oversized Tee
-          </h3>
-
-          <p className="mt-3 text-white/60">
-            Minimal black-and-neon Breeze Family streetwear tee.
-          </p>
-
-          <button className="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black uppercase hover:scale-[1.02] transition duration-300 shadow-[0_0_40px_rgba(0,255,120,0.25)]">
-            Notify Me
-          </button>
-
-        </div>
-
-      </div>
-
-      {/* ITEM 3 */}
-      <div className="group rounded-3xl overflow-hidden border border-green-400/20 bg-black/40 backdrop-blur-xl hover:border-green-300/40 transition duration-500 hover:scale-[1.02]">
-
-        <div className="relative overflow-hidden">
-
-          <img
-            src="https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=1200&auto=format&fit=crop"
-            alt="Breeze Cap"
-            className="w-full h-[420px] object-cover group-hover:scale-110 transition duration-700"
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-
-          <div className="absolute top-4 left-4 px-4 py-2 rounded-full bg-green-400 text-black font-black uppercase text-xs tracking-[2px]">
-            Exclusive
-          </div>
-
-        </div>
-
-        <div className="p-6">
-
-          <h3 className="text-2xl font-black uppercase">
-            Breeze Cap
-          </h3>
-
-          <p className="mt-3 text-white/60">
-            Premium fitted cap with embroidered neon Breeze logo.
-          </p>
-
-          <button className="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black uppercase hover:scale-[1.02] transition duration-300 shadow-[0_0_40px_rgba(0,255,120,0.25)]">
-            Notify Me
-          </button>
-
-        </div>
-
-      </div>
-
-      {/* ITEM 4 */}
-      <div className="group rounded-3xl overflow-hidden border border-green-400/20 bg-black/40 backdrop-blur-xl hover:border-green-300/40 transition duration-500 hover:scale-[1.02]">
-
-        <div className="relative overflow-hidden">
-
-          <img
-            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop"
-            alt="Breeze Accessories"
-            className="w-full h-[420px] object-cover group-hover:scale-110 transition duration-700"
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-
-          <div className="absolute top-4 left-4 px-4 py-2 rounded-full bg-green-400 text-black font-black uppercase text-xs tracking-[2px]">
-            New
-          </div>
-
-        </div>
-
-        <div className="p-6">
-
-          <h3 className="text-2xl font-black uppercase">
-            Accessories
-          </h3>
-
-          <p className="mt-3 text-white/60">
-            Lifestyle accessories inspired by creators and music culture.
-          </p>
-
-          <button className="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black uppercase hover:scale-[1.02] transition duration-300 shadow-[0_0_40px_rgba(0,255,120,0.25)]">
-            Notify Me
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
       </footer>
 
     </main>
