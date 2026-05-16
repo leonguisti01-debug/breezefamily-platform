@@ -21,8 +21,7 @@ export default function Season2FinalePage() {
     const { data } = await supabase
       .from("season2_finalists")
       .select("*")
-      .eq("eliminated", false)
-      .order("votes", { ascending: false });
+      .eq("eliminated", false);
 
     if (data) {
       setContestants(data);
@@ -82,6 +81,16 @@ export default function Season2FinalePage() {
       </main>
     );
   }
+
+  /* LEADERBOARD SORT */
+  const leaderboardContestants = [...contestants].sort(
+    (a, b) => (b.votes || 0) - (a.votes || 0)
+  );
+
+  /* CARD SORT */
+  const alphabeticalContestants = [...contestants].sort(
+    (a, b) => a.name.localeCompare(b.name)
+  );
 
   return (
     <main
@@ -143,7 +152,7 @@ export default function Season2FinalePage() {
 
             <div className="mt-10 space-y-4">
 
-              {contestants.map((contestant, index) => (
+              {leaderboardContestants.map((contestant, index) => (
                 <div
                   key={contestant.id}
                   className="flex items-center justify-between gap-4 p-4 rounded-2xl bg-black/30 border border-white/10"
@@ -204,16 +213,11 @@ export default function Season2FinalePage() {
 
           <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
 
-            {contestants.map((contestant, index) => (
+            {alphabeticalContestants.map((contestant) => (
               <div
                 key={contestant.id}
                 className="relative flex flex-col items-center text-center bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-5 md:p-6"
               >
-
-                {/* RANK */}
-                <div className="absolute top-4 left-4 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-400 to-pink-500 text-black font-black text-sm">
-                  #{index + 1}
-                </div>
 
                 {/* IMAGE */}
                 <img
