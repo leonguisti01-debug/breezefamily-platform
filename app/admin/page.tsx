@@ -1,282 +1,209 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  "https://xwzathzitijhmupqqxux.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
 );
 
 export default function AdminPage() {
-
-  const router = useRouter();
-
-  const [loading, setLoading] = useState(true);
-  const [authorized, setAuthorized] = useState(false);
   const [contestants, setContestants] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  /* LOAD CONTESTANTS */
   useEffect(() => {
-    checkAuth();
+    fetchContestants();
   }, []);
 
-  const checkAuth = async () => {
-
-    const auth = localStorage.getItem("admin-auth");
-
-    if (auth === "true") {
-
-      setAuthorized(true);
-
-      await fetchContestants();
-
-    } else {
-
-      router.push("/admin-login");
-
-    }
-
-    setLoading(false);
-  };
-
   const fetchContestants = async () => {
-
     const { data, error } = await supabase
       .from("contestants")
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (error) {
-
-      console.log(error);
-
-    } else {
-
-      setContestants(data || []);
-
+    if (!error && data) {
+      setContestants(data);
     }
+
+    setLoading(false);
   };
 
-  const updateStatus = async (
-    id: number,
-    status: string
-  ) => {
-
+  /* UPDATE STATUS */
+  const updateStatus = async (id: number, status: string) => {
     const { error } = await supabase
       .from("contestants")
-      .update({
-        status,
-        status_updated_at: new Date().toISOString(),
-        approved: status === "APPROVED",
-      })
+      .update({ status })
       .eq("id", id);
 
-    if (error) {
-
-      console.log(error);
-
-    } else {
-
+    if (!error) {
       fetchContestants();
-
     }
-  };
-
-  const logout = () => {
-
-    localStorage.removeItem("admin-auth");
-
-    router.push("/admin-login");
   };
 
   if (loading) {
-
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
-
-        <div className="text-center">
-
-          <h1 className="text-5xl font-black text-pink-400 animate-pulse">
-            Loading Admin...
-          </h1>
-
-        </div>
-
+        <h1 className="text-3xl font-black uppercase animate-pulse">
+          Loading Contestants...
+        </h1>
       </main>
     );
   }
 
-  if (!authorized) {
-    return null;
-  }
-
   return (
-    <main className="min-h-screen bg-black text-white p-8">
+    <main
+      className="min-h-screen text-white overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(circle at top, rgba(50,255,50,0.18), transparent 35%), #050505",
+      }}
+    >
+      {/* GLOW */}
+      <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] bg-green-500/20 blur-[180px] rounded-full"></div>
 
-      {/* HEADER */}
-      <div className="mb-12 flex items-center justify-between">
+      <div className="relative z-20 px-6 py-20 max-w-7xl mx-auto">
 
-        <div>
+        {/* HEADER */}
+        <div className="mb-16">
 
-          <h1 className="text-6xl font-black text-lime-400">
-            ADMIN DASHBOARD
+          <p className="uppercase tracking-[4px] text-green-300 text-sm">
+            Breeze Family
+          </p>
+
+          <h1 className="mt-3 text-5xl md:text-7xl font-black uppercase">
+            Contestant Management
           </h1>
 
-          <p className="mt-4 text-gray-400 text-xl">
-            Breeze Family Competition Management
+          <p className="mt-5 text-white/70 text-xl">
+            Approve, manage and moderate contestant entries.
           </p>
 
         </div>
 
-        <button
-          onClick={logout}
-          className="px-6 py-4 rounded-2xl bg-red-500 hover:bg-red-400 transition font-black"
-        >
-          LOGOUT
-        </button>
+        {/* GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
 
-      </div>
+          {contestants.map((contestant) => (
+            <div
+              key={contestant.id}
+              className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden"
+            >
 
-      {/* TABLE */}
-      <div className="rounded-[40px] border border-white/10 bg-white/5 overflow-hidden">
+              {/* PHOTO */}
+              <div className="w-full aspect-square overflow-hidden">
 
-        <div className="overflow-x-auto">
+                <img
+                  src={
+                    contestant.photo_url ||
+                    "/contestant-placeholder.jpg"
+                  }
+                  alt={contestant.full_name}
+                  className="w-full h-full object-cover"
+                />
 
-          <table className="w-full">
+              </div>
 
-            <thead className="bg-white/5">
+              {/* CONTENT */}
+              <div className="p-6">
 
-              <tr className="text-left">
+                {/* STATUS */}
+                <div className="inline-block px-4 py-2 rounded-full bg-green-500/10 border border-green-400/20 text-green-300 text-xs uppercase tracking-[3px]">
+                  {contestant.status || "pending"}
+                </div>
 
-                <th className="p-5">ID</th>
-                <th className="p-5">Contestant</th>
-                <th className="p-5">Category</th>
-                <th className="p-5">Votes</th>
-                <th className="p-5">Status</th>
-                <th className="p-5">Updated</th>
-                <th className="p-5">Actions</th>
+                {/* NAME */}
+                <h2 className="mt-5 text-3xl font-black uppercase">
+                  {contestant.full_name}
+                </h2>
 
-              </tr>
+                {/* INFO */}
+                <div className="mt-5 space-y-3 text-white/70">
 
-            </thead>
+                  <p>
+                    <span className="text-white font-bold">Age:</span>{" "}
+                    {contestant.age}
+                  </p>
 
-            <tbody>
+                  <p>
+                    <span className="text-white font-bold">Talent:</span>{" "}
+                    {contestant.talent_category}
+                  </p>
 
-              {contestants.map((contestant) => (
+                  <p>
+                    <span className="text-white font-bold">
+                      TikTok:
+                    </span>{" "}
+                    @{contestant.tiktok_username}
+                  </p>
 
-                <tr
-                  key={contestant.id}
-                  className="border-t border-white/5 hover:bg-white/5 align-top"
-                >
+                  <p>
+                    <span className="text-white font-bold">
+                      Guardian:
+                    </span>{" "}
+                    {contestant.guardian_name}
+                  </p>
 
-                  <td className="p-5 text-gray-400">
-                    {contestant.id}
-                  </td>
+                </div>
 
-                  <td className="p-5">
+                {/* BUTTONS */}
+                <div className="mt-8 grid grid-cols-2 gap-3">
 
-                    <div className="font-bold text-pink-400">
-                      {contestant.child_name}
-                    </div>
+                  <button
+                    onClick={() =>
+                      updateStatus(contestant.id, "approved")
+                    }
+                    className="py-3 rounded-2xl bg-green-500/10 border border-green-400/20 hover:bg-green-500/20 transition"
+                  >
+                    Approve
+                  </button>
 
-                    <div className="text-sm text-gray-500 mt-1">
-                      {contestant.parent_name}
-                    </div>
+                  <button
+                    onClick={() =>
+                      updateStatus(contestant.id, "declined")
+                    }
+                    className="py-3 rounded-2xl bg-red-500/10 border border-red-400/20 hover:bg-red-500/20 transition"
+                  >
+                    Decline
+                  </button>
 
-                  </td>
+                  <button
+                    onClick={() =>
+                      updateStatus(contestant.id, "through")
+                    }
+                    className="py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20 hover:bg-cyan-500/20 transition"
+                  >
+                    Through
+                  </button>
 
-                  <td className="p-5">
-                    {contestant.category}
-                  </td>
+                  <button
+                    onClick={() =>
+                      updateStatus(contestant.id, "out")
+                    }
+                    className="py-3 rounded-2xl bg-yellow-500/10 border border-yellow-400/20 hover:bg-yellow-500/20 transition"
+                  >
+                    Out
+                  </button>
 
-                  <td className="p-5">
-                    {contestant.votes || 0}
-                  </td>
+                  <button
+                    onClick={() =>
+                      updateStatus(
+                        contestant.id,
+                        "disqualified"
+                      )
+                    }
+                    className="col-span-2 py-3 rounded-2xl bg-pink-500/10 border border-pink-400/20 hover:bg-pink-500/20 transition"
+                  >
+                    Disqualified
+                  </button>
 
-                  <td className="p-5">
+                </div>
 
-                    <span className="font-bold">
+              </div>
 
-                      {contestant.status || "PENDING"}
-
-                    </span>
-
-                  </td>
-
-                  <td className="p-5 text-sm text-gray-400">
-
-                    {contestant.status_updated_at
-                      ? new Date(
-                          contestant.status_updated_at
-                        ).toLocaleString()
-                      : "-"}
-
-                  </td>
-
-                  <td className="p-5">
-
-                    <div className="flex flex-wrap gap-2">
-
-                      <button
-                        onClick={() =>
-                          updateStatus(
-                            contestant.id,
-                            "APPROVED"
-                          )
-                        }
-                        className="px-4 py-2 rounded-xl bg-lime-400 text-black font-bold"
-                      >
-                        APPROVE
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          updateStatus(
-                            contestant.id,
-                            "DISQUALIFIED"
-                          )
-                        }
-                        className="px-4 py-2 rounded-xl bg-red-500 text-white font-bold"
-                      >
-                        DISQUALIFY
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          updateStatus(
-                            contestant.id,
-                            "PASSED"
-                          )
-                        }
-                        className="px-4 py-2 rounded-xl bg-cyan-500 text-white font-bold"
-                      >
-                        PASS
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          updateStatus(
-                            contestant.id,
-                            "VOTED OUT"
-                          )
-                        }
-                        className="px-4 py-2 rounded-xl bg-yellow-500 text-black font-bold"
-                      >
-                        VOTED OUT
-                      </button>
-
-                    </div>
-
-                  </td>
-
-                </tr>
-
-              ))}
-
-            </tbody>
-
-          </table>
+            </div>
+          ))}
 
         </div>
 
