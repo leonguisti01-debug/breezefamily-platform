@@ -1,4 +1,27 @@
 export default function FanFavoriteJudgePage() {
+  const judges = [
+    {
+      name: "Judge 1",
+      video: "/judge1.mp4",
+      role: "Music Producer",
+    },
+    {
+      name: "Judge 2",
+      video: "/judge2.mp4",
+      role: "Talent Coach",
+    },
+    {
+      name: "Judge 3",
+      video: "/judge3.mp4",
+      role: "Creative Director",
+    },
+    {
+      name: "Judge 4",
+      video: "/judge4.mp4",
+      role: "Dance Specialist",
+    },
+  ];
+
   return (
     <main
       className="min-h-screen text-white overflow-hidden"
@@ -18,12 +41,10 @@ export default function FanFavoriteJudgePage() {
 
           <div className="max-w-7xl mx-auto text-center">
 
-            {/* TAG */}
             <div className="inline-block px-5 py-2 rounded-full border border-green-400/40 bg-black/30 backdrop-blur-md text-sm uppercase tracking-[4px] text-green-300 mb-8">
               Favorite Judge Vote
             </div>
 
-            {/* TITLE */}
             <h1 className="text-5xl md:text-8xl font-black uppercase leading-[0.92]">
 
               VOTE FOR
@@ -36,12 +57,10 @@ export default function FanFavoriteJudgePage() {
 
             </h1>
 
-            {/* SUBTITLE */}
             <p className="mt-8 text-2xl md:text-3xl font-black uppercase text-white">
               Choose The Judge You Love Most
             </p>
 
-            {/* DESCRIPTION */}
             <p className="mt-6 text-lg md:text-2xl text-white/80 leading-relaxed max-w-3xl mx-auto">
               Support your favorite judge and help crown the ultimate fan favorite.
             </p>
@@ -53,76 +72,46 @@ export default function FanFavoriteJudgePage() {
         {/* JUDGES */}
         <section className="relative z-20 px-6 pb-24">
 
-          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10">
 
-            {/* JUDGE 1 */}
-            <div className="flex flex-col items-center text-center bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
+            {judges.map((judge, index) => (
+              <div
+                key={index}
+                className="flex flex-col items-center text-center bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-6 hover:scale-[1.02] transition duration-300"
+              >
 
-              <img
-                src="/judge1.jpg"
-                alt="Judge 1"
-                className="w-full max-w-[220px] md:max-w-[320px] mx-auto rounded-3xl object-cover"
-              />
+                {/* VIDEO */}
+                <div className="w-full overflow-hidden rounded-3xl">
 
-              <h2 className="mt-6 text-3xl font-black uppercase">
-                Judge 1
-              </h2>
+                  <video
+                    src={judge.video}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    controls
+                    className="w-full aspect-video object-cover rounded-3xl"
+                  />
 
-              <p className="mt-3 text-white/70">
-                Inspiring mentor with a passion for discovering talent.
-              </p>
+                </div>
 
-              <button className="mt-6 px-8 py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black text-lg shadow-[0_0_50px_rgba(0,255,120,0.4)] hover:scale-105 transition duration-300">
-                Vote Now
-              </button>
+                {/* NAME */}
+                <h2 className="mt-6 text-3xl font-black uppercase">
+                  {judge.name}
+                </h2>
 
-            </div>
+                {/* ROLE */}
+                <p className="mt-3 text-white/70 text-lg">
+                  {judge.role}
+                </p>
 
-            {/* JUDGE 2 */}
-            <div className="flex flex-col items-center text-center bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
+                {/* BUTTON */}
+                <button className="mt-6 px-8 py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black text-lg shadow-[0_0_50px_rgba(0,255,120,0.4)] hover:scale-105 transition duration-300">
+                  Vote Now
+                </button>
 
-              <img
-                src="/judge2.jpg"
-                alt="Judge 2"
-                className="w-full max-w-[220px] md:max-w-[320px] mx-auto rounded-3xl object-cover"
-              />
-
-              <h2 className="mt-6 text-3xl font-black uppercase">
-                Judge 2
-              </h2>
-
-              <p className="mt-3 text-white/70">
-                Industry expert helping young stars shine brighter.
-              </p>
-
-              <button className="mt-6 px-8 py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black text-lg shadow-[0_0_50px_rgba(0,255,120,0.4)] hover:scale-105 transition duration-300">
-                Vote Now
-              </button>
-
-            </div>
-
-            {/* JUDGE 3 */}
-            <div className="flex flex-col items-center text-center bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
-
-              <img
-                src="/judge3.jpg"
-                alt="Judge 3"
-                className="w-full max-w-[220px] md:max-w-[320px] mx-auto rounded-3xl object-cover"
-              />
-
-              <h2 className="mt-6 text-3xl font-black uppercase">
-                Judge 3
-              </h2>
-
-              <p className="mt-3 text-white/70">
-                Creative visionary bringing energy and excitement.
-              </p>
-
-              <button className="mt-6 px-8 py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black text-lg shadow-[0_0_50px_rgba(0,255,120,0.4)] hover:scale-105 transition duration-300">
-                Vote Now
-              </button>
-
-            </div>
+              </div>
+            ))}
 
           </div>
 
