@@ -20,6 +20,50 @@ export default function HomePage() {
           {/* LEFT SIDE */}
           <div>
 
+            {/* SOCIAL ICONS */}
+            <div className="flex flex-wrap items-center gap-4 mb-8">
+
+              {/* TIKTOK */}
+              <a
+                href="https://www.tiktok.com/@itskentbreeze?_r=1&_t=ZS-96PJ9wohRtE"
+                target="_blank"
+                className="w-14 h-14 rounded-2xl bg-black/30 border border-white/10 backdrop-blur-md flex items-center justify-center hover:scale-110 transition duration-300"
+              >
+                <img
+                  src="/tiktok-icon.png"
+                  alt="TikTok"
+                  className="w-7 h-7 object-contain"
+                />
+              </a>
+
+              {/* EMAIL */}
+              <a
+                href="mailto:admin@breezefamily.co.za"
+                className="w-14 h-14 rounded-2xl bg-black/30 border border-white/10 backdrop-blur-md flex items-center justify-center hover:scale-110 transition duration-300"
+              >
+                <img
+                  src="/email-icon.png"
+                  alt="Email"
+                  className="w-7 h-7 object-contain"
+                />
+              </a>
+
+              {/* WHATSAPP */}
+              <a
+                href="https://whatsapp.com/channel/0029VbD9d4P9sBI9ue1ekp2z"
+                target="_blank"
+                className="w-14 h-14 rounded-2xl bg-black/30 border border-white/10 backdrop-blur-md flex items-center justify-center hover:scale-110 transition duration-300"
+              >
+                <img
+                  src="/whatsapp-icon.png"
+                  alt="WhatsApp"
+                  className="w-7 h-7 object-contain"
+                />
+              </a>
+
+            </div>
+
+            {/* WELCOME */}
             <div className="inline-block px-5 py-2 rounded-full border border-green-400/30 bg-green-500/10 backdrop-blur-md text-sm uppercase tracking-[4px] text-green-300 mb-8">
               Welcome To The Future
             </div>
