@@ -179,7 +179,7 @@ export default function HomePage() {
             {[
               {
                 title: "Breeze Hoodie",
-                image: "/merch-hoodie.jpg",
+                image: "/merch-hoodie.png",
                 desc:
                   "Premium oversized hoodie with iconic neon Breeze branding.",
               },
