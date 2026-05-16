@@ -6,13 +6,14 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
 );
 
 export default function AdminLoginPage() {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
+
   const [password, setPassword] =
     useState("");
 
@@ -115,7 +116,7 @@ export default function AdminLoginPage() {
               onChange={(e) =>
                 setEmail(e.target.value)
               }
-              placeholder="admin@breezefamily.co.za"
+              placeholder="Enter Email Address"
               className="w-full rounded-2xl border border-white/10 bg-black/30 px-5 py-4 text-white outline-none focus:border-green-400"
             />
 
