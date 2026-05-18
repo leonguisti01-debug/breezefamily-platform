@@ -29,7 +29,49 @@ export default function Season2FinalePage() {
   useEffect(() => {
     fetchContestants();
     fetchSettings();
+    checkExistingVote();
   }, []);
+
+  /* CHECK EXISTING VOTE */
+  const checkExistingVote =
+    async () => {
+
+      try {
+
+        const res =
+          await fetch(
+            "https://api.ipify.org?format=json"
+          );
+
+        const ipData =
+          await res.json();
+
+        const ip =
+          ipData.ip;
+
+        const {
+          data: existingVote,
+        } = await supabase
+          .from("top10_votes")
+          .select("*")
+          .eq(
+            "ip_address",
+            ip
+          )
+          .maybeSingle();
+
+        if (existingVote) {
+
+          setHasVoted(true);
+
+        }
+
+      } catch (err) {
+
+        console.log(err);
+
+      }
+    };
 
   /* SETTINGS */
   const fetchSettings =
@@ -56,21 +98,6 @@ export default function Season2FinalePage() {
         setting?.value === "1";
 
       setVotingOpen(isOpen);
-
-      const voted =
-        localStorage.getItem(
-          "top10-voted"
-        );
-
-      if (voted === "true") {
-
-        setHasVoted(true);
-
-      } else {
-
-        setHasVoted(false);
-
-      }
     };
 
   /* FETCH */
@@ -125,53 +152,111 @@ export default function Season2FinalePage() {
         return;
       }
 
-      const contestant =
-        contestants.find(
-          (c) =>
-            c.id ===
-            contestantId
-        );
+      try {
 
-      if (!contestant) return;
-
-      const currentVotes =
-        contestant.votes || 0;
-
-      const { error } =
-        await supabase
-          .from(
-            "season2_finalists"
-          )
-          .update({
-            votes:
-              currentVotes + 1,
-          })
-          .eq(
-            "id",
-            contestantId
+        /* GET USER IP */
+        const res =
+          await fetch(
+            "https://api.ipify.org?format=json"
           );
 
-      if (error) {
+        const ipData =
+          await res.json();
 
-        console.log(error);
+        const ip =
+          ipData.ip;
 
-        alert("Vote failed");
+        /* CHECK EXISTING VOTE */
+        const {
+          data: existingVote,
+        } = await supabase
+          .from("top10_votes")
+          .select("*")
+          .eq(
+            "ip_address",
+            ip
+          )
+          .maybeSingle();
 
-        return;
+        if (existingVote) {
+
+          setHasVoted(true);
+
+          alert(
+            "You have already voted."
+          );
+
+          return;
+        }
+
+        /* GET CONTESTANT */
+        const contestant =
+          contestants.find(
+            (c) =>
+              c.id ===
+              contestantId
+          );
+
+        if (!contestant)
+          return;
+
+        const currentVotes =
+          contestant.votes || 0;
+
+        /* UPDATE VOTES */
+        const { error } =
+          await supabase
+            .from(
+              "season2_finalists"
+            )
+            .update({
+              votes:
+                currentVotes + 1,
+            })
+            .eq(
+              "id",
+              contestantId
+            );
+
+        if (error) {
+
+          console.log(error);
+
+          alert("Vote failed");
+
+          return;
+        }
+
+        /* STORE IP VOTE */
+        await supabase
+          .from("top10_votes")
+          .insert({
+            contestant_id:
+              contestantId,
+            ip_address: ip,
+          });
+
+        setHasVoted(true);
+
+        localStorage.setItem(
+          "top10-voted",
+          "true"
+        );
+
+        alert(
+          "Vote submitted!"
+        );
+
+        fetchContestants();
+
+      } catch (err) {
+
+        console.log(err);
+
+        alert(
+          "Voting failed."
+        );
       }
-
-      localStorage.setItem(
-        "top10-voted",
-        "true"
-      );
-
-      setHasVoted(true);
-
-      alert(
-        "Vote submitted!"
-      );
-
-      fetchContestants();
     };
 
   if (loading) {
