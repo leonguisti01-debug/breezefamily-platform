@@ -32,7 +32,6 @@ export default function FanFavoriteJudgePage() {
     fetchJudges();
     fetchSettings();
 
-    /* AUTO REFRESH */
     const interval =
       setInterval(() => {
         fetchSettings();
@@ -120,7 +119,6 @@ export default function FanFavoriteJudgePage() {
       judgeId: number
     ) => {
 
-      /* RECHECK SETTINGS */
       await fetchSettings();
 
       if (!votingOpen) {
@@ -293,21 +291,38 @@ export default function FanFavoriteJudgePage() {
                   className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
                 >
 
-                  {judge.image_url ? (
-                    <img
-                      src={
-                        judge.image_url
-                      }
-                      alt={
-                        judge.name
-                      }
-                      className="w-full aspect-square object-cover"
-                    />
-                  ) : (
-                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
-                      No Photo
-                    </div>
-                  )}
+                  {/* VIDEO */}
+                  <div className="w-full bg-black overflow-hidden">
+
+                    {judge.video_url ? (
+                      <video
+                        src={
+                          judge.video_url
+                        }
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        controls
+                        className="w-full h-auto max-h-[750px] object-contain"
+                      />
+                    ) : judge.image_url ? (
+                      <img
+                        src={
+                          judge.image_url
+                        }
+                        alt={
+                          judge.name
+                        }
+                        className="w-full aspect-square object-cover"
+                      />
+                    ) : (
+                      <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+                        No Media
+                      </div>
+                    )}
+
+                  </div>
 
                   <div className="p-6 text-center">
 
