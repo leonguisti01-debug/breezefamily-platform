@@ -228,13 +228,26 @@ export default function Season2FinalePage() {
         }
 
         /* STORE IP VOTE */
-        await supabase
-          .from("top10_votes")
-          .insert({
-            contestant_id:
-              contestantId,
-            ip_address: ip,
-          });
+const {
+  error: insertError
+} = await supabase
+  .from("top10_votes")
+  .insert({
+    contestant_id:
+      contestantId,
+    ip_address: ip,
+  });
+
+if (insertError) {
+
+  alert(
+    "You have already voted."
+  );
+
+  setHasVoted(true);
+
+  return;
+}
 
         setHasVoted(true);
 
