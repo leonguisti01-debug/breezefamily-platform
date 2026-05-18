@@ -1,280 +1,262 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
+  "YOUR_SUPABASE_ANON_KEY"
 );
 
 export default function Season2FinalePage() {
-  const [contestants, setContestants] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
 
+  const [contestants, setContestants] =
+    useState<any[]>([]);
+
+  const [hasVoted, setHasVoted] =
+    useState(false);
+
+  const [votingOpen, setVotingOpen] =
+    useState(true);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  /* LOAD */
   useEffect(() => {
     fetchContestants();
+    fetchSettings();
   }, []);
 
-  const fetchContestants = async () => {
-    const { data } = await supabase
-      .from("season2_finalists")
-      .select("*")
-      .eq("eliminated", false);
+  /* FETCH SETTINGS */
+  const fetchSettings = async () => {
 
-    if (data) {
-      setContestants(data);
-    }
+    const { data } =
+      await supabase
+        .from("site_settings")
+        .select("*");
 
-    setLoading(false);
-  };
+    if (!data) return;
 
-  const voteForContestant = async (
-    contestantId: number,
-    currentVotes: number
-  ) => {
-    const hasVoted =
-      localStorage.getItem("season2_voted");
-
-    if (hasVoted) {
-      setMessage(
-        "You have already voted in the Season 2 Finale."
+    const setting =
+      data.find(
+        (s: any) =>
+          s.key ===
+          "top10_voting_open"
       );
 
-      setTimeout(() => {
-        setMessage("");
-      }, 4000);
+    const isOpen =
+      setting?.value === true ||
+      setting?.value === "true";
 
-      return;
+    setVotingOpen(isOpen);
+
+    /* RESET STORAGE WHEN REOPENED */
+    if (isOpen) {
+
+      localStorage.removeItem(
+        "top10-voted"
+      );
+
+      setHasVoted(false);
+
+    } else {
+
+      const voted =
+        localStorage.getItem(
+          "top10-voted"
+        );
+
+      if (voted === "true") {
+        setHasVoted(true);
+      }
+
     }
-
-    await supabase
-      .from("season2_finalists")
-      .update({
-        votes: currentVotes + 1,
-      })
-      .eq("id", contestantId);
-
-    localStorage.setItem(
-      "season2_voted",
-      "true"
-    );
-
-    setMessage(
-      "Your vote has been successfully submitted!"
-    );
-
-    setTimeout(() => {
-      setMessage("");
-    }, 4000);
-
-    fetchContestants();
   };
+
+  /* FETCH CONTESTANTS */
+  const fetchContestants =
+    async () => {
+
+      const { data } =
+        await supabase
+          .from("season2_finalists")
+          .select("*")
+          .neq(
+            "status",
+            "eliminated"
+          )
+          .neq(
+            "status",
+            "disqualified"
+          )
+          .order("votes", {
+            ascending: false,
+          });
+
+      if (data)
+        setContestants(data);
+
+      setLoading(false);
+    };
+
+  /* VOTE */
+  const voteForContestant =
+    async (
+      contestantId: number
+    ) => {
+
+      if (!votingOpen) {
+        alert(
+          "Voting is currently closed."
+        );
+        return;
+      }
+
+      if (hasVoted) {
+        alert(
+          "You have already voted."
+        );
+        return;
+      }
+
+      const contestant =
+        contestants.find(
+          (c) =>
+            c.id ===
+            contestantId
+        );
+
+      if (!contestant) return;
+
+      const currentVotes =
+        contestant.votes || 0;
+
+      await supabase
+        .from(
+          "season2_finalists"
+        )
+        .update({
+          votes:
+            currentVotes + 1,
+        })
+        .eq(
+          "id",
+          contestantId
+        );
+
+      localStorage.setItem(
+        "top10-voted",
+        "true"
+      );
+
+      setHasVoted(true);
+
+      alert(
+        "Vote submitted!"
+      );
+
+      fetchContestants();
+    };
 
   if (loading) {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
-        <h1 className="text-3xl font-black uppercase animate-pulse">
-          Loading Top 10...
+
+        <h1 className="text-4xl font-black uppercase">
+          Loading...
         </h1>
+
       </main>
     );
   }
 
-  /* LEADERBOARD SORT */
-  const leaderboardContestants = [...contestants].sort(
-    (a, b) => (b.votes || 0) - (a.votes || 0)
-  );
-
-  /* CARD SORT */
-  const alphabeticalContestants = [...contestants].sort(
-    (a, b) => a.name.localeCompare(b.name)
-  );
-
   return (
-    <main
-      className="min-h-screen text-white overflow-hidden"
-      style={{
-        backgroundImage: "url('/bg.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
-      }}
-    >
-      <div className="min-h-screen bg-black/50">
+    <main className="min-h-screen bg-black text-white px-6 py-20">
 
-        {/* MESSAGE */}
-        {message && (
-          <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[999] px-8 py-4 rounded-2xl bg-black/80 border border-cyan-400/30 backdrop-blur-xl text-white font-bold">
-            {message}
-          </div>
-        )}
+      <div className="max-w-7xl mx-auto">
 
-        {/* HERO */}
-        <section className="relative z-20 px-4 md:px-6 pt-20 md:pt-32 pb-16">
+        {/* HEADER */}
+        <div className="text-center">
 
-          <div className="max-w-7xl mx-auto text-center">
+          <p className="uppercase tracking-[4px] text-green-300 text-sm">
+            Breeze Family
+          </p>
 
-            <div className="inline-block px-5 py-2 rounded-full border border-cyan-400/40 bg-black/30 backdrop-blur-md text-xs md:text-sm uppercase tracking-[4px] text-cyan-300 mb-8">
-              Season 2 Finale
+          <h1 className="mt-4 text-5xl md:text-7xl font-black uppercase">
+            Top 10 Voting
+          </h1>
+
+          {!votingOpen && (
+            <div className="mt-8 inline-block px-6 py-4 rounded-2xl bg-red-500 text-white font-black uppercase">
+              Voting Closed
             </div>
+          )}
 
-            <h1 className="text-4xl sm:text-5xl md:text-8xl font-black uppercase leading-[0.92]">
+        </div>
 
-              TOP 10
+        {/* GRID */}
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
 
-              <br />
-
-              <span className="bg-gradient-to-r from-cyan-300 via-white to-pink-400 text-transparent bg-clip-text">
-                LIVE VOTING
-              </span>
-
-            </h1>
-
-            <p className="mt-6 md:mt-8 text-xl md:text-3xl font-black uppercase text-white">
-              Public Leaderboard
-            </p>
-
-          </div>
-
-        </section>
-
-        {/* LEADERBOARD */}
-        <section className="relative z-20 px-4 md:px-6 pb-16">
-
-          <div className="max-w-5xl mx-auto bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-10">
-
-            <h2 className="text-3xl md:text-5xl font-black uppercase text-center">
-              Live Leaderboard
-            </h2>
-
-            <div className="mt-10 space-y-4">
-
-              {leaderboardContestants.map((contestant, index) => (
-                <div
-                  key={contestant.id}
-                  className="flex items-center justify-between gap-4 p-4 rounded-2xl bg-black/30 border border-white/10"
-                >
-
-                  <div className="flex items-center gap-4">
-
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400 to-pink-500 text-black font-black flex items-center justify-center">
-                      #{index + 1}
-                    </div>
-
-                    <img
-                      src={
-                        contestant.image_url ||
-                        "/contestant-placeholder.jpg"
-                      }
-                      alt={contestant.name}
-                      className="w-14 h-14 rounded-full object-cover"
-                    />
-
-                    <div>
-
-                      <h3 className="font-black uppercase text-lg">
-                        {contestant.name}
-                      </h3>
-
-                      <p className="text-white/60 text-sm uppercase">
-                        {contestant.status || "safe"}
-                      </p>
-
-                    </div>
-
-                  </div>
-
-                  <div className="text-right">
-
-                    <p className="text-white/60 uppercase text-xs tracking-[3px]">
-                      Votes
-                    </p>
-
-                    <p className="text-2xl font-black">
-                      {contestant.votes || 0}
-                    </p>
-
-                  </div>
-
-                </div>
-              ))}
-
-            </div>
-
-          </div>
-
-        </section>
-
-        {/* TOP 10 CARDS */}
-        <section className="relative z-20 px-4 md:px-6 pb-24">
-
-          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-
-            {alphabeticalContestants.map((contestant) => (
+          {contestants.map(
+            (contestant) => (
               <div
                 key={contestant.id}
-                className="relative flex flex-col items-center text-center bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-5 md:p-6"
+                className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
               >
 
-                {/* IMAGE */}
                 <img
                   src={
-                    contestant.image_url ||
-                    "/contestant-placeholder.jpg"
+                    contestant.image_url
                   }
-                  alt={contestant.name}
-                  className="w-full max-w-[180px] sm:max-w-[220px] md:max-w-[300px] rounded-3xl object-cover"
+                  alt={
+                    contestant.name
+                  }
+                  className="w-full aspect-square object-cover"
                 />
 
-                {/* NAME */}
-                <h2 className="mt-5 text-2xl md:text-3xl font-black uppercase">
-                  {contestant.name}
-                </h2>
+                <div className="p-6 text-center">
 
-                {/* STATUS */}
-                <div className="mt-3 px-5 py-2 rounded-2xl bg-white/10 border border-white/10">
+                  <h2 className="text-3xl font-black uppercase">
+                    {
+                      contestant.name
+                    }
+                  </h2>
 
-                  <p className="uppercase tracking-[3px] text-xs text-white">
-                    {contestant.status || "safe"}
-                  </p>
+                  <button
+                    onClick={() =>
+                      voteForContestant(
+                        contestant.id
+                      )
+                    }
+                    disabled={
+                      hasVoted ||
+                      !votingOpen
+                    }
+                    className={`mt-8 w-full py-4 rounded-2xl font-black uppercase transition duration-300 ${
+                      hasVoted ||
+                      !votingOpen
+                        ? "bg-white/10 text-white/40"
+                        : "bg-green-400 text-black"
+                    }`}
+                  >
+
+                    {!votingOpen
+                      ? "Voting Closed"
+                      : hasVoted
+                      ? "Already Voted"
+                      : "Vote"}
+
+                  </button>
 
                 </div>
-
-                {/* LIVE VOTES */}
-                <div className="mt-5 px-6 py-3 rounded-2xl bg-cyan-500/10 border border-cyan-400/20">
-
-                  <p className="text-cyan-300 uppercase tracking-[3px] text-xs">
-                    Live Votes
-                  </p>
-
-                  <p className="text-3xl font-black mt-2">
-                    {contestant.votes || 0}
-                  </p>
-
-                </div>
-
-                {/* BUTTON */}
-                <button
-                  onClick={() =>
-                    voteForContestant(
-                      contestant.id,
-                      contestant.votes || 0
-                    )
-                  }
-                  className="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white font-black text-lg shadow-[0_0_50px_rgba(255,0,140,0.4)] hover:scale-[1.02] transition duration-300"
-                >
-                  Vote Now
-                </button>
 
               </div>
-            ))}
+            )
+          )}
 
-          </div>
-
-        </section>
+        </div>
 
       </div>
 
