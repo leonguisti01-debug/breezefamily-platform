@@ -51,7 +51,9 @@ export default function Season2FinalePage() {
 
       const isOpen =
         setting?.value === true ||
-        setting?.value === "true";
+        setting?.value === "true" ||
+        setting?.value === 1 ||
+        setting?.value === "1";
 
       setVotingOpen(isOpen);
 
