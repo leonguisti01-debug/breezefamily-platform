@@ -5,7 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 );
 
 export default function Season2FinalePage() {
@@ -278,19 +278,27 @@ export default function Season2FinalePage() {
                 >
 
                   {contestant.image_url ? (
-                    <img
-                      src={
-                        contestant.image_url
-                      }
-                      alt={
-                        contestant.name
-                      }
-                      className="w-full aspect-square object-cover"
-                    />
+
+                    <div className="w-full overflow-hidden bg-black">
+
+                      <img
+                        src={
+                          contestant.image_url
+                        }
+                        alt={
+                          contestant.name
+                        }
+                        className="w-full h-[420px] md:h-[520px] object-cover object-top"
+                      />
+
+                    </div>
+
                   ) : (
-                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+
+                    <div className="w-full h-[420px] md:h-[520px] bg-black flex items-center justify-center text-white/30">
                       No Photo
                     </div>
+
                   )}
 
                   <div className="p-6 text-center">
