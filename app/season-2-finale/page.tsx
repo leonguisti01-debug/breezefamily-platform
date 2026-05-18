@@ -50,17 +50,27 @@ export default function Season2FinalePage() {
           ipData.ip;
 
         const {
-          data: existingVote,
+          data: existingVotes,
+          error: voteCheckError
         } = await supabase
           .from("top10_votes")
           .select("id")
           .eq(
             "ip_address",
             ip
-          )
-          .maybeSingle();
+          );
 
-        if (existingVote) {
+        if (voteCheckError) {
+
+          console.log(voteCheckError);
+
+        }
+
+        const existingVote =
+          existingVotes &&
+          existingVotes.length > 0;
+
+        if (existingVote === true) {
 
           setHasVoted(true);
 
@@ -173,18 +183,28 @@ export default function Season2FinalePage() {
 
         /* CHECK EXISTING IP */
         const {
-          data: existingVote,
+          data: existingVotes,
+          error: voteCheckError
         } = await supabase
           .from("top10_votes")
           .select("id")
           .eq(
             "ip_address",
             ip
-          )
-          .maybeSingle();
+          );
+
+        if (voteCheckError) {
+
+          console.log(voteCheckError);
+
+        }
+
+        const existingVote =
+          existingVotes &&
+          existingVotes.length > 0;
 
         /* BLOCK DUPLICATES */
-        if (existingVote) {
+        if (existingVote === true) {
 
           setHasVoted(true);
 
