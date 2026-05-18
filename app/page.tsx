@@ -27,7 +27,7 @@ export default function HomePage() {
               <a
                 href="https://www.tiktok.com/@itskentbreeze?_r=1&_t=ZS-96PJ9wohRtE"
                 target="_blank"
-                className="w-14 h-14 rounded-2xl bg-black/30 border border-green-400/20 backdrop-blur-md flex items-center justify-center hover:scale-110 transition duration-300"
+                className="w-14 h-14 rounded-2xl bg-black/30 border border-green-400/20 backdrop-blur-md flex items-center justify-center transition duration-300"
               >
                 <img
                   src="/tiktok-icon.png"
@@ -39,7 +39,7 @@ export default function HomePage() {
               {/* EMAIL */}
               <a
                 href="mailto:admin@breezefamily.co.za"
-                className="w-14 h-14 rounded-2xl bg-black/30 border border-green-400/20 backdrop-blur-md flex items-center justify-center hover:scale-110 transition duration-300"
+                className="w-14 h-14 rounded-2xl bg-black/30 border border-green-400/20 backdrop-blur-md flex items-center justify-center transition duration-300"
               >
                 <img
                   src="/email-icon.png"
@@ -52,7 +52,7 @@ export default function HomePage() {
               <a
                 href="https://whatsapp.com/channel/0029VbD9d4P9sBI9ue1ekp2z"
                 target="_blank"
-                className="w-14 h-14 rounded-2xl bg-black/30 border border-green-400/20 backdrop-blur-md flex items-center justify-center hover:scale-110 transition duration-300"
+                className="w-14 h-14 rounded-2xl bg-black/30 border border-green-400/20 backdrop-blur-md flex items-center justify-center transition duration-300"
               >
                 <img
                   src="/whatsapp-icon.png"
@@ -68,7 +68,7 @@ export default function HomePage() {
               Welcome To The Future
             </div>
 
-            <h2 className="text-6xl md:text-8xl font-black uppercase leading-[0.9]">
+            <h2 className="text-5xl md:text-8xl font-black uppercase leading-[0.9]">
 
               THE NEW
 
@@ -80,11 +80,11 @@ export default function HomePage() {
 
             </h2>
 
-            <p className="mt-8 text-2xl md:text-3xl font-black uppercase text-white">
+            <p className="mt-8 text-xl md:text-3xl font-black uppercase text-white">
               Entertainment • Talent • Merch • Media
             </p>
 
-            <p className="mt-6 text-lg md:text-2xl text-white/80 leading-relaxed max-w-2xl">
+            <p className="mt-6 text-base md:text-2xl text-white/80 leading-relaxed max-w-2xl">
               The Breeze Family is building a next-generation entertainment platform for creators, performers and fans across South Africa.
             </p>
 
@@ -93,12 +93,12 @@ export default function HomePage() {
           {/* RIGHT SIDE */}
           <div className="relative flex justify-center">
 
-            <div className="absolute inset-0 bg-green-400/20 blur-[120px] rounded-full"></div>
+            <div className="absolute inset-0 bg-green-400/20 blur-[80px] md:blur-[120px] rounded-full"></div>
 
             <img
               src="/breeze-logo.png"
               alt="Breeze Family"
-              className="relative z-10 w-full max-w-[700px] drop-shadow-[0_0_60px_rgba(0,255,100,0.45)]"
+              className="relative z-10 w-full max-w-[500px] md:max-w-[700px] drop-shadow-[0_0_40px_rgba(0,255,100,0.35)]"
             />
 
           </div>
@@ -112,7 +112,7 @@ export default function HomePage() {
 
         <div className="max-w-5xl mx-auto">
 
-          <div className="rounded-3xl border border-green-400/20 bg-black/30 backdrop-blur-xl p-6 md:p-10">
+          <div className="rounded-3xl border border-green-400/20 bg-black/30 backdrop-blur-md p-6 md:p-10">
 
             <div className="text-center mb-8">
 
@@ -120,7 +120,7 @@ export default function HomePage() {
                 Breeze Vibes
               </p>
 
-              <h2 className="mt-4 text-4xl md:text-6xl font-black uppercase">
+              <h2 className="mt-4 text-3xl md:text-6xl font-black uppercase">
                 Official Playlist
               </h2>
 
@@ -155,7 +155,7 @@ export default function HomePage() {
               Limited Drop
             </p>
 
-            <h2 className="mt-4 text-5xl md:text-7xl font-black uppercase leading-[0.95]">
+            <h2 className="mt-4 text-4xl md:text-7xl font-black uppercase leading-[0.95]">
 
               Official
 
@@ -167,7 +167,7 @@ export default function HomePage() {
 
             </h2>
 
-            <p className="mt-6 text-lg md:text-2xl text-white/70 max-w-3xl mx-auto">
+            <p className="mt-6 text-base md:text-2xl text-white/70 max-w-3xl mx-auto">
               Premium streetwear inspired by entertainment, creators, music and fan culture.
             </p>
 
@@ -207,7 +207,7 @@ export default function HomePage() {
             ].map((item, index) => (
               <div
                 key={index}
-                className="group rounded-3xl overflow-hidden border border-green-400/20 bg-black/40 backdrop-blur-xl hover:border-green-300/40 transition duration-500 hover:scale-[1.02]"
+                className="rounded-3xl overflow-hidden border border-green-400/20 bg-black/40 backdrop-blur-md transition duration-300"
               >
 
                 <div className="relative overflow-hidden">
@@ -215,7 +215,8 @@ export default function HomePage() {
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-[420px] object-cover group-hover:scale-110 transition duration-700"
+                    loading="lazy"
+                    className="w-full h-[320px] md:h-[420px] object-cover transition duration-300"
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
@@ -236,7 +237,7 @@ export default function HomePage() {
                     {item.desc}
                   </p>
 
-                  <button className="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black uppercase hover:scale-[1.02] transition duration-300 shadow-[0_0_40px_rgba(0,255,120,0.25)]">
+                  <button className="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black uppercase transition duration-300 shadow-[0_0_20px_rgba(0,255,120,0.18)]">
                     Notify Me
                   </button>
 
