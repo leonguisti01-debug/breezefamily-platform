@@ -51,7 +51,7 @@ export default function Season2FinalePage() {
 
         const {
           data: existingVotes,
-          error: voteCheckError
+          error: checkError
         } = await supabase
           .from("top10_votes")
           .select("id")
@@ -60,17 +60,16 @@ export default function Season2FinalePage() {
             ip
           );
 
-        if (voteCheckError) {
+        if (checkError) {
 
-          console.log(voteCheckError);
+          console.log(checkError);
 
         }
 
-        const existingVote =
+        if (
           existingVotes &&
-          existingVotes.length > 0;
-
-        if (existingVote === true) {
+          existingVotes.length > 0
+        ) {
 
           setHasVoted(true);
 
@@ -115,7 +114,7 @@ export default function Season2FinalePage() {
       setVotingOpen(isOpen);
     };
 
-  /* FETCH */
+  /* FETCH CONTESTANTS */
   const fetchContestants =
     async () => {
 
@@ -184,7 +183,7 @@ export default function Season2FinalePage() {
         /* CHECK EXISTING IP */
         const {
           data: existingVotes,
-          error: voteCheckError
+          error: checkError
         } = await supabase
           .from("top10_votes")
           .select("id")
@@ -193,48 +192,17 @@ export default function Season2FinalePage() {
             ip
           );
 
-        if (voteCheckError) {
+        if (checkError) {
 
-          console.log(voteCheckError);
+          console.log(checkError);
 
         }
-
-        const existingVote =
-          existingVotes &&
-          existingVotes.length > 0;
 
         /* BLOCK DUPLICATES */
-        if (existingVote === true) {
-
-          setHasVoted(true);
-
-          localStorage.setItem(
-            "top10-voted",
-            "true"
-          );
-
-          alert(
-            "You have already voted."
-          );
-
-          return;
-        }
-
-        /* STORE IP FIRST */
-        const {
-          error: insertError
-        } = await supabase
-          .from("top10_votes")
-          .insert({
-            contestant_id:
-              contestantId,
-            ip_address: ip,
-          });
-
-        /* BLOCK DUPLICATE INSERTS */
-        if (insertError) {
-
-          console.log(insertError);
+        if (
+          existingVotes &&
+          existingVotes.length > 0
+        ) {
 
           setHasVoted(true);
 
@@ -265,29 +233,50 @@ export default function Season2FinalePage() {
           contestant.votes || 0;
 
         /* UPDATE VOTES */
-        const { error } =
-          await supabase
-            .from(
-              "season2_finalists"
-            )
-            .update({
-              votes:
-                currentVotes + 1,
-            })
-            .eq(
-              "id",
-              contestantId
-            );
+        const {
+          error: voteError
+        } = await supabase
+          .from(
+            "season2_finalists"
+          )
+          .update({
+            votes:
+              currentVotes + 1,
+          })
+          .eq(
+            "id",
+            contestantId
+          );
 
-        if (error) {
+        if (voteError) {
 
-          console.log(error);
+          console.log(voteError);
 
-          alert("Vote failed");
+          alert(
+            "Vote failed."
+          );
 
           return;
         }
 
+        /* STORE IP */
+        const {
+          error: insertError
+        } = await supabase
+          .from("top10_votes")
+          .insert({
+            contestant_id:
+              contestantId,
+            ip_address: ip,
+          });
+
+        if (insertError) {
+
+          console.log(insertError);
+
+        }
+
+        /* SUCCESS */
         setHasVoted(true);
 
         localStorage.setItem(
@@ -480,8 +469,8 @@ export default function Season2FinalePage() {
                       className={`mt-8 w-full py-4 rounded-2xl font-black uppercase transition duration-300 ${
                         hasVoted ||
                         !votingOpen
-                          ? "bg-white/10 text-white/40"
-                          : "bg-green-400 text-black"
+                          ? "bg-white/10 text-white/40 cursor-not-allowed"
+                          : "bg-green-400 text-black hover:opacity-90"
                       }`}
                     >
 
