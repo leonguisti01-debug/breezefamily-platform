@@ -1,12 +1,6 @@
 export default function HomePage() {
   return (
-    <main
-      className="min-h-screen text-white overflow-hidden relative"
-      style={{
-        background:
-          "radial-gradient(circle at top, rgba(50,255,50,0.18), transparent 35%), #050505",
-      }}
-    >
+    <main className="min-h-screen text-white overflow-hidden relative bg-black">
       {/* GLOW EFFECTS */}
       <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] bg-green-500/20 blur-[180px] rounded-full"></div>
 
