@@ -122,7 +122,7 @@ export default function HomePage() {
 
             <iframe
               style={{ borderRadius: "24px" }}
-              src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator"
+              src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator"
               width="100%"
               height="352"
               frameBorder="0"
