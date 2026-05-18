@@ -5,7 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
+  "YOUR_SUPABASE_ANON_KEY"
 );
 
 export default function Season2FinalePage() {
@@ -232,7 +232,7 @@ export default function Season2FinalePage() {
         const currentVotes =
           contestant.votes || 0;
 
-        /* UPDATE VOTES */
+        /* UPDATE VOTES FIRST */
         const {
           error: voteError
         } = await supabase
@@ -259,7 +259,7 @@ export default function Season2FinalePage() {
           return;
         }
 
-        /* STORE IP */
+        /* STORE IP AFTER SUCCESSFUL VOTE */
         const {
           error: insertError
         } = await supabase
@@ -335,6 +335,40 @@ export default function Season2FinalePage() {
           )}
 
         </div>
+
+        {/* NOTICE */}
+<div className="mt-12 max-w-4xl mx-auto rounded-3xl border border-green-400/20 bg-green-500/10 p-8 text-center">
+
+  <p className="text-lg md:text-xl font-bold leading-relaxed text-white">
+
+    Please note:
+    {" "}
+    <span className="text-green-300">
+      the Top 10 public vote majority
+    </span>
+    {" "}
+    will count as
+    {" "}
+    <span className="text-green-300">
+      ONE official community vote
+    </span>
+    {" "}
+    in favor of the contestant.
+
+    <br />
+    <br />
+
+    The
+    {" "}
+    <span className="text-green-300">
+      judges and guest judges
+    </span>
+    {" "}
+    will still make their own official voting decisions.
+
+  </p>
+
+</div>
 
         {/* LEADERBOARD */}
         <section className="mt-20">
