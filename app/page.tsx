@@ -81,7 +81,7 @@ export default function HomePage() {
             </h2>
 
             <p className="mt-8 text-xl md:text-3xl font-black uppercase text-white">
-              Entertainment • Talent • Merch • Media
+              Entertainment • Talent • Media
             </p>
 
             <p className="mt-6 text-base md:text-2xl text-white/80 leading-relaxed max-w-2xl">
@@ -136,115 +136,6 @@ export default function HomePage() {
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               loading="lazy"
             ></iframe>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* MERCH SECTION */}
-      <section className="relative z-20 px-6 pb-24">
-
-        <div className="max-w-7xl mx-auto">
-
-          {/* HEADER */}
-          <div className="text-center mb-16">
-
-            <p className="uppercase tracking-[4px] text-green-300 text-sm">
-              Limited Drop
-            </p>
-
-            <h2 className="mt-4 text-4xl md:text-7xl font-black uppercase leading-[0.95]">
-
-              Official
-
-              <br />
-
-              <span className="bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
-                Breeze Merch
-              </span>
-
-            </h2>
-
-            <p className="mt-6 text-base md:text-2xl text-white/70 max-w-3xl mx-auto">
-              Premium streetwear inspired by entertainment, creators, music and fan culture.
-            </p>
-
-          </div>
-
-          {/* MERCH GRID */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-
-            {[
-              {
-                title: "Breeze Hoodie",
-                image: "/merch-hoodie.png",
-                desc:
-                  "Premium oversized hoodie with iconic neon Breeze branding.",
-              },
-
-              {
-                title: "Oversized Tees",
-                image: "/merch-shirt.jpg",
-                desc:
-                  "Black and white Breeze Family streetwear collection.",
-              },
-
-              {
-                title: "Thermal Flask",
-                image: "/merch-bottle.png",
-                desc:
-                  "Premium insulated Breeze Family thermal flask.",
-              },
-
-              {
-                title: "Tote Bag",
-                image: "/merch-bag.png",
-                desc:
-                  "Minimal premium tote bag with neon Breeze artwork.",
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="rounded-3xl overflow-hidden border border-green-400/20 bg-black/40 backdrop-blur-md transition duration-300"
-              >
-
-                <div className="relative overflow-hidden">
-
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    loading="lazy"
-                    className="w-full h-[320px] md:h-[420px] object-cover transition duration-300"
-                  />
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-
-                  <div className="absolute top-4 left-4 px-4 py-2 rounded-full bg-green-400 text-black font-black uppercase text-xs tracking-[2px]">
-                    Coming Soon
-                  </div>
-
-                </div>
-
-                <div className="p-6">
-
-                  <h3 className="text-2xl font-black uppercase">
-                    {item.title}
-                  </h3>
-
-                  <p className="mt-3 text-white/60">
-                    {item.desc}
-                  </p>
-
-                  <button className="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black uppercase transition duration-300 shadow-[0_0_20px_rgba(0,255,120,0.18)]">
-                    Notify Me
-                  </button>
-
-                </div>
-
-              </div>
-            ))}
 
           </div>
 
