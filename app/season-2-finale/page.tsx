@@ -336,40 +336,6 @@ export default function Season2FinalePage() {
 
         </div>
 
-        {/* NOTICE */}
-<div className="mt-12 max-w-4xl mx-auto rounded-3xl border border-green-400/20 bg-green-500/10 p-8 text-center">
-
-  <p className="text-lg md:text-xl font-bold leading-relaxed text-white">
-
-    Please note:
-    {" "}
-    <span className="text-green-300">
-      the Top 10 public vote majority
-    </span>
-    {" "}
-    will count as
-    {" "}
-    <span className="text-green-300">
-      ONE official community vote
-    </span>
-    {" "}
-    in favor of the contestant.
-
-    <br />
-    <br />
-
-    The
-    {" "}
-    <span className="text-green-300">
-      judges and guest judges
-    </span>
-    {" "}
-    will still make their own official voting decisions.
-
-  </p>
-
-</div>
-
         {/* LEADERBOARD */}
         <section className="mt-20">
 
