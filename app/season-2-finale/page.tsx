@@ -1,26 +1,29 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
-  "YOUR_SUPABASE_ANON_KEY"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
 );
 
 export default function Season2FinalePage() {
 
-  const [contestants, setContestants] =
+  const [contestants,
+    setContestants] =
     useState<any[]>([]);
 
-  const [hasVoted, setHasVoted] =
+  const [hasVoted,
+    setHasVoted] =
     useState(false);
 
-  const [votingOpen, setVotingOpen] =
+  const [votingOpen,
+    setVotingOpen] =
     useState(true);
 
-  const [loading, setLoading] =
+  const [loading,
+    setLoading] =
     useState(true);
 
   /* LOAD */
@@ -29,51 +32,51 @@ export default function Season2FinalePage() {
     fetchSettings();
   }, []);
 
-  /* FETCH SETTINGS */
-  const fetchSettings = async () => {
+  /* SETTINGS */
+  const fetchSettings =
+    async () => {
 
-    const { data } =
-      await supabase
-        .from("site_settings")
-        .select("*");
+      const { data } =
+        await supabase
+          .from("site_settings")
+          .select("*");
 
-    if (!data) return;
+      if (!data) return;
 
-    const setting =
-      data.find(
-        (s: any) =>
-          s.key ===
-          "top10_voting_open"
-      );
+      const setting =
+        data.find(
+          (s: any) =>
+            s.key ===
+            "top10_voting_open"
+        );
 
-    const isOpen =
-      setting?.value === true ||
-      setting?.value === "true";
+      const isOpen =
+        setting?.value === true ||
+        setting?.value === "true";
 
-    setVotingOpen(isOpen);
+      setVotingOpen(isOpen);
 
-    /* RESET STORAGE WHEN REOPENED */
-    if (isOpen) {
+      if (isOpen) {
 
-      localStorage.removeItem(
-        "top10-voted"
-      );
-
-      setHasVoted(false);
-
-    } else {
-
-      const voted =
-        localStorage.getItem(
+        localStorage.removeItem(
           "top10-voted"
         );
 
-      if (voted === "true") {
-        setHasVoted(true);
-      }
+        setHasVoted(false);
 
-    }
-  };
+      } else {
+
+        const voted =
+          localStorage.getItem(
+            "top10-voted"
+          );
+
+        if (voted === "true") {
+          setHasVoted(true);
+        }
+
+      }
+    };
 
   /* FETCH CONTESTANTS */
   const fetchContestants =
@@ -81,7 +84,9 @@ export default function Season2FinalePage() {
 
       const { data } =
         await supabase
-          .from("season2_finalists")
+          .from(
+            "season2_finalists"
+          )
           .select("*")
           .neq(
             "status",
@@ -133,18 +138,25 @@ export default function Season2FinalePage() {
       const currentVotes =
         contestant.votes || 0;
 
-      await supabase
-        .from(
-          "season2_finalists"
-        )
-        .update({
-          votes:
-            currentVotes + 1,
-        })
-        .eq(
-          "id",
-          contestantId
-        );
+      const { error } =
+        await supabase
+          .from(
+            "season2_finalists"
+          )
+          .update({
+            votes:
+              currentVotes + 1,
+          })
+          .eq(
+            "id",
+            contestantId
+          );
+
+      if (error) {
+        console.log(error);
+        alert("Vote failed");
+        return;
+      }
 
       localStorage.setItem(
         "top10-voted",
@@ -196,7 +208,7 @@ export default function Season2FinalePage() {
 
         </div>
 
-        {/* GRID */}
+        {/* CONTESTANTS */}
         <div className="mt-20 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
 
           {contestants.map(
@@ -206,16 +218,24 @@ export default function Season2FinalePage() {
                 className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
               >
 
-                <img
-                  src={
-                    contestant.image_url
-                  }
-                  alt={
-                    contestant.name
-                  }
-                  className="w-full aspect-square object-cover"
-                />
+                {/* IMAGE */}
+                {contestant.image_url ? (
+                  <img
+                    src={
+                      contestant.image_url
+                    }
+                    alt={
+                      contestant.name
+                    }
+                    className="w-full aspect-square object-cover"
+                  />
+                ) : (
+                  <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+                    No Photo
+                  </div>
+                )}
 
+                {/* CONTENT */}
                 <div className="p-6 text-center">
 
                   <h2 className="text-3xl font-black uppercase">
