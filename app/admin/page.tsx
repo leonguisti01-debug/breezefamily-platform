@@ -5,22 +5,24 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
-  "YOUR_SUPABASE_ANON_KEY"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
 );
 
 export default function AdminPage() {
 
+  /* STATES */
   const [contestants, setContestants] = useState<any[]>([]);
   const [season2Contestants, setSeason2Contestants] =
     useState<any[]>([]);
   const [judges, setJudges] = useState<any[]>([]);
 
-  const [loading, setLoading] = useState(true);
-
   const [judgesVotingOpen, setJudgesVotingOpen] =
     useState(true);
 
   const [top10VotingOpen, setTop10VotingOpen] =
+    useState(true);
+
+  const [loading, setLoading] =
     useState(true);
 
   /* LOAD */
@@ -63,7 +65,7 @@ export default function AdminPage() {
     );
   };
 
-  /* TOGGLE */
+  /* TOGGLE SETTINGS */
   const toggleSetting = async (
     key: string,
     value: boolean
@@ -89,10 +91,11 @@ export default function AdminPage() {
         ascending: false,
       });
 
-    if (data) setContestants(data);
+    if (data)
+      setContestants(data);
   };
 
-  /* FINALISTS */
+  /* TOP 10 */
   const fetchSeason2Contestants =
     async () => {
 
@@ -117,12 +120,13 @@ export default function AdminPage() {
         ascending: false,
       });
 
-    if (data) setJudges(data);
+    if (data)
+      setJudges(data);
 
     setLoading(false);
   };
 
-  /* KIDS STATUS */
+  /* UPDATE KIDS */
   const updateStatus = async (
     id: number,
     status: string
@@ -136,91 +140,95 @@ export default function AdminPage() {
     fetchContestants();
   };
 
-  /* FINALIST STATUS */
-  const updateFinalistStatus = async (
-    id: number,
-    status: string,
-    eliminated: boolean
-  ) => {
+  /* UPDATE TOP 10 */
+  const updateFinalistStatus =
+    async (
+      id: number,
+      status: string,
+      eliminated: boolean
+    ) => {
 
-    await supabase
-      .from("season2_finalists")
-      .update({
-        status,
-        eliminated,
-      })
-      .eq("id", id);
+      await supabase
+        .from("season2_finalists")
+        .update({
+          status,
+          eliminated,
+        })
+        .eq("id", id);
 
-    fetchSeason2Contestants();
-  };
+      fetchSeason2Contestants();
+    };
 
-  /* JUDGE STATUS */
-  const updateJudgeStatus = async (
-    id: number,
-    status: string,
-    eliminated: boolean
-  ) => {
+  /* UPDATE JUDGES */
+  const updateJudgeStatus =
+    async (
+      id: number,
+      status: string,
+      eliminated: boolean
+    ) => {
 
-    await supabase
-      .from("fan_favorite_judges")
-      .update({
-        status,
-        eliminated,
-      })
-      .eq("id", id);
+      await supabase
+        .from("fan_favorite_judges")
+        .update({
+          status,
+          eliminated,
+        })
+        .eq("id", id);
 
-    fetchJudges();
-  };
+      fetchJudges();
+    };
 
-  /* RESET FINALIST VOTES */
-  const resetFinalistVotes = async () => {
+  /* RESET TOP 10 */
+  const resetFinalistVotes =
+    async () => {
 
-    const confirmReset =
-      window.confirm(
-        "Reset ALL finalist votes?"
-      );
+      const confirmReset =
+        window.confirm(
+          "Reset ALL Top 10 votes?"
+        );
 
-    if (!confirmReset) return;
+      if (!confirmReset) return;
 
-    await supabase
-      .from("season2_finalists")
-      .update({
-        votes: 0,
-      })
-      .neq("id", 0);
+      await supabase
+        .from("season2_finalists")
+        .update({
+          votes: 0,
+        })
+        .neq("id", 0);
 
-    alert("Finalist votes reset.");
+      alert("Top 10 votes reset.");
 
-    fetchSeason2Contestants();
-  };
+      fetchSeason2Contestants();
+    };
 
-  /* RESET JUDGE VOTES */
-  const resetJudgeVotes = async () => {
+  /* RESET JUDGES */
+  const resetJudgeVotes =
+    async () => {
 
-    const confirmReset =
-      window.confirm(
-        "Reset ALL judge votes?"
-      );
+      const confirmReset =
+        window.confirm(
+          "Reset ALL judge votes?"
+        );
 
-    if (!confirmReset) return;
+      if (!confirmReset) return;
 
-    await supabase
-      .from("fan_favorite_judges")
-      .update({
-        votes: 0,
-      })
-      .neq("id", 0);
+      await supabase
+        .from("fan_favorite_judges")
+        .update({
+          votes: 0,
+        })
+        .neq("id", 0);
 
-    alert("Judge votes reset.");
+      alert("Judge votes reset.");
 
-    fetchJudges();
-  };
+      fetchJudges();
+    };
 
   if (loading) {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
 
-        <h1 className="text-3xl font-black uppercase">
+        <h1 className="text-4xl font-black uppercase">
           Loading Admin...
         </h1>
 
@@ -231,7 +239,7 @@ export default function AdminPage() {
   return (
     <main className="min-h-screen bg-black text-white">
 
-      <div className="px-6 py-20 max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-6 py-20">
 
         {/* HEADER */}
         <div>
@@ -240,7 +248,7 @@ export default function AdminPage() {
             Breeze Family
           </p>
 
-          <h1 className="mt-3 text-5xl md:text-7xl font-black uppercase">
+          <h1 className="mt-4 text-5xl md:text-7xl font-black uppercase">
             Admin Dashboard
           </h1>
 
@@ -249,7 +257,6 @@ export default function AdminPage() {
         {/* VOTING CONTROLS */}
         <div className="mt-16 grid md:grid-cols-2 gap-8">
 
-          {/* JUDGES */}
           <button
             onClick={() =>
               toggleSetting(
@@ -257,7 +264,7 @@ export default function AdminPage() {
                 judgesVotingOpen
               )
             }
-            className={`py-8 rounded-3xl font-black uppercase text-2xl transition duration-300 ${
+            className={`py-8 rounded-3xl font-black uppercase text-2xl ${
               judgesVotingOpen
                 ? "bg-green-400 text-black"
                 : "bg-red-500 text-white"
@@ -278,7 +285,6 @@ export default function AdminPage() {
 
           </button>
 
-          {/* TOP 10 */}
           <button
             onClick={() =>
               toggleSetting(
@@ -286,7 +292,7 @@ export default function AdminPage() {
                 top10VotingOpen
               )
             }
-            className={`py-8 rounded-3xl font-black uppercase text-2xl transition duration-300 ${
+            className={`py-8 rounded-3xl font-black uppercase text-2xl ${
               top10VotingOpen
                 ? "bg-green-400 text-black"
                 : "bg-red-500 text-white"
@@ -309,41 +315,112 @@ export default function AdminPage() {
 
         </div>
 
-        {/* FINALISTS */}
-        <section className="mt-20">
+        {/* TOP 10 */}
+        <section className="mt-24">
 
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="flex justify-between items-center">
 
             <h2 className="text-4xl font-black uppercase">
-              Season 2 Top 10
+              Top 10
             </h2>
 
             <button
               onClick={resetFinalistVotes}
-              className="px-8 py-4 rounded-2xl bg-red-500/10 border border-red-400/20 text-red-300 font-black"
+              className="px-6 py-4 rounded-2xl bg-red-500 text-white font-black uppercase"
             >
-              RESET FINALIST VOTES
+              Reset Votes
             </button>
 
           </div>
 
-        </section>
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
 
-        {/* JUDGES */}
-        <section className="mt-24">
+            {season2Contestants.map(
+              (contestant) => (
+                <div
+                  key={contestant.id}
+                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
+                >
 
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                  <img
+                    src={contestant.image_url}
+                    alt={contestant.name}
+                    className="w-full aspect-square object-cover"
+                  />
 
-            <h2 className="text-4xl font-black uppercase">
-              Fan Favorite Judges
-            </h2>
+                  <div className="p-6">
 
-            <button
-              onClick={resetJudgeVotes}
-              className="px-8 py-4 rounded-2xl bg-pink-500/10 border border-pink-400/20 text-pink-300 font-black"
-            >
-              RESET JUDGE VOTES
-            </button>
+                    <h3 className="text-3xl font-black uppercase">
+                      {contestant.name}
+                    </h3>
+
+                    <p className="mt-3 text-green-300 font-bold">
+                      Votes:
+                      {" "}
+                      {contestant.votes || 0}
+                    </p>
+
+                    <div className="mt-6 grid gap-3">
+
+                      <button
+                        onClick={() =>
+                          updateFinalistStatus(
+                            contestant.id,
+                            "safe",
+                            false
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-green-500"
+                      >
+                        Safe
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateFinalistStatus(
+                            contestant.id,
+                            "eliminated",
+                            true
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-red-500"
+                      >
+                        Eliminated
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateFinalistStatus(
+                            contestant.id,
+                            "re-instated",
+                            false
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-cyan-500"
+                      >
+                        Re-Instated
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateFinalistStatus(
+                            contestant.id,
+                            "disqualified",
+                            true
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-pink-500"
+                      >
+                        Disqualified
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </div>
+              )
+            )}
 
           </div>
 
