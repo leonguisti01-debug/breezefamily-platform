@@ -53,7 +53,7 @@ export default function Season2FinalePage() {
           data: existingVote,
         } = await supabase
           .from("top10_votes")
-          .select("*")
+          .select("id")
           .eq(
             "ip_address",
             ip
@@ -63,6 +63,11 @@ export default function Season2FinalePage() {
         if (existingVote) {
 
           setHasVoted(true);
+
+          localStorage.setItem(
+            "top10-voted",
+            "true"
+          );
 
         }
 
@@ -166,21 +171,57 @@ export default function Season2FinalePage() {
         const ip =
           ipData.ip;
 
-        /* CHECK EXISTING VOTE */
+        /* CHECK EXISTING IP */
         const {
           data: existingVote,
         } = await supabase
           .from("top10_votes")
-          .select("*")
+          .select("id")
           .eq(
             "ip_address",
             ip
           )
           .maybeSingle();
 
+        /* BLOCK DUPLICATES */
         if (existingVote) {
 
           setHasVoted(true);
+
+          localStorage.setItem(
+            "top10-voted",
+            "true"
+          );
+
+          alert(
+            "You have already voted."
+          );
+
+          return;
+        }
+
+        /* STORE IP FIRST */
+        const {
+          error: insertError
+        } = await supabase
+          .from("top10_votes")
+          .insert({
+            contestant_id:
+              contestantId,
+            ip_address: ip,
+          });
+
+        /* BLOCK DUPLICATE INSERTS */
+        if (insertError) {
+
+          console.log(insertError);
+
+          setHasVoted(true);
+
+          localStorage.setItem(
+            "top10-voted",
+            "true"
+          );
 
           alert(
             "You have already voted."
@@ -226,28 +267,6 @@ export default function Season2FinalePage() {
 
           return;
         }
-
-        /* STORE IP VOTE */
-const {
-  error: insertError
-} = await supabase
-  .from("top10_votes")
-  .insert({
-    contestant_id:
-      contestantId,
-    ip_address: ip,
-  });
-
-if (insertError) {
-
-  alert(
-    "You have already voted."
-  );
-
-  setHasVoted(true);
-
-  return;
-}
 
         setHasVoted(true);
 
