@@ -31,6 +31,7 @@ export default function FanFavoriteJudgePage() {
 
     fetchJudges();
     fetchSettings();
+    checkExistingVote();
 
     const interval =
       setInterval(() => {
@@ -41,6 +42,61 @@ export default function FanFavoriteJudgePage() {
       clearInterval(interval);
 
   }, []);
+
+  /* CHECK EXISTING VOTE */
+  const checkExistingVote =
+    async () => {
+
+      try {
+
+        const res =
+          await fetch(
+            "https://api.ipify.org?format=json"
+          );
+
+        const ipData =
+          await res.json();
+
+        const ip =
+          ipData.ip;
+
+        const {
+          data: existingVotes,
+          error: checkError
+        } = await supabase
+          .from("judge_votes")
+          .select("id")
+          .eq(
+            "ip_address",
+            ip
+          );
+
+        if (checkError) {
+
+          console.log(checkError);
+
+        }
+
+        if (
+          existingVotes &&
+          existingVotes.length > 0
+        ) {
+
+          setHasVoted(true);
+
+          localStorage.setItem(
+            "judge-voted",
+            "true"
+          );
+
+        }
+
+      } catch (err) {
+
+        console.log(err);
+
+      }
+    };
 
   /* SETTINGS */
   const fetchSettings =
@@ -74,15 +130,6 @@ export default function FanFavoriteJudgePage() {
         rawValue === "1";
 
       setVotingOpen(isOpen);
-
-      const voted =
-        localStorage.getItem(
-          "judge-voted"
-        );
-
-      setHasVoted(
-        voted === "true"
-      );
     };
 
   /* FETCH JUDGES */
@@ -139,54 +186,133 @@ export default function FanFavoriteJudgePage() {
         return;
       }
 
-      const judge =
-        judges.find(
-          (j) =>
-            j.id === judgeId
-        );
+      try {
 
-      if (!judge) return;
-
-      const currentVotes =
-        judge.votes || 0;
-
-      const { error } =
-        await supabase
-          .from(
-            "fan_favorite_judges"
-          )
-          .update({
-            votes:
-              currentVotes + 1,
-          })
-          .eq(
-            "id",
-            judgeId
+        /* GET USER IP */
+        const res =
+          await fetch(
+            "https://api.ipify.org?format=json"
           );
 
-      if (error) {
+        const ipData =
+          await res.json();
 
-        console.log(error);
+        const ip =
+          ipData.ip;
 
-        alert(
-          "Vote failed"
+        /* CHECK EXISTING IP */
+        const {
+          data: existingVotes,
+          error: checkError
+        } = await supabase
+          .from("judge_votes")
+          .select("id")
+          .eq(
+            "ip_address",
+            ip
+          );
+
+        if (checkError) {
+
+          console.log(checkError);
+
+        }
+
+        /* BLOCK DUPLICATES */
+        if (
+          existingVotes &&
+          existingVotes.length > 0
+        ) {
+
+          setHasVoted(true);
+
+          localStorage.setItem(
+            "judge-voted",
+            "true"
+          );
+
+          alert(
+            "You have already voted."
+          );
+
+          return;
+        }
+
+        const judge =
+          judges.find(
+            (j) =>
+              j.id === judgeId
+          );
+
+        if (!judge) return;
+
+        const currentVotes =
+          judge.votes || 0;
+
+        /* UPDATE JUDGE VOTES */
+        const { error } =
+          await supabase
+            .from(
+              "fan_favorite_judges"
+            )
+            .update({
+              votes:
+                currentVotes + 1,
+            })
+            .eq(
+              "id",
+              judgeId
+            );
+
+        if (error) {
+
+          console.log(error);
+
+          alert(
+            "Vote failed"
+          );
+
+          return;
+        }
+
+        /* STORE IP */
+        const {
+          error: insertError
+        } = await supabase
+          .from("judge_votes")
+          .insert({
+            judge_id:
+              judgeId,
+            ip_address: ip,
+          });
+
+        if (insertError) {
+
+          console.log(insertError);
+
+        }
+
+        localStorage.setItem(
+          "judge-voted",
+          "true"
         );
 
-        return;
+        setHasVoted(true);
+
+        alert(
+          "Vote submitted!"
+        );
+
+        fetchJudges();
+
+      } catch (err) {
+
+        console.log(err);
+
+        alert(
+          "Voting failed."
+        );
       }
-
-      localStorage.setItem(
-        "judge-voted",
-        "true"
-      );
-
-      setHasVoted(true);
-
-      alert(
-        "Vote submitted!"
-      );
-
-      fetchJudges();
     };
 
   if (loading) {
@@ -359,7 +485,7 @@ export default function FanFavoriteJudgePage() {
                       className={`mt-8 w-full py-4 rounded-2xl font-black uppercase transition duration-300 ${
                         hasVoted ||
                         !votingOpen
-                          ? "bg-white/10 text-white/40"
+                          ? "bg-white/10 text-white/40 cursor-not-allowed"
                           : "bg-pink-500 text-white"
                       }`}
                     >
