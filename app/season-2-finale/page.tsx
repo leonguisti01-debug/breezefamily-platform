@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -78,7 +79,7 @@ export default function Season2FinalePage() {
       }
     };
 
-  /* FETCH CONTESTANTS */
+  /* FETCH */
   const fetchContestants =
     async () => {
 
@@ -197,7 +198,7 @@ export default function Season2FinalePage() {
           </p>
 
           <h1 className="mt-4 text-5xl md:text-7xl font-black uppercase">
-            Top 10 Voting
+            Top 10 Leaderboard
           </h1>
 
           {!votingOpen && (
@@ -208,11 +209,14 @@ export default function Season2FinalePage() {
 
         </div>
 
-        {/* CONTESTANTS */}
+        {/* GRID */}
         <div className="mt-20 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
 
           {contestants.map(
-            (contestant) => (
+            (
+              contestant,
+              index
+            ) => (
               <div
                 key={contestant.id}
                 className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
@@ -238,12 +242,33 @@ export default function Season2FinalePage() {
                 {/* CONTENT */}
                 <div className="p-6 text-center">
 
-                  <h2 className="text-3xl font-black uppercase">
+                  {/* POSITION */}
+                  <div className="inline-block px-4 py-2 rounded-full bg-green-400 text-black font-black uppercase text-sm">
+                    #{index + 1}
+                  </div>
+
+                  <h2 className="mt-5 text-3xl font-black uppercase">
                     {
                       contestant.name
                     }
                   </h2>
 
+                  {/* VOTES */}
+                  <div className="mt-5 px-5 py-4 rounded-2xl bg-green-500/10 border border-green-400/20">
+
+                    <p className="uppercase tracking-[3px] text-xs text-green-300">
+                      Votes
+                    </p>
+
+                    <p className="mt-2 text-4xl font-black">
+                      {
+                        contestant.votes || 0
+                      }
+                    </p>
+
+                  </div>
+
+                  {/* BUTTON */}
                   <button
                     onClick={() =>
                       voteForContestant(
