@@ -11,15 +11,22 @@ const supabase = createClient(
 export default function AdminPage() {
 
   /* STATES */
-  const [contestants, setContestants] = useState<any[]>([]);
-  const [season2Contestants, setSeason2Contestants] =
+  const [contestants, setContestants] =
     useState<any[]>([]);
-  const [judges, setJudges] = useState<any[]>([]);
 
-  const [judgesVotingOpen, setJudgesVotingOpen] =
+  const [season2Contestants,
+    setSeason2Contestants] =
+    useState<any[]>([]);
+
+  const [judges, setJudges] =
+    useState<any[]>([]);
+
+  const [judgesVotingOpen,
+    setJudgesVotingOpen] =
     useState(true);
 
-  const [top10VotingOpen, setTop10VotingOpen] =
+  const [top10VotingOpen,
+    setTop10VotingOpen] =
     useState(true);
 
   const [loading, setLoading] =
@@ -36,9 +43,15 @@ export default function AdminPage() {
   /* SETTINGS */
   const fetchSettings = async () => {
 
-    const { data } = await supabase
-      .from("site_settings")
-      .select("*");
+    const { data, error } =
+      await supabase
+        .from("site_settings")
+        .select("*");
+
+    if (error) {
+      console.log(error);
+      return;
+    }
 
     if (!data) return;
 
@@ -57,88 +70,122 @@ export default function AdminPage() {
       );
 
     setJudgesVotingOpen(
-      judges?.value ?? true
+      judges?.value === true ||
+      judges?.value === "true"
     );
 
     setTop10VotingOpen(
-      top10?.value ?? true
+      top10?.value === true ||
+      top10?.value === "true"
     );
   };
 
-  /* TOGGLE */
+  /* TOGGLE SETTINGS */
   const toggleSetting = async (
     key: string,
     value: boolean
   ) => {
 
-    await supabase
-      .from("site_settings")
-      .update({
-        value: !value,
-      })
-      .eq("key", key);
+    const newValue = !value;
 
-    fetchSettings();
+    const { error } =
+      await supabase
+        .from("site_settings")
+        .update({
+          value: newValue,
+        })
+        .eq("key", key);
+
+    if (error) {
+      console.log(error);
+      alert("Failed to update setting");
+      return;
+    }
+
+    if (
+      key ===
+      "judges_voting_open"
+    ) {
+      setJudgesVotingOpen(newValue);
+    }
+
+    if (
+      key ===
+      "top10_voting_open"
+    ) {
+      setTop10VotingOpen(newValue);
+    }
   };
 
   /* KIDS */
-  const fetchContestants = async () => {
+  const fetchContestants =
+    async () => {
 
-    const { data } = await supabase
-      .from("contestants")
-      .select("*")
-      .order("created_at", {
-        ascending: false,
-      });
+      const { data } =
+        await supabase
+          .from("contestants")
+          .select("*")
+          .order(
+            "created_at",
+            {
+              ascending: false,
+            }
+          );
 
-    if (data)
-      setContestants(data);
-  };
+      if (data)
+        setContestants(data);
+    };
 
   /* TOP 10 */
   const fetchSeason2Contestants =
     async () => {
 
-      const { data } = await supabase
-        .from("season2_finalists")
-        .select("*")
-        .order("votes", {
-          ascending: false,
-        });
+      const { data } =
+        await supabase
+          .from("season2_finalists")
+          .select("*")
+          .order("votes", {
+            ascending: false,
+          });
 
       if (data)
         setSeason2Contestants(data);
     };
 
   /* JUDGES */
-  const fetchJudges = async () => {
+  const fetchJudges =
+    async () => {
 
-    const { data } = await supabase
-      .from("fan_favorite_judges")
-      .select("*")
-      .order("votes", {
-        ascending: false,
-      });
+      const { data } =
+        await supabase
+          .from(
+            "fan_favorite_judges"
+          )
+          .select("*")
+          .order("votes", {
+            ascending: false,
+          });
 
-    if (data)
-      setJudges(data);
+      if (data)
+        setJudges(data);
 
-    setLoading(false);
-  };
+      setLoading(false);
+    };
 
   /* UPDATE KIDS */
-  const updateStatus = async (
-    id: number,
-    status: string
-  ) => {
+  const updateStatus =
+    async (
+      id: number,
+      status: string
+    ) => {
 
-    await supabase
-      .from("contestants")
-      .update({ status })
-      .eq("id", id);
+      await supabase
+        .from("contestants")
+        .update({ status })
+        .eq("id", id);
 
-    fetchContestants();
-  };
+      fetchContestants();
+    };
 
   /* UPDATE TOP 10 */
   const updateFinalistStatus =
@@ -149,7 +196,9 @@ export default function AdminPage() {
     ) => {
 
       await supabase
-        .from("season2_finalists")
+        .from(
+          "season2_finalists"
+        )
         .update({
           status,
           eliminated,
@@ -168,7 +217,9 @@ export default function AdminPage() {
     ) => {
 
       await supabase
-        .from("fan_favorite_judges")
+        .from(
+          "fan_favorite_judges"
+        )
         .update({
           status,
           eliminated,
@@ -187,16 +238,21 @@ export default function AdminPage() {
           "Reset ALL Top 10 votes?"
         );
 
-      if (!confirmReset) return;
+      if (!confirmReset)
+        return;
 
       await supabase
-        .from("season2_finalists")
+        .from(
+          "season2_finalists"
+        )
         .update({
           votes: 0,
         })
         .neq("id", 0);
 
-      alert("Top 10 votes reset.");
+      alert(
+        "Top 10 votes reset."
+      );
 
       fetchSeason2Contestants();
     };
@@ -210,16 +266,21 @@ export default function AdminPage() {
           "Reset ALL judge votes?"
         );
 
-      if (!confirmReset) return;
+      if (!confirmReset)
+        return;
 
       await supabase
-        .from("fan_favorite_judges")
+        .from(
+          "fan_favorite_judges"
+        )
         .update({
           votes: 0,
         })
         .neq("id", 0);
 
-      alert("Judge votes reset.");
+      alert(
+        "Judge votes reset."
+      );
 
       fetchJudges();
     };
@@ -257,6 +318,7 @@ export default function AdminPage() {
         {/* VOTING CONTROLS */}
         <div className="mt-16 grid md:grid-cols-2 gap-8">
 
+          {/* JUDGES */}
           <button
             onClick={() =>
               toggleSetting(
@@ -264,7 +326,7 @@ export default function AdminPage() {
                 judgesVotingOpen
               )
             }
-            className={`py-8 rounded-3xl font-black uppercase text-2xl ${
+            className={`py-8 rounded-3xl font-black uppercase text-2xl transition duration-300 ${
               judgesVotingOpen
                 ? "bg-green-400 text-black"
                 : "bg-red-500 text-white"
@@ -285,6 +347,7 @@ export default function AdminPage() {
 
           </button>
 
+          {/* TOP 10 */}
           <button
             onClick={() =>
               toggleSetting(
@@ -292,7 +355,7 @@ export default function AdminPage() {
                 top10VotingOpen
               )
             }
-            className={`py-8 rounded-3xl font-black uppercase text-2xl ${
+            className={`py-8 rounded-3xl font-black uppercase text-2xl transition duration-300 ${
               top10VotingOpen
                 ? "bg-green-400 text-black"
                 : "bg-red-500 text-white"
@@ -325,7 +388,9 @@ export default function AdminPage() {
             </h2>
 
             <button
-              onClick={resetFinalistVotes}
+              onClick={
+                resetFinalistVotes
+              }
               className="px-6 py-4 rounded-2xl bg-red-500 text-white font-black uppercase"
             >
               Reset Votes
@@ -343,21 +408,29 @@ export default function AdminPage() {
                 >
 
                   <img
-                    src={contestant.image_url}
-                    alt={contestant.name}
+                    src={
+                      contestant.image_url
+                    }
+                    alt={
+                      contestant.name
+                    }
                     className="w-full aspect-square object-cover"
                   />
 
                   <div className="p-6">
 
                     <h3 className="text-3xl font-black uppercase">
-                      {contestant.name}
+                      {
+                        contestant.name
+                      }
                     </h3>
 
                     <p className="mt-3 text-green-300 font-bold">
                       Votes:
                       {" "}
-                      {contestant.votes || 0}
+                      {
+                        contestant.votes || 0
+                      }
                     </p>
 
                     <div className="mt-6 grid gap-3">
@@ -436,7 +509,9 @@ export default function AdminPage() {
             </h2>
 
             <button
-              onClick={resetJudgeVotes}
+              onClick={
+                resetJudgeVotes
+              }
               className="px-6 py-4 rounded-2xl bg-pink-500 text-white font-black uppercase"
             >
               Reset Judge Votes
@@ -446,103 +521,189 @@ export default function AdminPage() {
 
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
 
-            {judges.map((judge) => (
-              <div
-                key={judge.id}
-                className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
-              >
+            {judges.map(
+              (judge) => (
+                <div
+                  key={judge.id}
+                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
+                >
 
-                <div className="w-full bg-black overflow-hidden">
+                  <div className="w-full bg-black overflow-hidden">
 
-                  {judge.video_url ? (
-                    <video
-                      src={judge.video_url}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className="w-full h-auto max-h-[750px] object-contain"
-                    />
-                  ) : (
-                    <div className="w-full h-[500px] flex items-center justify-center text-white/40">
-                      No Video
+                    {judge.video_url ? (
+                      <video
+                        src={
+                          judge.video_url
+                        }
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className="w-full h-auto max-h-[750px] object-contain"
+                      />
+                    ) : (
+                      <div className="w-full h-[500px] flex items-center justify-center text-white/40">
+                        No Video
+                      </div>
+                    )}
+
+                  </div>
+
+                  <div className="p-6">
+
+                    <h3 className="text-3xl font-black uppercase">
+                      {judge.name}
+                    </h3>
+
+                    <p className="mt-3 text-pink-300 font-bold">
+                      Votes:
+                      {" "}
+                      {
+                        judge.votes || 0
+                      }
+                    </p>
+
+                    <div className="mt-6 grid gap-3">
+
+                      <button
+                        onClick={() =>
+                          updateJudgeStatus(
+                            judge.id,
+                            "safe",
+                            false
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-green-500"
+                      >
+                        Safe
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateJudgeStatus(
+                            judge.id,
+                            "eliminated",
+                            true
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-red-500"
+                      >
+                        Eliminated
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateJudgeStatus(
+                            judge.id,
+                            "re-instated",
+                            false
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-cyan-500"
+                      >
+                        Re-Instated
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateJudgeStatus(
+                            judge.id,
+                            "disqualified",
+                            true
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-pink-500"
+                      >
+                        Disqualified
+                      </button>
+
                     </div>
-                  )}
-
-                </div>
-
-                <div className="p-6">
-
-                  <h3 className="text-3xl font-black uppercase">
-                    {judge.name}
-                  </h3>
-
-                  <p className="mt-3 text-pink-300 font-bold">
-                    Votes:
-                    {" "}
-                    {judge.votes || 0}
-                  </p>
-
-                  <div className="mt-6 grid gap-3">
-
-                    <button
-                      onClick={() =>
-                        updateJudgeStatus(
-                          judge.id,
-                          "safe",
-                          false
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-green-500"
-                    >
-                      Safe
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        updateJudgeStatus(
-                          judge.id,
-                          "eliminated",
-                          true
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-red-500"
-                    >
-                      Eliminated
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        updateJudgeStatus(
-                          judge.id,
-                          "re-instated",
-                          false
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-cyan-500"
-                    >
-                      Re-Instated
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        updateJudgeStatus(
-                          judge.id,
-                          "disqualified",
-                          true
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-pink-500"
-                    >
-                      Disqualified
-                    </button>
 
                   </div>
 
                 </div>
+              )
+            )}
 
-              </div>
-            ))}
+          </div>
+
+        </section>
+
+        {/* KIDS */}
+        <section className="mt-24">
+
+          <h2 className="text-4xl font-black uppercase">
+            Kids Entries
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+            {contestants.map(
+              (contestant) => (
+                <div
+                  key={contestant.id}
+                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
+                >
+
+                  <img
+                    src={
+                      contestant.photo_url
+                    }
+                    alt={
+                      contestant.full_name
+                    }
+                    className="w-full aspect-square object-cover"
+                  />
+
+                  <div className="p-6">
+
+                    <h3 className="text-3xl font-black uppercase">
+                      {
+                        contestant.full_name
+                      }
+                    </h3>
+
+                    <p className="mt-3 text-white/70">
+                      Age:
+                      {" "}
+                      {
+                        contestant.age
+                      }
+                    </p>
+
+                    <div className="mt-6 grid grid-cols-2 gap-3">
+
+                      <button
+                        onClick={() =>
+                          updateStatus(
+                            contestant.id,
+                            "approved"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-green-500"
+                      >
+                        Approve
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateStatus(
+                            contestant.id,
+                            "declined"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-red-500"
+                      >
+                        Decline
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </div>
+              )
+            )}
 
           </div>
 
