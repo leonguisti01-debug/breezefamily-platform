@@ -278,19 +278,27 @@ export default function Season2FinalePage() {
                 >
 
                   {contestant.image_url ? (
-                    <img
-                      src={
-                        contestant.image_url
-                      }
-                      alt={
-                        contestant.name
-                      }
-                      className="w-full aspect-square object-cover"
-                    />
+
+                    <div className="w-full bg-black flex items-center justify-center p-4">
+
+                      <img
+                        src={
+                          contestant.image_url
+                        }
+                        alt={
+                          contestant.name
+                        }
+                        className="w-full h-auto max-h-[750px] object-contain rounded-2xl"
+                      />
+
+                    </div>
+
                   ) : (
-                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+
+                    <div className="w-full h-[500px] bg-black flex items-center justify-center text-white/30">
                       No Photo
                     </div>
+
                   )}
 
                   <div className="p-6 text-center">
