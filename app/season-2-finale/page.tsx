@@ -55,24 +55,18 @@ export default function Season2FinalePage() {
 
       setVotingOpen(isOpen);
 
-      if (isOpen) {
-
-        localStorage.removeItem(
+      const voted =
+        localStorage.getItem(
           "top10-voted"
         );
 
-        setHasVoted(false);
+      if (voted === "true") {
+
+        setHasVoted(true);
 
       } else {
 
-        const voted =
-          localStorage.getItem(
-            "top10-voted"
-          );
-
-        if (voted === "true") {
-          setHasVoted(true);
-        }
+        setHasVoted(false);
 
       }
     };
@@ -112,16 +106,20 @@ export default function Season2FinalePage() {
     ) => {
 
       if (!votingOpen) {
+
         alert(
           "Voting is currently closed."
         );
+
         return;
       }
 
       if (hasVoted) {
+
         alert(
           "You have already voted."
         );
+
         return;
       }
 
@@ -152,8 +150,11 @@ export default function Season2FinalePage() {
           );
 
       if (error) {
+
         console.log(error);
+
         alert("Vote failed");
+
         return;
       }
 
