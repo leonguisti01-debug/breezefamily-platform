@@ -172,6 +172,134 @@ export default function AdminPage() {
       setLoading(false);
     };
 
+  /* UPLOAD TOP 10 IMAGE */
+  const uploadTop10Image =
+    async (
+      e: any,
+      contestantId: number
+    ) => {
+
+      const file =
+        e.target.files[0];
+
+      if (!file) return;
+
+      const fileName =
+        `${Date.now()}-${file.name}`;
+
+      const { error: uploadError } =
+        await supabase.storage
+          .from("contestant-photos")
+          .upload(
+            fileName,
+            file
+          );
+
+      if (uploadError) {
+        console.log(uploadError);
+        alert("Upload failed");
+        return;
+      }
+
+      const {
+        data: publicUrlData,
+      } = supabase.storage
+        .from("contestant-photos")
+        .getPublicUrl(
+          fileName
+        );
+
+      const imageUrl =
+        publicUrlData.publicUrl;
+
+      const { error: updateError } =
+        await supabase
+          .from(
+            "season2_finalists"
+          )
+          .update({
+            image_url: imageUrl,
+          })
+          .eq(
+            "id",
+            contestantId
+          );
+
+      if (updateError) {
+        console.log(updateError);
+        alert("Database update failed");
+        return;
+      }
+
+      alert("Top 10 photo uploaded!");
+
+      fetchSeason2Contestants();
+    };
+
+  /* UPLOAD JUDGE IMAGE */
+  const uploadJudgeImage =
+    async (
+      e: any,
+      judgeId: number
+    ) => {
+
+      const file =
+        e.target.files[0];
+
+      if (!file) return;
+
+      const fileName =
+        `${Date.now()}-${file.name}`;
+
+      const { error: uploadError } =
+        await supabase.storage
+          .from("judges")
+          .upload(
+            fileName,
+            file
+          );
+
+      if (uploadError) {
+        console.log(uploadError);
+        alert("Upload failed");
+        return;
+      }
+
+      const {
+        data: publicUrlData,
+      } = supabase.storage
+        .from("judges")
+        .getPublicUrl(
+          fileName
+        );
+
+      const imageUrl =
+        publicUrlData.publicUrl;
+
+      const { error: updateError } =
+        await supabase
+          .from(
+            "fan_favorite_judges"
+          )
+          .update({
+            image_url: imageUrl,
+          })
+          .eq(
+            "id",
+            judgeId
+          );
+
+      if (updateError) {
+        console.log(updateError);
+        alert("Database update failed");
+        return;
+      }
+
+      alert("Judge photo uploaded!");
+
+      fetchJudges();
+    };
+
   /* UPDATE KIDS */
   const updateStatus =
     async (
@@ -318,7 +446,6 @@ export default function AdminPage() {
         {/* VOTING CONTROLS */}
         <div className="mt-16 grid md:grid-cols-2 gap-8">
 
-          {/* JUDGES */}
           <button
             onClick={() =>
               toggleSetting(
@@ -338,16 +465,13 @@ export default function AdminPage() {
             <br />
 
             <span className="text-lg">
-
               {judgesVotingOpen
                 ? "OPEN"
                 : "CLOSED"}
-
             </span>
 
           </button>
 
-          {/* TOP 10 */}
           <button
             onClick={() =>
               toggleSetting(
@@ -367,11 +491,9 @@ export default function AdminPage() {
             <br />
 
             <span className="text-lg">
-
               {top10VotingOpen
                 ? "OPEN"
                 : "CLOSED"}
-
             </span>
 
           </button>
@@ -432,6 +554,26 @@ export default function AdminPage() {
                         contestant.votes || 0
                       }
                     </p>
+
+                    <label className="mt-6 block">
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          uploadTop10Image(
+                            e,
+                            contestant.id
+                          )
+                        }
+                        className="hidden"
+                      />
+
+                      <div className="cursor-pointer py-3 rounded-2xl bg-white text-black text-center font-black uppercase">
+                        Upload Photo
+                      </div>
+
+                    </label>
 
                     <div className="mt-6 grid gap-3">
 
@@ -528,26 +670,21 @@ export default function AdminPage() {
                   className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
                 >
 
-                  <div className="w-full bg-black overflow-hidden">
-
-                    {judge.video_url ? (
-                      <video
-                        src={
-                          judge.video_url
-                        }
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        className="w-full h-auto max-h-[750px] object-contain"
-                      />
-                    ) : (
-                      <div className="w-full h-[500px] flex items-center justify-center text-white/40">
-                        No Video
-                      </div>
-                    )}
-
-                  </div>
+                  {judge.image_url ? (
+                    <img
+                      src={
+                        judge.image_url
+                      }
+                      alt={
+                        judge.name
+                      }
+                      className="w-full aspect-square object-cover"
+                    />
+                  ) : (
+                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+                      No Photo
+                    </div>
+                  )}
 
                   <div className="p-6">
 
@@ -562,6 +699,26 @@ export default function AdminPage() {
                         judge.votes || 0
                       }
                     </p>
+
+                    <label className="mt-6 block">
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          uploadJudgeImage(
+                            e,
+                            judge.id
+                          )
+                        }
+                        className="hidden"
+                      />
+
+                      <div className="cursor-pointer py-3 rounded-2xl bg-white text-black text-center font-black uppercase">
+                        Upload Photo
+                      </div>
+
+                    </label>
 
                     <div className="mt-6 grid gap-3">
 
