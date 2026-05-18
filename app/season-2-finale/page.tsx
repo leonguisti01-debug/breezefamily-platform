@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -27,7 +26,6 @@ export default function Season2FinalePage() {
     setLoading] =
     useState(true);
 
-  /* LOAD */
   useEffect(() => {
     fetchContestants();
     fetchSettings();
@@ -209,99 +207,153 @@ export default function Season2FinalePage() {
 
         </div>
 
-        {/* GRID */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+        {/* LEADERBOARD */}
+        <section className="mt-20">
 
-          {contestants.map(
-            (
-              contestant,
-              index
-            ) => (
-              <div
-                key={contestant.id}
-                className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
-              >
+          <div className="rounded-3xl bg-white/5 border border-white/10 overflow-hidden">
 
-                {/* IMAGE */}
-                {contestant.image_url ? (
-                  <img
-                    src={
-                      contestant.image_url
-                    }
-                    alt={
-                      contestant.name
-                    }
-                    className="w-full aspect-square object-cover"
-                  />
-                ) : (
-                  <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
-                    No Photo
-                  </div>
-                )}
+            <div className="grid grid-cols-3 bg-green-400 text-black font-black uppercase text-sm tracking-[2px]">
 
-                {/* CONTENT */}
-                <div className="p-6 text-center">
+              <div className="p-5">
+                Rank
+              </div>
 
-                  {/* POSITION */}
-                  <div className="inline-block px-4 py-2 rounded-full bg-green-400 text-black font-black uppercase text-sm">
+              <div className="p-5">
+                Contestant
+              </div>
+
+              <div className="p-5 text-right">
+                Votes
+              </div>
+
+            </div>
+
+            {contestants.map(
+              (
+                contestant,
+                index
+              ) => (
+                <div
+                  key={contestant.id}
+                  className="grid grid-cols-3 border-t border-white/10 items-center"
+                >
+
+                  <div className="p-5 font-black text-2xl text-green-300">
                     #{index + 1}
                   </div>
 
-                  <h2 className="mt-5 text-3xl font-black uppercase">
+                  <div className="p-5 font-bold uppercase">
                     {
                       contestant.name
                     }
-                  </h2>
+                  </div>
 
-                  {/* VOTES */}
-                  <div className="mt-5 px-5 py-4 rounded-2xl bg-green-500/10 border border-green-400/20">
+                  <div className="p-5 text-right text-2xl font-black">
+                    {
+                      contestant.votes || 0
+                    }
+                  </div>
 
-                    <p className="uppercase tracking-[3px] text-xs text-green-300">
-                      Votes
-                    </p>
+                </div>
+              )
+            )}
 
-                    <p className="mt-2 text-4xl font-black">
-                      {
-                        contestant.votes || 0
+          </div>
+
+        </section>
+
+        {/* CONTESTANT CARDS */}
+        <section className="mt-24">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+
+            {contestants.map(
+              (
+                contestant,
+                index
+              ) => (
+                <div
+                  key={contestant.id}
+                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
+                >
+
+                  {contestant.image_url ? (
+                    <img
+                      src={
+                        contestant.image_url
                       }
-                    </p>
+                      alt={
+                        contestant.name
+                      }
+                      className="w-full aspect-square object-cover"
+                    />
+                  ) : (
+                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+                      No Photo
+                    </div>
+                  )}
+
+                  <div className="p-6 text-center">
+
+                    <div className="inline-block px-4 py-2 rounded-full bg-green-400 text-black font-black uppercase text-sm">
+                      #{index + 1}
+                    </div>
+
+                    <h2 className="mt-5 text-3xl font-black uppercase">
+                      {
+                        contestant.name
+                      }
+                    </h2>
+
+                    <div className="mt-5 px-5 py-4 rounded-2xl bg-green-500/10 border border-green-400/20">
+
+                      <p className="uppercase tracking-[3px] text-xs text-green-300">
+                        Votes
+                      </p>
+
+                      <p className="mt-2 text-4xl font-black">
+                        {
+                          contestant.votes || 0
+                        }
+                      </p>
+
+                    </div>
+
+                    <button
+                      onClick={() =>
+                        voteForContestant(
+                          contestant.id
+                        )
+                      }
+                      disabled={
+                        hasVoted ||
+                        !votingOpen
+                      }
+                      className={`mt-8 w-full py-4 rounded-2xl font-black uppercase transition duration-300 ${
+                        hasVoted ||
+                        !votingOpen
+                          ? "bg-white/10 text-white/40"
+                          : "bg-green-400 text-black"
+                      }`}
+                    >
+
+                      {!votingOpen
+                        ? "Voting Closed"
+                        : hasVoted
+                        ? "Already Voted"
+                        : "Vote"}
+
+                    </button>
 
                   </div>
 
-                  {/* BUTTON */}
-                  <button
-                    onClick={() =>
-                      voteForContestant(
-                        contestant.id
-                      )
-                    }
-                    disabled={
-                      hasVoted ||
-                      !votingOpen
-                    }
-                    className={`mt-8 w-full py-4 rounded-2xl font-black uppercase transition duration-300 ${
-                      hasVoted ||
-                      !votingOpen
-                        ? "bg-white/10 text-white/40"
-                        : "bg-green-400 text-black"
-                    }`}
-                  >
-
-                    {!votingOpen
-                      ? "Voting Closed"
-                      : hasVoted
-                      ? "Already Voted"
-                      : "Vote"}
-
-                  </button>
-
                 </div>
+              )
+            )}
 
-              </div>
-            )
-          )}
+          </div>
 
-        </div>
+        </section>
 
       </div>
 
