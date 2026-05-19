@@ -10,6 +10,16 @@ const supabase = createClient(
 
 export default function AdminPage() {
 
+  /* AUTH */
+  const [authorized,
+    setAuthorized] =
+    useState(false);
+
+  const [password,
+    setPassword] =
+    useState("");
+
+  /* DATA */
   const [contestants,
     setContestants] =
     useState<any[]>([]);
@@ -26,6 +36,7 @@ export default function AdminPage() {
     setHits] =
     useState<any[]>([]);
 
+  /* SETTINGS */
   const [judgesVotingOpen,
     setJudgesVotingOpen] =
     useState(true);
@@ -39,6 +50,19 @@ export default function AdminPage() {
     useState(true);
 
   useEffect(() => {
+
+    const savedAuth =
+      localStorage.getItem(
+        "admin-auth"
+      );
+
+    if (
+      savedAuth === "true"
+    ) {
+
+      setAuthorized(true);
+
+    }
 
     fetchContestants();
     fetchSeason2Contestants();
@@ -183,110 +207,6 @@ export default function AdminPage() {
       setLoading(false);
     };
 
-  /* UPLOAD TOP10 PHOTO */
-  const uploadTop10Image =
-    async (
-      e: any,
-      contestantId: number
-    ) => {
-
-      const file =
-        e.target.files[0];
-
-      if (!file) return;
-
-      const fileName =
-        `${Date.now()}-${file.name}`;
-
-      await supabase.storage
-        .from(
-          "contestant-photos"
-        )
-        .upload(
-          fileName,
-          file
-        );
-
-      const {
-        data: publicUrlData,
-      } = supabase.storage
-        .from(
-          "contestant-photos"
-        )
-        .getPublicUrl(
-          fileName
-        );
-
-      await supabase
-        .from(
-          "season2_finalists"
-        )
-        .update({
-          image_url:
-            publicUrlData.publicUrl,
-        })
-        .eq(
-          "id",
-          contestantId
-        );
-
-      fetchSeason2Contestants();
-
-      alert(
-        "Photo uploaded!"
-      );
-    };
-
-  /* UPLOAD JUDGE VIDEO */
-  const uploadJudgeVideo =
-    async (
-      e: any,
-      judgeId: number
-    ) => {
-
-      const file =
-        e.target.files[0];
-
-      if (!file) return;
-
-      const fileName =
-        `${Date.now()}-${file.name}`;
-
-      await supabase.storage
-        .from("judges")
-        .upload(
-          fileName,
-          file
-        );
-
-      const {
-        data: publicUrlData,
-      } = supabase.storage
-        .from("judges")
-        .getPublicUrl(
-          fileName
-        );
-
-      await supabase
-        .from(
-          "fan_favorite_judges"
-        )
-        .update({
-          video_url:
-            publicUrlData.publicUrl,
-        })
-        .eq(
-          "id",
-          judgeId
-        );
-
-      fetchJudges();
-
-      alert(
-        "Video uploaded!"
-      );
-    };
-
   /* STATUS */
   const updateStatus =
     async (
@@ -394,6 +314,72 @@ export default function AdminPage() {
       );
     };
 
+  /* LOGIN SCREEN */
+  if (!authorized) {
+
+    return (
+
+      <main className="min-h-screen bg-black text-white flex items-center justify-center px-6">
+
+        <div className="w-full max-w-md rounded-3xl bg-white/5 border border-white/10 p-10">
+
+          <p className="uppercase tracking-[4px] text-green-300 text-sm">
+            Breeze Family
+          </p>
+
+          <h1 className="mt-4 text-4xl font-black uppercase">
+            Admin Login
+          </h1>
+
+          <input
+            type="password"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) =>
+              setPassword(
+                e.target.value
+              )
+            }
+            className="mt-8 w-full px-5 py-4 rounded-2xl bg-black border border-white/10 text-white"
+          />
+
+          <button
+            onClick={() => {
+
+              if (
+                password ===
+                "BreezeAdmin2026"
+              ) {
+
+                localStorage.setItem(
+                  "admin-auth",
+                  "true"
+                );
+
+                setAuthorized(true);
+
+              } else {
+
+                alert(
+                  "Incorrect password"
+                );
+
+              }
+            }}
+            className="mt-6 w-full py-4 rounded-2xl bg-green-400 text-black font-black uppercase"
+          >
+
+            Login
+
+          </button>
+
+        </div>
+
+      </main>
+
+    );
+  }
+
   if (loading) {
 
     return (
@@ -413,15 +399,36 @@ export default function AdminPage() {
       <div className="max-w-7xl mx-auto px-6 py-20">
 
         {/* HEADER */}
-        <div>
+        <div className="flex items-center justify-between">
 
-          <p className="uppercase tracking-[4px] text-green-300 text-sm">
-            Breeze Family
-          </p>
+          <div>
 
-          <h1 className="mt-4 text-5xl md:text-7xl font-black uppercase">
-            Admin Dashboard
-          </h1>
+            <p className="uppercase tracking-[4px] text-green-300 text-sm">
+              Breeze Family
+            </p>
+
+            <h1 className="mt-4 text-5xl md:text-7xl font-black uppercase">
+              Admin Dashboard
+            </h1>
+
+          </div>
+
+          <button
+            onClick={() => {
+
+              localStorage.removeItem(
+                "admin-auth"
+              );
+
+              window.location.reload();
+
+            }}
+            className="px-6 py-4 rounded-2xl bg-red-500 text-white font-black uppercase"
+          >
+
+            Logout
+
+          </button>
 
         </div>
 
