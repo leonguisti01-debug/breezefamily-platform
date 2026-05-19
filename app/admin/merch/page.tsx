@@ -5,7 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
-  "YOUR_SUPABASE_ANON_KEY"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
 );
 
 export default function MerchAdminPage() {
@@ -26,8 +26,12 @@ export default function MerchAdminPage() {
   const fetchProducts =
     async () => {
 
-      const { data } =
-        await supabase
+      try {
+
+        const {
+          data,
+          error
+        } = await supabase
           .from("merch_products")
           .select("*")
           .order(
@@ -37,70 +41,130 @@ export default function MerchAdminPage() {
             }
           );
 
-      if (data)
-        setProducts(data);
+        if (error) {
+
+          console.log(error);
+
+          return;
+        }
+
+        if (data) {
+
+          setProducts(data);
+
+        }
+
+      } catch (err) {
+
+        console.log(err);
+
+      }
 
       setLoading(false);
     };
 
-  /* UPDATE PRICE */
-  const updatePrice =
-    async (
-      id: number,
-      price: string
-    ) => {
+  /* ADD PRODUCT */
+  const addProduct =
+    async () => {
 
-      await supabase
-        .from("merch_products")
-        .update({
-          price,
-        })
-        .eq("id", id);
+      try {
 
-      fetchProducts();
+        const {
+          data,
+          error
+        } = await supabase
+          .from("merch_products")
+          .insert([
+            {
+              name: "New Product",
+              price: "R0",
+              category: "Merch",
+              status: "active",
+            },
+          ])
+          .select();
 
-      alert("Price updated!");
+        if (error) {
+
+          console.log(error);
+
+          alert(
+            "Failed to add product."
+          );
+
+          return;
+        }
+
+        console.log(data);
+
+        alert(
+          "Product added!"
+        );
+
+        fetchProducts();
+
+      } catch (err) {
+
+        console.log(err);
+
+        alert(
+          "Something went wrong."
+        );
+      }
     };
 
   /* UPDATE NAME */
   const updateName =
     async (
       id: number,
-      name: string
+      value: string
     ) => {
 
       await supabase
         .from("merch_products")
         .update({
-          name,
+          name: value,
         })
         .eq("id", id);
 
       fetchProducts();
+    };
 
-      alert("Name updated!");
+  /* UPDATE PRICE */
+  const updatePrice =
+    async (
+      id: number,
+      value: string
+    ) => {
+
+      await supabase
+        .from("merch_products")
+        .update({
+          price: value,
+        })
+        .eq("id", id);
+
+      fetchProducts();
     };
 
   /* UPDATE CATEGORY */
   const updateCategory =
     async (
       id: number,
-      category: string
+      value: string
     ) => {
 
       await supabase
         .from("merch_products")
         .update({
-          category,
+          category: value,
         })
         .eq("id", id);
 
       fetchProducts();
-
-      alert("Category updated!");
     };
 
-  /* TOGGLE PRODUCT */
+  /* TOGGLE STATUS */
   const toggleStatus =
     async (
       id: number,
@@ -122,71 +186,80 @@ export default function MerchAdminPage() {
       fetchProducts();
     };
 
-  /* UPLOAD PRODUCT IMAGE */
+  /* UPLOAD IMAGE */
   const uploadImage =
     async (
       e: any,
       productId: number
     ) => {
 
-      const file =
-        e.target.files[0];
+      try {
 
-      if (!file) return;
+        const file =
+          e.target.files[0];
 
-      const fileName =
-        `${Date.now()}-${file.name}`;
+        if (!file) return;
 
-      await supabase.storage
-        .from("merch")
-        .upload(
-          fileName,
-          file
+        const fileName =
+          `${Date.now()}-${file.name}`;
+
+        const {
+          error: uploadError
+        } = await supabase.storage
+          .from("merch")
+          .upload(
+            fileName,
+            file
+          );
+
+        if (uploadError) {
+
+          console.log(uploadError);
+
+          alert(
+            "Upload failed."
+          );
+
+          return;
+        }
+
+        const {
+          data: publicUrlData,
+        } = supabase.storage
+          .from("merch")
+          .getPublicUrl(
+            fileName
+          );
+
+        await supabase
+          .from("merch_products")
+          .update({
+            image_url:
+              publicUrlData.publicUrl,
+          })
+          .eq(
+            "id",
+            productId
+          );
+
+        alert(
+          "Image uploaded!"
         );
 
-      const {
-        data: publicUrlData,
-      } = supabase.storage
-        .from("merch")
-        .getPublicUrl(
-          fileName
+        fetchProducts();
+
+      } catch (err) {
+
+        console.log(err);
+
+        alert(
+          "Upload failed."
         );
-
-      await supabase
-        .from("merch_products")
-        .update({
-          image_url:
-            publicUrlData.publicUrl,
-        })
-        .eq(
-          "id",
-          productId
-        );
-
-      fetchProducts();
-
-      alert("Image uploaded!");
-    };
-
-  /* ADD PRODUCT */
-  const addProduct =
-    async () => {
-
-      await supabase
-        .from("merch_products")
-        .insert({
-          name: "New Product",
-          price: "R0",
-          category: "Merch",
-          status: "active",
-        });
-
-      fetchProducts();
-
-      alert("Product added!");
+      }
     };
 
   if (loading) {
+
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
 

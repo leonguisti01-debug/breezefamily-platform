@@ -417,6 +417,178 @@ export default function AdminPage() {
 
         </div>
 
+        {/* TOP10 */}
+        <section className="mt-24">
+
+          <div className="flex justify-between items-center">
+
+            <h2 className="text-4xl font-black uppercase">
+              Top 10 Finalists
+            </h2>
+
+            <button
+              onClick={resetFinalistVotes}
+              className="px-6 py-4 rounded-2xl bg-green-500 text-black font-black uppercase"
+            >
+              Reset Votes
+            </button>
+
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+            {season2Contestants.map(
+              (contestant) => (
+                <div
+                  key={contestant.id}
+                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
+                >
+
+                  {contestant.image_url ? (
+                    <img
+                      src={contestant.image_url}
+                      alt={contestant.name}
+                      className="w-full aspect-square object-cover"
+                    />
+                  ) : (
+                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+                      No Image
+                    </div>
+                  )}
+
+                  <div className="p-6">
+
+                    <h3 className="text-3xl font-black uppercase">
+                      {contestant.name}
+                    </h3>
+
+                    <p className="mt-3 text-green-300 font-bold">
+                      Votes:
+                      {" "}
+                      {contestant.votes || 0}
+                    </p>
+
+                    <label className="mt-6 block">
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          uploadTop10Image(
+                            e,
+                            contestant.id
+                          )
+                        }
+                        className="hidden"
+                      />
+
+                      <div className="cursor-pointer py-3 rounded-2xl bg-white text-black text-center font-black uppercase">
+                        Upload Photo
+                      </div>
+
+                    </label>
+
+                  </div>
+
+                </div>
+              )
+            )}
+
+          </div>
+
+        </section>
+
+        {/* JUDGES */}
+        <section className="mt-24">
+
+          <div className="flex justify-between items-center">
+
+            <h2 className="text-4xl font-black uppercase">
+              Fan Favorite Judges
+            </h2>
+
+            <button
+              onClick={resetJudgeVotes}
+              className="px-6 py-4 rounded-2xl bg-pink-500 text-white font-black uppercase"
+            >
+              Reset Judge Votes
+            </button>
+
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+            {judges.map((judge) => (
+              <div
+                key={judge.id}
+                className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
+              >
+
+                <div className="w-full bg-black overflow-hidden">
+
+                  {judge.video_url ? (
+
+                    <video
+                      src={judge.video_url}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      controls
+                      className="w-full h-auto max-h-[750px] object-contain"
+                    />
+
+                  ) : (
+
+                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+                      No Video
+                    </div>
+
+                  )}
+
+                </div>
+
+                <div className="p-6">
+
+                  <h3 className="text-3xl font-black uppercase">
+                    {judge.name}
+                  </h3>
+
+                  <p className="mt-3 text-pink-300 font-bold">
+                    Votes:
+                    {" "}
+                    {judge.votes || 0}
+                  </p>
+
+                  <label className="mt-6 block">
+
+                    <input
+                      type="file"
+                      accept="video/mp4"
+                      onChange={(e) =>
+                        uploadJudgeVideo(
+                          e,
+                          judge.id
+                        )
+                      }
+                      className="hidden"
+                    />
+
+                    <div className="cursor-pointer py-3 rounded-2xl bg-white text-black text-center font-black uppercase">
+                      Upload Video
+                    </div>
+
+                  </label>
+
+                </div>
+
+              </div>
+            ))}
+
+          </div>
+
+        </section>
+
         {/* KIDS */}
         <section className="mt-24">
 

@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://www.breezefamily.co.za</loc><lastmod>2026-05-16T11:33:37.749Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.breezefamily.co.za/admin</loc><lastmod>2026-05-16T11:33:37.750Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.breezefamily.co.za/admin-login</loc><lastmod>2026-05-16T11:33:37.750Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.breezefamily.co.za/fan-favorite-judge</loc><lastmod>2026-05-16T11:33:37.750Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.breezefamily.co.za/judge-admin</loc><lastmod>2026-05-16T11:33:37.750Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.breezefamily.co.za/judge-admin-login</loc><lastmod>2026-05-16T11:33:37.750Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.breezefamily.co.za/kids-edition</loc><lastmod>2026-05-16T11:33:37.750Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.breezefamily.co.za/kids-edition/register</loc><lastmod>2026-05-16T11:33:37.750Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.breezefamily.co.za/leaderboard</loc><lastmod>2026-05-16T11:33:37.750Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.breezefamily.co.za/season-2-admin</loc><lastmod>2026-05-16T11:33:37.750Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.breezefamily.co.za/season-2-admin-login</loc><lastmod>2026-05-16T11:33:37.750Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.breezefamily.co.za/season-2-finale</loc><lastmod>2026-05-16T11:33:37.750Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.breezefamily.co.za/vote</loc><lastmod>2026-05-16T11:33:37.750Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za</loc><lastmod>2026-05-18T15:02:43.043Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/admin</loc><lastmod>2026-05-18T15:02:43.044Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/admin/merch</loc><lastmod>2026-05-18T15:02:43.044Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/admin-login</loc><lastmod>2026-05-18T15:02:43.044Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/fan-favorite-judge</loc><lastmod>2026-05-18T15:02:43.044Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/judge-admin</loc><lastmod>2026-05-18T15:02:43.044Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/judge-admin-login</loc><lastmod>2026-05-18T15:02:43.044Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/kids-edition</loc><lastmod>2026-05-18T15:02:43.044Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/kids-edition/register</loc><lastmod>2026-05-18T15:02:43.044Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/leaderboard</loc><lastmod>2026-05-18T15:02:43.044Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/merch</loc><lastmod>2026-05-18T15:02:43.044Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/merch-manager</loc><lastmod>2026-05-18T15:02:43.044Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/season-2-admin</loc><lastmod>2026-05-18T15:02:43.045Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/season-2-admin-login</loc><lastmod>2026-05-18T15:02:43.045Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/season-2-finale</loc><lastmod>2026-05-18T15:02:43.045Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/sitemap.xml</loc><lastmod>2026-05-18T15:02:43.045Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.breezefamily.co.za/vote</loc><lastmod>2026-05-18T15:02:43.045Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>
