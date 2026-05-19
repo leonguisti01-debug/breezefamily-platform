@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -18,8 +19,15 @@ export default function MerchPage() {
     setLoading] =
     useState(true);
 
+  const [cartCount,
+    setCartCount] =
+    useState(0);
+
   useEffect(() => {
+
     fetchProducts();
+    loadCartCount();
+
   }, []);
 
   /* FETCH PRODUCTS */
@@ -47,7 +55,70 @@ export default function MerchPage() {
       setLoading(false);
     };
 
+  /* LOAD CART COUNT */
+  const loadCartCount =
+    () => {
+
+      const cart =
+        JSON.parse(
+          localStorage.getItem(
+            "cart"
+          ) || "[]"
+        );
+
+      setCartCount(
+        cart.length
+      );
+    };
+
+  /* ADD TO CART */
+  const addToCart =
+    (product: any) => {
+
+      const cart =
+        JSON.parse(
+          localStorage.getItem(
+            "cart"
+          ) || "[]"
+        );
+
+      const existing =
+        cart.find(
+          (item: any) =>
+            item.id ===
+            product.id
+        );
+
+      if (existing) {
+
+        existing.quantity += 1;
+
+      } else {
+
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image_url:
+            product.image_url,
+          quantity: 1,
+        });
+      }
+
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+      );
+
+      loadCartCount();
+
+      alert(
+        `${product.name} added to cart`
+      );
+    };
+
   if (loading) {
+
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
 
@@ -68,6 +139,19 @@ export default function MerchPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-green-500/10 via-transparent to-transparent" />
 
         <div className="relative max-w-7xl mx-auto text-center">
+
+          <div className="flex justify-end mb-8">
+
+            <Link
+              href="/cart"
+              className="px-8 py-4 rounded-2xl bg-green-400 text-black font-black uppercase hover:opacity-90 transition duration-300"
+            >
+
+              Cart ({cartCount})
+
+            </Link>
+
+          </div>
 
           <p className="uppercase tracking-[6px] text-green-300 text-sm font-bold">
             Breeze Family
@@ -112,8 +196,7 @@ export default function MerchPage() {
 
             {products.map(
               (
-                product,
-                index
+                product
               ) => (
                 <div
                   key={product.id}
@@ -172,9 +255,17 @@ export default function MerchPage() {
 
                     </div>
 
-                    <button className="mt-8 w-full py-4 rounded-2xl bg-green-400 text-black font-black uppercase hover:opacity-90 transition duration-300">
+                    {/* ADD TO CART */}
+                    <button
+                      onClick={() =>
+                        addToCart(
+                          product
+                        )
+                      }
+                      className="mt-8 w-full py-4 rounded-2xl bg-green-400 text-black font-black uppercase hover:opacity-90 transition duration-300"
+                    >
 
-                      Coming Soon
+                      Add To Cart
 
                     </button>
 
@@ -216,12 +307,6 @@ export default function MerchPage() {
               More products and collaborations launching soon.
 
             </p>
-
-            <button className="mt-10 px-10 py-5 rounded-2xl bg-green-400 text-black font-black uppercase hover:scale-105 transition duration-300">
-
-              Merch Launching Soon
-
-            </button>
 
           </div>
 
