@@ -10,14 +10,20 @@ const supabase = createClient(
 
 export default function AdminPage() {
 
-  const [contestants, setContestants] =
+  const [contestants,
+    setContestants] =
     useState<any[]>([]);
 
   const [season2Contestants,
     setSeason2Contestants] =
     useState<any[]>([]);
 
-  const [judges, setJudges] =
+  const [judges,
+    setJudges] =
+    useState<any[]>([]);
+
+  const [hits,
+    setHits] =
     useState<any[]>([]);
 
   const [judgesVotingOpen,
@@ -28,72 +34,95 @@ export default function AdminPage() {
     setTop10VotingOpen] =
     useState(true);
 
-  const [loading, setLoading] =
+  const [loading,
+    setLoading] =
     useState(true);
 
   useEffect(() => {
+
     fetchContestants();
     fetchSeason2Contestants();
     fetchJudges();
     fetchSettings();
+    fetchHits();
+
   }, []);
 
   /* SETTINGS */
-  const fetchSettings = async () => {
+  const fetchSettings =
+    async () => {
 
-    const { data } =
-      await supabase
-        .from("site_settings")
-        .select("*");
+      const { data } =
+        await supabase
+          .from("site_settings")
+          .select("*");
 
-    if (!data) return;
+      if (!data) return;
 
-    const judgesSetting =
-      data.find(
-        (s: any) =>
-          s.key ===
-          "judges_voting_open"
+      const judgesSetting =
+        data.find(
+          (s: any) =>
+            s.key ===
+            "judges_voting_open"
+        );
+
+      const top10Setting =
+        data.find(
+          (s: any) =>
+            s.key ===
+            "top10_voting_open"
+        );
+
+      setJudgesVotingOpen(
+        judgesSetting?.value === true ||
+        judgesSetting?.value === "true" ||
+        judgesSetting?.value === 1 ||
+        judgesSetting?.value === "1"
       );
 
-    const top10Setting =
-      data.find(
-        (s: any) =>
-          s.key ===
-          "top10_voting_open"
+      setTop10VotingOpen(
+        top10Setting?.value === true ||
+        top10Setting?.value === "true" ||
+        top10Setting?.value === 1 ||
+        top10Setting?.value === "1"
       );
+    };
 
-    setJudgesVotingOpen(
-      judgesSetting?.value === true ||
-      judgesSetting?.value === "true" ||
-      judgesSetting?.value === 1 ||
-      judgesSetting?.value === "1"
-    );
+  /* FETCH HITS */
+  const fetchHits =
+    async () => {
 
-    setTop10VotingOpen(
-      top10Setting?.value === true ||
-      top10Setting?.value === "true" ||
-      top10Setting?.value === 1 ||
-      top10Setting?.value === "1"
-    );
-  };
+      const { data } =
+        await supabase
+          .from("site_hits")
+          .select("*");
+
+      if (data)
+        setHits(data);
+    };
 
   /* TOGGLE */
-  const toggleSetting = async (
-    key: string,
-    current: boolean
-  ) => {
+  const toggleSetting =
+    async (
+      key: string,
+      current: boolean
+    ) => {
 
-    const newValue = !current;
+      const newValue =
+        !current;
 
-    await supabase
-      .from("site_settings")
-      .update({
-        value: newValue,
-      })
-      .eq("key", key);
+      await supabase
+        .from("site_settings")
+        .update({
+          value: newValue,
+        })
+        .eq(
+          "key",
+          key
+        );
 
-    fetchSettings();
-  };
+      fetchSettings();
+    };
 
   /* FETCH */
   const fetchContestants =
@@ -121,9 +150,12 @@ export default function AdminPage() {
         await supabase
           .from("season2_finalists")
           .select("*")
-          .order("votes", {
-            ascending: false,
-          });
+          .order(
+            "votes",
+            {
+              ascending: false,
+            }
+          );
 
       if (data)
         setSeason2Contestants(data);
@@ -138,9 +170,12 @@ export default function AdminPage() {
             "fan_favorite_judges"
           )
           .select("*")
-          .order("votes", {
-            ascending: false,
-          });
+          .order(
+            "votes",
+            {
+              ascending: false,
+            }
+          );
 
       if (data)
         setJudges(data);
@@ -164,7 +199,9 @@ export default function AdminPage() {
         `${Date.now()}-${file.name}`;
 
       await supabase.storage
-        .from("contestant-photos")
+        .from(
+          "contestant-photos"
+        )
         .upload(
           fileName,
           file
@@ -173,7 +210,9 @@ export default function AdminPage() {
       const {
         data: publicUrlData,
       } = supabase.storage
-        .from("contestant-photos")
+        .from(
+          "contestant-photos"
+        )
         .getPublicUrl(
           fileName
         );
@@ -193,7 +232,9 @@ export default function AdminPage() {
 
       fetchSeason2Contestants();
 
-      alert("Photo uploaded!");
+      alert(
+        "Photo uploaded!"
+      );
     };
 
   /* UPLOAD JUDGE VIDEO */
@@ -241,10 +282,12 @@ export default function AdminPage() {
 
       fetchJudges();
 
-      alert("Video uploaded!");
+      alert(
+        "Video uploaded!"
+      );
     };
 
-  /* UPDATE STATUS */
+  /* STATUS */
   const updateStatus =
     async (
       id: number,
@@ -253,8 +296,13 @@ export default function AdminPage() {
 
       await supabase
         .from("contestants")
-        .update({ status })
-        .eq("id", id);
+        .update({
+          status,
+        })
+        .eq(
+          "id",
+          id
+        );
 
       fetchContestants();
     };
@@ -262,8 +310,7 @@ export default function AdminPage() {
   const updateFinalistStatus =
     async (
       id: number,
-      status: string,
-      eliminated: boolean
+      status: string
     ) => {
 
       await supabase
@@ -272,9 +319,11 @@ export default function AdminPage() {
         )
         .update({
           status,
-          eliminated,
         })
-        .eq("id", id);
+        .eq(
+          "id",
+          id
+        );
 
       fetchSeason2Contestants();
     };
@@ -282,8 +331,7 @@ export default function AdminPage() {
   const updateJudgeStatus =
     async (
       id: number,
-      status: string,
-      eliminated: boolean
+      status: string
     ) => {
 
       await supabase
@@ -292,9 +340,11 @@ export default function AdminPage() {
         )
         .update({
           status,
-          eliminated,
         })
-        .eq("id", id);
+        .eq(
+          "id",
+          id
+        );
 
       fetchJudges();
     };
@@ -310,7 +360,10 @@ export default function AdminPage() {
         .update({
           votes: 0,
         })
-        .neq("id", 0);
+        .neq(
+          "id",
+          0
+        );
 
       fetchSeason2Contestants();
 
@@ -329,7 +382,10 @@ export default function AdminPage() {
         .update({
           votes: 0,
         })
-        .neq("id", 0);
+        .neq(
+          "id",
+          0
+        );
 
       fetchJudges();
 
@@ -339,11 +395,14 @@ export default function AdminPage() {
     };
 
   if (loading) {
+
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
+
         <h1 className="text-4xl font-black uppercase">
           Loading Admin...
         </h1>
+
       </main>
     );
   }
@@ -363,6 +422,23 @@ export default function AdminPage() {
           <h1 className="mt-4 text-5xl md:text-7xl font-black uppercase">
             Admin Dashboard
           </h1>
+
+        </div>
+
+        {/* HITS */}
+        <div className="mt-10 grid md:grid-cols-4 gap-6">
+
+          <div className="rounded-3xl bg-white/5 border border-white/10 p-8">
+
+            <p className="uppercase tracking-[3px] text-white/50 text-sm">
+              Total Site Hits
+            </p>
+
+            <h2 className="mt-4 text-5xl font-black">
+              {hits.length}
+            </h2>
+
+          </div>
 
         </div>
 
@@ -416,268 +492,6 @@ export default function AdminPage() {
           </button>
 
         </div>
-
-        {/* TOP10 */}
-        <section className="mt-24">
-
-          <div className="flex justify-between items-center">
-
-            <h2 className="text-4xl font-black uppercase">
-              Top 10 Finalists
-            </h2>
-
-            <button
-              onClick={resetFinalistVotes}
-              className="px-6 py-4 rounded-2xl bg-green-500 text-black font-black uppercase"
-            >
-              Reset Votes
-            </button>
-
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-
-            {season2Contestants.map(
-              (contestant) => (
-                <div
-                  key={contestant.id}
-                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
-                >
-
-                  {contestant.image_url ? (
-                    <img
-                      src={contestant.image_url}
-                      alt={contestant.name}
-                      className="w-full aspect-square object-cover"
-                    />
-                  ) : (
-                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
-                      No Image
-                    </div>
-                  )}
-
-                  <div className="p-6">
-
-                    <h3 className="text-3xl font-black uppercase">
-                      {contestant.name}
-                    </h3>
-
-                    <p className="mt-3 text-green-300 font-bold">
-                      Votes:
-                      {" "}
-                      {contestant.votes || 0}
-                    </p>
-
-                    <label className="mt-6 block">
-
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) =>
-                          uploadTop10Image(
-                            e,
-                            contestant.id
-                          )
-                        }
-                        className="hidden"
-                      />
-
-                      <div className="cursor-pointer py-3 rounded-2xl bg-white text-black text-center font-black uppercase">
-                        Upload Photo
-                      </div>
-
-                    </label>
-
-                  </div>
-
-                </div>
-              )
-            )}
-
-          </div>
-
-        </section>
-
-        {/* JUDGES */}
-        <section className="mt-24">
-
-          <div className="flex justify-between items-center">
-
-            <h2 className="text-4xl font-black uppercase">
-              Fan Favorite Judges
-            </h2>
-
-            <button
-              onClick={resetJudgeVotes}
-              className="px-6 py-4 rounded-2xl bg-pink-500 text-white font-black uppercase"
-            >
-              Reset Judge Votes
-            </button>
-
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-
-            {judges.map((judge) => (
-              <div
-                key={judge.id}
-                className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
-              >
-
-                <div className="w-full bg-black overflow-hidden">
-
-                  {judge.video_url ? (
-
-                    <video
-                      src={judge.video_url}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      controls
-                      className="w-full h-auto max-h-[750px] object-contain"
-                    />
-
-                  ) : (
-
-                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
-                      No Video
-                    </div>
-
-                  )}
-
-                </div>
-
-                <div className="p-6">
-
-                  <h3 className="text-3xl font-black uppercase">
-                    {judge.name}
-                  </h3>
-
-                  <p className="mt-3 text-pink-300 font-bold">
-                    Votes:
-                    {" "}
-                    {judge.votes || 0}
-                  </p>
-
-                  <label className="mt-6 block">
-
-                    <input
-                      type="file"
-                      accept="video/mp4"
-                      onChange={(e) =>
-                        uploadJudgeVideo(
-                          e,
-                          judge.id
-                        )
-                      }
-                      className="hidden"
-                    />
-
-                    <div className="cursor-pointer py-3 rounded-2xl bg-white text-black text-center font-black uppercase">
-                      Upload Video
-                    </div>
-
-                  </label>
-
-                </div>
-
-              </div>
-            ))}
-
-          </div>
-
-        </section>
-
-        {/* KIDS */}
-        <section className="mt-24">
-
-          <h2 className="text-4xl font-black uppercase">
-            Kids Entries
-          </h2>
-
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-
-            {contestants.map(
-              (contestant) => (
-                <div
-                  key={contestant.id}
-                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
-                >
-
-                  {contestant.photo_url ? (
-
-                    <img
-                      src={contestant.photo_url}
-                      alt={contestant.full_name}
-                      className="w-full aspect-square object-cover"
-                    />
-
-                  ) : (
-
-                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
-                      No Photo
-                    </div>
-
-                  )}
-
-                  <div className="p-6">
-
-                    <h3 className="text-3xl font-black uppercase">
-                      {
-                        contestant.full_name
-                      }
-                    </h3>
-
-                    <p className="mt-3 text-white/70">
-                      Age:
-                      {" "}
-                      {contestant.age}
-                    </p>
-
-                    <p className="mt-2 text-white/50 text-sm uppercase">
-                      Status:
-                      {" "}
-                      {contestant.status || "pending"}
-                    </p>
-
-                    <div className="mt-6 grid grid-cols-2 gap-3">
-
-                      <button
-                        onClick={() =>
-                          updateStatus(
-                            contestant.id,
-                            "accepted"
-                          )
-                        }
-                        className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
-                      >
-                        Accept
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          updateStatus(
-                            contestant.id,
-                            "rejected"
-                          )
-                        }
-                        className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
-                      >
-                        Reject
-                      </button>
-
-                    </div>
-
-                  </div>
-
-                </div>
-              )
-            )}
-
-          </div>
-
-        </section>
 
       </div>
 
