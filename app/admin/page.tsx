@@ -10,16 +10,6 @@ const supabase = createClient(
 
 export default function AdminPage() {
 
-  /* AUTH */
-  const [authorized,
-    setAuthorized] =
-    useState(false);
-
-  const [password,
-    setPassword] =
-    useState("");
-
-  /* DATA */
   const [contestants,
     setContestants] =
     useState<any[]>([]);
@@ -32,9 +22,9 @@ export default function AdminPage() {
     setJudges] =
     useState<any[]>([]);
 
-  const [hits,
-    setHits] =
-    useState<any[]>([]);
+  const [siteHits,
+    setSiteHits] =
+    useState(0);
 
   const [judgesVotingOpen,
     setJudgesVotingOpen] =
@@ -49,19 +39,6 @@ export default function AdminPage() {
     useState(true);
 
   useEffect(() => {
-
-    const savedAuth =
-      localStorage.getItem(
-        "admin-auth"
-      );
-
-    if (
-      savedAuth === "true"
-    ) {
-
-      setAuthorized(true);
-
-    }
 
     fetchContestants();
     fetchSeason2Contestants();
@@ -98,30 +75,48 @@ export default function AdminPage() {
 
       setJudgesVotingOpen(
         judgesSetting?.value === true ||
-        judgesSetting?.value === "true" ||
-        judgesSetting?.value === 1 ||
-        judgesSetting?.value === "1"
+        judgesSetting?.value === "true"
       );
 
       setTop10VotingOpen(
         top10Setting?.value === true ||
-        top10Setting?.value === "true" ||
-        top10Setting?.value === 1 ||
-        top10Setting?.value === "1"
+        top10Setting?.value === "true"
       );
     };
 
-  /* FETCH HITS */
+  /* HITS */
   const fetchHits =
     async () => {
 
-      const { data } =
-        await supabase
-          .from("site_hits")
-          .select("*");
+      const {
+        count
+      } = await supabase
+        .from("site_hits")
+        .select("*", {
+          count: "exact",
+          head: true,
+        });
 
-      if (data)
-        setHits(data);
+      setSiteHits(
+        count || 0
+      );
+    };
+
+  /* TOGGLE */
+  const toggleSetting =
+    async (
+      key: string,
+      current: boolean
+    ) => {
+
+      await supabase
+        .from("site_settings")
+        .update({
+          value: !current,
+        })
+        .eq("key", key);
+
+      fetchSettings();
     };
 
   /* FETCH */
@@ -150,12 +145,9 @@ export default function AdminPage() {
         await supabase
           .from("season2_finalists")
           .select("*")
-          .order(
-            "votes",
-            {
-              ascending: false,
-            }
-          );
+          .order("votes", {
+            ascending: false,
+          });
 
       if (data)
         setSeason2Contestants(data);
@@ -166,16 +158,11 @@ export default function AdminPage() {
 
       const { data } =
         await supabase
-          .from(
-            "fan_favorite_judges"
-          )
+          .from("fan_favorite_judges")
           .select("*")
-          .order(
-            "votes",
-            {
-              ascending: false,
-            }
-          );
+          .order("votes", {
+            ascending: false,
+          });
 
       if (data)
         setJudges(data);
@@ -183,28 +170,8 @@ export default function AdminPage() {
       setLoading(false);
     };
 
-  /* TOGGLE */
-  const toggleSetting =
-    async (
-      key: string,
-      current: boolean
-    ) => {
-
-      await supabase
-        .from("site_settings")
-        .update({
-          value: !current,
-        })
-        .eq(
-          "key",
-          key
-        );
-
-      fetchSettings();
-    };
-
-  /* STATUS */
-  const updateStatus =
+  /* KIDS STATUS */
+  const updateKidsStatus =
     async (
       id: number,
       status: string
@@ -215,14 +182,12 @@ export default function AdminPage() {
         .update({
           status,
         })
-        .eq(
-          "id",
-          id
-        );
+        .eq("id", id);
 
       fetchContestants();
     };
 
+  /* FINALIST STATUS */
   const updateFinalistStatus =
     async (
       id: number,
@@ -230,20 +195,16 @@ export default function AdminPage() {
     ) => {
 
       await supabase
-        .from(
-          "season2_finalists"
-        )
+        .from("season2_finalists")
         .update({
           status,
         })
-        .eq(
-          "id",
-          id
-        );
+        .eq("id", id);
 
       fetchSeason2Contestants();
     };
 
+  /* JUDGE STATUS */
   const updateJudgeStatus =
     async (
       id: number,
@@ -251,81 +212,100 @@ export default function AdminPage() {
     ) => {
 
       await supabase
-        .from(
-          "fan_favorite_judges"
-        )
+        .from("fan_favorite_judges")
         .update({
           status,
         })
-        .eq(
-          "id",
-          id
-        );
+        .eq("id", id);
 
       fetchJudges();
     };
 
-  /* LOGIN */
-  if (!authorized) {
+  /* UPLOAD FINALIST PHOTO */
+  const uploadTop10Image =
+    async (
+      e: any,
+      contestantId: number
+    ) => {
 
-    return (
+      const file =
+        e.target.files[0];
 
-      <main className="min-h-screen bg-black text-white flex items-center justify-center px-6">
+      if (!file) return;
 
-        <div className="w-full max-w-md rounded-3xl bg-white/5 border border-white/10 p-10">
+      const fileName =
+        `${Date.now()}-${file.name}`;
 
-          <h1 className="text-4xl font-black uppercase">
-            Admin Login
-          </h1>
+      await supabase.storage
+        .from("contestant-photos")
+        .upload(
+          fileName,
+          file
+        );
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) =>
-              setPassword(
-                e.target.value
-              )
-            }
-            className="mt-8 w-full px-5 py-4 rounded-2xl bg-black border border-white/10 text-white"
-          />
+      const {
+        data: publicUrlData,
+      } = supabase.storage
+        .from("contestant-photos")
+        .getPublicUrl(
+          fileName
+        );
 
-          <button
-            onClick={() => {
+      await supabase
+        .from("season2_finalists")
+        .update({
+          image_url:
+            publicUrlData.publicUrl,
+        })
+        .eq("id", contestantId);
 
-              if (
-                password ===
-                "BreezeAdmin2026"
-              ) {
+      fetchSeason2Contestants();
 
-                localStorage.setItem(
-                  "admin-auth",
-                  "true"
-                );
+      alert("Photo uploaded!");
+    };
 
-                setAuthorized(true);
+  /* UPLOAD JUDGE VIDEO */
+  const uploadJudgeVideo =
+    async (
+      e: any,
+      judgeId: number
+    ) => {
 
-              } else {
+      const file =
+        e.target.files[0];
 
-                alert(
-                  "Incorrect password"
-                );
+      if (!file) return;
 
-              }
-            }}
-            className="mt-6 w-full py-4 rounded-2xl bg-green-400 text-black font-black uppercase"
-          >
+      const fileName =
+        `${Date.now()}-${file.name}`;
 
-            Login
+      await supabase.storage
+        .from("judges")
+        .upload(
+          fileName,
+          file
+        );
 
-          </button>
+      const {
+        data: publicUrlData,
+      } = supabase.storage
+        .from("judges")
+        .getPublicUrl(
+          fileName
+        );
 
-        </div>
+      await supabase
+        .from("fan_favorite_judges")
+        .update({
+          video_url:
+            publicUrlData.publicUrl,
+        })
+        .eq("id", judgeId);
 
-      </main>
+      fetchJudges();
 
-    );
-  }
+      alert("Video uploaded!");
+    };
 
   if (loading) {
 
@@ -333,7 +313,7 @@ export default function AdminPage() {
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
 
         <h1 className="text-4xl font-black uppercase">
-          Loading...
+          Loading Admin...
         </h1>
 
       </main>
@@ -345,25 +325,21 @@ export default function AdminPage() {
 
       <div className="max-w-7xl mx-auto">
 
-        <h1 className="text-6xl font-black uppercase">
-          Admin Dashboard
-        </h1>
+        {/* HEADER */}
+        <div>
 
-        {/* HIT COUNTER */}
-        <div className="mt-10 rounded-3xl bg-white/5 border border-white/10 p-8">
-
-          <p className="uppercase text-sm tracking-[3px] text-white/50">
-            Total Site Hits
+          <p className="uppercase tracking-[4px] text-green-300 text-sm">
+            Breeze Family
           </p>
 
-          <h2 className="mt-4 text-5xl font-black">
-            {hits.length}
-          </h2>
+          <h1 className="mt-4 text-6xl font-black uppercase">
+            Admin Dashboard
+          </h1>
 
         </div>
 
-        {/* VOTING */}
-        <div className="mt-10 grid md:grid-cols-2 gap-6">
+        {/* CONTROLS */}
+        <div className="mt-16 grid md:grid-cols-3 gap-8">
 
           <button
             onClick={() =>
@@ -372,13 +348,19 @@ export default function AdminPage() {
                 judgesVotingOpen
               )
             }
-            className={`py-6 rounded-3xl font-black uppercase text-2xl ${
+            className={`py-8 rounded-3xl font-black uppercase text-2xl ${
               judgesVotingOpen
                 ? "bg-green-400 text-black"
                 : "bg-red-500 text-white"
             }`}
           >
+
             Judges Voting
+            <br />
+            {judgesVotingOpen
+              ? "OPEN"
+              : "CLOSED"}
+
           </button>
 
           <button
@@ -388,21 +370,39 @@ export default function AdminPage() {
                 top10VotingOpen
               )
             }
-            className={`py-6 rounded-3xl font-black uppercase text-2xl ${
+            className={`py-8 rounded-3xl font-black uppercase text-2xl ${
               top10VotingOpen
                 ? "bg-green-400 text-black"
                 : "bg-red-500 text-white"
             }`}
           >
+
             Top 10 Voting
+            <br />
+            {top10VotingOpen
+              ? "OPEN"
+              : "CLOSED"}
+
           </button>
+
+          <div className="rounded-3xl bg-white/5 border border-white/10 p-8 flex flex-col items-center justify-center">
+
+            <p className="uppercase tracking-[4px] text-white/50 text-sm">
+              Site Hits
+            </p>
+
+            <h2 className="mt-4 text-6xl font-black">
+              {siteHits}
+            </h2>
+
+          </div>
 
         </div>
 
         {/* TOP 10 */}
         <section className="mt-24">
 
-          <h2 className="text-4xl font-black uppercase">
+          <h2 className="text-5xl font-black uppercase">
             Top 10 Finalists
           </h2>
 
@@ -410,58 +410,97 @@ export default function AdminPage() {
 
             {season2Contestants.map(
               (contestant) => (
+
                 <div
                   key={contestant.id}
-                  className="rounded-3xl bg-white/5 border border-white/10 p-6"
+                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
                 >
 
-                  <h3 className="text-3xl font-black uppercase">
-                    {contestant.name}
-                  </h3>
+                  {contestant.image_url ? (
 
-                  <p className="mt-3">
-                    Votes:
-                    {" "}
-                    {contestant.votes || 0}
-                  </p>
+                    <img
+                      src={contestant.image_url}
+                      alt={contestant.name}
+                      className="w-full aspect-square object-cover"
+                    />
 
-                  <div className="mt-6 grid gap-3">
+                  ) : (
 
-                    <button
-                      onClick={() =>
-                        updateFinalistStatus(
-                          contestant.id,
-                          "safe"
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
-                    >
-                      Safe
-                    </button>
+                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+                      No Image
+                    </div>
 
-                    <button
-                      onClick={() =>
-                        updateFinalistStatus(
-                          contestant.id,
-                          "eliminated"
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
-                    >
-                      Eliminated
-                    </button>
+                  )}
 
-                    <button
-                      onClick={() =>
-                        updateFinalistStatus(
-                          contestant.id,
-                          "disqualified"
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-pink-500 text-white font-black uppercase"
-                    >
-                      Disqualified
-                    </button>
+                  <div className="p-6">
+
+                    <h3 className="text-3xl font-black uppercase">
+                      {contestant.name}
+                    </h3>
+
+                    <p className="mt-3 text-green-300 font-bold">
+                      Votes: {contestant.votes || 0}
+                    </p>
+
+                    <label className="mt-6 block">
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          uploadTop10Image(
+                            e,
+                            contestant.id
+                          )
+                        }
+                        className="hidden"
+                      />
+
+                      <div className="cursor-pointer py-3 rounded-2xl bg-white text-black text-center font-black uppercase">
+                        Upload Photo
+                      </div>
+
+                    </label>
+
+                    <div className="mt-6 grid gap-3">
+
+                      <button
+                        onClick={() =>
+                          updateFinalistStatus(
+                            contestant.id,
+                            "safe"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
+                      >
+                        Safe
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateFinalistStatus(
+                            contestant.id,
+                            "eliminated"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
+                      >
+                        Eliminated
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateFinalistStatus(
+                            contestant.id,
+                            "disqualified"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-pink-500 text-white font-black uppercase"
+                      >
+                        Disqualified
+                      </button>
+
+                    </div>
 
                   </div>
 
@@ -476,7 +515,7 @@ export default function AdminPage() {
         {/* JUDGES */}
         <section className="mt-24">
 
-          <h2 className="text-4xl font-black uppercase">
+          <h2 className="text-5xl font-black uppercase">
             Fan Favorite Judges
           </h2>
 
@@ -484,58 +523,101 @@ export default function AdminPage() {
 
             {judges.map(
               (judge) => (
+
                 <div
                   key={judge.id}
-                  className="rounded-3xl bg-white/5 border border-white/10 p-6"
+                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
                 >
 
-                  <h3 className="text-3xl font-black uppercase">
-                    {judge.name}
-                  </h3>
+                  {judge.video_url ? (
 
-                  <p className="mt-3">
-                    Votes:
-                    {" "}
-                    {judge.votes || 0}
-                  </p>
+                    <video
+                      src={judge.video_url}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      controls
+                      className="w-full h-auto"
+                    />
 
-                  <div className="mt-6 grid gap-3">
+                  ) : (
 
-                    <button
-                      onClick={() =>
-                        updateJudgeStatus(
-                          judge.id,
-                          "safe"
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
-                    >
-                      Safe
-                    </button>
+                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+                      No Video
+                    </div>
 
-                    <button
-                      onClick={() =>
-                        updateJudgeStatus(
-                          judge.id,
-                          "eliminated"
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
-                    >
-                      Eliminated
-                    </button>
+                  )}
 
-                    <button
-                      onClick={() =>
-                        updateJudgeStatus(
-                          judge.id,
-                          "disqualified"
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-pink-500 text-white font-black uppercase"
-                    >
-                      Disqualified
-                    </button>
+                  <div className="p-6">
+
+                    <h3 className="text-3xl font-black uppercase">
+                      {judge.name}
+                    </h3>
+
+                    <p className="mt-3 text-pink-300 font-bold">
+                      Votes: {judge.votes || 0}
+                    </p>
+
+                    <label className="mt-6 block">
+
+                      <input
+                        type="file"
+                        accept="video/mp4"
+                        onChange={(e) =>
+                          uploadJudgeVideo(
+                            e,
+                            judge.id
+                          )
+                        }
+                        className="hidden"
+                      />
+
+                      <div className="cursor-pointer py-3 rounded-2xl bg-white text-black text-center font-black uppercase">
+                        Upload Video
+                      </div>
+
+                    </label>
+
+                    <div className="mt-6 grid gap-3">
+
+                      <button
+                        onClick={() =>
+                          updateJudgeStatus(
+                            judge.id,
+                            "safe"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
+                      >
+                        Safe
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateJudgeStatus(
+                            judge.id,
+                            "eliminated"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
+                      >
+                        Eliminated
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateJudgeStatus(
+                            judge.id,
+                            "disqualified"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-pink-500 text-white font-black uppercase"
+                      >
+                        Disqualified
+                      </button>
+
+                    </div>
 
                   </div>
 
@@ -550,7 +632,7 @@ export default function AdminPage() {
         {/* KIDS */}
         <section className="mt-24">
 
-          <h2 className="text-4xl font-black uppercase">
+          <h2 className="text-5xl font-black uppercase">
             Kids Entries
           </h2>
 
@@ -558,60 +640,69 @@ export default function AdminPage() {
 
             {contestants.map(
               (contestant) => (
+
                 <div
                   key={contestant.id}
-                  className="rounded-3xl bg-white/5 border border-white/10 p-6"
+                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
                 >
 
-                  <h3 className="text-3xl font-black uppercase">
-                    {
-                      contestant.full_name
-                    }
-                  </h3>
+                  {contestant.photo_url ? (
 
-                  <p className="mt-3">
-                    Age:
-                    {" "}
-                    {contestant.age}
-                  </p>
+                    <img
+                      src={contestant.photo_url}
+                      alt={contestant.full_name}
+                      className="w-full aspect-square object-cover"
+                    />
 
-                  <div className="mt-6 grid gap-3">
+                  ) : (
 
-                    <button
-                      onClick={() =>
-                        updateStatus(
-                          contestant.id,
-                          "safe"
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
-                    >
-                      Safe
-                    </button>
+                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+                      No Photo
+                    </div>
 
-                    <button
-                      onClick={() =>
-                        updateStatus(
-                          contestant.id,
-                          "eliminated"
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
-                    >
-                      Eliminated
-                    </button>
+                  )}
 
-                    <button
-                      onClick={() =>
-                        updateStatus(
-                          contestant.id,
-                          "disqualified"
-                        )
-                      }
-                      className="py-3 rounded-2xl bg-pink-500 text-white font-black uppercase"
-                    >
-                      Disqualified
-                    </button>
+                  <div className="p-6">
+
+                    <h3 className="text-3xl font-black uppercase">
+                      {contestant.full_name}
+                    </h3>
+
+                    <p className="mt-3 text-white/70">
+                      Age: {contestant.age}
+                    </p>
+
+                    <p className="mt-2 text-white/40 uppercase text-sm">
+                      {contestant.status || "pending"}
+                    </p>
+
+                    <div className="mt-6 grid grid-cols-2 gap-3">
+
+                      <button
+                        onClick={() =>
+                          updateKidsStatus(
+                            contestant.id,
+                            "accepted"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
+                      >
+                        Accept
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateKidsStatus(
+                            contestant.id,
+                            "rejected"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
+                      >
+                        Decline
+                      </button>
+
+                    </div>
 
                   </div>
 
