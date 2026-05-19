@@ -36,7 +36,6 @@ export default function AdminPage() {
     setHits] =
     useState<any[]>([]);
 
-  /* SETTINGS */
   const [judgesVotingOpen,
     setJudgesVotingOpen] =
     useState(true);
@@ -125,29 +124,6 @@ export default function AdminPage() {
         setHits(data);
     };
 
-  /* TOGGLE */
-  const toggleSetting =
-    async (
-      key: string,
-      current: boolean
-    ) => {
-
-      const newValue =
-        !current;
-
-      await supabase
-        .from("site_settings")
-        .update({
-          value: newValue,
-        })
-        .eq(
-          "key",
-          key
-        );
-
-      fetchSettings();
-    };
-
   /* FETCH */
   const fetchContestants =
     async () => {
@@ -205,6 +181,26 @@ export default function AdminPage() {
         setJudges(data);
 
       setLoading(false);
+    };
+
+  /* TOGGLE */
+  const toggleSetting =
+    async (
+      key: string,
+      current: boolean
+    ) => {
+
+      await supabase
+        .from("site_settings")
+        .update({
+          value: !current,
+        })
+        .eq(
+          "key",
+          key
+        );
+
+      fetchSettings();
     };
 
   /* STATUS */
@@ -269,52 +265,7 @@ export default function AdminPage() {
       fetchJudges();
     };
 
-  /* RESET */
-  const resetFinalistVotes =
-    async () => {
-
-      await supabase
-        .from(
-          "season2_finalists"
-        )
-        .update({
-          votes: 0,
-        })
-        .neq(
-          "id",
-          0
-        );
-
-      fetchSeason2Contestants();
-
-      alert(
-        "Top 10 votes reset."
-      );
-    };
-
-  const resetJudgeVotes =
-    async () => {
-
-      await supabase
-        .from(
-          "fan_favorite_judges"
-        )
-        .update({
-          votes: 0,
-        })
-        .neq(
-          "id",
-          0
-        );
-
-      fetchJudges();
-
-      alert(
-        "Judge votes reset."
-      );
-    };
-
-  /* LOGIN SCREEN */
+  /* LOGIN */
   if (!authorized) {
 
     return (
@@ -323,17 +274,13 @@ export default function AdminPage() {
 
         <div className="w-full max-w-md rounded-3xl bg-white/5 border border-white/10 p-10">
 
-          <p className="uppercase tracking-[4px] text-green-300 text-sm">
-            Breeze Family
-          </p>
-
-          <h1 className="mt-4 text-4xl font-black uppercase">
+          <h1 className="text-4xl font-black uppercase">
             Admin Login
           </h1>
 
           <input
             type="password"
-            placeholder="Enter Password"
+            placeholder="Password"
             value={password}
             onChange={(e) =>
               setPassword(
@@ -386,7 +333,7 @@ export default function AdminPage() {
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
 
         <h1 className="text-4xl font-black uppercase">
-          Loading Admin...
+          Loading...
         </h1>
 
       </main>
@@ -394,63 +341,29 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-black text-white px-6 py-20">
 
-      <div className="max-w-7xl mx-auto px-6 py-20">
+      <div className="max-w-7xl mx-auto">
 
-        {/* HEADER */}
-        <div className="flex items-center justify-between">
+        <h1 className="text-6xl font-black uppercase">
+          Admin Dashboard
+        </h1>
 
-          <div>
+        {/* HIT COUNTER */}
+        <div className="mt-10 rounded-3xl bg-white/5 border border-white/10 p-8">
 
-            <p className="uppercase tracking-[4px] text-green-300 text-sm">
-              Breeze Family
-            </p>
+          <p className="uppercase text-sm tracking-[3px] text-white/50">
+            Total Site Hits
+          </p>
 
-            <h1 className="mt-4 text-5xl md:text-7xl font-black uppercase">
-              Admin Dashboard
-            </h1>
-
-          </div>
-
-          <button
-            onClick={() => {
-
-              localStorage.removeItem(
-                "admin-auth"
-              );
-
-              window.location.reload();
-
-            }}
-            className="px-6 py-4 rounded-2xl bg-red-500 text-white font-black uppercase"
-          >
-
-            Logout
-
-          </button>
-
-        </div>
-
-        {/* HITS */}
-        <div className="mt-10 grid md:grid-cols-4 gap-6">
-
-          <div className="rounded-3xl bg-white/5 border border-white/10 p-8">
-
-            <p className="uppercase tracking-[3px] text-white/50 text-sm">
-              Total Site Hits
-            </p>
-
-            <h2 className="mt-4 text-5xl font-black">
-              {hits.length}
-            </h2>
-
-          </div>
+          <h2 className="mt-4 text-5xl font-black">
+            {hits.length}
+          </h2>
 
         </div>
 
         {/* VOTING */}
-        <div className="mt-16 grid md:grid-cols-2 gap-8">
+        <div className="mt-10 grid md:grid-cols-2 gap-6">
 
           <button
             onClick={() =>
@@ -459,20 +372,13 @@ export default function AdminPage() {
                 judgesVotingOpen
               )
             }
-            className={`py-8 rounded-3xl font-black uppercase text-2xl ${
+            className={`py-6 rounded-3xl font-black uppercase text-2xl ${
               judgesVotingOpen
                 ? "bg-green-400 text-black"
                 : "bg-red-500 text-white"
             }`}
           >
-
             Judges Voting
-            <br />
-
-            {judgesVotingOpen
-              ? "OPEN"
-              : "CLOSED"}
-
           </button>
 
           <button
@@ -482,23 +388,240 @@ export default function AdminPage() {
                 top10VotingOpen
               )
             }
-            className={`py-8 rounded-3xl font-black uppercase text-2xl ${
+            className={`py-6 rounded-3xl font-black uppercase text-2xl ${
               top10VotingOpen
                 ? "bg-green-400 text-black"
                 : "bg-red-500 text-white"
             }`}
           >
-
             Top 10 Voting
-            <br />
-
-            {top10VotingOpen
-              ? "OPEN"
-              : "CLOSED"}
-
           </button>
 
         </div>
+
+        {/* TOP 10 */}
+        <section className="mt-24">
+
+          <h2 className="text-4xl font-black uppercase">
+            Top 10 Finalists
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+            {season2Contestants.map(
+              (contestant) => (
+                <div
+                  key={contestant.id}
+                  className="rounded-3xl bg-white/5 border border-white/10 p-6"
+                >
+
+                  <h3 className="text-3xl font-black uppercase">
+                    {contestant.name}
+                  </h3>
+
+                  <p className="mt-3">
+                    Votes:
+                    {" "}
+                    {contestant.votes || 0}
+                  </p>
+
+                  <div className="mt-6 grid gap-3">
+
+                    <button
+                      onClick={() =>
+                        updateFinalistStatus(
+                          contestant.id,
+                          "safe"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
+                    >
+                      Safe
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateFinalistStatus(
+                          contestant.id,
+                          "eliminated"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
+                    >
+                      Eliminated
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateFinalistStatus(
+                          contestant.id,
+                          "disqualified"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-pink-500 text-white font-black uppercase"
+                    >
+                      Disqualified
+                    </button>
+
+                  </div>
+
+                </div>
+              )
+            )}
+
+          </div>
+
+        </section>
+
+        {/* JUDGES */}
+        <section className="mt-24">
+
+          <h2 className="text-4xl font-black uppercase">
+            Fan Favorite Judges
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+            {judges.map(
+              (judge) => (
+                <div
+                  key={judge.id}
+                  className="rounded-3xl bg-white/5 border border-white/10 p-6"
+                >
+
+                  <h3 className="text-3xl font-black uppercase">
+                    {judge.name}
+                  </h3>
+
+                  <p className="mt-3">
+                    Votes:
+                    {" "}
+                    {judge.votes || 0}
+                  </p>
+
+                  <div className="mt-6 grid gap-3">
+
+                    <button
+                      onClick={() =>
+                        updateJudgeStatus(
+                          judge.id,
+                          "safe"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
+                    >
+                      Safe
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateJudgeStatus(
+                          judge.id,
+                          "eliminated"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
+                    >
+                      Eliminated
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateJudgeStatus(
+                          judge.id,
+                          "disqualified"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-pink-500 text-white font-black uppercase"
+                    >
+                      Disqualified
+                    </button>
+
+                  </div>
+
+                </div>
+              )
+            )}
+
+          </div>
+
+        </section>
+
+        {/* KIDS */}
+        <section className="mt-24">
+
+          <h2 className="text-4xl font-black uppercase">
+            Kids Entries
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+            {contestants.map(
+              (contestant) => (
+                <div
+                  key={contestant.id}
+                  className="rounded-3xl bg-white/5 border border-white/10 p-6"
+                >
+
+                  <h3 className="text-3xl font-black uppercase">
+                    {
+                      contestant.full_name
+                    }
+                  </h3>
+
+                  <p className="mt-3">
+                    Age:
+                    {" "}
+                    {contestant.age}
+                  </p>
+
+                  <div className="mt-6 grid gap-3">
+
+                    <button
+                      onClick={() =>
+                        updateStatus(
+                          contestant.id,
+                          "safe"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
+                    >
+                      Safe
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateStatus(
+                          contestant.id,
+                          "eliminated"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
+                    >
+                      Eliminated
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateStatus(
+                          contestant.id,
+                          "disqualified"
+                        )
+                      }
+                      className="py-3 rounded-2xl bg-pink-500 text-white font-black uppercase"
+                    >
+                      Disqualified
+                    </button>
+
+                  </div>
+
+                </div>
+              )
+            )}
+
+          </div>
+
+        </section>
 
       </div>
 
