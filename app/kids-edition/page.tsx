@@ -22,7 +22,7 @@ export default function KidsEditionPage() {
     const { data, error } = await supabase
       .from("contestants")
       .select("*")
-      .in("status", ["approved", "through"])
+      .in("status", ["accepted", "through"])
       .order("created_at", { ascending: false });
 
     if (!error && data) {
