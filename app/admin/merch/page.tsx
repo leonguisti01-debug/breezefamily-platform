@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -9,7 +8,7 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
 );
 
-export default function MerchPage() {
+export default function MerchAdminPage() {
 
   const [products,
     setProducts] =
@@ -19,15 +18,8 @@ export default function MerchPage() {
     setLoading] =
     useState(true);
 
-  const [cartCount,
-    setCartCount] =
-    useState(0);
-
   useEffect(() => {
-
     fetchProducts();
-    loadCartCount();
-
   }, []);
 
   /* FETCH PRODUCTS */
@@ -40,10 +32,6 @@ export default function MerchPage() {
       } = await supabase
         .from("merch_products")
         .select("*")
-        .eq(
-          "status",
-          "active"
-        )
         .order(
           "created_at",
           {
@@ -55,6 +43,7 @@ export default function MerchPage() {
 
         console.log(error);
 
+        return;
       }
 
       if (data) {
@@ -66,66 +55,140 @@ export default function MerchPage() {
       setLoading(false);
     };
 
-  /* LOAD CART COUNT */
-  const loadCartCount =
-    () => {
+  /* ADD PRODUCT */
+  const addProduct =
+    async () => {
 
-      const cart =
-        JSON.parse(
-          localStorage.getItem(
-            "cart"
-          ) || "[]"
+      const {
+        error
+      } = await supabase
+        .from("merch_products")
+        .insert([
+          {
+            name: "New Product",
+            price: "R0",
+            category: "Merch",
+            status: "active",
+          },
+        ]);
+
+      if (error) {
+
+        console.log(error);
+
+        alert(
+          "Failed to add product."
         );
 
-      setCartCount(
-        cart.length
-      );
-    };
-
-  /* ADD TO CART */
-  const addToCart =
-    (product: any) => {
-
-      const cart =
-        JSON.parse(
-          localStorage.getItem(
-            "cart"
-          ) || "[]"
-        );
-
-      const existing =
-        cart.find(
-          (item: any) =>
-            item.id ===
-            product.id
-        );
-
-      if (existing) {
-
-        existing.quantity += 1;
-
-      } else {
-
-        cart.push({
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          image_url:
-            product.image_url,
-          quantity: 1,
-        });
+        return;
       }
 
-      localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
+      alert(
+        "Product added!"
       );
 
-      loadCartCount();
+      fetchProducts();
+    };
+
+  /* UPDATE */
+  const updateField =
+    async (
+      id: number,
+      field: string,
+      value: string
+    ) => {
+
+      await supabase
+        .from("merch_products")
+        .update({
+          [field]: value,
+        })
+        .eq("id", id);
+
+      fetchProducts();
+    };
+
+  /* TOGGLE STATUS */
+  const toggleStatus =
+    async (
+      id: number,
+      currentStatus: string
+    ) => {
+
+      const newStatus =
+        currentStatus === "active"
+          ? "hidden"
+          : "active";
+
+      await supabase
+        .from("merch_products")
+        .update({
+          status: newStatus,
+        })
+        .eq("id", id);
+
+      fetchProducts();
+    };
+
+  /* UPLOAD IMAGE */
+  const uploadImage =
+    async (
+      e: any,
+      productId: number
+    ) => {
+
+      const file =
+        e.target.files[0];
+
+      if (!file) return;
+
+      const fileName =
+        `${Date.now()}-${file.name}`;
+
+      const {
+        error: uploadError
+      } = await supabase.storage
+        .from("merch")
+        .upload(
+          fileName,
+          file
+        );
+
+      if (uploadError) {
+
+        console.log(uploadError);
+
+        alert(
+          "Upload failed."
+        );
+
+        return;
+      }
+
+      const {
+        data: publicUrlData,
+      } = supabase.storage
+        .from("merch")
+        .getPublicUrl(
+          fileName
+        );
+
+      await supabase
+        .from("merch_products")
+        .update({
+          image_url:
+            publicUrlData.publicUrl,
+        })
+        .eq(
+          "id",
+          productId
+        );
 
       alert(
-        `${product.name} added to cart`
+        "Image uploaded!"
       );
+
+      fetchProducts();
     };
 
   if (loading) {
@@ -134,7 +197,7 @@ export default function MerchPage() {
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
 
         <h1 className="text-4xl font-black uppercase">
-          Loading Store...
+          Loading Merch Admin...
         </h1>
 
       </main>
@@ -156,20 +219,19 @@ export default function MerchPage() {
             </p>
 
             <h1 className="mt-4 text-5xl md:text-7xl font-black uppercase">
-              Merch Store
+              Merch Admin
             </h1>
 
           </div>
 
-          {/* CART BUTTON */}
-          <Link
-            href="/cart"
-            className="inline-flex items-center justify-center px-8 py-5 rounded-2xl bg-green-400 text-black font-black uppercase hover:opacity-90 transition duration-300"
+          <button
+            onClick={addProduct}
+            className="px-8 py-5 rounded-2xl bg-green-400 text-black font-black uppercase"
           >
 
-            Cart ({cartCount})
+            Add Product
 
-          </Link>
+          </button>
 
         </div>
 
@@ -207,31 +269,96 @@ export default function MerchPage() {
                 <div className="p-6">
 
                   {/* NAME */}
-                  <h2 className="text-3xl font-black uppercase">
-                    {product.name}
-                  </h2>
-
-                  {/* CATEGORY */}
-                  <p className="mt-3 uppercase tracking-[3px] text-sm text-white/50">
-                    {product.category}
-                  </p>
-
-                  {/* PRICE */}
-                  <p className="mt-6 text-4xl font-black text-green-300">
-                    {product.price}
-                  </p>
-
-                  {/* BUTTON */}
-                  <button
-                    onClick={() =>
-                      addToCart(
-                        product
+                  <input
+                    type="text"
+                    defaultValue={
+                      product.name
+                    }
+                    onBlur={(e) =>
+                      updateField(
+                        product.id,
+                        "name",
+                        e.target.value
                       )
                     }
-                    className="mt-8 w-full py-4 rounded-2xl bg-green-400 text-black font-black uppercase hover:opacity-90 transition duration-300"
+                    className="w-full px-4 py-4 rounded-2xl bg-black border border-white/10 text-white"
+                  />
+
+                  {/* PRICE */}
+                  <input
+                    type="text"
+                    defaultValue={
+                      product.price
+                    }
+                    onBlur={(e) =>
+                      updateField(
+                        product.id,
+                        "price",
+                        e.target.value
+                      )
+                    }
+                    className="mt-4 w-full px-4 py-4 rounded-2xl bg-black border border-white/10 text-white"
+                  />
+
+                  {/* CATEGORY */}
+                  <input
+                    type="text"
+                    defaultValue={
+                      product.category
+                    }
+                    onBlur={(e) =>
+                      updateField(
+                        product.id,
+                        "category",
+                        e.target.value
+                      )
+                    }
+                    className="mt-4 w-full px-4 py-4 rounded-2xl bg-black border border-white/10 text-white"
+                  />
+
+                  {/* IMAGE */}
+                  <label className="mt-6 block">
+
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) =>
+                        uploadImage(
+                          e,
+                          product.id
+                        )
+                      }
+                      className="hidden"
+                    />
+
+                    <div className="cursor-pointer py-4 rounded-2xl bg-white text-black text-center font-black uppercase">
+
+                      Upload Product Photo
+
+                    </div>
+
+                  </label>
+
+                  {/* STATUS */}
+                  <button
+                    onClick={() =>
+                      toggleStatus(
+                        product.id,
+                        product.status
+                      )
+                    }
+                    className={`mt-6 w-full py-4 rounded-2xl font-black uppercase ${
+                      product.status ===
+                      "active"
+                        ? "bg-green-400 text-black"
+                        : "bg-red-500 text-white"
+                    }`}
                   >
 
-                    Add To Cart
+                    {product.status ===
+                    "active"
+                      ? "Visible On Store"
+                      : "Hidden From Store"}
 
                   </button>
 
