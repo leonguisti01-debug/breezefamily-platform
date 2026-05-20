@@ -85,18 +85,7 @@ export default function HomePage() {
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="relative flex justify-center">
-
-            <div className="absolute inset-0 bg-green-400/20 blur-[80px] md:blur-[120px] rounded-full"></div>
-
-            <img
-              src="/breeze-logo.png"
-              alt="Breeze Family"
-              className="relative z-10 w-full max-w-[500px] md:max-w-[700px] drop-shadow-[0_0_40px_rgba(0,255,100,0.35)]"
-            />
-
-          </div>
-
+          
         </div>
 
       </section>
