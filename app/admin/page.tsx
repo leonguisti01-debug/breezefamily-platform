@@ -570,6 +570,208 @@ export default function AdminPage() {
 
         </section>
 
+        {/* JUDGES */}
+        <section className="mt-24">
+
+          <h2 className="text-5xl font-black uppercase">
+            Fan Favorite Judges
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+            {judges.map(
+              (judge) => (
+
+                <div
+                  key={judge.id}
+                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
+                >
+
+                  {judge.video_url ? (
+
+                    <video
+                      src={judge.video_url}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      controls
+                      className="w-full h-auto"
+                    />
+
+                  ) : (
+
+                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+                      No Video
+                    </div>
+
+                  )}
+
+                  <div className="p-6">
+
+                    <h3 className="text-3xl font-black uppercase">
+                      {judge.name}
+                    </h3>
+
+                    <p className="mt-3 text-pink-300 font-bold">
+                      Votes: {judge.votes || 0}
+                    </p>
+
+                    <label className="mt-6 block">
+
+                      <input
+                        type="file"
+                        accept="video/mp4"
+                        onChange={(e) =>
+                          uploadJudgeVideo(
+                            e,
+                            judge.id
+                          )
+                        }
+                        className="hidden"
+                      />
+
+                      <div className="cursor-pointer py-3 rounded-2xl bg-white text-black text-center font-black uppercase">
+                        Upload Video
+                      </div>
+
+                    </label>
+
+                    <div className="mt-6 grid gap-3">
+
+                      <button
+                        onClick={() =>
+                          updateJudgeStatus(
+                            judge.id,
+                            "safe"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
+                      >
+                        Safe
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateJudgeStatus(
+                            judge.id,
+                            "eliminated"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
+                      >
+                        Eliminated
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateJudgeStatus(
+                            judge.id,
+                            "disqualified"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-pink-500 text-white font-black uppercase"
+                      >
+                        Disqualified
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </div>
+              )
+            )}
+
+          </div>
+
+        </section>
+
+        {/* KIDS */}
+        <section className="mt-24">
+
+          <h2 className="text-5xl font-black uppercase">
+            Kids Entries
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+            {contestants.map(
+              (contestant) => (
+
+                <div
+                  key={contestant.id}
+                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
+                >
+
+                  {contestant.photo_url ? (
+
+                    <img
+                      src={contestant.photo_url}
+                      alt={contestant.full_name}
+                      className="w-full aspect-square object-cover"
+                    />
+
+                  ) : (
+
+                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+                      No Photo
+                    </div>
+
+                  )}
+
+                  <div className="p-6">
+
+                    <h3 className="text-3xl font-black uppercase">
+                      {contestant.full_name}
+                    </h3>
+
+                    <p className="mt-3 text-white/70">
+                      Age: {contestant.age}
+                    </p>
+
+                    <p className="mt-2 text-white/40 uppercase text-sm">
+                      {contestant.status || "pending"}
+                    </p>
+
+                    <div className="mt-6 grid grid-cols-2 gap-3">
+
+                      <button
+                        onClick={() =>
+                          updateKidsStatus(
+                            contestant.id,
+                            "accepted"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
+                      >
+                        Accept
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateKidsStatus(
+                            contestant.id,
+                            "rejected"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
+                      >
+                        Decline
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </div>
+              )
+            )}
+
+          </div>
+
+        </section>
+
       </div>
 
     </main>
