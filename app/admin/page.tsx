@@ -48,43 +48,46 @@ export default function AdminPage() {
 
   useEffect(() => {
 
-    const loggedIn =
-      localStorage.getItem(
-        "admin-auth"
-      );
+    const checkAuth =
+      async () => {
 
-    if (
-      loggedIn !== "true"
-    ) {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
-      router.push(
-        "/admin-login"
-      );
+        if (!session) {
 
-      return;
-    }
+          window.location.href =
+            "/admin-login";
 
-    setAuthorized(true);
+          return;
+        }
 
-    fetchContestants();
-    fetchSeason2Contestants();
-    fetchJudges();
-    fetchSettings();
-    fetchHits();
+        setAuthorized(true);
+
+        await fetchContestants();
+
+        await fetchSeason2Contestants();
+
+        await fetchJudges();
+
+        await fetchSettings();
+
+        await fetchHits();
+      };
+
+    checkAuth();
 
   }, []);
 
   /* LOGOUT */
   const logout =
-    () => {
+    async () => {
 
-      localStorage.removeItem(
-        "admin-auth"
-      );
+      await supabase.auth.signOut();
 
-      router.push(
-        "/admin-login"
-      );
+      window.location.href =
+        "/admin-login";
     };
 
   /* SETTINGS */
@@ -346,7 +349,10 @@ export default function AdminPage() {
       alert("Video uploaded!");
     };
 
-  if (!authorized || loading) {
+  if (
+    !authorized ||
+    loading
+  ) {
 
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -451,7 +457,118 @@ export default function AdminPage() {
 
         </div>
 
-        {/* REST OF YOUR PAGE STAYS THE SAME */}
+        {/* TOP 10 */}
+        <section className="mt-24">
+
+          <h2 className="text-5xl font-black uppercase">
+            Top 10 Finalists
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+            {season2Contestants.map(
+              (contestant) => (
+
+                <div
+                  key={contestant.id}
+                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
+                >
+
+                  {contestant.image_url ? (
+
+                    <img
+                      src={contestant.image_url}
+                      alt={contestant.name}
+                      className="w-full aspect-square object-cover"
+                    />
+
+                  ) : (
+
+                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
+                      No Image
+                    </div>
+
+                  )}
+
+                  <div className="p-6">
+
+                    <h3 className="text-3xl font-black uppercase">
+                      {contestant.name}
+                    </h3>
+
+                    <p className="mt-3 text-green-300 font-bold">
+                      Votes: {contestant.votes || 0}
+                    </p>
+
+                    <label className="mt-6 block">
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          uploadTop10Image(
+                            e,
+                            contestant.id
+                          )
+                        }
+                        className="hidden"
+                      />
+
+                      <div className="cursor-pointer py-3 rounded-2xl bg-white text-black text-center font-black uppercase">
+                        Upload Photo
+                      </div>
+
+                    </label>
+
+                    <div className="mt-6 grid gap-3">
+
+                      <button
+                        onClick={() =>
+                          updateFinalistStatus(
+                            contestant.id,
+                            "safe"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
+                      >
+                        Safe
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateFinalistStatus(
+                            contestant.id,
+                            "eliminated"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
+                      >
+                        Eliminated
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateFinalistStatus(
+                            contestant.id,
+                            "disqualified"
+                          )
+                        }
+                        className="py-3 rounded-2xl bg-pink-500 text-white font-black uppercase"
+                      >
+                        Disqualified
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </div>
+              )
+            )}
+
+          </div>
+
+        </section>
 
       </div>
 
