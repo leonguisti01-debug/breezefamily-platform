@@ -28,9 +28,13 @@ export default function Season2FinalePage() {
     useState(true);
 
   useEffect(() => {
+
     fetchContestants();
+
     fetchSettings();
+
     checkExistingVote();
+
   }, []);
 
   /* CHECK EXISTING VOTE */
@@ -39,7 +43,7 @@ export default function Season2FinalePage() {
 
       try {
 
-        /* IP */
+        /* GET IP */
         const res =
           await fetch(
             "https://api.ipify.org?format=json"
@@ -51,7 +55,7 @@ export default function Season2FinalePage() {
         const ip =
           ipData.ip;
 
-        /* FINGERPRINT */
+        /* GET FINGERPRINT */
         const fp =
           await FingerprintJS.load();
 
@@ -61,6 +65,7 @@ export default function Season2FinalePage() {
         const fingerprint =
           result.visitorId;
 
+        /* CHECK DATABASE */
         const {
           data: existingVotes,
           error: checkError
@@ -179,7 +184,7 @@ export default function Season2FinalePage() {
 
       try {
 
-        /* IP */
+        /* GET IP */
         const res =
           await fetch(
             "https://api.ipify.org?format=json"
@@ -191,7 +196,7 @@ export default function Season2FinalePage() {
         const ip =
           ipData.ip;
 
-        /* COUNTRY */
+        /* GET COUNTRY */
         const geoRes =
           await fetch(
             `https://ipapi.co/${ip}/json/`
@@ -204,11 +209,11 @@ export default function Season2FinalePage() {
           geoData.country_name ||
           "Unknown";
 
-        /* USER AGENT */
+        /* GET USER AGENT */
         const userAgent =
           navigator.userAgent;
 
-        /* FINGERPRINT */
+        /* GET FINGERPRINT */
         const fp =
           await FingerprintJS.load();
 
@@ -218,7 +223,7 @@ export default function Season2FinalePage() {
         const fingerprint =
           result.visitorId;
 
-        /* CHECK EXISTING */
+        /* CHECK DUPLICATES */
         const {
           data: existingVotes,
           error: checkError
@@ -235,7 +240,6 @@ export default function Season2FinalePage() {
 
         }
 
-        /* BLOCK DUPLICATES */
         if (
           existingVotes &&
           existingVotes.length > 0
@@ -255,7 +259,7 @@ export default function Season2FinalePage() {
           return;
         }
 
-        /* GET CONTESTANT */
+        /* FIND CONTESTANT */
         const contestant =
           contestants.find(
             (c) =>
@@ -341,6 +345,7 @@ export default function Season2FinalePage() {
     };
 
   if (loading) {
+
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
 
@@ -375,6 +380,162 @@ export default function Season2FinalePage() {
           )}
 
         </div>
+
+        {/* LEADERBOARD */}
+        <section className="mt-20">
+
+          <div className="rounded-3xl bg-white/5 border border-white/10 overflow-hidden">
+
+            <div className="grid grid-cols-3 bg-green-400 text-black font-black uppercase text-sm tracking-[2px]">
+
+              <div className="p-5">
+                Rank
+              </div>
+
+              <div className="p-5">
+                Contestant
+              </div>
+
+              <div className="p-5 text-right">
+                Votes
+              </div>
+
+            </div>
+
+            {contestants.map(
+              (
+                contestant,
+                index
+              ) => (
+                <div
+                  key={contestant.id}
+                  className="grid grid-cols-3 border-t border-white/10 items-center"
+                >
+
+                  <div className="p-5 font-black text-2xl text-green-300">
+                    #{index + 1}
+                  </div>
+
+                  <div className="p-5 font-bold uppercase">
+                    {
+                      contestant.name
+                    }
+                  </div>
+
+                  <div className="p-5 text-right text-2xl font-black">
+                    {
+                      contestant.votes || 0
+                    }
+                  </div>
+
+                </div>
+              )
+            )}
+
+          </div>
+
+        </section>
+
+        {/* CONTESTANT CARDS */}
+        <section className="mt-24">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+
+            {contestants.map(
+              (
+                contestant,
+                index
+              ) => (
+                <div
+                  key={contestant.id}
+                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
+                >
+
+                  {contestant.image_url ? (
+
+                    <div className="w-full bg-black flex items-center justify-center p-4">
+
+                      <img
+                        src={
+                          contestant.image_url
+                        }
+                        alt={
+                          contestant.name
+                        }
+                        className="w-full h-auto max-h-[750px] object-contain rounded-2xl"
+                      />
+
+                    </div>
+
+                  ) : (
+
+                    <div className="w-full h-[500px] bg-black flex items-center justify-center text-white/30">
+                      No Photo
+                    </div>
+
+                  )}
+
+                  <div className="p-6 text-center">
+
+                    <div className="inline-block px-4 py-2 rounded-full bg-green-400 text-black font-black uppercase text-sm">
+                      #{index + 1}
+                    </div>
+
+                    <h2 className="mt-5 text-3xl font-black uppercase">
+                      {
+                        contestant.name
+                      }
+                    </h2>
+
+                    <div className="mt-5 px-5 py-4 rounded-2xl bg-green-500/10 border border-green-400/20">
+
+                      <p className="uppercase tracking-[3px] text-xs text-green-300">
+                        Votes
+                      </p>
+
+                      <p className="mt-2 text-4xl font-black">
+                        {
+                          contestant.votes || 0
+                        }
+                      </p>
+
+                    </div>
+
+                    <button
+                      onClick={() =>
+                        voteForContestant(
+                          contestant.id
+                        )
+                      }
+                      disabled={
+                        hasVoted ||
+                        !votingOpen
+                      }
+                      className={`mt-8 w-full py-4 rounded-2xl font-black uppercase transition duration-300 ${
+                        hasVoted ||
+                        !votingOpen
+                          ? "bg-white/10 text-white/40 cursor-not-allowed"
+                          : "bg-green-400 text-black hover:opacity-90"
+                      }`}
+                    >
+
+                      {!votingOpen
+                        ? "Voting Closed"
+                        : hasVoted
+                        ? "Already Voted"
+                        : "Vote"}
+
+                    </button>
+
+                  </div>
+
+                </div>
+              )
+            )}
+
+          </div>
+
+        </section>
 
       </div>
 
