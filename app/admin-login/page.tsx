@@ -10,44 +10,59 @@ const supabase = createClient(
 );
 
 export default function AdminLoginPage() {
-  const router = useRouter();
 
-  const [email, setEmail] = useState("");
+  const router =
+    useRouter();
 
-  const [password, setPassword] =
+  const [email,
+    setEmail] =
     useState("");
 
-  const [loading, setLoading] =
+  const [password,
+    setPassword] =
+    useState("");
+
+  const [loading,
+    setLoading] =
     useState(false);
 
-  const [errorMessage, setErrorMessage] =
+  const [errorMessage,
+    setErrorMessage] =
     useState("");
 
-  const handleLogin = async (
-    e: React.FormEvent
-  ) => {
-    e.preventDefault();
+  const handleLogin =
+    async (
+      e: React.FormEvent
+    ) => {
 
-    setLoading(true);
+      e.preventDefault();
 
-    setErrorMessage("");
+      setLoading(true);
 
-    const { error } =
-      await supabase.auth.signInWithPassword({
+      setErrorMessage("");
+
+      const {
+        error
+      } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-    if (error) {
-      setErrorMessage(error.message);
+      if (error) {
 
-      setLoading(false);
+        setErrorMessage(
+          error.message
+        );
 
-      return;
-    }
+        setLoading(false);
 
-    router.push("/admin");
-  };
+        return;
+      }
+
+      /* IMPORTANT */
+      window.location.href =
+        "/admin";
+    };
 
   return (
     <main
@@ -57,12 +72,13 @@ export default function AdminLoginPage() {
           "radial-gradient(circle at top, rgba(50,255,50,0.18), transparent 35%), #050505",
       }}
     >
-      {/* GLOW EFFECTS */}
+
+      {/* GLOW */}
       <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] bg-green-500/20 blur-[180px] rounded-full"></div>
 
       <div className="absolute bottom-[-200px] right-[-200px] w-[600px] h-[600px] bg-lime-400/20 blur-[180px] rounded-full"></div>
 
-      {/* LOGIN CARD */}
+      {/* CARD */}
       <div className="relative z-20 w-full max-w-md rounded-3xl border border-green-400/20 bg-black/40 backdrop-blur-2xl p-8 md:p-10 shadow-[0_0_60px_rgba(0,255,120,0.08)]">
 
         {/* LOGO */}
@@ -91,9 +107,13 @@ export default function AdminLoginPage() {
 
         {/* ERROR */}
         {errorMessage && (
+
           <div className="mt-6 rounded-2xl border border-red-500/20 bg-red-500/10 px-5 py-4 text-sm text-red-300">
+
             {errorMessage}
+
           </div>
+
         )}
 
         {/* FORM */}
@@ -114,7 +134,9 @@ export default function AdminLoginPage() {
               required
               value={email}
               onChange={(e) =>
-                setEmail(e.target.value)
+                setEmail(
+                  e.target.value
+                )
               }
               placeholder="Enter Email Address"
               className="w-full rounded-2xl border border-white/10 bg-black/30 px-5 py-4 text-white outline-none focus:border-green-400"
@@ -134,7 +156,9 @@ export default function AdminLoginPage() {
               required
               value={password}
               onChange={(e) =>
-                setPassword(e.target.value)
+                setPassword(
+                  e.target.value
+                )
               }
               placeholder="Enter Password"
               className="w-full rounded-2xl border border-white/10 bg-black/30 px-5 py-4 text-white outline-none focus:border-green-400"
@@ -148,9 +172,11 @@ export default function AdminLoginPage() {
             disabled={loading}
             className="w-full py-4 rounded-2xl bg-gradient-to-r from-green-400 to-lime-300 text-black font-black text-lg shadow-[0_0_50px_rgba(0,255,120,0.35)] hover:scale-[1.02] transition duration-300 disabled:opacity-50"
           >
+
             {loading
               ? "Signing In..."
               : "Login To Admin"}
+
           </button>
 
         </form>
