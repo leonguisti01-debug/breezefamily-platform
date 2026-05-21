@@ -23,31 +23,26 @@ export default function HomePage() {
         }}
       />
 
+      {/* HUGE BACKGROUND TEXT */}
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 text-[140px] md:text-[280px] font-black uppercase text-white/[0.03] leading-none pointer-events-none select-none">
+
+        BREEZE
+
+      </div>
+
       {/* NAVBAR */}
       <header className="relative z-50 px-6 pt-6">
 
-        <div className="max-w-7xl mx-auto flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl px-6 py-5">
 
           {/* LOGO */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center">
 
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-300 to-lime-500 flex items-center justify-center font-black text-black text-xl shadow-[0_0_30px_rgba(120,255,120,0.35)]">
-
-              B
-
-            </div>
-
-            <div>
-
-              <p className="text-xs uppercase tracking-[4px] text-green-300">
-                Breeze Family
-              </p>
-
-              <h2 className="font-black uppercase text-lg">
-                Entertainment
-              </h2>
-
-            </div>
+            <img
+              src="/breeze-logo-new.png"
+              alt="Breeze Family"
+              className="h-16 md:h-24 w-auto object-contain drop-shadow-[0_0_40px_rgba(120,255,120,0.18)]"
+            />
 
           </div>
 
@@ -55,21 +50,33 @@ export default function HomePage() {
           <nav className="hidden md:flex items-center gap-8 text-sm uppercase tracking-[3px] text-white/70">
 
             <Link href="/top-10">
+
               <span className="hover:text-green-300 transition duration-300 cursor-pointer">
+
                 Top 10
+
               </span>
+
             </Link>
 
             <Link href="/kids">
+
               <span className="hover:text-green-300 transition duration-300 cursor-pointer">
+
                 Kids Edition
+
               </span>
+
             </Link>
 
             <Link href="/merch">
+
               <span className="hover:text-green-300 transition duration-300 cursor-pointer">
+
                 Merch
+
               </span>
+
             </Link>
 
           </nav>
@@ -83,12 +90,12 @@ export default function HomePage() {
 
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
 
-          {/* LEFT */}
+          {/* LEFT SIDE */}
           <div>
 
-            {/* LIVE STATUS */}
+            {/* LIVE BADGE */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
               className="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-green-400/20 bg-green-500/10 backdrop-blur-md"
@@ -104,9 +111,9 @@ export default function HomePage() {
 
             </motion.div>
 
-            {/* HEADING */}
+            {/* MAIN TITLE */}
             <motion.h1
-              initial={{ opacity: 0, y: 60 }}
+              initial={{ opacity: 0, y: 80 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
               className="mt-10 text-6xl md:text-8xl xl:text-[120px] font-black uppercase leading-[0.88]"
@@ -136,12 +143,12 @@ export default function HomePage() {
               className="mt-8 max-w-2xl text-lg md:text-2xl text-white/70 leading-relaxed"
             >
 
-              South Africa’s next-generation creator platform for performers,
-              entertainers and digital stars.
+              South Africa’s next-generation creator platform
+              for performers, entertainers and digital stars.
 
             </motion.p>
 
-            {/* BUTTONS */}
+            {/* CTA BUTTONS */}
             <div className="mt-10 flex flex-wrap gap-5">
 
               <Link href="/kids-edition/register">
@@ -207,7 +214,7 @@ export default function HomePage() {
           {/* RIGHT SIDE */}
           <div className="relative h-[700px] hidden lg:block">
 
-            {/* BIG CARD */}
+            {/* MAIN CARD */}
             <motion.div
               animate={{
                 y: [0, -15, 0],
@@ -275,7 +282,7 @@ export default function HomePage() {
 
             </motion.div>
 
-            {/* SMALL PANEL */}
+            {/* STATUS PANEL */}
             <motion.div
               animate={{
                 y: [0, -10, 0],
