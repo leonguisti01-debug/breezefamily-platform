@@ -359,8 +359,9 @@ export default function HomePage() {
 
             {/* VIDEO 1 */}
             <a
-              href="https://www.tiktok.com/@itskentbreeze/video/7615236380767325461"
+              href="https://www.tiktok.com/@itskentbreezy/video/7615236380767325461"
               target="_blank"
+              rel="noopener noreferrer"
               className="group min-w-[210px] md:min-w-[250px] snap-start"
             >
 
@@ -378,8 +379,9 @@ export default function HomePage() {
 
             {/* VIDEO 2 */}
             <a
-              href="https://www.tiktok.com/@itskentbreeze/video/7536618269583674630"
+              href="https://www.tiktok.com/@itskentbreezy/video/7536618269583674630"
               target="_blank"
+              rel="noopener noreferrer"
               className="group min-w-[210px] md:min-w-[250px] snap-start"
             >
 
@@ -397,8 +399,9 @@ export default function HomePage() {
 
             {/* VIDEO 3 */}
             <a
-              href="https://www.tiktok.com/@itskentbreeze/video/7626772857565007124"
+              href="https://www.tiktok.com/@itskentbreezy/video/7626772857565007124"
               target="_blank"
+              rel="noopener noreferrer"
               className="group min-w-[210px] md:min-w-[250px] snap-start"
             >
 
