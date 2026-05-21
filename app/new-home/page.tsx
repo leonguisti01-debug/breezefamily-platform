@@ -257,11 +257,12 @@ export default function HomePage() {
             >
 
               <h1
-                className="uppercase italic font-black leading-[0.86]"
+                className="uppercase italic font-black"
                 style={{
                   fontFamily: "Bebas Neue, sans-serif",
                   fontSize: "clamp(72px, 9vw, 150px)",
-                  letterSpacing: "-0.04em",
+                  letterSpacing: "0.06em",
+                  lineHeight: "0.88",
                 }}
               >
 
@@ -269,11 +270,11 @@ export default function HomePage() {
                   A NEW
                 </span>
 
-                <span className="block bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
+                <span className="block mt-2 bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
                   BREEZE
                 </span>
 
-                <span className="block text-white">
+                <span className="block mt-2 text-white">
                   ERA
                 </span>
 
