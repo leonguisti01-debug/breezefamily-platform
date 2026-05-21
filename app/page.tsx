@@ -43,7 +43,7 @@ export default function HomePage() {
           <div className="flex items-center gap-6 md:gap-10">
 
             {/* LOGO */}
-            <Link href="/new-home">
+            <Link href="/">
 
               <img
                 src="/breeze-logo-new.png"
@@ -56,7 +56,7 @@ export default function HomePage() {
             {/* NAVIGATION */}
             <nav className="hidden lg:flex items-center gap-8">
 
-              <Link href="/new-home">
+              <Link href="/">
 
                 <div className="relative group">
 
@@ -75,34 +75,44 @@ export default function HomePage() {
 
               </Link>
 
-              <Link href="/tiktok-stars">
+              <Link href="/">
+
                 <span className="text-white/80 hover:text-white text-[11px] uppercase tracking-[2px] font-bold transition duration-300">
                   TikTok Stars
                 </span>
+
               </Link>
 
-              <Link href="/merch">
+              <Link href="/">
+
                 <span className="text-white/80 hover:text-white text-[11px] uppercase tracking-[2px] font-bold transition duration-300">
                   My Merch
                 </span>
+
               </Link>
 
-              <Link href="/highlights">
+              <Link href="/">
+
                 <span className="text-white/80 hover:text-white text-[11px] uppercase tracking-[2px] font-bold transition duration-300">
                   Highlights
                 </span>
+
               </Link>
 
-              <Link href="/about">
+              <Link href="/">
+
                 <span className="text-white/80 hover:text-white text-[11px] uppercase tracking-[2px] font-bold transition duration-300">
                   About
                 </span>
+
               </Link>
 
-              <Link href="/contact">
+              <Link href="/">
+
                 <span className="text-white/80 hover:text-white text-[11px] uppercase tracking-[2px] font-bold transition duration-300">
                   Contact
                 </span>
+
               </Link>
 
             </nav>
@@ -115,48 +125,44 @@ export default function HomePage() {
             <a
               href="https://www.tiktok.com/@itskentbreeze?_r=1&_t=ZS-96PJ9wohRtE"
               target="_blank"
-              className="opacity-80 hover:opacity-100 transition duration-300"
             >
               <img
                 src="/tiktok-icon.png"
                 alt="TikTok"
-                className="w-4 h-4 object-contain"
+                className="w-4 h-4 object-contain opacity-80 hover:opacity-100 transition"
               />
             </a>
 
             <a
               href="https://www.instagram.com/itskentbreezy?igsh=MWI3eGF0YWdiZjk5OQ=="
               target="_blank"
-              className="opacity-80 hover:opacity-100 transition duration-300"
             >
               <img
                 src="/instagram-icon.png"
                 alt="Instagram"
-                className="w-4 h-4 object-contain"
+                className="w-4 h-4 object-contain opacity-80 hover:opacity-100 transition"
               />
             </a>
 
             <a
               href="https://youtube.com"
               target="_blank"
-              className="opacity-80 hover:opacity-100 transition duration-300"
             >
               <img
                 src="/youtube-icon.png"
                 alt="YouTube"
-                className="w-4 h-4 object-contain"
+                className="w-4 h-4 object-contain opacity-80 hover:opacity-100 transition"
               />
             </a>
 
             <a
               href="https://whatsapp.com/channel/0029VbD9d4P9sBI9ue1ekp2z"
               target="_blank"
-              className="opacity-80 hover:opacity-100 transition duration-300"
             >
               <img
                 src="/whatsapp-icon.png"
                 alt="WhatsApp"
-                className="w-4 h-4 object-contain"
+                className="w-4 h-4 object-contain opacity-80 hover:opacity-100 transition"
               />
             </a>
 
@@ -415,66 +421,70 @@ export default function HomePage() {
             </a>
 
             {/* SPOTIFY */}
-<div
-  className="min-w-[210px] md:min-w-[250px] rounded-[28px] border bg-white/5 backdrop-blur-2xl p-4 snap-start"
-  style={{
-    borderColor: `${BREEZE_GREEN}40`,
-  }}
->
+            <div className="group min-w-[210px] md:min-w-[250px] snap-start">
 
-  {/* HEADER */}
-  <div className="flex items-center justify-between mb-4">
+              <div
+                className="rounded-[28px] overflow-hidden border bg-white/5 backdrop-blur-2xl p-4"
+                style={{
+                  borderColor: `${BREEZE_GREEN}40`,
+                }}
+              >
 
-    <div>
+                {/* TOP */}
+                <div className="flex items-center justify-between mb-4">
 
-      <p
-        className="uppercase tracking-[4px] text-[10px] md:text-xs"
-        style={{
-          color: BREEZE_GREEN,
-        }}
-      >
-        Breeze Vibes
-      </p>
+                  <div>
 
-      <h3
-        className="mt-2 uppercase italic font-black"
-        style={{
-          fontFamily: "Bebas Neue, sans-serif",
-          fontSize: "clamp(22px, 4vw, 34px)",
-          letterSpacing: "0.08em",
-          lineHeight: "0.9",
-        }}
-      >
+                    <p
+                      className="uppercase tracking-[4px] text-[10px] md:text-xs"
+                      style={{
+                        color: BREEZE_GREEN,
+                      }}
+                    >
+                      Breeze Vibes
+                    </p>
 
-        Spotify
+                    <h3
+                      className="mt-2 uppercase italic font-black"
+                      style={{
+                        fontFamily: "Bebas Neue, sans-serif",
+                        fontSize: "clamp(22px, 4vw, 34px)",
+                        letterSpacing: "0.08em",
+                        lineHeight: "0.9",
+                      }}
+                    >
 
-      </h3>
+                      Spotify
 
-    </div>
+                    </h3>
 
-    <img
-      src="/spotify-icon.png"
-      alt="Spotify"
-      className="w-6 h-6 object-contain"
-    />
+                  </div>
 
-  </div>
+                  <img
+                    src="/spotify-icon.png"
+                    alt="Spotify"
+                    className="w-6 h-6 object-contain"
+                  />
 
-  {/* EMBED */}
-  <iframe
-    style={{
-      borderRadius: "18px",
-    }}
-    src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator"
-    width="100%"
-    height="440"
-    frameBorder="0"
-    allowFullScreen
-    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-    loading="lazy"
-  />
+                </div>
 
-</div>
+                {/* PORTRAIT EMBED */}
+                <iframe
+                  style={{
+                    borderRadius: "18px",
+                  }}
+                  src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator&theme=0"
+                  width="100%"
+                  height="520"
+                  frameBorder="0"
+                  allowFullScreen
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                />
+
+              </div>
+
+            </div>
 
           </div>
 
