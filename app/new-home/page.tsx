@@ -257,19 +257,16 @@ export default function HomePage() {
             >
 
               <h1
-                className="uppercase italic font-black leading-[0.82] tracking-[-6px]"
+                className="uppercase italic font-black leading-[0.86]"
                 style={{
                   fontFamily: "Bebas Neue, sans-serif",
                   fontSize: "clamp(72px, 9vw, 150px)",
+                  letterSpacing: "-0.04em",
                 }}
               >
 
                 <span className="block text-white">
-                  THE
-                </span>
-
-                <span className="block text-white">
-                  NEW
+                  A NEW
                 </span>
 
                 <span className="block bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
