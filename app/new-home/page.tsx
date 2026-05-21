@@ -43,87 +43,102 @@ export default function HomePage() {
             </Link>
 
             {/* NAVIGATION */}
-            <nav className="hidden lg:flex items-center gap-10">
+<nav className="hidden lg:flex items-center gap-10">
 
-              {/* HOME */}
-              <Link href="/new-home">
+  {/* HOME */}
+  <Link href="/new-home">
 
-                <div className="relative group">
+    <div className="relative group">
 
-                  <span className="text-white text-xs uppercase tracking-[2px] font-bold">
+      <span className="text-white text-xs uppercase tracking-[2px] font-bold">
 
-                    Home
+        Home
 
-                  </span>
+      </span>
 
-                  {/* ACTIVE LINE */}
-                  <div className="absolute left-0 -bottom-[22px] w-full h-[2px] bg-gradient-to-r from-green-300 to-lime-400 rounded-full" />
+      {/* ACTIVE LINE */}
+      <div className="absolute left-0 -bottom-[22px] w-full h-[2px] bg-gradient-to-r from-green-300 to-lime-400 rounded-full" />
 
-                </div>
+    </div>
 
-              </Link>
+  </Link>
 
-              {/* MERCH */}
-              <Link href="/merch">
+  {/* TIKTOK STARS */}
+  <Link href="/top-10">
 
-                <div className="relative group">
+    <div className="relative group">
 
-                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+      <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
 
-                    My Merch
+        TikTok Stars
 
-                  </span>
+      </span>
 
-                </div>
+    </div>
 
-              </Link>
+  </Link>
 
-              {/* HIGHLIGHTS */}
-              <Link href="/highlights">
+  {/* MERCH */}
+  <Link href="/merch">
 
-                <div className="relative group">
+    <div className="relative group">
 
-                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+      <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
 
-                    Highlights
+        My Merch
 
-                  </span>
+      </span>
 
-                </div>
+    </div>
 
-              </Link>
+  </Link>
 
-              {/* ABOUT */}
-              <Link href="/about">
+  {/* HIGHLIGHTS */}
+  <Link href="/highlights">
 
-                <div className="relative group">
+    <div className="relative group">
 
-                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+      <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
 
-                    About
+        Highlights
 
-                  </span>
+      </span>
 
-                </div>
+    </div>
 
-              </Link>
+  </Link>
 
-              {/* CONTACT */}
-              <Link href="/contact">
+  {/* ABOUT */}
+  <Link href="/about">
 
-                <div className="relative group">
+    <div className="relative group">
 
-                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+      <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
 
-                    Contact
+        About
 
-                  </span>
+      </span>
 
-                </div>
+    </div>
 
-              </Link>
+  </Link>
 
-            </nav>
+  {/* CONTACT */}
+  <Link href="/contact">
+
+    <div className="relative group">
+
+      <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+
+        Contact
+
+      </span>
+
+    </div>
+
+  </Link>
+
+</nav>
 
           </div>
 
