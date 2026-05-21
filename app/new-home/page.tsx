@@ -130,19 +130,19 @@ export default function HomePage() {
             </a>
 
             {/* INSTAGRAM */}
-            <a
-              href="https://www.instagram.com/itskentbreezy?igsh=MWI3eGF0YWdiZjk5OQ=="
-              target="_blank"
-              className="opacity-80 hover:opacity-100 transition duration-300"
-            >
+<a
+  href="https://www.instagram.com/itskentbreezy?igsh=MWI3eGF0YWdiZjk5OQ=="
+  target="_blank"
+  className="opacity-80 hover:opacity-100 transition duration-300"
+>
 
-              <img
-                src="/instagram-icon.png"
-                alt="Instagram"
-                className="w-5 h-5 object-contain"
-              />
+  <img
+    src="/instagram-icon.png"
+    alt="Instagram"
+    className="w-5 h-5 object-contain"
+  />
 
-            </a>
+</a>
 
             {/* YOUTUBE */}
             <a
