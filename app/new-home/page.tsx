@@ -494,6 +494,7 @@ export default function HomePage() {
                     <div className="ml-1 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[16px] border-l-white" />
 
                   </div>
+                  
                   {/* SPOTIFY */}
 <div className="min-w-[260px] md:min-w-[340px] rounded-[32px] border border-green-400/20 bg-white/5 backdrop-blur-2xl p-5 md:p-6 snap-start">
 
