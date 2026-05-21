@@ -7,7 +7,7 @@ const BREEZE_GREEN = "#8DFF00";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden relative">
+    <main className="min-h-screen bg-black text-white overflow-hidden relative scale-[0.9] origin-top">
 
       {/* BACKGROUND */}
       <div
@@ -37,10 +37,10 @@ export default function HomePage() {
       {/* NAVBAR */}
       <header className="relative z-50 px-3 md:px-4 pt-3">
 
-        <div className="max-w-[1400px] mx-auto h-[62px] rounded-[10px] border border-white/10 bg-black/90 backdrop-blur-2xl flex items-center justify-between px-4 md:px-6">
+        <div className="max-w-[1260px] mx-auto h-[56px] rounded-[10px] border border-white/10 bg-black/90 backdrop-blur-2xl flex items-center justify-between px-4 md:px-6">
 
           {/* LEFT */}
-          <div className="flex items-center gap-6 md:gap-12">
+          <div className="flex items-center gap-6 md:gap-10">
 
             {/* LOGO */}
             <Link href="/new-home">
@@ -48,24 +48,24 @@ export default function HomePage() {
               <img
                 src="/breeze-logo-new.png"
                 alt="Breeze Family"
-                className="h-9 md:h-10 w-auto object-contain"
+                className="h-8 md:h-9 w-auto object-contain"
               />
 
             </Link>
 
             {/* NAVIGATION */}
-            <nav className="hidden lg:flex items-center gap-10">
+            <nav className="hidden lg:flex items-center gap-8">
 
               <Link href="/new-home">
 
                 <div className="relative group">
 
-                  <span className="text-white text-xs uppercase tracking-[2px] font-bold">
+                  <span className="text-white text-[11px] uppercase tracking-[2px] font-bold">
                     Home
                   </span>
 
                   <div
-                    className="absolute left-0 -bottom-[20px] w-full h-[2px] rounded-full"
+                    className="absolute left-0 -bottom-[18px] w-full h-[2px] rounded-full"
                     style={{
                       background: BREEZE_GREEN,
                     }}
@@ -76,31 +76,31 @@ export default function HomePage() {
               </Link>
 
               <Link href="/tiktok-stars">
-                <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                <span className="text-white/80 hover:text-white text-[11px] uppercase tracking-[2px] font-bold transition duration-300">
                   TikTok Stars
                 </span>
               </Link>
 
               <Link href="/merch">
-                <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                <span className="text-white/80 hover:text-white text-[11px] uppercase tracking-[2px] font-bold transition duration-300">
                   My Merch
                 </span>
               </Link>
 
               <Link href="/highlights">
-                <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                <span className="text-white/80 hover:text-white text-[11px] uppercase tracking-[2px] font-bold transition duration-300">
                   Highlights
                 </span>
               </Link>
 
               <Link href="/about">
-                <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                <span className="text-white/80 hover:text-white text-[11px] uppercase tracking-[2px] font-bold transition duration-300">
                   About
                 </span>
               </Link>
 
               <Link href="/contact">
-                <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                <span className="text-white/80 hover:text-white text-[11px] uppercase tracking-[2px] font-bold transition duration-300">
                   Contact
                 </span>
               </Link>
@@ -110,7 +110,7 @@ export default function HomePage() {
           </div>
 
           {/* RIGHT */}
-          <div className="flex items-center gap-3 md:gap-5">
+          <div className="flex items-center gap-3 md:gap-4">
 
             <a
               href="https://www.tiktok.com/@itskentbreeze?_r=1&_t=ZS-96PJ9wohRtE"
@@ -120,7 +120,7 @@ export default function HomePage() {
               <img
                 src="/tiktok-icon.png"
                 alt="TikTok"
-                className="w-4 h-4 md:w-5 md:h-5 object-contain"
+                className="w-4 h-4 object-contain"
               />
             </a>
 
@@ -132,7 +132,7 @@ export default function HomePage() {
               <img
                 src="/instagram-icon.png"
                 alt="Instagram"
-                className="w-4 h-4 md:w-5 md:h-5 object-contain"
+                className="w-4 h-4 object-contain"
               />
             </a>
 
@@ -144,7 +144,7 @@ export default function HomePage() {
               <img
                 src="/youtube-icon.png"
                 alt="YouTube"
-                className="w-4 h-4 md:w-5 md:h-5 object-contain"
+                className="w-4 h-4 object-contain"
               />
             </a>
 
@@ -156,7 +156,7 @@ export default function HomePage() {
               <img
                 src="/whatsapp-icon.png"
                 alt="WhatsApp"
-                className="w-4 h-4 md:w-5 md:h-5 object-contain"
+                className="w-4 h-4 object-contain"
               />
             </a>
 
@@ -167,9 +167,9 @@ export default function HomePage() {
       </header>
 
       {/* HERO */}
-      <section className="relative z-20 px-4 md:px-6 pt-16 md:pt-28 pb-20 md:pb-28">
+      <section className="relative z-20 px-4 md:px-6 pt-14 md:pt-24 pb-20">
 
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 md:gap-20 items-center">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
 
           {/* LEFT SIDE */}
           <div className="relative z-20">
@@ -179,9 +179,9 @@ export default function HomePage() {
               className="uppercase font-black"
               style={{
                 fontFamily: "Bebas Neue, sans-serif",
-                fontSize: "clamp(14px, 1vw, 18px)",
+                fontSize: "clamp(13px, 1vw, 16px)",
                 letterSpacing: "0.12em",
-                marginBottom: "18px",
+                marginBottom: "16px",
                 color: BREEZE_GREEN,
               }}
             >
@@ -197,9 +197,9 @@ export default function HomePage() {
                 className="uppercase italic font-black text-white"
                 style={{
                   fontFamily: "Bebas Neue, sans-serif",
-                  fontSize: "clamp(90px, 11vw, 180px)",
+                  fontSize: "clamp(78px, 10vw, 160px)",
                   lineHeight: "0.82",
-                  letterSpacing: "0.09em",
+                  letterSpacing: "0.12em",
                 }}
               >
 
@@ -228,8 +228,8 @@ export default function HomePage() {
             <p
               className="text-white/80"
               style={{
-                marginTop: "26px",
-                fontSize: "clamp(20px, 1.5vw, 30px)",
+                marginTop: "24px",
+                fontSize: "clamp(18px, 1.4vw, 26px)",
                 fontWeight: 300,
                 letterSpacing: "-0.02em",
               }}
@@ -242,7 +242,7 @@ export default function HomePage() {
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="relative h-[680px] md:h-[860px] mt-10 lg:mt-0">
+          <div className="relative h-[620px] md:h-[760px] mt-10 lg:mt-0">
 
             {/* MAIN CARD */}
             <motion.div
@@ -253,7 +253,7 @@ export default function HomePage() {
                 repeat: Infinity,
                 duration: 6,
               }}
-              className="absolute top-0 right-0 w-[260px] md:w-[420px] rounded-[40px] overflow-hidden border bg-white/5 backdrop-blur-2xl shadow-[0_0_60px_rgba(141,255,0,0.08)]"
+              className="absolute top-0 right-0 w-[240px] md:w-[380px] rounded-[34px] overflow-hidden border bg-white/5 backdrop-blur-2xl shadow-[0_0_60px_rgba(141,255,0,0.08)]"
               style={{
                 borderColor: `${BREEZE_GREEN}40`,
               }}
@@ -262,31 +262,217 @@ export default function HomePage() {
               <img
                 src="/hero-main.jpg"
                 alt="Breeze Family"
-                className="w-full h-[320px] md:h-[500px] object-cover"
+                className="w-full h-[300px] md:h-[460px] object-cover"
               />
 
-              <div className="p-5 md:p-8">
+            </motion.div>
 
-                <p
-                  className="uppercase tracking-[4px] text-xs md:text-sm"
-                  style={{
-                    color: BREEZE_GREEN,
-                  }}
-                >
-                  Trending Now
-                </p>
+            {/* KIDS CARD */}
+            <motion.div
+              animate={{
+                y: [0, 12, 0],
+                rotate: [-8, -10, -8],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 6,
+              }}
+              className="absolute top-[150px] left-0 md:left-[-10px] w-[200px] md:w-[290px] rounded-[28px] overflow-hidden border bg-black/80 backdrop-blur-2xl shadow-[0_0_60px_rgba(141,255,0,0.12)]"
+              style={{
+                borderColor: `${BREEZE_GREEN}40`,
+              }}
+            >
 
-                <h2 className="mt-3 md:mt-4 text-2xl md:text-4xl font-black uppercase leading-tight">
+              <img
+                src="/kids-poster.jpg"
+                alt="Kids Talent Show"
+                className="w-full h-[280px] md:h-[410px] object-cover"
+              />
 
-                  South Africa’s
-                  <br />
-                  Next Stars
+            </motion.div>
 
-                </h2>
+            {/* MERCH CARD */}
+            <motion.div
+              animate={{
+                y: [0, -10, 0],
+                rotate: [6, 8, 6],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 7,
+              }}
+              className="absolute bottom-[20px] right-0 md:right-[-30px] w-[200px] md:w-[270px] rounded-[28px] overflow-hidden border bg-black/80 backdrop-blur-2xl shadow-[0_0_60px_rgba(141,255,0,0.12)]"
+              style={{
+                borderColor: `${BREEZE_GREEN}40`,
+              }}
+            >
+
+              <img
+                src="/merch-card.jpg"
+                alt="Breeze Merch"
+                className="w-full h-[280px] md:h-[390px] object-cover"
+              />
+
+            </motion.div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* SOCIAL SECTION */}
+      <section className="relative z-20 px-4 md:px-6 pb-24">
+
+        <div className="max-w-7xl mx-auto">
+
+          {/* HEADER */}
+          <div className="mb-10">
+
+            <p
+              className="uppercase tracking-[4px] text-sm"
+              style={{
+                color: BREEZE_GREEN,
+              }}
+            >
+              Creator Feed
+            </p>
+
+            <h2
+              className="mt-4 uppercase italic font-black"
+              style={{
+                fontFamily: "Bebas Neue, sans-serif",
+                fontSize: "clamp(38px, 7vw, 80px)",
+                letterSpacing: "0.08em",
+                lineHeight: "0.9",
+              }}
+            >
+
+              Latest Content
+
+            </h2>
+
+          </div>
+
+          {/* CONTENT STRIP */}
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
+
+            {/* VIDEO 1 */}
+            <a
+              href="https://www.tiktok.com/@itskentbreeze/video/7615236380767325461"
+              target="_blank"
+              className="group min-w-[210px] md:min-w-[250px] snap-start"
+            >
+
+              <div className="relative rounded-[28px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+
+                <img
+                  src="/tiktok-1.jpg"
+                  alt="TikTok Video"
+                  className="w-full h-[340px] md:h-[440px] object-cover group-hover:scale-[1.03] transition duration-500"
+                />
 
               </div>
 
-            </motion.div>
+            </a>
+
+            {/* VIDEO 2 */}
+            <a
+              href="https://www.tiktok.com/@itskentbreeze/video/7536618269583674630"
+              target="_blank"
+              className="group min-w-[210px] md:min-w-[250px] snap-start"
+            >
+
+              <div className="relative rounded-[28px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+
+                <img
+                  src="/tiktok-2.jpg"
+                  alt="TikTok Video"
+                  className="w-full h-[340px] md:h-[440px] object-cover group-hover:scale-[1.03] transition duration-500"
+                />
+
+              </div>
+
+            </a>
+
+            {/* VIDEO 3 */}
+            <a
+              href="https://www.tiktok.com/@itskentbreeze/video/7626772857565007124"
+              target="_blank"
+              className="group min-w-[210px] md:min-w-[250px] snap-start"
+            >
+
+              <div className="relative rounded-[28px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+
+                <img
+                  src="/tiktok-3.jpg"
+                  alt="TikTok Video"
+                  className="w-full h-[340px] md:h-[440px] object-cover group-hover:scale-[1.03] transition duration-500"
+                />
+
+              </div>
+
+            </a>
+
+            {/* SPOTIFY */}
+            <div
+              className="min-w-[240px] md:min-w-[320px] rounded-[28px] border bg-white/5 backdrop-blur-2xl p-5 snap-start"
+              style={{
+                borderColor: `${BREEZE_GREEN}40`,
+              }}
+            >
+
+              <div className="flex items-center justify-between mb-5">
+
+                <div>
+
+                  <p
+                    className="uppercase tracking-[4px] text-[10px] md:text-xs"
+                    style={{
+                      color: BREEZE_GREEN,
+                    }}
+                  >
+                    Breeze Vibes
+                  </p>
+
+                  <h3
+                    className="mt-2 uppercase italic font-black"
+                    style={{
+                      fontFamily: "Bebas Neue, sans-serif",
+                      fontSize: "clamp(28px, 5vw, 42px)",
+                      letterSpacing: "0.08em",
+                      lineHeight: "0.9",
+                    }}
+                  >
+
+                    Spotify
+
+                  </h3>
+
+                </div>
+
+                <img
+                  src="/spotify-icon.png"
+                  alt="Spotify"
+                  className="w-7 h-7 object-contain"
+                />
+
+              </div>
+
+              <iframe
+                style={{
+                  borderRadius: "20px",
+                }}
+                src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator"
+                width="100%"
+                height="340"
+                frameBorder="0"
+                allowFullScreen
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"
+              />
+
+            </div>
 
           </div>
 
