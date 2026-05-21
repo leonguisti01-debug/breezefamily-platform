@@ -43,102 +43,102 @@ export default function HomePage() {
             </Link>
 
             {/* NAVIGATION */}
-<nav className="hidden lg:flex items-center gap-10">
+            <nav className="hidden lg:flex items-center gap-10">
 
-  {/* HOME */}
-  <Link href="/new-home">
+              {/* HOME */}
+              <Link href="/new-home">
 
-    <div className="relative group">
+                <div className="relative group">
 
-      <span className="text-white text-xs uppercase tracking-[2px] font-bold">
+                  <span className="text-white text-xs uppercase tracking-[2px] font-bold">
 
-        Home
+                    Home
 
-      </span>
+                  </span>
 
-      {/* ACTIVE LINE */}
-      <div className="absolute left-0 -bottom-[22px] w-full h-[2px] bg-gradient-to-r from-green-300 to-lime-400 rounded-full" />
+                  {/* ACTIVE LINE */}
+                  <div className="absolute left-0 -bottom-[22px] w-full h-[2px] bg-gradient-to-r from-green-300 to-lime-400 rounded-full" />
 
-    </div>
+                </div>
 
-  </Link>
+              </Link>
 
-  {/* TIKTOK STARS */}
-  <Link href="/top-10">
+              {/* TIKTOK STARS */}
+              <Link href="/tiktok-stars">
 
-    <div className="relative group">
+                <div className="relative group">
 
-      <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
 
-        TikTok Stars
+                    TikTok Stars
 
-      </span>
+                  </span>
 
-    </div>
+                </div>
 
-  </Link>
+              </Link>
 
-  {/* MERCH */}
-  <Link href="/merch">
+              {/* MERCH */}
+              <Link href="/merch">
 
-    <div className="relative group">
+                <div className="relative group">
 
-      <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
 
-        My Merch
+                    My Merch
 
-      </span>
+                  </span>
 
-    </div>
+                </div>
 
-  </Link>
+              </Link>
 
-  {/* HIGHLIGHTS */}
-  <Link href="/highlights">
+              {/* HIGHLIGHTS */}
+              <Link href="/highlights">
 
-    <div className="relative group">
+                <div className="relative group">
 
-      <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
 
-        Highlights
+                    Highlights
 
-      </span>
+                  </span>
 
-    </div>
+                </div>
 
-  </Link>
+              </Link>
 
-  {/* ABOUT */}
-  <Link href="/about">
+              {/* ABOUT */}
+              <Link href="/about">
 
-    <div className="relative group">
+                <div className="relative group">
 
-      <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
 
-        About
+                    About
 
-      </span>
+                  </span>
 
-    </div>
+                </div>
 
-  </Link>
+              </Link>
 
-  {/* CONTACT */}
-  <Link href="/contact">
+              {/* CONTACT */}
+              <Link href="/contact">
 
-    <div className="relative group">
+                <div className="relative group">
 
-      <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
 
-        Contact
+                    Contact
 
-      </span>
+                  </span>
 
-    </div>
+                </div>
 
-  </Link>
+              </Link>
 
-</nav>
+            </nav>
 
           </div>
 
@@ -256,19 +256,19 @@ export default function HomePage() {
               className="mt-10 text-6xl md:text-8xl xl:text-[120px] font-black uppercase leading-[0.88]"
             >
 
-              A NEW
+              THE
 
               <br />
 
               <span className="bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
 
-                BREEZE
+                FUTURE
 
               </span>
 
               <br />
 
-              ERA
+              OF TALENT
 
             </motion.h1>
 
@@ -346,6 +346,47 @@ export default function HomePage() {
                   Next Stars
 
                 </h2>
+
+              </div>
+
+            </motion.div>
+
+            {/* KIDS POSTER CARD */}
+            <motion.div
+              animate={{
+                y: [0, 12, 0],
+                rotate: [-8, -10, -8],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 6,
+              }}
+              className="absolute top-[240px] left-[20px] w-[240px] rounded-[30px] overflow-hidden border border-green-400/20 bg-black/80 backdrop-blur-2xl shadow-[0_0_60px_rgba(120,255,120,0.12)]"
+            >
+
+              <img
+                src="/kids-poster.jpg"
+                alt="Kids Talent Show"
+                className="w-full h-[340px] object-cover"
+              />
+
+              <div className="p-5">
+
+                <p className="uppercase tracking-[3px] text-green-300 text-xs">
+                  Breeze Family
+                </p>
+
+                <h3 className="mt-3 text-2xl font-black uppercase leading-tight">
+
+                  Kids
+                  <br />
+                  Talent Show
+
+                </h3>
+
+                <p className="mt-3 text-white/60 text-sm">
+                  Entries officially open.
+                </p>
 
               </div>
 
