@@ -249,31 +249,40 @@ export default function HomePage() {
             </motion.div>
 
             {/* HEADING */}
-            <motion.h1
+            <motion.div
               initial={{ opacity: 0, y: 80 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
-              className="mt-10 text-6xl md:text-8xl xl:text-[120px] font-black uppercase leading-[0.9] italic tracking-[-4px]"
-              style={{
-                fontFamily: "Bebas Neue, sans-serif",
-              }}
+              className="mt-10"
             >
 
-              A NEW
+              <h1
+                className="uppercase italic font-black leading-[0.82] tracking-[-6px]"
+                style={{
+                  fontFamily: "Bebas Neue, sans-serif",
+                  fontSize: "clamp(72px, 9vw, 150px)",
+                }}
+              >
 
-              <br />
+                <span className="block text-white">
+                  THE
+                </span>
 
-              <span className="bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
+                <span className="block text-white">
+                  NEW
+                </span>
 
-                BREEZE
+                <span className="block bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
+                  BREEZE
+                </span>
 
-              </span>
+                <span className="block text-white">
+                  ERA
+                </span>
 
-              <br />
+              </h1>
 
-              ERA
-
-            </motion.h1>
+            </motion.div>
 
             {/* TEXT */}
             <motion.p
