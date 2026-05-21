@@ -56,7 +56,6 @@ export default function HomePage() {
 
                   </span>
 
-                  {/* ACTIVE LINE */}
                   <div className="absolute left-0 -bottom-[22px] w-full h-[2px] bg-gradient-to-r from-green-300 to-lime-400 rounded-full" />
 
                 </div>
@@ -66,75 +65,45 @@ export default function HomePage() {
               {/* TIKTOK STARS */}
               <Link href="/tiktok-stars">
 
-                <div className="relative group">
-
-                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
-
-                    TikTok Stars
-
-                  </span>
-
-                </div>
+                <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                  TikTok Stars
+                </span>
 
               </Link>
 
               {/* MERCH */}
               <Link href="/merch">
 
-                <div className="relative group">
-
-                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
-
-                    My Merch
-
-                  </span>
-
-                </div>
+                <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                  My Merch
+                </span>
 
               </Link>
 
               {/* HIGHLIGHTS */}
               <Link href="/highlights">
 
-                <div className="relative group">
-
-                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
-
-                    Highlights
-
-                  </span>
-
-                </div>
+                <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                  Highlights
+                </span>
 
               </Link>
 
               {/* ABOUT */}
               <Link href="/about">
 
-                <div className="relative group">
-
-                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
-
-                    About
-
-                  </span>
-
-                </div>
+                <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                  About
+                </span>
 
               </Link>
 
               {/* CONTACT */}
               <Link href="/contact">
 
-                <div className="relative group">
-
-                  <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
-
-                    Contact
-
-                  </span>
-
-                </div>
+                <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
+                  Contact
+                </span>
 
               </Link>
 
@@ -390,18 +359,18 @@ export default function HomePage() {
 
       </section>
 
-      {/* LATEST VIDEOS */}
+      {/* SOCIAL SECTION */}
       <section className="relative z-20 px-6 pb-32">
 
         <div className="max-w-7xl mx-auto">
 
-          {/* TITLE */}
-          <div className="flex items-end justify-between mb-10">
+          {/* HEADER */}
+          <div className="flex items-end justify-between mb-12">
 
             <div>
 
               <p className="uppercase tracking-[4px] text-green-300 text-sm">
-                Social Feed
+                Creator Feed
               </p>
 
               <h2
@@ -414,7 +383,7 @@ export default function HomePage() {
                 }}
               >
 
-                Latest Videos
+                Latest Content
 
               </h2>
 
@@ -432,49 +401,100 @@ export default function HomePage() {
 
           </div>
 
-          {/* VIDEOS */}
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {/* CONTENT GRID */}
+          <div className="grid xl:grid-cols-[1fr_340px] gap-10 items-start">
 
-            {/* VIDEO 1 */}
-            <div className="rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+            {/* VIDEOS */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-              <div className="aspect-[9/16] bg-black">
+              {/* VIDEO 1 */}
+              <div className="rounded-[28px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
 
-                <iframe
-  src="https://www.tiktok.com/embed/v2/7615236380767325461"
-  className="w-full h-full"
-  allowFullScreen
-/>
+                <div className="aspect-[9/16] bg-black max-h-[520px]">
+
+                  <iframe
+                    src="https://www.tiktok.com/embed/v2/7615236380767325461"
+                    className="w-full h-full"
+                    allowFullScreen
+                  />
+
+                </div>
+
+              </div>
+
+              {/* VIDEO 2 */}
+              <div className="rounded-[28px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+
+                <div className="aspect-[9/16] bg-black max-h-[520px]">
+
+                  <iframe
+                    src="https://www.tiktok.com/embed/v2/7536618269583674630"
+                    className="w-full h-full"
+                    allowFullScreen
+                  />
+
+                </div>
+
+              </div>
+
+              {/* VIDEO 3 */}
+              <div className="rounded-[28px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+
+                <div className="aspect-[9/16] bg-black max-h-[520px]">
+
+                  <iframe
+                    src="https://www.tiktok.com/embed/v2/7626772857565007124"
+                    className="w-full h-full"
+                    allowFullScreen
+                  />
+
+                </div>
 
               </div>
 
             </div>
 
-            {/* VIDEO 2 */}
-            <div className="rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+            {/* SPOTIFY PANEL */}
+            <div className="rounded-[32px] border border-green-400/20 bg-white/5 backdrop-blur-2xl p-6 sticky top-10">
 
-              <div className="aspect-[9/16] bg-black">
+              <p className="uppercase tracking-[4px] text-green-300 text-xs">
+                Breeze Vibes
+              </p>
 
-               <iframe
-      src="https://www.tiktok.com/embed/v2/7536618269583674630"
-      className="w-full h-full"
-      allowFullScreen
-    />
+              <h3
+                className="mt-4 uppercase italic font-black"
+                style={{
+                  fontFamily: "Bebas Neue, sans-serif",
+                  fontSize: "48px",
+                  letterSpacing: "0.04em",
+                  lineHeight: "0.9",
+                }}
+              >
 
-              </div>
+                Spotify
+                <br />
+                Playlist
 
-            </div>
+              </h3>
 
-            {/* VIDEO 3 */}
-            <div className="rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+              <p className="mt-4 text-white/60 text-sm leading-relaxed">
+                Official sounds powering the Breeze movement.
+              </p>
 
-              <div className="aspect-[9/16] bg-black">
+              <div className="mt-6 overflow-hidden rounded-3xl border border-white/10">
 
                 <iframe
-      src="https://www.tiktok.com/embed/v2/7626772857565007124"
-      className="w-full h-full"
-      allowFullScreen
-    />
+                  style={{
+                    borderRadius: "24px",
+                  }}
+                  src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator"
+                  width="100%"
+                  height="380"
+                  frameBorder="0"
+                  allowFullScreen
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                />
 
               </div>
 
