@@ -253,22 +253,25 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 80 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
-              className="mt-10 text-6xl md:text-8xl xl:text-[120px] font-black uppercase leading-[0.88]"
+              className="mt-10 text-6xl md:text-8xl xl:text-[120px] font-black uppercase leading-[0.9] italic tracking-[-4px]"
+              style={{
+                fontFamily: "Bebas Neue, sans-serif",
+              }}
             >
 
-              THE
+              A NEW
 
               <br />
 
               <span className="bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
 
-                FUTURE
+                BREEZE
 
               </span>
 
               <br />
 
-              OF TALENT
+              ERA
 
             </motion.h1>
 
@@ -313,7 +316,7 @@ export default function HomePage() {
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="relative h-[700px] hidden lg:block">
+          <div className="relative h-[760px] hidden lg:block">
 
             {/* MAIN CARD */}
             <motion.div
@@ -361,13 +364,13 @@ export default function HomePage() {
                 repeat: Infinity,
                 duration: 6,
               }}
-              className="absolute top-[240px] left-[20px] w-[240px] rounded-[30px] overflow-hidden border border-green-400/20 bg-black/80 backdrop-blur-2xl shadow-[0_0_60px_rgba(120,255,120,0.12)]"
+              className="absolute top-[220px] left-[-20px] w-[320px] rounded-[30px] overflow-hidden border border-green-400/20 bg-black/80 backdrop-blur-2xl shadow-[0_0_60px_rgba(120,255,120,0.12)]"
             >
 
               <img
                 src="/kids-poster.jpg"
                 alt="Kids Talent Show"
-                className="w-full h-[340px] object-cover"
+                className="w-full h-[440px] object-cover"
               />
 
               <div className="p-5">
