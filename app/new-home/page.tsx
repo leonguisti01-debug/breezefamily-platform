@@ -398,152 +398,184 @@ export default function HomePage() {
 
       </section>
 
-      {/* SOCIAL SECTION */}
-      <section className="relative z-20 px-6 pb-32">
+{/* SOCIAL SECTION */}
+<section className="relative z-20 px-6 pb-32">
 
-        <div className="max-w-7xl mx-auto">
+  <div className="max-w-7xl mx-auto">
 
-          {/* HEADER */}
-          <div className="flex items-end justify-between mb-12">
+    {/* HEADER */}
+    <div className="mb-14">
 
-            <div>
+      <p className="uppercase tracking-[4px] text-green-300 text-sm">
+        Creator Feed
+      </p>
 
-              <p className="uppercase tracking-[4px] text-green-300 text-sm">
-                Creator Feed
-              </p>
+      <h2
+        className="mt-4 uppercase italic font-black"
+        style={{
+          fontFamily: "Bebas Neue, sans-serif",
+          fontSize: "clamp(42px, 5vw, 90px)",
+          letterSpacing: "0.04em",
+          lineHeight: "0.9",
+        }}
+      >
 
-              <h2
-                className="mt-4 uppercase italic font-black"
-                style={{
-                  fontFamily: "Bebas Neue, sans-serif",
-                  fontSize: "clamp(42px, 5vw, 90px)",
-                  letterSpacing: "0.04em",
-                  lineHeight: "0.9",
-                }}
-              >
+        Latest Content
 
-                Latest Content
+      </h2>
 
-              </h2>
+    </div>
 
-            </div>
+    {/* CONTENT LAYOUT */}
+    <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-10 items-start">
 
-            <a
-              href="https://www.tiktok.com/@itskentbreeze"
-              target="_blank"
-              className="hidden md:flex px-6 py-3 rounded-full border border-green-400/20 bg-white/5 backdrop-blur-xl text-sm uppercase tracking-[2px] hover:border-green-300 transition duration-300"
-            >
+      {/* FEATURED VIDEO */}
+      <motion.div
+        animate={{
+          y: [0, -10, 0],
+        }}
+        transition={{
+          repeat: Infinity,
+          duration: 7,
+        }}
+        className="rounded-[40px] overflow-hidden border border-green-400/20 bg-white/5 backdrop-blur-2xl shadow-[0_0_80px_rgba(120,255,120,0.08)]"
+      >
 
-              View TikTok →
+        <div className="aspect-[9/16] max-h-[780px] bg-black">
 
-            </a>
+          <iframe
+            src="https://www.tiktok.com/embed/v2/7615236380767325461"
+            className="w-full h-full"
+            allowFullScreen
+          />
+
+        </div>
+
+      </motion.div>
+
+      {/* RIGHT SIDE */}
+      <div className="space-y-8">
+
+        {/* VIDEO 2 */}
+        <motion.div
+          animate={{
+            y: [0, 8, 0],
+            rotate: [-2, 0, -2],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 6,
+          }}
+          className="rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl"
+        >
+
+          <div className="aspect-[9/16] max-h-[360px] bg-black">
+
+            <iframe
+              src="https://www.tiktok.com/embed/v2/7536618269583674630"
+              className="w-full h-full"
+              allowFullScreen
+            />
 
           </div>
 
-          {/* CONTENT GRID */}
-          <div className="grid xl:grid-cols-[1fr_340px] gap-10 items-start">
+        </motion.div>
 
-            {/* VIDEOS */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* VIDEO 3 */}
+        <motion.div
+          animate={{
+            y: [0, -8, 0],
+            rotate: [2, 0, 2],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 7,
+          }}
+          className="rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl"
+        >
 
-              {/* VIDEO 1 */}
-              <div className="rounded-[28px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+          <div className="aspect-[9/16] max-h-[360px] bg-black">
 
-                <div className="aspect-[9/16] bg-black max-h-[520px]">
+            <iframe
+              src="https://www.tiktok.com/embed/v2/7626772857565007124"
+              className="w-full h-full"
+              allowFullScreen
+            />
 
-                  <iframe
-                    src="https://www.tiktok.com/embed/v2/7615236380767325461"
-                    className="w-full h-full"
-                    allowFullScreen
-                  />
+          </div>
 
-                </div>
+        </motion.div>
 
-              </div>
+        {/* SPOTIFY */}
+        <motion.div
+          animate={{
+            y: [0, 6, 0],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 8,
+          }}
+          className="rounded-[32px] border border-green-400/20 bg-white/5 backdrop-blur-2xl p-6"
+        >
 
-              {/* VIDEO 2 */}
-              <div className="rounded-[28px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+          <div className="flex items-center justify-between mb-5">
 
-                <div className="aspect-[9/16] bg-black max-h-[520px]">
-
-                  <iframe
-                    src="https://www.tiktok.com/embed/v2/7536618269583674630"
-                    className="w-full h-full"
-                    allowFullScreen
-                  />
-
-                </div>
-
-              </div>
-
-              {/* VIDEO 3 */}
-              <div className="rounded-[28px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
-
-                <div className="aspect-[9/16] bg-black max-h-[520px]">
-
-                  <iframe
-                    src="https://www.tiktok.com/embed/v2/7626772857565007124"
-                    className="w-full h-full"
-                    allowFullScreen
-                  />
-
-                </div>
-
-              </div>
-
-            </div>
-
-            {/* SPOTIFY PANEL */}
-            <div className="rounded-[32px] border border-green-400/20 bg-white/5 backdrop-blur-2xl p-6 sticky top-10">
+            <div>
 
               <p className="uppercase tracking-[4px] text-green-300 text-xs">
                 Breeze Vibes
               </p>
 
               <h3
-                className="mt-4 uppercase italic font-black"
+                className="mt-2 uppercase italic font-black"
                 style={{
                   fontFamily: "Bebas Neue, sans-serif",
-                  fontSize: "48px",
+                  fontSize: "42px",
                   letterSpacing: "0.04em",
                   lineHeight: "0.9",
                 }}
               >
 
                 Spotify
-                <br />
-                Playlist
 
               </h3>
 
-              <p className="mt-4 text-white/60 text-sm leading-relaxed">
-                Official sounds powering the Breeze movement.
-              </p>
+            </div>
 
-              <div className="mt-6 overflow-hidden rounded-3xl border border-white/10">
+            <div className="w-14 h-14 rounded-2xl bg-green-400/10 border border-green-400/20 flex items-center justify-center">
 
-                <iframe
-                  style={{
-                    borderRadius: "24px",
-                  }}
-                  src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator"
-                  width="100%"
-                  height="380"
-                  frameBorder="0"
-                  allowFullScreen
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                  loading="lazy"
-                />
-
-              </div>
+              <img
+                src="/spotify-icon.png"
+                alt="Spotify"
+                className="w-7 h-7 object-contain"
+              />
 
             </div>
 
           </div>
 
-        </div>
+          <iframe
+            style={{
+              borderRadius: "20px",
+            }}
+            src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator"
+            width="100%"
+            height="152"
+            frameBorder="0"
+            allowFullScreen
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+          />
 
-      </section>
+        </motion.div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 
     </main>
   );
