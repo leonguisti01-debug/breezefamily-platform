@@ -131,7 +131,7 @@ export default function HomePage() {
 
             {/* INSTAGRAM */}
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/itskentbreezy?igsh=MWI3eGF0YWdiZjk5OQ=="
               target="_blank"
               className="opacity-80 hover:opacity-100 transition duration-300"
             >
