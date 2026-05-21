@@ -7,7 +7,7 @@ const BREEZE_GREEN = "#8DFF00";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden relative scale-[0.9] origin-top">
+    <main className="min-h-screen bg-black text-white overflow-hidden relative">
 
       {/* BACKGROUND */}
       <div
