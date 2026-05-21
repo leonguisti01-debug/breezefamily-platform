@@ -4,7 +4,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 export default function HomePage() {
-
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden relative">
 
@@ -24,12 +23,12 @@ export default function HomePage() {
       />
 
       {/* NAVBAR */}
-      <header className="relative z-50 px-4 pt-4">
+      <header className="relative z-50 px-3 md:px-4 pt-3">
 
-        <div className="max-w-[1400px] mx-auto h-[72px] rounded-[6px] border border-white/10 bg-black/90 backdrop-blur-2xl flex items-center justify-between px-6">
+        <div className="max-w-[1400px] mx-auto h-[62px] rounded-[10px] border border-white/10 bg-black/90 backdrop-blur-2xl flex items-center justify-between px-4 md:px-6">
 
           {/* LEFT */}
-          <div className="flex items-center gap-12">
+          <div className="flex items-center gap-6 md:gap-12">
 
             {/* LOGO */}
             <Link href="/new-home">
@@ -37,7 +36,7 @@ export default function HomePage() {
               <img
                 src="/breeze-logo-new.png"
                 alt="Breeze Family"
-                className="h-12 w-auto object-contain"
+                className="h-9 md:h-10 w-auto object-contain"
               />
 
             </Link>
@@ -54,55 +53,40 @@ export default function HomePage() {
                     Home
                   </span>
 
-                  <div className="absolute left-0 -bottom-[22px] w-full h-[2px] bg-gradient-to-r from-green-300 to-lime-400 rounded-full" />
+                  <div className="absolute left-0 -bottom-[20px] w-full h-[2px] bg-gradient-to-r from-green-300 to-lime-400 rounded-full" />
 
                 </div>
 
               </Link>
 
-              {/* TIKTOK STARS */}
               <Link href="/tiktok-stars">
-
                 <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
                   TikTok Stars
                 </span>
-
               </Link>
 
-              {/* MERCH */}
               <Link href="/merch">
-
                 <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
                   My Merch
                 </span>
-
               </Link>
 
-              {/* HIGHLIGHTS */}
               <Link href="/highlights">
-
                 <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
                   Highlights
                 </span>
-
               </Link>
 
-              {/* ABOUT */}
               <Link href="/about">
-
                 <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
                   About
                 </span>
-
               </Link>
 
-              {/* CONTACT */}
               <Link href="/contact">
-
                 <span className="text-white/80 hover:text-white text-xs uppercase tracking-[2px] font-bold transition duration-300">
                   Contact
                 </span>
-
               </Link>
 
             </nav>
@@ -110,7 +94,7 @@ export default function HomePage() {
           </div>
 
           {/* RIGHT */}
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-3 md:gap-5">
 
             {/* TIKTOK */}
             <a
@@ -118,13 +102,11 @@ export default function HomePage() {
               target="_blank"
               className="opacity-80 hover:opacity-100 transition duration-300"
             >
-
               <img
                 src="/tiktok-icon.png"
                 alt="TikTok"
-                className="w-5 h-5 object-contain"
+                className="w-4 h-4 md:w-5 md:h-5 object-contain"
               />
-
             </a>
 
             {/* INSTAGRAM */}
@@ -133,13 +115,11 @@ export default function HomePage() {
               target="_blank"
               className="opacity-80 hover:opacity-100 transition duration-300"
             >
-
               <img
                 src="/instagram-icon.png"
                 alt="Instagram"
-                className="w-5 h-5 object-contain"
+                className="w-4 h-4 md:w-5 md:h-5 object-contain"
               />
-
             </a>
 
             {/* YOUTUBE */}
@@ -148,13 +128,11 @@ export default function HomePage() {
               target="_blank"
               className="opacity-80 hover:opacity-100 transition duration-300"
             >
-
               <img
                 src="/youtube-icon.png"
                 alt="YouTube"
-                className="w-5 h-5 object-contain"
+                className="w-4 h-4 md:w-5 md:h-5 object-contain"
               />
-
             </a>
 
             {/* WHATSAPP */}
@@ -163,19 +141,17 @@ export default function HomePage() {
               target="_blank"
               className="opacity-80 hover:opacity-100 transition duration-300"
             >
-
               <img
                 src="/whatsapp-icon.png"
                 alt="WhatsApp"
-                className="w-5 h-5 object-contain"
+                className="w-4 h-4 md:w-5 md:h-5 object-contain"
               />
-
             </a>
 
             {/* BUTTON */}
             <Link href="/admin-login">
 
-              <button className="ml-4 px-8 h-[46px] rounded-full border border-green-400/40 bg-black text-white text-xs uppercase tracking-[2px] font-black hover:border-green-300 hover:shadow-[0_0_30px_rgba(120,255,120,0.25)] transition duration-300">
+              <button className="hidden md:flex ml-3 px-7 h-[42px] rounded-full border border-green-400/40 bg-black text-white text-[11px] uppercase tracking-[2px] font-black hover:border-green-300 hover:shadow-[0_0_30px_rgba(120,255,120,0.25)] transition duration-300 items-center">
 
                 Register / Login →
 
@@ -190,9 +166,9 @@ export default function HomePage() {
       </header>
 
       {/* HERO */}
-      <section className="relative z-20 px-6 pt-28 md:pt-36 pb-28">
+      <section className="relative z-20 px-4 md:px-6 pt-16 md:pt-28 pb-20 md:pb-28">
 
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 md:gap-20 items-center">
 
           {/* LEFT SIDE */}
           <div>
@@ -202,16 +178,16 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 80 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
-              className="mt-10"
+              className="mt-6"
             >
 
               <h1
                 className="uppercase italic font-black"
                 style={{
                   fontFamily: "Bebas Neue, sans-serif",
-                  fontSize: "clamp(72px, 9vw, 150px)",
-                  letterSpacing: "0.06em",
-                  lineHeight: "0.88",
+                  fontSize: "clamp(56px, 14vw, 150px)",
+                  letterSpacing: "0.04em",
+                  lineHeight: "0.9",
                 }}
               >
 
@@ -236,20 +212,19 @@ export default function HomePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="mt-8 max-w-2xl text-lg md:text-2xl text-white/70 leading-relaxed"
+              className="mt-6 max-w-xl text-base md:text-2xl text-white/70 leading-relaxed"
             >
 
-              South Africa’s next-generation creator platform
-              for performers, entertainers and digital stars.
+              Faith. Family. Loyalty.
 
             </motion.p>
 
             {/* BUTTONS */}
-            <div className="mt-10 flex flex-wrap gap-5">
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
 
               <Link href="/kids-edition/register">
 
-                <button className="px-10 py-5 rounded-2xl bg-gradient-to-r from-green-300 to-lime-400 text-black font-black uppercase tracking-[2px] shadow-[0_0_40px_rgba(120,255,120,0.35)] hover:scale-[1.03] transition duration-300">
+                <button className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-gradient-to-r from-green-300 to-lime-400 text-black font-black uppercase tracking-[2px] shadow-[0_0_40px_rgba(120,255,120,0.35)] hover:scale-[1.03] transition duration-300">
 
                   Enter Competition
 
@@ -259,7 +234,7 @@ export default function HomePage() {
 
               <Link href="/top-10">
 
-                <button className="px-10 py-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md font-black uppercase tracking-[2px] hover:border-green-400/30 transition duration-300">
+                <button className="w-full sm:w-auto px-10 py-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md font-black uppercase tracking-[2px] hover:border-green-400/30 transition duration-300">
 
                   Watch Leaderboard
 
@@ -272,7 +247,7 @@ export default function HomePage() {
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="relative h-[860px] hidden lg:block">
+          <div className="relative h-[680px] md:h-[860px] mt-10 lg:mt-0">
 
             {/* MAIN CARD */}
             <motion.div
@@ -283,22 +258,22 @@ export default function HomePage() {
                 repeat: Infinity,
                 duration: 6,
               }}
-              className="absolute top-0 right-0 w-[420px] rounded-[40px] overflow-hidden border border-green-400/20 bg-white/5 backdrop-blur-2xl shadow-[0_0_60px_rgba(120,255,120,0.08)]"
+              className="absolute top-0 right-0 w-[260px] md:w-[420px] rounded-[40px] overflow-hidden border border-green-400/20 bg-white/5 backdrop-blur-2xl shadow-[0_0_60px_rgba(120,255,120,0.08)]"
             >
 
               <img
                 src="/hero-main.jpg"
                 alt="Breeze Family"
-                className="w-full h-[500px] object-cover"
+                className="w-full h-[320px] md:h-[500px] object-cover"
               />
 
-              <div className="p-8">
+              <div className="p-5 md:p-8">
 
-                <p className="uppercase tracking-[4px] text-green-300 text-sm">
+                <p className="uppercase tracking-[4px] text-green-300 text-xs md:text-sm">
                   Trending Now
                 </p>
 
-                <h2 className="mt-4 text-4xl font-black uppercase leading-tight">
+                <h2 className="mt-3 md:mt-4 text-2xl md:text-4xl font-black uppercase leading-tight">
 
                   South Africa’s
                   <br />
@@ -320,22 +295,22 @@ export default function HomePage() {
                 repeat: Infinity,
                 duration: 6,
               }}
-              className="absolute top-[220px] left-[-20px] w-[320px] rounded-[30px] overflow-hidden border border-green-400/20 bg-black/80 backdrop-blur-2xl shadow-[0_0_60px_rgba(120,255,120,0.12)]"
+              className="absolute top-[160px] left-0 md:left-[-20px] w-[220px] md:w-[320px] rounded-[30px] overflow-hidden border border-green-400/20 bg-black/80 backdrop-blur-2xl shadow-[0_0_60px_rgba(120,255,120,0.12)]"
             >
 
               <img
                 src="/kids-poster.jpg"
                 alt="Kids Talent Show"
-                className="w-full h-[440px] object-cover"
+                className="w-full h-[300px] md:h-[440px] object-cover"
               />
 
-              <div className="p-5">
+              <div className="p-4 md:p-5">
 
-                <p className="uppercase tracking-[3px] text-green-300 text-xs">
+                <p className="uppercase tracking-[3px] text-green-300 text-[10px] md:text-xs">
                   Breeze Family
                 </p>
 
-                <h3 className="mt-3 text-2xl font-black uppercase leading-tight">
+                <h3 className="mt-2 md:mt-3 text-xl md:text-2xl font-black uppercase leading-tight">
 
                   Kids
                   <br />
@@ -343,7 +318,7 @@ export default function HomePage() {
 
                 </h3>
 
-                <p className="mt-3 text-white/60 text-sm">
+                <p className="mt-2 md:mt-3 text-white/60 text-xs md:text-sm">
                   Entries officially open.
                 </p>
 
@@ -361,22 +336,22 @@ export default function HomePage() {
                 repeat: Infinity,
                 duration: 7,
               }}
-              className="absolute bottom-[-20px] right-[-40px] w-[300px] rounded-[30px] overflow-hidden border border-green-400/20 bg-black/80 backdrop-blur-2xl shadow-[0_0_60px_rgba(120,255,120,0.12)]"
+              className="absolute bottom-[20px] right-0 md:right-[-40px] w-[220px] md:w-[300px] rounded-[30px] overflow-hidden border border-green-400/20 bg-black/80 backdrop-blur-2xl shadow-[0_0_60px_rgba(120,255,120,0.12)]"
             >
 
               <img
                 src="/merch-card.jpg"
                 alt="Breeze Merch"
-                className="w-full h-[420px] object-cover"
+                className="w-full h-[300px] md:h-[420px] object-cover"
               />
 
-              <div className="p-5">
+              <div className="p-4 md:p-5">
 
-                <p className="uppercase tracking-[3px] text-green-300 text-xs">
+                <p className="uppercase tracking-[3px] text-green-300 text-[10px] md:text-xs">
                   Official Store
                 </p>
 
-                <h3 className="mt-3 text-2xl font-black uppercase leading-tight">
+                <h3 className="mt-2 md:mt-3 text-xl md:text-2xl font-black uppercase leading-tight">
 
                   Breeze
                   <br />
@@ -384,7 +359,7 @@ export default function HomePage() {
 
                 </h3>
 
-                <p className="mt-3 text-white/60 text-sm">
+                <p className="mt-2 md:mt-3 text-white/60 text-xs md:text-sm">
                   Apparel, caps, bags and accessories.
                 </p>
 
@@ -399,12 +374,12 @@ export default function HomePage() {
       </section>
 
       {/* SOCIAL SECTION */}
-      <section className="relative z-20 px-6 pb-32">
+      <section className="relative z-20 px-4 md:px-6 pb-24 md:pb-32">
 
         <div className="max-w-7xl mx-auto">
 
           {/* HEADER */}
-          <div className="flex items-end justify-between mb-12">
+          <div className="flex items-end justify-between mb-10 md:mb-12">
 
             <div>
 
@@ -416,7 +391,7 @@ export default function HomePage() {
                 className="mt-4 uppercase italic font-black"
                 style={{
                   fontFamily: "Bebas Neue, sans-serif",
-                  fontSize: "clamp(42px, 5vw, 90px)",
+                  fontSize: "clamp(42px, 8vw, 90px)",
                   letterSpacing: "0.04em",
                   lineHeight: "0.9",
                 }}
@@ -428,26 +403,16 @@ export default function HomePage() {
 
             </div>
 
-            <a
-              href="https://www.tiktok.com/@itskentbreeze"
-              target="_blank"
-              className="hidden md:flex px-6 py-3 rounded-full border border-green-400/20 bg-white/5 backdrop-blur-xl text-sm uppercase tracking-[2px] hover:border-green-300 transition duration-300"
-            >
-
-              View TikTok →
-
-            </a>
-
           </div>
 
           {/* CONTENT STRIP */}
-          <div className="flex gap-6 overflow-x-auto pb-4">
+          <div className="flex gap-4 md:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory">
 
             {/* VIDEO 1 */}
             <a
               href="https://www.tiktok.com/@itskentbreeze/video/7615236380767325461"
               target="_blank"
-              className="group min-w-[280px]"
+              className="group min-w-[220px] md:min-w-[280px] snap-start"
             >
 
               <div className="relative rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
@@ -455,16 +420,16 @@ export default function HomePage() {
                 <img
                   src="/tiktok-1.jpg"
                   alt="TikTok Video"
-                  className="w-full h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
+                  className="w-full h-[380px] md:h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
                 <div className="absolute inset-0 flex items-center justify-center">
 
-                  <div className="w-20 h-20 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:scale-110 transition duration-300">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:scale-110 transition duration-300">
 
-                    <div className="ml-1 w-0 h-0 border-t-[12px] border-t-transparent border-b-[12px] border-b-transparent border-l-[18px] border-l-white" />
+                    <div className="ml-1 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[16px] border-l-white" />
 
                   </div>
 
@@ -478,7 +443,7 @@ export default function HomePage() {
             <a
               href="https://www.tiktok.com/@itskentbreeze/video/7536618269583674630"
               target="_blank"
-              className="group min-w-[280px]"
+              className="group min-w-[220px] md:min-w-[280px] snap-start"
             >
 
               <div className="relative rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
@@ -486,16 +451,16 @@ export default function HomePage() {
                 <img
                   src="/tiktok-2.jpg"
                   alt="TikTok Video"
-                  className="w-full h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
+                  className="w-full h-[380px] md:h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
                 <div className="absolute inset-0 flex items-center justify-center">
 
-                  <div className="w-20 h-20 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:scale-110 transition duration-300">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:scale-110 transition duration-300">
 
-                    <div className="ml-1 w-0 h-0 border-t-[12px] border-t-transparent border-b-[12px] border-b-transparent border-l-[18px] border-l-white" />
+                    <div className="ml-1 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[16px] border-l-white" />
 
                   </div>
 
@@ -509,7 +474,7 @@ export default function HomePage() {
             <a
               href="https://www.tiktok.com/@itskentbreeze/video/7626772857565007124"
               target="_blank"
-              className="group min-w-[280px]"
+              className="group min-w-[220px] md:min-w-[280px] snap-start"
             >
 
               <div className="relative rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
@@ -517,16 +482,16 @@ export default function HomePage() {
                 <img
                   src="/tiktok-3.jpg"
                   alt="TikTok Video"
-                  className="w-full h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
+                  className="w-full h-[380px] md:h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
                 <div className="absolute inset-0 flex items-center justify-center">
 
-                  <div className="w-20 h-20 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:scale-110 transition duration-300">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:scale-110 transition duration-300">
 
-                    <div className="ml-1 w-0 h-0 border-t-[12px] border-t-transparent border-b-[12px] border-b-transparent border-l-[18px] border-l-white" />
+                    <div className="ml-1 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[16px] border-l-white" />
 
                   </div>
 
@@ -535,56 +500,6 @@ export default function HomePage() {
               </div>
 
             </a>
-
-            {/* SPOTIFY */}
-            <div className="min-w-[340px] rounded-[32px] border border-green-400/20 bg-white/5 backdrop-blur-2xl p-6">
-
-              <div className="flex items-center justify-between mb-5">
-
-                <div>
-
-                  <p className="uppercase tracking-[4px] text-green-300 text-xs">
-                    Breeze Vibes
-                  </p>
-
-                  <h3
-                    className="mt-2 uppercase italic font-black"
-                    style={{
-                      fontFamily: "Bebas Neue, sans-serif",
-                      fontSize: "42px",
-                      letterSpacing: "0.04em",
-                      lineHeight: "0.9",
-                    }}
-                  >
-
-                    Spotify
-
-                  </h3>
-
-                </div>
-
-                <img
-                  src="/spotify-icon.png"
-                  alt="Spotify"
-                  className="w-8 h-8 object-contain"
-                />
-
-              </div>
-
-              <iframe
-                style={{
-                  borderRadius: "20px",
-                }}
-                src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator"
-                width="100%"
-                height="420"
-                frameBorder="0"
-                allowFullScreen
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-              />
-
-            </div>
 
           </div>
 
