@@ -1,4 +1,5 @@
 import "./globals.css";
+import Navbar from "../components/Navbar";
 
 export const metadata = {
   title: "Breeze Family",
@@ -12,7 +13,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+
+      <body className="bg-black text-white overflow-x-hidden">
+
+        {/* GLOBAL NAVBAR */}
+        <Navbar />
+
+        {/* PAGE CONTENT */}
+        <main className="pt-24 overflow-x-hidden">
+          {children}
+        </main>
+
+      </body>
+
     </html>
   );
 }

@@ -12,3 +12,17 @@ body {
 * {
   box-sizing: border-box;
 }
+html,
+body {
+  overflow-x: hidden;
+  background: black;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
