@@ -95,7 +95,6 @@ export default function HomePage() {
           {/* RIGHT */}
           <div className="flex items-center gap-3 md:gap-5">
 
-            {/* TIKTOK */}
             <a
               href="https://www.tiktok.com/@itskentbreeze?_r=1&_t=ZS-96PJ9wohRtE"
               target="_blank"
@@ -108,7 +107,6 @@ export default function HomePage() {
               />
             </a>
 
-            {/* INSTAGRAM */}
             <a
               href="https://www.instagram.com/itskentbreezy?igsh=MWI3eGF0YWdiZjk5OQ=="
               target="_blank"
@@ -121,7 +119,6 @@ export default function HomePage() {
               />
             </a>
 
-            {/* YOUTUBE */}
             <a
               href="https://youtube.com"
               target="_blank"
@@ -134,7 +131,6 @@ export default function HomePage() {
               />
             </a>
 
-            {/* WHATSAPP */}
             <a
               href="https://whatsapp.com/channel/0029VbD9d4P9sBI9ue1ekp2z"
               target="_blank"
@@ -146,17 +142,6 @@ export default function HomePage() {
                 className="w-4 h-4 md:w-5 md:h-5 object-contain"
               />
             </a>
-
-            {/* BUTTON */}
-            <Link href="/admin-login">
-
-              <button className="hidden md:flex ml-3 px-7 h-[42px] rounded-full border border-green-400/40 bg-black text-white text-[11px] uppercase tracking-[2px] font-black hover:border-green-300 hover:shadow-[0_0_30px_rgba(120,255,120,0.25)] transition duration-300 items-center">
-
-                Register / Login →
-
-              </button>
-
-            </Link>
 
           </div>
 
@@ -217,31 +202,6 @@ export default function HomePage() {
               Faith. Family. Loyalty.
 
             </motion.p>
-
-            {/* BUTTONS */}
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
-
-              <Link href="/kids-edition/register">
-
-                <button className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-gradient-to-r from-green-300 to-lime-400 text-black font-black uppercase tracking-[2px] shadow-[0_0_40px_rgba(120,255,120,0.35)] hover:scale-[1.03] transition duration-300">
-
-                  Enter Competition
-
-                </button>
-
-              </Link>
-
-              <Link href="/top-10">
-
-                <button className="w-full sm:w-auto px-10 py-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md font-black uppercase tracking-[2px] hover:border-green-400/30 transition duration-300">
-
-                  Watch Leaderboard
-
-                </button>
-
-              </Link>
-
-            </div>
 
           </div>
 
@@ -422,8 +382,6 @@ export default function HomePage() {
                   className="w-full h-[380px] md:h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-
               </div>
 
             </a>
@@ -443,8 +401,6 @@ export default function HomePage() {
                   className="w-full h-[380px] md:h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-
               </div>
 
             </a>
@@ -463,8 +419,6 @@ export default function HomePage() {
                   alt="TikTok Video"
                   className="w-full h-[380px] md:h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
                 />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
               </div>
 
