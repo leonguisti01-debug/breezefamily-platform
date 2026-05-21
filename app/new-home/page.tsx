@@ -455,11 +455,11 @@ export default function HomePage() {
 
               <div className="aspect-[9/16] bg-black">
 
-                <iframe
-                  src="https://www.tiktok.com/embed/v2/7498536207716928823"
-                  className="w-full h-full"
-                  allowFullScreen
-                />
+               <iframe
+      src="https://www.tiktok.com/embed/v2/7536618269583674630"
+      className="w-full h-full"
+      allowFullScreen
+    />
 
               </div>
 
@@ -471,10 +471,10 @@ export default function HomePage() {
               <div className="aspect-[9/16] bg-black">
 
                 <iframe
-                  src="https://www.tiktok.com/embed/v2/7498536207716928823"
-                  className="w-full h-full"
-                  allowFullScreen
-                />
+      src="https://www.tiktok.com/embed/v2/7626772857565007124"
+      className="w-full h-full"
+      allowFullScreen
+    />
 
               </div>
 
