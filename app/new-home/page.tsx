@@ -310,7 +310,7 @@ export default function HomePage() {
 
             </motion.div>
 
-            {/* KIDS POSTER CARD */}
+            {/* KIDS CARD */}
             <motion.div
               animate={{
                 y: [0, 12, 0],
@@ -398,184 +398,199 @@ export default function HomePage() {
 
       </section>
 
-{/* SOCIAL SECTION */}
-<section className="relative z-20 px-6 pb-32">
+      {/* SOCIAL SECTION */}
+      <section className="relative z-20 px-6 pb-32">
 
-  <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto">
 
-    {/* HEADER */}
-    <div className="mb-14">
-
-      <p className="uppercase tracking-[4px] text-green-300 text-sm">
-        Creator Feed
-      </p>
-
-      <h2
-        className="mt-4 uppercase italic font-black"
-        style={{
-          fontFamily: "Bebas Neue, sans-serif",
-          fontSize: "clamp(42px, 5vw, 90px)",
-          letterSpacing: "0.04em",
-          lineHeight: "0.9",
-        }}
-      >
-
-        Latest Content
-
-      </h2>
-
-    </div>
-
-    {/* CONTENT LAYOUT */}
-    <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-10 items-start">
-
-      {/* FEATURED VIDEO */}
-      <motion.div
-        animate={{
-          y: [0, -10, 0],
-        }}
-        transition={{
-          repeat: Infinity,
-          duration: 7,
-        }}
-        className="rounded-[40px] overflow-hidden border border-green-400/20 bg-white/5 backdrop-blur-2xl shadow-[0_0_80px_rgba(120,255,120,0.08)]"
-      >
-
-        <div className="aspect-[9/16] max-h-[780px] bg-black">
-
-          <iframe
-            src="https://www.tiktok.com/embed/v2/7615236380767325461"
-            className="w-full h-full"
-            allowFullScreen
-          />
-
-        </div>
-
-      </motion.div>
-
-      {/* RIGHT SIDE */}
-      <div className="space-y-8">
-
-        {/* VIDEO 2 */}
-        <motion.div
-          animate={{
-            y: [0, 8, 0],
-            rotate: [-2, 0, -2],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 6,
-          }}
-          className="rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl"
-        >
-
-          <div className="aspect-[9/16] max-h-[360px] bg-black">
-
-            <iframe
-              src="https://www.tiktok.com/embed/v2/7536618269583674630"
-              className="w-full h-full"
-              allowFullScreen
-            />
-
-          </div>
-
-        </motion.div>
-
-        {/* VIDEO 3 */}
-        <motion.div
-          animate={{
-            y: [0, -8, 0],
-            rotate: [2, 0, 2],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 7,
-          }}
-          className="rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl"
-        >
-
-          <div className="aspect-[9/16] max-h-[360px] bg-black">
-
-            <iframe
-              src="https://www.tiktok.com/embed/v2/7626772857565007124"
-              className="w-full h-full"
-              allowFullScreen
-            />
-
-          </div>
-
-        </motion.div>
-
-        {/* SPOTIFY */}
-        <motion.div
-          animate={{
-            y: [0, 6, 0],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 8,
-          }}
-          className="rounded-[32px] border border-green-400/20 bg-white/5 backdrop-blur-2xl p-6"
-        >
-
-          <div className="flex items-center justify-between mb-5">
+          {/* HEADER */}
+          <div className="flex items-end justify-between mb-12">
 
             <div>
 
-              <p className="uppercase tracking-[4px] text-green-300 text-xs">
-                Breeze Vibes
+              <p className="uppercase tracking-[4px] text-green-300 text-sm">
+                Creator Feed
               </p>
 
-              <h3
-                className="mt-2 uppercase italic font-black"
+              <h2
+                className="mt-4 uppercase italic font-black"
                 style={{
                   fontFamily: "Bebas Neue, sans-serif",
-                  fontSize: "42px",
+                  fontSize: "clamp(42px, 5vw, 90px)",
                   letterSpacing: "0.04em",
                   lineHeight: "0.9",
                 }}
               >
 
-                Spotify
+                Latest Content
 
-              </h3>
+              </h2>
 
             </div>
 
-            <div className="w-14 h-14 rounded-2xl bg-green-400/10 border border-green-400/20 flex items-center justify-center">
+            <a
+              href="https://www.tiktok.com/@itskentbreeze"
+              target="_blank"
+              className="hidden md:flex px-6 py-3 rounded-full border border-green-400/20 bg-white/5 backdrop-blur-xl text-sm uppercase tracking-[2px] hover:border-green-300 transition duration-300"
+            >
 
-              <img
-                src="/spotify-icon.png"
-                alt="Spotify"
-                className="w-7 h-7 object-contain"
+              View TikTok →
+
+            </a>
+
+          </div>
+
+          {/* CONTENT STRIP */}
+          <div className="flex gap-6 overflow-x-auto pb-4">
+
+            {/* VIDEO 1 */}
+            <a
+              href="https://www.tiktok.com/@itskentbreeze/video/7615236380767325461"
+              target="_blank"
+              className="group min-w-[280px]"
+            >
+
+              <div className="relative rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+
+                <img
+                  src="/tiktok-1.jpg"
+                  alt="TikTok Video"
+                  className="w-full h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+                <div className="absolute inset-0 flex items-center justify-center">
+
+                  <div className="w-20 h-20 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:scale-110 transition duration-300">
+
+                    <div className="ml-1 w-0 h-0 border-t-[12px] border-t-transparent border-b-[12px] border-b-transparent border-l-[18px] border-l-white" />
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </a>
+
+            {/* VIDEO 2 */}
+            <a
+              href="https://www.tiktok.com/@itskentbreeze/video/7536618269583674630"
+              target="_blank"
+              className="group min-w-[280px]"
+            >
+
+              <div className="relative rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+
+                <img
+                  src="/tiktok-2.jpg"
+                  alt="TikTok Video"
+                  className="w-full h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+                <div className="absolute inset-0 flex items-center justify-center">
+
+                  <div className="w-20 h-20 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:scale-110 transition duration-300">
+
+                    <div className="ml-1 w-0 h-0 border-t-[12px] border-t-transparent border-b-[12px] border-b-transparent border-l-[18px] border-l-white" />
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </a>
+
+            {/* VIDEO 3 */}
+            <a
+              href="https://www.tiktok.com/@itskentbreeze/video/7626772857565007124"
+              target="_blank"
+              className="group min-w-[280px]"
+            >
+
+              <div className="relative rounded-[32px] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-2xl">
+
+                <img
+                  src="/tiktok-3.jpg"
+                  alt="TikTok Video"
+                  className="w-full h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+                <div className="absolute inset-0 flex items-center justify-center">
+
+                  <div className="w-20 h-20 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:scale-110 transition duration-300">
+
+                    <div className="ml-1 w-0 h-0 border-t-[12px] border-t-transparent border-b-[12px] border-b-transparent border-l-[18px] border-l-white" />
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </a>
+
+            {/* SPOTIFY */}
+            <div className="min-w-[340px] rounded-[32px] border border-green-400/20 bg-white/5 backdrop-blur-2xl p-6">
+
+              <div className="flex items-center justify-between mb-5">
+
+                <div>
+
+                  <p className="uppercase tracking-[4px] text-green-300 text-xs">
+                    Breeze Vibes
+                  </p>
+
+                  <h3
+                    className="mt-2 uppercase italic font-black"
+                    style={{
+                      fontFamily: "Bebas Neue, sans-serif",
+                      fontSize: "42px",
+                      letterSpacing: "0.04em",
+                      lineHeight: "0.9",
+                    }}
+                  >
+
+                    Spotify
+
+                  </h3>
+
+                </div>
+
+                <img
+                  src="/spotify-icon.png"
+                  alt="Spotify"
+                  className="w-8 h-8 object-contain"
+                />
+
+              </div>
+
+              <iframe
+                style={{
+                  borderRadius: "20px",
+                }}
+                src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator"
+                width="100%"
+                height="420"
+                frameBorder="0"
+                allowFullScreen
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"
               />
 
             </div>
 
           </div>
 
-          <iframe
-            style={{
-              borderRadius: "20px",
-            }}
-            src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator"
-            width="100%"
-            height="152"
-            frameBorder="0"
-            allowFullScreen
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"
-          />
+        </div>
 
-        </motion.div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
+      </section>
 
     </main>
   );
