@@ -256,19 +256,19 @@ export default function HomePage() {
               className="mt-10 text-6xl md:text-8xl xl:text-[120px] font-black uppercase leading-[0.88]"
             >
 
-              THE
+              A NEW
 
               <br />
 
               <span className="bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
 
-                FUTURE
+                BREEZE
 
               </span>
 
               <br />
 
-              OF TALENT
+              ERA
 
             </motion.h1>
 
