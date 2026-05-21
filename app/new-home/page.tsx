@@ -494,6 +494,55 @@ export default function HomePage() {
                     <div className="ml-1 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[16px] border-l-white" />
 
                   </div>
+                  {/* SPOTIFY */}
+<div className="min-w-[260px] md:min-w-[340px] rounded-[32px] border border-green-400/20 bg-white/5 backdrop-blur-2xl p-5 md:p-6 snap-start">
+
+  <div className="flex items-center justify-between mb-5">
+
+    <div>
+
+      <p className="uppercase tracking-[4px] text-green-300 text-[10px] md:text-xs">
+        Breeze Vibes
+      </p>
+
+      <h3
+        className="mt-2 uppercase italic font-black"
+        style={{
+          fontFamily: "Bebas Neue, sans-serif",
+          fontSize: "clamp(28px, 5vw, 42px)",
+          letterSpacing: "0.04em",
+          lineHeight: "0.9",
+        }}
+      >
+
+        Spotify
+
+      </h3>
+
+    </div>
+
+    <img
+      src="/spotify-icon.png"
+      alt="Spotify"
+      className="w-7 h-7 md:w-8 md:h-8 object-contain"
+    />
+
+  </div>
+
+  <iframe
+    style={{
+      borderRadius: "20px",
+    }}
+    src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator"
+    width="100%"
+    height="380"
+    frameBorder="0"
+    allowFullScreen
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    loading="lazy"
+  />
+
+</div>
 
                 </div>
 
