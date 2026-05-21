@@ -415,64 +415,66 @@ export default function HomePage() {
             </a>
 
             {/* SPOTIFY */}
-            <div
-              className="min-w-[240px] md:min-w-[320px] rounded-[28px] border bg-white/5 backdrop-blur-2xl p-5 snap-start"
-              style={{
-                borderColor: `${BREEZE_GREEN}40`,
-              }}
-            >
+<div
+  className="min-w-[210px] md:min-w-[250px] rounded-[28px] border bg-white/5 backdrop-blur-2xl p-4 snap-start"
+  style={{
+    borderColor: `${BREEZE_GREEN}40`,
+  }}
+>
 
-              <div className="flex items-center justify-between mb-5">
+  {/* HEADER */}
+  <div className="flex items-center justify-between mb-4">
 
-                <div>
+    <div>
 
-                  <p
-                    className="uppercase tracking-[4px] text-[10px] md:text-xs"
-                    style={{
-                      color: BREEZE_GREEN,
-                    }}
-                  >
-                    Breeze Vibes
-                  </p>
+      <p
+        className="uppercase tracking-[4px] text-[10px] md:text-xs"
+        style={{
+          color: BREEZE_GREEN,
+        }}
+      >
+        Breeze Vibes
+      </p>
 
-                  <h3
-                    className="mt-2 uppercase italic font-black"
-                    style={{
-                      fontFamily: "Bebas Neue, sans-serif",
-                      fontSize: "clamp(28px, 5vw, 42px)",
-                      letterSpacing: "0.08em",
-                      lineHeight: "0.9",
-                    }}
-                  >
+      <h3
+        className="mt-2 uppercase italic font-black"
+        style={{
+          fontFamily: "Bebas Neue, sans-serif",
+          fontSize: "clamp(22px, 4vw, 34px)",
+          letterSpacing: "0.08em",
+          lineHeight: "0.9",
+        }}
+      >
 
-                    Spotify
+        Spotify
 
-                  </h3>
+      </h3>
 
-                </div>
+    </div>
 
-                <img
-                  src="/spotify-icon.png"
-                  alt="Spotify"
-                  className="w-7 h-7 object-contain"
-                />
+    <img
+      src="/spotify-icon.png"
+      alt="Spotify"
+      className="w-6 h-6 object-contain"
+    />
 
-              </div>
+  </div>
 
-              <iframe
-                style={{
-                  borderRadius: "20px",
-                }}
-                src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator"
-                width="100%"
-                height="340"
-                frameBorder="0"
-                allowFullScreen
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-              />
+  {/* EMBED */}
+  <iframe
+    style={{
+      borderRadius: "18px",
+    }}
+    src="https://open.spotify.com/embed/playlist/0I4lpBmuPerde7sYpVgLX2?utm_source=generator"
+    width="100%"
+    height="440"
+    frameBorder="0"
+    allowFullScreen
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    loading="lazy"
+  />
 
-            </div>
+</div>
 
           </div>
 
