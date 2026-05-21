@@ -51,9 +51,7 @@ export default function HomePage() {
                 <div className="relative group">
 
                   <span className="text-white text-xs uppercase tracking-[2px] font-bold">
-
                     Home
-
                   </span>
 
                   <div className="absolute left-0 -bottom-[22px] w-full h-[2px] bg-gradient-to-r from-green-300 to-lime-400 rounded-full" />
@@ -130,19 +128,19 @@ export default function HomePage() {
             </a>
 
             {/* INSTAGRAM */}
-<a
-  href="https://www.instagram.com/itskentbreezy?igsh=MWI3eGF0YWdiZjk5OQ=="
-  target="_blank"
-  className="opacity-80 hover:opacity-100 transition duration-300"
->
+            <a
+              href="https://www.instagram.com/itskentbreezy?igsh=MWI3eGF0YWdiZjk5OQ=="
+              target="_blank"
+              className="opacity-80 hover:opacity-100 transition duration-300"
+            >
 
-  <img
-    src="/instagram-icon.png"
-    alt="Instagram"
-    className="w-5 h-5 object-contain"
-  />
+              <img
+                src="/instagram-icon.png"
+                alt="Instagram"
+                className="w-5 h-5 object-contain"
+              />
 
-</a>
+            </a>
 
             {/* YOUTUBE */}
             <a
@@ -274,7 +272,7 @@ export default function HomePage() {
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="relative h-[760px] hidden lg:block">
+          <div className="relative h-[860px] hidden lg:block">
 
             {/* MAIN CARD */}
             <motion.div
@@ -347,6 +345,47 @@ export default function HomePage() {
 
                 <p className="mt-3 text-white/60 text-sm">
                   Entries officially open.
+                </p>
+
+              </div>
+
+            </motion.div>
+
+            {/* MERCH CARD */}
+            <motion.div
+              animate={{
+                y: [0, -10, 0],
+                rotate: [6, 8, 6],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 7,
+              }}
+              className="absolute bottom-[-20px] right-[-40px] w-[300px] rounded-[30px] overflow-hidden border border-green-400/20 bg-black/80 backdrop-blur-2xl shadow-[0_0_60px_rgba(120,255,120,0.12)]"
+            >
+
+              <img
+                src="/merch-card.jpg"
+                alt="Breeze Merch"
+                className="w-full h-[420px] object-cover"
+              />
+
+              <div className="p-5">
+
+                <p className="uppercase tracking-[3px] text-green-300 text-xs">
+                  Official Store
+                </p>
+
+                <h3 className="mt-3 text-2xl font-black uppercase leading-tight">
+
+                  Breeze
+                  <br />
+                  Merch
+
+                </h3>
+
+                <p className="mt-3 text-white/60 text-sm">
+                  Apparel, caps, bags and accessories.
                 </p>
 
               </div>
