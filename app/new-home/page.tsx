@@ -155,55 +155,68 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 md:gap-20 items-center">
 
           {/* LEFT SIDE */}
-          <div>
+<div className="relative z-20">
 
-            {/* HEADING */}
-            <motion.div
-              initial={{ opacity: 0, y: 80 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-              className="mt-6"
-            >
+  {/* SMALL TOP TEXT */}
+  <p
+    className="uppercase text-green-300 font-black"
+    style={{
+      fontFamily: "Bebas Neue, sans-serif",
+      fontSize: "clamp(14px, 1vw, 18px)",
+      letterSpacing: "0.12em",
+      marginBottom: "18px",
+    }}
+  >
 
-              <h1
-                className="uppercase italic font-black"
-                style={{
-                  fontFamily: "Bebas Neue, sans-serif",
-                  fontSize: "clamp(56px, 14vw, 150px)",
-                  letterSpacing: "0.04em",
-                  lineHeight: "0.9",
-                }}
-              >
+    A NEW CHAPTER. A BIGGER MOVEMENT.
 
-                <span className="block text-white">
-                  A NEW
-                </span>
+  </p>
 
-                <span className="block mt-2 bg-gradient-to-r from-green-300 via-white to-lime-300 text-transparent bg-clip-text">
-                  BREEZE
-                </span>
+  {/* MAIN HEADING */}
+  <div className="leading-none">
 
-                <span className="block mt-2 text-white">
-                  ERA
-                </span>
+    <h1
+      className="uppercase italic font-black text-white"
+      style={{
+        fontFamily: "Bebas Neue, sans-serif",
+        fontSize: "clamp(90px, 11vw, 180px)",
+        lineHeight: "0.82",
+        letterSpacing: "-0.03em",
+      }}
+    >
 
-              </h1>
+      <span className="block">
+        A NEW
+      </span>
 
-            </motion.div>
+      <span className="block text-[#8DFF00] mt-2">
+        BREEZE
+      </span>
 
-            {/* TEXT */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="mt-6 max-w-xl text-base md:text-2xl text-white/70 leading-relaxed"
-            >
+      <span className="block mt-2">
+        ERA
+      </span>
 
-              Faith. Family. Loyalty.
+    </h1>
 
-            </motion.p>
+  </div>
 
-          </div>
+  {/* SLOGAN */}
+  <p
+    className="text-white/80"
+    style={{
+      marginTop: "26px",
+      fontSize: "clamp(20px, 1.5vw, 30px)",
+      fontWeight: 300,
+      letterSpacing: "-0.02em",
+    }}
+  >
+
+    Faith. Family. Loyalty.
+
+  </p>
+
+</div>
 
           {/* RIGHT SIDE */}
           <div className="relative h-[680px] md:h-[860px] mt-10 lg:mt-0">
@@ -382,6 +395,8 @@ export default function HomePage() {
                   className="w-full h-[380px] md:h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
                 />
 
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
               </div>
 
             </a>
@@ -401,6 +416,8 @@ export default function HomePage() {
                   className="w-full h-[380px] md:h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
                 />
 
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
               </div>
 
             </a>
@@ -419,6 +436,8 @@ export default function HomePage() {
                   alt="TikTok Video"
                   className="w-full h-[380px] md:h-[500px] object-cover group-hover:scale-[1.03] transition duration-500"
                 />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
               </div>
 
