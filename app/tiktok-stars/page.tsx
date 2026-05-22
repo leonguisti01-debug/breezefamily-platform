@@ -87,14 +87,14 @@ export default function TikTokStarsPage() {
 
         <div className="max-w-7xl mx-auto overflow-visible">
 
-          <div className="flex lg:grid lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto overflow-y-visible lg:overflow-visible snap-x snap-mandatory pb-4 pr-6 no-scrollbar">
+          <div className="flex lg:grid lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto overflow-y-visible lg:overflow-visible snap-x snap-mandatory px-1 pb-4 pr-[20vw] no-scrollbar">
 
             {/* ========================= */}
             {/* SEASON 1 */}
             {/* ========================= */}
 
             <motion.div
-              className="min-w-[82vw] sm:min-w-[420px] lg:min-w-0 snap-center shrink-0"
+              className="w-[78vw] sm:w-[420px] lg:w-auto snap-center shrink-0"
               whileHover={{
                 y: -8,
               }}
@@ -280,7 +280,7 @@ export default function TikTokStarsPage() {
             {/* ========================= */}
 
             <motion.div
-              className="min-w-[82vw] sm:min-w-[420px] lg:min-w-0 snap-center shrink-0"
+              className="w-[78vw] sm:w-[420px] lg:w-auto snap-center shrink-0"
               whileHover={{
                 y: -8,
               }}
@@ -431,7 +431,7 @@ export default function TikTokStarsPage() {
             {/* ========================= */}
 
             <motion.div
-              className="min-w-[82vw] sm:min-w-[420px] lg:min-w-0 snap-center shrink-0"
+              className="w-[78vw] sm:w-[420px] lg:w-auto snap-center shrink-0"
               whileHover={{
                 y: -8,
               }}
