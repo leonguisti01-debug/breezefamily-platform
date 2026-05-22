@@ -29,7 +29,6 @@ export default function PrizedPetsPage() {
 
   const [petPhoto, setPetPhoto] = useState<File | null>(null);
 
-  // LOAD ENTRIES
   useEffect(() => {
 
     fetchEntries();
@@ -53,7 +52,6 @@ export default function PrizedPetsPage() {
     setEntriesLoading(false);
   };
 
-  // SUBMIT ENTRY
   const handleSubmit = async (
     e: React.FormEvent
   ) => {
@@ -220,9 +218,9 @@ export default function PrizedPetsPage() {
       {/* PRIZES */}
       <section className="relative z-20 px-4 md:px-6">
 
-        <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-6">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
 
-          <div className="bg-white/5 border border-[#8DFF00]/20 backdrop-blur-2xl rounded-[30px] p-8 text-center">
+          <div className="bg-white/5 border border-[#8DFF00]/20 backdrop-blur-2xl rounded-[30px] p-6 md:p-8 text-center">
 
             <p
               className="uppercase tracking-[4px] text-xs"
@@ -237,7 +235,7 @@ export default function PrizedPetsPage() {
               className="mt-4 uppercase italic font-black"
               style={{
                 fontFamily: "Bebas Neue, sans-serif",
-                fontSize: "72px",
+                fontSize: "clamp(52px, 10vw, 72px)",
                 lineHeight: "0.9",
               }}
             >
@@ -246,7 +244,7 @@ export default function PrizedPetsPage() {
 
           </div>
 
-          <div className="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-[30px] p-8 text-center">
+          <div className="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-[30px] p-6 md:p-8 text-center">
 
             <p className="uppercase tracking-[4px] text-xs text-white/60">
               Second Place
@@ -256,7 +254,7 @@ export default function PrizedPetsPage() {
               className="mt-4 uppercase italic font-black"
               style={{
                 fontFamily: "Bebas Neue, sans-serif",
-                fontSize: "72px",
+                fontSize: "clamp(52px, 10vw, 72px)",
                 lineHeight: "0.9",
               }}
             >
@@ -265,7 +263,7 @@ export default function PrizedPetsPage() {
 
           </div>
 
-          <div className="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-[30px] p-8 text-center">
+          <div className="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-[30px] p-6 md:p-8 text-center">
 
             <p className="uppercase tracking-[4px] text-xs text-white/60">
               Third Place
@@ -275,7 +273,7 @@ export default function PrizedPetsPage() {
               className="mt-4 uppercase italic font-black"
               style={{
                 fontFamily: "Bebas Neue, sans-serif",
-                fontSize: "72px",
+                fontSize: "clamp(52px, 10vw, 72px)",
                 lineHeight: "0.9",
               }}
             >
@@ -293,13 +291,13 @@ export default function PrizedPetsPage() {
 
         <div className="max-w-3xl mx-auto">
 
-          <div className="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-[34px] p-6 md:p-12">
+          <div className="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-[34px] p-5 md:p-12">
 
             <h2
               className="uppercase italic font-black text-center"
               style={{
                 fontFamily: "Bebas Neue, sans-serif",
-                fontSize: "clamp(50px, 6vw, 90px)",
+                fontSize: "clamp(46px, 8vw, 90px)",
                 lineHeight: "0.9",
                 letterSpacing: "0.08em",
               }}
@@ -337,7 +335,7 @@ export default function PrizedPetsPage() {
 
             <form
               onSubmit={handleSubmit}
-              className="mt-10 space-y-6"
+              className="mt-10 space-y-5"
             >
 
               <input
@@ -351,7 +349,7 @@ export default function PrizedPetsPage() {
                 className="
                   w-full
                   px-5
-                  py-5
+                  py-4
                   rounded-2xl
                   bg-black/40
                   border
@@ -374,7 +372,7 @@ export default function PrizedPetsPage() {
                 className="
                   w-full
                   px-5
-                  py-5
+                  py-4
                   rounded-2xl
                   bg-black/40
                   border
@@ -398,7 +396,7 @@ export default function PrizedPetsPage() {
                 className="
                   w-full
                   px-5
-                  py-5
+                  py-4
                   rounded-2xl
                   bg-black/40
                   border
@@ -412,12 +410,12 @@ export default function PrizedPetsPage() {
                 disabled={loading}
                 className="
                   w-full
-                  py-5
+                  py-4
                   rounded-2xl
                   bg-[#8DFF00]
                   text-black
                   font-black
-                  text-lg
+                  text-sm md:text-lg
                   uppercase
                   tracking-[4px]
                   hover:scale-[1.01]
@@ -460,7 +458,7 @@ export default function PrizedPetsPage() {
               className="mt-4 uppercase italic font-black"
               style={{
                 fontFamily: "Bebas Neue, sans-serif",
-                fontSize: "clamp(60px, 7vw, 120px)",
+                fontSize: "clamp(48px, 9vw, 120px)",
                 lineHeight: "0.82",
               }}
             >
@@ -489,7 +487,7 @@ export default function PrizedPetsPage() {
 
           ) : (
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
 
               {entries.map((entry, index) => (
 
@@ -508,7 +506,7 @@ export default function PrizedPetsPage() {
                     className="
                       relative
                       overflow-hidden
-                      rounded-[30px]
+                      rounded-[26px]
                       border
                       bg-white/5
                       backdrop-blur-2xl
@@ -524,7 +522,7 @@ export default function PrizedPetsPage() {
                       <img
                         src={entry.photo_url}
                         alt={entry.name}
-                        className="w-full h-[360px] object-cover"
+                        className="w-full h-[240px] sm:h-[300px] md:h-[360px] object-cover"
                       />
 
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
@@ -532,7 +530,7 @@ export default function PrizedPetsPage() {
                     </div>
 
                     {/* CONTENT */}
-                    <div className="p-6">
+                    <div className="p-5 md:p-6">
 
                       <p
                         className="uppercase tracking-[4px] text-[10px]"
@@ -547,7 +545,7 @@ export default function PrizedPetsPage() {
                         className="mt-3 uppercase italic font-black"
                         style={{
                           fontFamily: "Bebas Neue, sans-serif",
-                          fontSize: "34px",
+                          fontSize: "clamp(24px, 5vw, 34px)",
                           lineHeight: "0.9",
                           letterSpacing: "0.08em",
                         }}
