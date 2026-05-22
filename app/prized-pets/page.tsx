@@ -456,138 +456,127 @@ export default function PrizedPetsPage() {
       </section>
 
       {/* ENTRIES GRID */}
-      <section
-        id="pet-gallery"
-        className="relative z-20 px-4 md:px-6 pt-20 pb-[180px] block"
+<section
+  id="pet-gallery"
+  className="relative z-20 px-4 md:px-6 pt-20 pb-[180px]"
+>
+
+  <div className="max-w-7xl mx-auto">
+
+    <div className="text-center mb-10 md:mb-14">
+
+      <p
+        className="uppercase tracking-[5px] text-xs"
+        style={{
+          color: BREEZE_GREEN,
+        }}
+      >
+        LIVE ENTRIES
+      </p>
+
+      <h2
+        className="mt-4 uppercase italic font-black"
+        style={{
+          fontFamily: "Bebas Neue, sans-serif",
+          fontSize: "clamp(42px, 9vw, 120px)",
+          lineHeight: "0.82",
+        }}
       >
 
-        <div className="max-w-7xl mx-auto overflow-visible w-full">
+        PET
+        <span
+          className="block"
+          style={{
+            color: BREEZE_GREEN,
+          }}
+        >
+          GALLERY
+        </span>
 
-          <div className="text-center mb-14">
+      </h2>
 
-            <p
-              className="uppercase tracking-[5px] text-xs"
-              style={{
-                color: BREEZE_GREEN,
-              }}
-            >
-              LIVE ENTRIES
-            </p>
+    </div>
 
-            <h2
-              className="mt-4 uppercase italic font-black"
-              style={{
-                fontFamily: "Bebas Neue, sans-serif",
-                fontSize: "clamp(48px, 9vw, 120px)",
-                lineHeight: "0.82",
-              }}
-            >
+    {entriesLoading ? (
 
-              PET
-              <span
-                className="block"
+      <div className="text-center py-20 text-white/50 uppercase tracking-[4px]">
+
+        Loading Entries...
+
+      </div>
+
+    ) : (
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+
+        {entries.map((entry, index) => (
+
+          <motion.div
+            key={index}
+            whileHover={{
+              scale: 1.05,
+            }}
+            transition={{
+              duration: 0.25,
+            }}
+          >
+
+            <div className="flex flex-col items-center text-center">
+
+              {/* PHOTO BUBBLE */}
+              <div
+                className="
+                  relative
+                  rounded-full
+                  overflow-hidden
+                  border-2
+                  bg-white/5
+                  backdrop-blur-xl
+                "
                 style={{
-                  color: BREEZE_GREEN,
+                  borderColor: `${BREEZE_GREEN}50`,
+                  width: "110px",
+                  height: "110px",
                 }}
               >
-                GALLERY
-              </span>
 
-            </h2>
+                <img
+                  src={entry.photo_url}
+                  alt={entry.name}
+                  className="w-full h-full object-cover"
+                />
 
-          </div>
+              </div>
 
-          {entriesLoading ? (
+              {/* NAME */}
+              <h3
+                className="mt-3 uppercase italic font-black break-words"
+                style={{
+                  fontFamily: "Bebas Neue, sans-serif",
+                  fontSize: "clamp(16px, 4vw, 24px)",
+                  lineHeight: "0.95",
+                  letterSpacing: "0.05em",
+                  maxWidth: "120px",
+                }}
+              >
 
-            <div className="text-center py-20 text-white/50 uppercase tracking-[4px]">
+                {entry.name}
 
-              Loading Entries...
-
-            </div>
-
-          ) : (
-
-            <div className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-
-              {entries.map((entry, index) => (
-
-                <motion.div
-                  key={index}
-                  whileHover={{
-                    y: -8,
-                    scale: 1.02,
-                  }}
-                  transition={{
-                    duration: 0.3,
-                  }}
-                >
-
-                  <div
-                    className="
-                      relative
-                      overflow-hidden
-                      rounded-[26px]
-                      border
-                      bg-white/5
-                      backdrop-blur-2xl
-                    "
-                    style={{
-                      borderColor: `${BREEZE_GREEN}20`,
-                    }}
-                  >
-
-                    <div className="relative">
-
-                      <img
-                        src={entry.photo_url}
-                        alt={entry.name}
-                        className="w-full h-[240px] sm:h-[300px] md:h-[360px] object-cover"
-                      />
-
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-
-                    </div>
-
-                    <div className="p-5 md:p-6">
-
-                      <p
-                        className="uppercase tracking-[4px] text-[10px]"
-                        style={{
-                          color: BREEZE_GREEN,
-                        }}
-                      >
-                        Prized Pets Entry
-                      </p>
-
-                      <h3
-                        className="mt-3 uppercase italic font-black break-words"
-                        style={{
-                          fontFamily: "Bebas Neue, sans-serif",
-                          fontSize: "clamp(24px, 5vw, 34px)",
-                          lineHeight: "0.9",
-                          letterSpacing: "0.08em",
-                        }}
-                      >
-
-                        {entry.name}
-
-                      </h3>
-
-                    </div>
-
-                  </div>
-
-                </motion.div>
-
-              ))}
+              </h3>
 
             </div>
 
-          )}
+          </motion.div>
 
-        </div>
+        ))}
 
-      </section>
+      </div>
+
+    )}
+
+  </div>
+
+</section>
 
     </main>
   );
