@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 
 const BREEZE_GREEN = "#8DFF00";
@@ -83,16 +82,17 @@ export default function TikTokStarsPage() {
 
       </section>
 
-      {/* 3 WAY SPLIT */}
+      {/* MOBILE SWIPE + DESKTOP GRID */}
       <section className="relative z-20 px-4 md:px-6 pb-28">
 
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-6">
+        <div className="max-w-7xl mx-auto flex lg:grid lg:grid-cols-3 gap-6 overflow-x-auto lg:overflow-visible snap-x snap-mandatory pb-4 no-scrollbar">
 
           {/* ========================= */}
           {/* SEASON 1 */}
           {/* ========================= */}
 
           <motion.div
+            className="min-w-[88vw] sm:min-w-[420px] lg:min-w-0 snap-center"
             whileHover={{
               y: -8,
             }}
@@ -117,7 +117,6 @@ export default function TikTokStarsPage() {
               }}
             >
 
-              {/* GLOW */}
               <div
                 className="absolute top-[-100px] right-[-100px] w-[220px] h-[220px] rounded-full blur-[120px]"
                 style={{
@@ -125,7 +124,6 @@ export default function TikTokStarsPage() {
                 }}
               />
 
-              {/* HEADER */}
               <div className="relative z-10">
 
                 <p
@@ -153,10 +151,8 @@ export default function TikTokStarsPage() {
 
               </div>
 
-              {/* PODIUM */}
               <div className="relative z-10 mt-12">
 
-                {/* WINNER */}
                 <div className="text-center">
 
                   <div
@@ -205,10 +201,8 @@ export default function TikTokStarsPage() {
 
                 </div>
 
-                {/* RUNNERS UP */}
                 <div className="grid grid-cols-2 gap-5 mt-12">
 
-                  {/* SECOND */}
                   <div className="text-center">
 
                     <div className="w-[120px] h-[120px] rounded-full overflow-hidden border border-white/20 mx-auto">
@@ -240,7 +234,6 @@ export default function TikTokStarsPage() {
 
                   </div>
 
-                  {/* THIRD */}
                   <div className="text-center">
 
                     <div className="w-[120px] h-[120px] rounded-full overflow-hidden border border-white/20 mx-auto">
@@ -285,6 +278,7 @@ export default function TikTokStarsPage() {
           {/* ========================= */}
 
           <motion.div
+            className="min-w-[88vw] sm:min-w-[420px] lg:min-w-0 snap-center"
             whileHover={{
               y: -8,
             }}
@@ -309,7 +303,6 @@ export default function TikTokStarsPage() {
               }}
             >
 
-              {/* GLOW */}
               <div
                 className="absolute top-[-100px] right-[-100px] w-[220px] h-[220px] rounded-full blur-[120px]"
                 style={{
@@ -317,7 +310,6 @@ export default function TikTokStarsPage() {
                 }}
               />
 
-              {/* HEADER */}
               <div className="relative z-10">
 
                 <p
@@ -345,10 +337,8 @@ export default function TikTokStarsPage() {
 
               </div>
 
-              {/* PODIUM */}
               <div className="relative z-10 mt-12">
 
-                {/* WINNER */}
                 <div className="text-center">
 
                   <div
@@ -397,7 +387,6 @@ export default function TikTokStarsPage() {
 
                 </div>
 
-                {/* SECOND PLACE */}
                 <div className="mt-14 text-center">
 
                   <div className="w-[140px] h-[140px] rounded-full overflow-hidden border border-white/20 mx-auto">
@@ -440,6 +429,7 @@ export default function TikTokStarsPage() {
           {/* ========================= */}
 
           <motion.div
+            className="min-w-[88vw] sm:min-w-[420px] lg:min-w-0 snap-center"
             whileHover={{
               y: -8,
             }}
@@ -467,7 +457,6 @@ export default function TikTokStarsPage() {
               }}
             >
 
-              {/* BIG GLOW */}
               <div
                 className="absolute top-[-120px] right-[-120px] w-[260px] h-[260px] rounded-full blur-[140px]"
                 style={{
@@ -475,7 +464,6 @@ export default function TikTokStarsPage() {
                 }}
               />
 
-              {/* BADGE */}
               <div
                 className="
                   absolute
@@ -495,7 +483,6 @@ export default function TikTokStarsPage() {
                 OPEN NOW
               </div>
 
-              {/* CONTENT */}
               <div className="relative z-10">
 
                 <p
@@ -543,7 +530,6 @@ export default function TikTokStarsPage() {
               {/* CTA */}
               <div className="relative z-10 mt-16 space-y-4">
 
-                {/* VIEW ENTRIES */}
                 <a
                   href="https://www.breezefamily.co.za/kids-edition/entries"
                   target="_blank"
@@ -579,7 +565,6 @@ export default function TikTokStarsPage() {
 
                 </a>
 
-                {/* ENTER BUTTON */}
                 <a
                   href="https://www.breezefamily.co.za/kids-edition/register"
                   target="_blank"
