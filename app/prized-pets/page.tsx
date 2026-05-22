@@ -150,18 +150,18 @@ export default function PrizedPetsPage() {
   };
 
   return (
-    <main className="min-h-screen w-full bg-black text-white relative overflow-y-auto overflow-x-hidden">
+    <main className="min-h-screen bg-black text-white relative">
 
       {/* BACKGROUND */}
       <div
-        className="absolute top-[-300px] left-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full pointer-events-none"
+        className="fixed top-[-300px] left-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full pointer-events-none z-0"
         style={{
           background: `${BREEZE_GREEN}18`,
         }}
       />
 
       <div
-        className="absolute bottom-[-300px] right-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full pointer-events-none"
+        className="fixed bottom-[-300px] right-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full pointer-events-none z-0"
         style={{
           background: `${BREEZE_GREEN}10`,
         }}
@@ -169,7 +169,7 @@ export default function PrizedPetsPage() {
 
       {/* GRID */}
       <div
-        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+        className="fixed inset-0 opacity-[0.04] pointer-events-none z-0"
         style={{
           backgroundImage:
             "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
@@ -456,127 +456,139 @@ export default function PrizedPetsPage() {
       </section>
 
       {/* ENTRIES GRID */}
-<section
-  id="pet-gallery"
-  className="relative z-20 px-4 md:px-6 pt-20 pb-[180px]"
->
-
-  <div className="max-w-7xl mx-auto">
-
-    <div className="text-center mb-10 md:mb-14">
-
-      <p
-        className="uppercase tracking-[5px] text-xs"
-        style={{
-          color: BREEZE_GREEN,
-        }}
-      >
-        LIVE ENTRIES
-      </p>
-
-      <h2
-        className="mt-4 uppercase italic font-black"
-        style={{
-          fontFamily: "Bebas Neue, sans-serif",
-          fontSize: "clamp(42px, 9vw, 120px)",
-          lineHeight: "0.82",
-        }}
+      <section
+        id="pet-gallery"
+        className="relative z-20 px-4 md:px-6 pt-20 pb-[220px]"
       >
 
-        PET
-        <span
-          className="block"
-          style={{
-            color: BREEZE_GREEN,
-          }}
-        >
-          GALLERY
-        </span>
+        <div className="max-w-7xl mx-auto overflow-visible">
 
-      </h2>
+          <div className="text-center mb-10 md:mb-14">
 
-    </div>
+            <p
+              className="uppercase tracking-[5px] text-xs"
+              style={{
+                color: BREEZE_GREEN,
+              }}
+            >
+              LIVE ENTRIES
+            </p>
 
-    {entriesLoading ? (
+            <h2
+              className="mt-4 uppercase italic font-black"
+              style={{
+                fontFamily: "Bebas Neue, sans-serif",
+                fontSize: "clamp(42px, 9vw, 120px)",
+                lineHeight: "0.82",
+              }}
+            >
 
-      <div className="text-center py-20 text-white/50 uppercase tracking-[4px]">
-
-        Loading Entries...
-
-      </div>
-
-    ) : (
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
-
-        {entries.map((entry, index) => (
-
-          <motion.div
-            key={index}
-            whileHover={{
-              scale: 1.05,
-            }}
-            transition={{
-              duration: 0.25,
-            }}
-          >
-
-            <div className="flex flex-col items-center text-center">
-
-              {/* PHOTO BUBBLE */}
-              <div
-                className="
-                  relative
-                  rounded-full
-                  overflow-hidden
-                  border-2
-                  bg-white/5
-                  backdrop-blur-xl
-                "
+              PET
+              <span
+                className="block"
                 style={{
-                  borderColor: `${BREEZE_GREEN}50`,
-                  width: "110px",
-                  height: "110px",
+                  color: BREEZE_GREEN,
                 }}
               >
+                GALLERY
+              </span>
 
-                <img
-                  src={entry.photo_url}
-                  alt={entry.name}
-                  className="w-full h-full object-cover"
-                />
+            </h2>
 
-              </div>
+          </div>
 
-              {/* NAME */}
-              <h3
-                className="mt-3 uppercase italic font-black break-words"
-                style={{
-                  fontFamily: "Bebas Neue, sans-serif",
-                  fontSize: "clamp(16px, 4vw, 24px)",
-                  lineHeight: "0.95",
-                  letterSpacing: "0.05em",
-                  maxWidth: "120px",
-                }}
-              >
+          {entriesLoading ? (
 
-                {entry.name}
+            <div className="text-center py-20 text-white/50 uppercase tracking-[4px]">
 
-              </h3>
+              Loading Entries...
 
             </div>
 
-          </motion.div>
+          ) : (
 
-        ))}
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-5 md:gap-6">
 
-      </div>
+              {entries.map((entry, index) => (
 
-    )}
+                <motion.div
+                  key={index}
+                  whileHover={{
+                    scale: 1.05,
+                  }}
+                  transition={{
+                    duration: 0.25,
+                  }}
+                >
 
-  </div>
+                  <div className="flex flex-col items-center text-center">
 
-</section>
+                    {/* PHOTO BUBBLE */}
+                    <div
+                      className="
+                        relative
+                        rounded-full
+                        overflow-hidden
+                        border-2
+                        bg-black
+                        w-[72px]
+                        h-[72px]
+                        sm:w-[88px]
+                        sm:h-[88px]
+                        md:w-[100px]
+                        md:h-[100px]
+                        flex
+                        items-center
+                        justify-center
+                      "
+                      style={{
+                        borderColor: `${BREEZE_GREEN}50`,
+                      }}
+                    >
+
+                      <img
+                        src={entry.photo_url}
+                        alt={entry.name}
+                        loading="lazy"
+                        className="
+                          w-full
+                          h-full
+                          object-contain
+                          bg-black
+                        "
+                      />
+
+                    </div>
+
+                    {/* NAME */}
+                    <h3
+                      className="mt-3 uppercase italic font-black break-words"
+                      style={{
+                        fontFamily: "Bebas Neue, sans-serif",
+                        fontSize: "clamp(12px, 3vw, 18px)",
+                        lineHeight: "0.95",
+                        letterSpacing: "0.05em",
+                        maxWidth: "80px",
+                      }}
+                    >
+
+                      {entry.name}
+
+                    </h3>
+
+                  </div>
+
+                </motion.div>
+
+              ))}
+
+            </div>
+
+          )}
+
+        </div>
+
+      </section>
 
     </main>
   );
