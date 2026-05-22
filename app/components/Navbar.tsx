@@ -33,6 +33,13 @@ export default function Navbar() {
               </span>
             </Link>
 
+            {/* PRIZED PETS */}
+            <Link href="/prized-pets">
+              <span className="text-white/80 hover:text-[#8DFF00] text-[10px] md:text-[11px] uppercase tracking-[2px] font-bold whitespace-nowrap transition">
+                Prized Pets
+              </span>
+            </Link>
+
             <Link href="/tiktok-stars">
               <span className="text-white/80 hover:text-[#8DFF00] text-[10px] md:text-[11px] uppercase tracking-[2px] font-bold whitespace-nowrap transition">
                 TikTok Stars
