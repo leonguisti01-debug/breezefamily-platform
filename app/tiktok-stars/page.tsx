@@ -391,7 +391,7 @@ export default function TikTokStarsPage() {
                     }}
                   >
 
-                    NAME
+                    CARLETHEIA
 
                   </h3>
 
@@ -423,7 +423,7 @@ export default function TikTokStarsPage() {
                     }}
                   >
 
-                    NAME
+                    KUTLWANO
 
                   </h4>
 
