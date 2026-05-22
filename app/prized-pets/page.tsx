@@ -8,7 +8,7 @@ const BREEZE_GREEN = "#8DFF00";
 
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
+  "YOUR_SUPABASE_KEY"
 );
 
 export default function PrizedPetsPage() {
@@ -130,10 +130,15 @@ export default function PrizedPetsPage() {
     setLoading(false);
 
     fetchEntries();
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth",
+    });
   };
 
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden relative">
+    <main className="min-h-screen bg-black text-white overflow-x-hidden relative">
 
       {/* BACKGROUND */}
       <div
@@ -178,7 +183,7 @@ export default function PrizedPetsPage() {
             className="mt-4 uppercase italic font-black"
             style={{
               fontFamily: "Bebas Neue, sans-serif",
-              fontSize: "clamp(70px, 10vw, 180px)",
+              fontSize: "clamp(64px, 12vw, 180px)",
               letterSpacing: "0.1em",
               lineHeight: "0.82",
             }}
@@ -197,9 +202,9 @@ export default function PrizedPetsPage() {
           </h1>
 
           <p
-            className="mt-8 text-white/70 max-w-2xl mx-auto"
+            className="mt-8 text-white/70 max-w-2xl mx-auto px-2"
             style={{
-              fontSize: "18px",
+              fontSize: "clamp(15px, 4vw, 18px)",
               lineHeight: "1.7",
             }}
           >
@@ -439,7 +444,7 @@ export default function PrizedPetsPage() {
       </section>
 
       {/* ENTRIES GRID */}
-      <section className="relative z-20 px-4 md:px-6 pt-20 pb-28">
+      <section className="relative z-20 px-4 md:px-6 pt-20 pb-40">
 
         <div className="max-w-7xl mx-auto">
 
@@ -516,7 +521,6 @@ export default function PrizedPetsPage() {
                     }}
                   >
 
-                    {/* IMAGE */}
                     <div className="relative">
 
                       <img
@@ -529,7 +533,6 @@ export default function PrizedPetsPage() {
 
                     </div>
 
-                    {/* CONTENT */}
                     <div className="p-5 md:p-6">
 
                       <p
@@ -542,7 +545,7 @@ export default function PrizedPetsPage() {
                       </p>
 
                       <h3
-                        className="mt-3 uppercase italic font-black"
+                        className="mt-3 uppercase italic font-black break-words"
                         style={{
                           fontFamily: "Bebas Neue, sans-serif",
                           fontSize: "clamp(24px, 5vw, 34px)",
