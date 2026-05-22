@@ -35,7 +35,7 @@ export default function TikTokStarsPage() {
       />
 
       {/* HERO */}
-      <section className="relative z-20 px-4 md:px-6 pt-20 md:pt-28 pb-16">
+      <section className="relative z-20 px-4 md:px-6 pt-10 md:pt-14 pb-16">
 
         <div className="max-w-7xl mx-auto text-center">
 
@@ -541,8 +541,45 @@ export default function TikTokStarsPage() {
               </div>
 
               {/* CTA */}
-              <div className="relative z-10 mt-16">
+              <div className="relative z-10 mt-16 space-y-4">
 
+                {/* VIEW ENTRIES */}
+                <a
+                  href="https://www.breezefamily.co.za/kids-edition/entries"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+
+                  <div
+                    className="
+                      rounded-[24px]
+                      border
+                      border-white/10
+                      bg-white/5
+                      backdrop-blur-xl
+                      text-white
+                      px-6
+                      py-5
+                      uppercase
+                      tracking-[4px]
+                      text-xs
+                      font-black
+                      text-center
+                      hover:border-[#8DFF00]
+                      hover:text-[#8DFF00]
+                      transition
+                      duration-300
+                      cursor-pointer
+                    "
+                  >
+
+                    View Accepted Entries
+
+                  </div>
+
+                </a>
+
+                {/* ENTER BUTTON */}
                 <a
                   href="https://www.breezefamily.co.za/kids-edition/register"
                   target="_blank"
