@@ -142,6 +142,7 @@ export default function PrizedPetsPage() {
 
         gallery.scrollIntoView({
           behavior: "smooth",
+          block: "start",
         });
       }
 
@@ -149,7 +150,7 @@ export default function PrizedPetsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white relative">
+    <main className="min-h-screen w-full bg-black text-white relative overflow-y-auto overflow-x-hidden">
 
       {/* BACKGROUND */}
       <div
@@ -457,10 +458,10 @@ export default function PrizedPetsPage() {
       {/* ENTRIES GRID */}
       <section
         id="pet-gallery"
-        className="relative z-20 px-4 md:px-6 pt-20 pb-[180px]"
+        className="relative z-20 px-4 md:px-6 pt-20 pb-[180px] block"
       >
 
-        <div className="max-w-7xl mx-auto overflow-visible">
+        <div className="max-w-7xl mx-auto overflow-visible w-full">
 
           <div className="text-center mb-14">
 
@@ -506,7 +507,7 @@ export default function PrizedPetsPage() {
 
           ) : (
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
 
               {entries.map((entry, index) => (
 
