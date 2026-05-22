@@ -8,7 +8,7 @@ const BREEZE_GREEN = "#8DFF00";
 
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
-  "YOUR_SUPABASE_KEY"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
 );
 
 export default function PrizedPetsPage() {
@@ -131,25 +131,36 @@ export default function PrizedPetsPage() {
 
     fetchEntries();
 
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth",
-    });
+    setTimeout(() => {
+
+      const gallery =
+        document.getElementById(
+          "pet-gallery"
+        );
+
+      if (gallery) {
+
+        gallery.scrollIntoView({
+          behavior: "smooth",
+        });
+      }
+
+    }, 500);
   };
 
   return (
-    <main className="min-h-screen bg-black text-white overflow-x-hidden relative">
+    <main className="min-h-screen bg-black text-white relative">
 
       {/* BACKGROUND */}
       <div
-        className="absolute top-[-300px] left-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full"
+        className="absolute top-[-300px] left-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full pointer-events-none"
         style={{
           background: `${BREEZE_GREEN}18`,
         }}
       />
 
       <div
-        className="absolute bottom-[-300px] right-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full"
+        className="absolute bottom-[-300px] right-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full pointer-events-none"
         style={{
           background: `${BREEZE_GREEN}10`,
         }}
@@ -157,7 +168,7 @@ export default function PrizedPetsPage() {
 
       {/* GRID */}
       <div
-        className="absolute inset-0 opacity-[0.04]"
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
         style={{
           backgroundImage:
             "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
@@ -444,9 +455,12 @@ export default function PrizedPetsPage() {
       </section>
 
       {/* ENTRIES GRID */}
-      <section className="relative z-20 px-4 md:px-6 pt-20 pb-40">
+      <section
+        id="pet-gallery"
+        className="relative z-20 px-4 md:px-6 pt-20 pb-[180px]"
+      >
 
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto overflow-visible">
 
           <div className="text-center mb-14">
 
