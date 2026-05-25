@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 
+const BREEZE_GREEN = "#8DFF00";
+
+const COURIER_FEE = 150;
+
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
@@ -61,7 +65,7 @@ export default function CartPage() {
       setCart(updatedCart);
     };
 
-  /* REMOVE ITEM */
+  /* REMOVE */
   const removeItem =
     (id: number) => {
 
@@ -123,8 +127,8 @@ export default function CartPage() {
       saveCart(updatedCart);
     };
 
-  /* TOTAL */
-  const calculateTotal =
+  /* SUBTOTAL */
+  const calculateSubtotal =
     () => {
 
       return cart.reduce(
@@ -152,7 +156,14 @@ export default function CartPage() {
       );
     };
 
-  /* WHATSAPP CHECKOUT */
+  const subtotal =
+    calculateSubtotal();
+
+  const total =
+    subtotal +
+    COURIER_FEE;
+
+  /* CHECKOUT */
   const checkoutWhatsApp =
     async () => {
 
@@ -169,9 +180,6 @@ export default function CartPage() {
         return;
       }
 
-      const total =
-        calculateTotal();
-
       /* SAVE ORDER */
       const {
         error
@@ -184,7 +192,12 @@ export default function CartPage() {
             phone,
             address,
             items: cart,
-            total: `R${total}`,
+            subtotal:
+              `R${subtotal}`,
+            courier:
+              `R${COURIER_FEE}`,
+            total:
+              `R${total}`,
             status: "new",
           },
         ]);
@@ -200,7 +213,7 @@ export default function CartPage() {
         return;
       }
 
-      /* WHATSAPP MESSAGE */
+      /* WHATSAPP */
       let message =
         `Hi Breeze Family,%0A%0A`;
 
@@ -216,7 +229,13 @@ export default function CartPage() {
       );
 
       message +=
-        `%0ATotal: R${total}%0A%0A`;
+        `%0ASubtotal: R${subtotal}%0A`;
+
+      message +=
+        `Courier: R${COURIER_FEE}%0A`;
+
+      message +=
+        `TOTAL: R${total}%0A%0A`;
 
       message +=
         `Name: ${name}%0A`;
@@ -227,13 +246,11 @@ export default function CartPage() {
       message +=
         `Address: ${address}`;
 
-      /* OPEN WHATSAPP */
       window.open(
         `https://wa.me/27660725752?text=${message}`,
         "_blank"
       );
 
-      /* CLEAR CART */
       localStorage.removeItem(
         "cart"
       );
@@ -246,31 +263,86 @@ export default function CartPage() {
     };
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-20">
+    <main className="min-h-screen bg-black text-white overflow-x-hidden px-4 py-20">
 
-      <div className="max-w-6xl mx-auto">
+      {/* BACKGROUND */}
+      <div
+        className="fixed top-[-300px] left-[-300px] w-[400px] h-[400px] blur-[160px] rounded-full pointer-events-none"
+        style={{
+          background:
+            `${BREEZE_GREEN}10`,
+        }}
+      />
+
+      <div
+        className="fixed bottom-[-300px] right-[-300px] w-[400px] h-[400px] blur-[160px] rounded-full pointer-events-none"
+        style={{
+          background:
+            `${BREEZE_GREEN}08`,
+        }}
+      />
+
+      <div className="max-w-3xl mx-auto relative z-20">
 
         {/* HEADER */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+        <div className="flex items-start justify-between gap-4">
 
           <div>
 
-            <p className="uppercase tracking-[4px] text-green-300 text-sm">
+            <p
+              className="uppercase tracking-[3px] text-[10px]"
+              style={{
+                color:
+                  BREEZE_GREEN,
+              }}
+            >
               Breeze Family
             </p>
 
-            <h1 className="mt-4 text-5xl md:text-7xl font-black uppercase">
-              Shopping Cart
+            <h1
+              className="mt-2 uppercase italic font-black"
+              style={{
+                fontFamily:
+                  "Bebas Neue, sans-serif",
+                fontSize:
+                  "clamp(42px, 11vw, 80px)",
+                lineHeight:
+                  "0.82",
+              }}
+            >
+
+              YOUR
+              <span
+                className="block"
+                style={{
+                  color:
+                    BREEZE_GREEN,
+                }}
+              >
+                CART
+              </span>
+
             </h1>
 
           </div>
 
           <Link
             href="/merch"
-            className="inline-flex items-center justify-center px-8 py-5 rounded-2xl bg-white text-black font-black uppercase hover:opacity-90 transition duration-300"
+            className="
+              shrink-0
+              px-4
+              py-3
+              rounded-xl
+              bg-white
+              text-black
+              font-black
+              uppercase
+              text-[10px]
+              tracking-[1px]
+            "
           >
 
-            Continue Shopping
+            Shop
 
           </Link>
 
@@ -279,33 +351,42 @@ export default function CartPage() {
         {/* EMPTY */}
         {cart.length === 0 && (
 
-          <div className="mt-20 rounded-3xl bg-white/5 border border-white/10 p-16 text-center">
+          <div className="mt-12 rounded-[28px] bg-white/5 border border-white/10 p-10 text-center">
 
-            <h2 className="text-4xl font-black uppercase">
+            <h2 className="text-2xl font-black uppercase">
+
               Your Cart Is Empty
+
             </h2>
 
           </div>
 
         )}
 
-        {/* ITEMS */}
+        {/* CART */}
         {cart.length > 0 && (
 
-          <div className="mt-20 grid gap-8">
+          <div className="mt-10 space-y-4">
 
+            {/* ITEMS */}
             {cart.map(
               (item) => (
 
                 <div
                   key={item.id}
-                  className="rounded-3xl bg-white/5 border border-white/10 overflow-hidden"
+                  className="
+                    rounded-[24px]
+                    bg-white/5
+                    border
+                    border-white/10
+                    overflow-hidden
+                  "
                 >
 
-                  <div className="grid md:grid-cols-4 gap-6">
+                  <div className="flex">
 
                     {/* IMAGE */}
-                    <div>
+                    <div className="w-[110px] h-[110px] bg-black shrink-0">
 
                       {item.image_url ? (
 
@@ -316,32 +397,54 @@ export default function CartPage() {
                           alt={
                             item.name
                           }
-                          className="w-full h-full object-cover"
+                          className="
+                            w-full
+                            h-full
+                            object-cover
+                          "
                         />
 
                       ) : (
 
-                        <div className="w-full h-full bg-black flex items-center justify-center text-white/30">
+                        <div className="w-full h-full flex items-center justify-center text-white/30 text-[10px] uppercase">
+
                           No Image
+
                         </div>
 
                       )}
 
                     </div>
 
-                    {/* DETAILS */}
-                    <div className="md:col-span-3 p-8">
+                    {/* CONTENT */}
+                    <div className="flex-1 p-4">
 
-                      <h2 className="text-4xl font-black uppercase">
+                      <h2
+                        className="uppercase font-black leading-tight"
+                        style={{
+                          fontSize:
+                            "clamp(14px, 4vw, 20px)",
+                        }}
+                      >
+
                         {item.name}
+
                       </h2>
 
-                      <p className="mt-4 text-2xl text-green-300 font-black">
+                      <p
+                        className="mt-1 font-black"
+                        style={{
+                          color:
+                            BREEZE_GREEN,
+                        }}
+                      >
+
                         {item.price}
+
                       </p>
 
                       {/* QUANTITY */}
-                      <div className="mt-8 flex items-center gap-4">
+                      <div className="mt-3 flex items-center gap-2">
 
                         <button
                           onClick={() =>
@@ -349,13 +452,24 @@ export default function CartPage() {
                               item.id
                             )
                           }
-                          className="w-12 h-12 rounded-xl bg-white text-black font-black text-2xl"
+                          className="
+                            w-8
+                            h-8
+                            rounded-lg
+                            bg-white
+                            text-black
+                            font-black
+                          "
                         >
+
                           -
+
                         </button>
 
-                        <div className="text-2xl font-black">
+                        <div className="text-sm font-black min-w-[20px] text-center">
+
                           {item.quantity}
+
                         </div>
 
                         <button
@@ -364,9 +478,18 @@ export default function CartPage() {
                               item.id
                             )
                           }
-                          className="w-12 h-12 rounded-xl bg-green-400 text-black font-black text-2xl"
+                          className="
+                            w-8
+                            h-8
+                            rounded-lg
+                            bg-[#8DFF00]
+                            text-black
+                            font-black
+                          "
                         >
+
                           +
+
                         </button>
 
                       </div>
@@ -378,10 +501,17 @@ export default function CartPage() {
                             item.id
                           )
                         }
-                        className="mt-8 px-6 py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
+                        className="
+                          mt-3
+                          text-[10px]
+                          uppercase
+                          tracking-[1px]
+                          text-red-400
+                          font-black
+                        "
                       >
 
-                        Remove Item
+                        Remove
 
                       </button>
 
@@ -390,30 +520,65 @@ export default function CartPage() {
                   </div>
 
                 </div>
+
               )
             )}
 
-            {/* TOTAL */}
-            <div className="rounded-3xl bg-green-400 text-black p-10">
+            {/* TOTALS */}
+            <div className="rounded-[28px] bg-[#8DFF00] text-black p-6">
 
-              <p className="uppercase tracking-[3px] text-sm">
-                Order Total
-              </p>
+              <div className="space-y-3">
 
-              <h2 className="mt-4 text-6xl font-black">
-                R{calculateTotal()}
-              </h2>
+                <div className="flex items-center justify-between font-black uppercase text-sm">
+
+                  <span>
+                    Subtotal
+                  </span>
+
+                  <span>
+                    R{subtotal}
+                  </span>
+
+                </div>
+
+                <div className="flex items-center justify-between font-black uppercase text-sm">
+
+                  <span>
+                    Courier
+                  </span>
+
+                  <span>
+                    R150
+                  </span>
+
+                </div>
+
+                <div className="border-t border-black/20 pt-3 flex items-center justify-between font-black uppercase text-lg">
+
+                  <span>
+                    Total
+                  </span>
+
+                  <span>
+                    R{total}
+                  </span>
+
+                </div>
+
+              </div>
 
             </div>
 
-            {/* CUSTOMER DETAILS */}
-            <div className="rounded-3xl bg-white/5 border border-white/10 p-10">
+            {/* DETAILS */}
+            <div className="rounded-[28px] bg-white/5 border border-white/10 p-5">
 
-              <h2 className="text-4xl font-black uppercase">
+              <h2 className="text-2xl font-black uppercase">
+
                 Customer Details
+
               </h2>
 
-              <div className="mt-8 grid gap-6">
+              <div className="mt-5 space-y-4">
 
                 <input
                   type="text"
@@ -424,7 +589,16 @@ export default function CartPage() {
                       e.target.value
                     )
                   }
-                  className="w-full px-5 py-5 rounded-2xl bg-black border border-white/10 text-white"
+                  className="
+                    w-full
+                    px-4
+                    py-4
+                    rounded-2xl
+                    bg-black
+                    border
+                    border-white/10
+                    text-white
+                  "
                 />
 
                 <input
@@ -436,7 +610,16 @@ export default function CartPage() {
                       e.target.value
                     )
                   }
-                  className="w-full px-5 py-5 rounded-2xl bg-black border border-white/10 text-white"
+                  className="
+                    w-full
+                    px-4
+                    py-4
+                    rounded-2xl
+                    bg-black
+                    border
+                    border-white/10
+                    text-white
+                  "
                 />
 
                 <textarea
@@ -447,17 +630,38 @@ export default function CartPage() {
                       e.target.value
                     )
                   }
-                  className="w-full px-5 py-5 rounded-2xl bg-black border border-white/10 text-white min-h-[150px]"
+                  className="
+                    w-full
+                    px-4
+                    py-4
+                    rounded-2xl
+                    bg-black
+                    border
+                    border-white/10
+                    text-white
+                    min-h-[120px]
+                  "
                 />
 
               </div>
 
-              {/* WHATSAPP */}
+              {/* ORDER */}
               <button
                 onClick={
                   checkoutWhatsApp
                 }
-                className="mt-10 w-full py-5 rounded-2xl bg-green-400 text-black font-black uppercase text-xl hover:opacity-90 transition duration-300"
+                className="
+                  mt-6
+                  w-full
+                  py-4
+                  rounded-2xl
+                  bg-[#8DFF00]
+                  text-black
+                  font-black
+                  uppercase
+                  text-sm
+                  tracking-[2px]
+                "
               >
 
                 Order On WhatsApp
