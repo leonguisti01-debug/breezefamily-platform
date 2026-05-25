@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
+
+const BREEZE_GREEN = "#8DFF00";
 
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
@@ -26,6 +28,7 @@ export default function MerchPage() {
   useEffect(() => {
 
     fetchProducts();
+
     loadCartCount();
 
   }, []);
@@ -67,7 +70,15 @@ export default function MerchPage() {
         );
 
       setCartCount(
-        cart.length
+        cart.reduce(
+          (
+            total: number,
+            item: any
+          ) =>
+            total +
+            item.quantity,
+          0
+        )
       );
     };
 
@@ -102,6 +113,8 @@ export default function MerchPage() {
           image_url:
             product.image_url,
           quantity: 1,
+          category:
+            product.category,
         });
       }
 
@@ -117,13 +130,51 @@ export default function MerchPage() {
       );
     };
 
+  /* CATEGORIES */
+  const categories = [
+    "My Merch",
+    "Tech",
+    "Fun Stuff",
+    "Affiliated",
+    "Sponsors",
+  ];
+
+  /* GROUP PRODUCTS */
+  const groupedProducts =
+    useMemo(() => {
+
+      return categories.map(
+        (category) => ({
+
+          title: category,
+
+          items:
+            products.filter(
+              (
+                product
+              ) =>
+                product.category ===
+                category
+            ),
+
+        })
+      );
+
+    }, [products]);
+
   if (loading) {
 
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
 
-        <h1 className="text-4xl font-black uppercase">
-          Loading Merch...
+        <h1
+          className="uppercase font-black"
+          style={{
+            fontSize:
+              "clamp(30px, 8vw, 60px)",
+          }}
+        >
+          Loading Store...
         </h1>
 
       </main>
@@ -131,20 +182,81 @@ export default function MerchPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden">
+    <main className="min-h-screen bg-black text-white overflow-x-hidden">
+
+      {/* BACKGROUND */}
+      <div
+        className="fixed top-[-300px] left-[-300px] w-[500px] h-[500px] blur-[180px] rounded-full pointer-events-none"
+        style={{
+          background: `${BREEZE_GREEN}12`,
+        }}
+      />
+
+      <div
+        className="fixed bottom-[-300px] right-[-300px] w-[500px] h-[500px] blur-[180px] rounded-full pointer-events-none"
+        style={{
+          background: `${BREEZE_GREEN}08`,
+        }}
+      />
 
       {/* HERO */}
-      <section className="relative px-6 py-24 border-b border-white/10">
+      <section className="relative px-4 pt-24 pb-12">
 
-        <div className="absolute inset-0 bg-gradient-to-b from-green-500/10 via-transparent to-transparent" />
+        <div className="max-w-7xl mx-auto">
 
-        <div className="relative max-w-7xl mx-auto text-center">
+          {/* TOP BAR */}
+          <div className="flex items-center justify-between mb-10">
 
-          <div className="flex justify-end mb-8">
+            <div>
+
+              <p
+                className="uppercase tracking-[4px] text-xs"
+                style={{
+                  color: BREEZE_GREEN,
+                }}
+              >
+                Breeze Family
+              </p>
+
+              <h1
+                className="uppercase italic font-black mt-2"
+                style={{
+                  fontFamily:
+                    "Bebas Neue, sans-serif",
+                  fontSize:
+                    "clamp(52px, 12vw, 120px)",
+                  lineHeight: "0.82",
+                }}
+              >
+
+                MERCH
+                <span
+                  className="block"
+                  style={{
+                    color: BREEZE_GREEN,
+                  }}
+                >
+                  STORE
+                </span>
+
+              </h1>
+
+            </div>
 
             <Link
               href="/cart"
-              className="px-8 py-4 rounded-2xl bg-green-400 text-black font-black uppercase hover:opacity-90 transition duration-300"
+              className="
+                shrink-0
+                px-5
+                py-3
+                rounded-2xl
+                bg-[#8DFF00]
+                text-black
+                font-black
+                uppercase
+                text-xs
+                tracking-[2px]
+              "
             >
 
               Cart ({cartCount})
@@ -153,162 +265,238 @@ export default function MerchPage() {
 
           </div>
 
-          <p className="uppercase tracking-[6px] text-green-300 text-sm font-bold">
-            Breeze Family
-          </p>
+          {/* DESCRIPTION */}
+          <p className="text-white/60 leading-relaxed max-w-xl text-sm md:text-base">
 
-          <h1 className="mt-6 text-6xl md:text-8xl font-black uppercase leading-none">
-            Merch Store
-          </h1>
+            Official Breeze Family products,
+            lifestyle items, collaborations,
+            tech gear and exclusive drops.
 
-          <p className="mt-8 max-w-2xl mx-auto text-white/70 text-lg leading-relaxed">
-            Official Breeze Family merchandise collection.
-            Premium streetwear, lifestyle essentials and
-            limited edition drops.
           </p>
 
         </div>
 
       </section>
 
-      {/* PRODUCTS */}
-      <section className="px-6 py-20">
+      {/* STORE */}
+      <section className="px-4 pb-28">
 
         <div className="max-w-7xl mx-auto">
 
-          <div className="flex items-center justify-between mb-12">
+          {groupedProducts.map(
+            (section, index) => (
 
-            <div>
+              <div
+                key={index}
+                className="mb-16"
+              >
 
-              <p className="uppercase tracking-[4px] text-green-300 text-sm">
-                Collection
-              </p>
+                {/* CATEGORY HEADER */}
+                <div className="mb-6">
 
-              <h2 className="mt-3 text-5xl font-black uppercase">
-                Featured Products
-              </h2>
+                  <p
+                    className="uppercase tracking-[4px] text-[10px]"
+                    style={{
+                      color: BREEZE_GREEN,
+                    }}
+                  >
+                    Collection
+                  </p>
 
-            </div>
+                  <h2
+                    className="uppercase italic font-black mt-2"
+                    style={{
+                      fontFamily:
+                        "Bebas Neue, sans-serif",
+                      fontSize:
+                        "clamp(34px, 8vw, 64px)",
+                      lineHeight: "0.9",
+                    }}
+                  >
 
-          </div>
+                    {section.title}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
-
-            {products.map(
-              (
-                product
-              ) => (
-                <div
-                  key={product.id}
-                  className="group rounded-3xl overflow-hidden bg-white/5 border border-white/10 hover:border-green-400/30 transition duration-500"
-                >
-
-                  {/* IMAGE */}
-                  <div className="relative overflow-hidden bg-black aspect-square">
-
-                    {product.image_url ? (
-
-                      <img
-                        src={
-                          product.image_url
-                        }
-                        alt={
-                          product.name
-                        }
-                        className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
-                      />
-
-                    ) : (
-
-                      <div className="w-full h-full flex items-center justify-center text-white/30">
-                        No Image
-                      </div>
-
-                    )}
-
-                    <div className="absolute top-5 left-5 px-4 py-2 rounded-full bg-green-400 text-black text-xs font-black uppercase tracking-[2px]">
-                      Breeze Family
-                    </div>
-
-                  </div>
-
-                  {/* CONTENT */}
-                  <div className="p-6">
-
-                    <div className="flex items-start justify-between gap-4">
-
-                      <div>
-
-                        <h3 className="text-2xl font-black uppercase leading-tight">
-                          {product.name}
-                        </h3>
-
-                        <p className="mt-3 text-white/60 text-sm uppercase tracking-[3px]">
-                          {product.category}
-                        </p>
-
-                      </div>
-
-                      <div className="text-2xl font-black text-green-300 whitespace-nowrap">
-                        {product.price}
-                      </div>
-
-                    </div>
-
-                    {/* ADD TO CART */}
-                    <button
-                      onClick={() =>
-                        addToCart(
-                          product
-                        )
-                      }
-                      className="mt-8 w-full py-4 rounded-2xl bg-green-400 text-black font-black uppercase hover:opacity-90 transition duration-300"
-                    >
-
-                      Add To Cart
-
-                    </button>
-
-                  </div>
+                  </h2>
 
                 </div>
-              )
-            )}
 
-          </div>
+                {/* EMPTY */}
+                {section.items.length ===
+                0 ? (
 
-        </div>
+                  <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-10 text-center text-white/40 uppercase tracking-[3px] text-xs">
 
-      </section>
+                    Products Coming Soon
 
-      {/* BANNER */}
-      <section className="px-6 pb-24">
+                  </div>
 
-        <div className="max-w-7xl mx-auto rounded-[40px] overflow-hidden border border-white/10 bg-gradient-to-r from-green-500/20 to-black">
+                ) : (
 
-          <div className="px-10 py-20 text-center">
+                  /* MOBILE FIRST GRID */
+                  <div className="grid grid-cols-2 gap-4">
 
-            <p className="uppercase tracking-[4px] text-green-300 text-sm">
-              Limited Release
-            </p>
+                    {section.items.map(
+                      (
+                        product
+                      ) => (
 
-            <h2 className="mt-5 text-5xl md:text-7xl font-black uppercase leading-tight">
-              Wear The Movement
-            </h2>
+                        <div
+                          key={
+                            product.id
+                          }
+                          className="
+                            rounded-[28px]
+                            overflow-hidden
+                            border
+                            border-white/10
+                            bg-white/5
+                            backdrop-blur-xl
+                          "
+                        >
 
-            <p className="mt-8 max-w-3xl mx-auto text-white/70 text-lg leading-relaxed">
+                          {/* IMAGE */}
+                          <div className="relative bg-black aspect-square overflow-hidden">
 
-              Exclusive merchandise designed for the
-              Breeze Family community.
+                            {product.image_url ? (
 
-              <br />
-              <br />
+                              <img
+                                src={
+                                  product.image_url
+                                }
+                                alt={
+                                  product.name
+                                }
+                                loading="lazy"
+                                className="
+                                  w-full
+                                  h-full
+                                  object-cover
+                                "
+                              />
 
-              More products and collaborations launching soon.
+                            ) : (
 
-            </p>
+                              <div className="w-full h-full flex items-center justify-center text-white/30 text-xs uppercase">
 
-          </div>
+                                No Image
+
+                              </div>
+
+                            )}
+
+                            {/* TAG */}
+                            <div
+                              className="
+                                absolute
+                                top-3
+                                left-3
+                                px-3
+                                py-1
+                                rounded-full
+                                text-[9px]
+                                font-black
+                                uppercase
+                                tracking-[2px]
+                                bg-black/70
+                                backdrop-blur-xl
+                              "
+                              style={{
+                                color:
+                                  BREEZE_GREEN,
+                                border:
+                                  `1px solid ${BREEZE_GREEN}40`,
+                              }}
+                            >
+
+                              {product.category}
+
+                            </div>
+
+                          </div>
+
+                          {/* CONTENT */}
+                          <div className="p-4">
+
+                            <h3
+                              className="uppercase font-black leading-tight"
+                              style={{
+                                fontSize:
+                                  "clamp(16px, 4vw, 24px)",
+                              }}
+                            >
+
+                              {
+                                product.name
+                              }
+
+                            </h3>
+
+                            {/* PRICE */}
+                            <p
+                              className="mt-2 font-black"
+                              style={{
+                                color:
+                                  BREEZE_GREEN,
+                                fontSize:
+                                  "clamp(14px, 3vw, 18px)",
+                              }}
+                            >
+
+                              {
+                                product.price
+                              }
+
+                            </p>
+
+                            {/* DESCRIPTION */}
+                            <p className="mt-3 text-white/50 text-xs leading-relaxed line-clamp-3">
+
+                              {
+                                product.description
+                              }
+
+                            </p>
+
+                            {/* BUTTON */}
+                            <button
+                              onClick={() =>
+                                addToCart(
+                                  product
+                                )
+                              }
+                              className="
+                                mt-4
+                                w-full
+                                py-3
+                                rounded-2xl
+                                bg-[#8DFF00]
+                                text-black
+                                font-black
+                                uppercase
+                                text-[11px]
+                                tracking-[2px]
+                                active:scale-95
+                                transition
+                              "
+                            >
+
+                              Add To Cart
+
+                            </button>
+
+                          </div>
+
+                        </div>
+                      )
+                    )}
+
+                  </div>
+
+                )}
+
+              </div>
+            )
+          )}
 
         </div>
 
