@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const BREEZE_GREEN = "#8DFF00";
@@ -34,6 +34,16 @@ export default function MerchManagerPage() {
       null
     );
 
+  const [imagePreview,
+    setImagePreview] =
+    useState("");
+
+  const [image,
+    setImage] =
+    useState<File | null>(
+      null
+    );
+
   const [form,
     setForm] =
     useState({
@@ -44,12 +54,6 @@ export default function MerchManagerPage() {
         "My Merch",
       featured: false,
     });
-
-  const [image,
-    setImage] =
-    useState<File | null>(
-      null
-    );
 
   useEffect(() => {
 
@@ -81,7 +85,30 @@ export default function MerchManagerPage() {
       }
     };
 
-  /* HANDLE INPUT */
+  /* GROUPED */
+  const groupedProducts =
+    useMemo(() => {
+
+      return categories.map(
+        (category) => ({
+
+          category,
+
+          items:
+            products.filter(
+              (
+                product
+              ) =>
+                product.category ===
+                category
+            ),
+
+        })
+      );
+
+    }, [products]);
+
+  /* INPUT */
   const handleChange =
     (
       key: string,
@@ -115,6 +142,8 @@ export default function MerchManagerPage() {
       });
 
       setImage(null);
+
+      setImagePreview("");
 
       setEditingId(
         null
@@ -166,7 +195,7 @@ export default function MerchManagerPage() {
           publicUrl;
       }
 
-      /* EDIT */
+      /* UPDATE */
       if (
         editingId
       ) {
@@ -253,6 +282,10 @@ export default function MerchManagerPage() {
           product.featured,
       });
 
+      setImagePreview(
+        product.image_url
+      );
+
       window.scrollTo({
         top: 0,
         behavior:
@@ -289,7 +322,7 @@ export default function MerchManagerPage() {
       fetchProducts();
     };
 
-  /* TOGGLE STATUS */
+  /* STATUS */
   const toggleStatus =
     async (
       id: number,
@@ -382,6 +415,27 @@ export default function MerchManagerPage() {
         <div className="mt-12 rounded-[30px] border border-[#8DFF00]/20 bg-white/5 backdrop-blur-2xl p-5">
 
           <div className="space-y-4">
+
+            {/* PREVIEW */}
+            {imagePreview && (
+
+              <div className="aspect-square rounded-[26px] overflow-hidden bg-black">
+
+                <img
+                  src={
+                    imagePreview
+                  }
+                  alt="Preview"
+                  className="
+                    w-full
+                    h-full
+                    object-cover
+                  "
+                />
+
+              </div>
+
+            )}
 
             {/* NAME */}
             <input
@@ -545,13 +599,27 @@ export default function MerchManagerPage() {
               accept="image/*"
               onChange={(
                 e
-              ) =>
-                setImage(
+              ) => {
+
+                const file =
                   e.target
-                    .files?.[0] ||
-                    null
-                )
-              }
+                    .files?.[0];
+
+                if (
+                  file
+                ) {
+
+                  setImage(
+                    file
+                  );
+
+                  setImagePreview(
+                    URL.createObjectURL(
+                      file
+                    )
+                  );
+                }
+              }}
               className="
                 w-full
                 px-5
@@ -595,222 +663,303 @@ export default function MerchManagerPage() {
 
         </div>
 
-        {/* PRODUCTS */}
-        <div className="mt-14 grid grid-cols-2 gap-4">
+        {/* DIVISIONS */}
+        <div className="mt-16 space-y-16">
 
-          {products.map(
+          {groupedProducts.map(
             (
-              product
+              section
             ) => (
 
               <div
                 key={
-                  product.id
+                  section.category
                 }
-                className="
-                  rounded-[26px]
-                  overflow-hidden
-                  border
-                  border-white/10
-                  bg-white/5
-                  backdrop-blur-xl
-                "
               >
 
-                {/* IMAGE */}
-                <div className="aspect-square bg-black overflow-hidden">
+                {/* HEADER */}
+                <div className="mb-6">
 
-                  {product.image_url ? (
+                  <p
+                    className="uppercase tracking-[4px] text-[10px]"
+                    style={{
+                      color:
+                        BREEZE_GREEN,
+                    }}
+                  >
+                    Division
+                  </p>
 
-                    <img
-                      src={
-                        product.image_url
-                      }
-                      alt={
-                        product.name
-                      }
-                      loading="lazy"
-                      className="
-                        w-full
-                        h-full
-                        object-cover
-                      "
-                    />
+                  <h2
+                    className="mt-2 uppercase italic font-black"
+                    style={{
+                      fontFamily:
+                        "Bebas Neue, sans-serif",
+                      fontSize:
+                        "clamp(38px, 8vw, 70px)",
+                      lineHeight:
+                        "0.9",
+                    }}
+                  >
 
-                  ) : (
+                    {
+                      section.category
+                    }
 
-                    <div className="w-full h-full flex items-center justify-center text-white/30 text-xs uppercase">
-
-                      No Image
-
-                    </div>
-
-                  )}
+                  </h2>
 
                 </div>
 
-                {/* CONTENT */}
-                <div className="p-4">
+                {/* EMPTY */}
+                {section.items
+                  .length ===
+                  0 ? (
 
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="rounded-[26px] border border-white/10 bg-white/5 p-8 text-center uppercase tracking-[4px] text-xs text-white/40">
 
-                    <h2
-                      className="uppercase font-black leading-tight"
-                      style={{
-                        fontSize:
-                          "clamp(16px, 4vw, 24px)",
-                      }}
-                    >
+                    No Products
 
-                      {
-                        product.name
-                      }
+                  </div>
 
-                    </h2>
+                ) : (
 
-                    {product.featured && (
+                  <div className="grid grid-cols-2 gap-4">
 
-                      <div
-                        className="
-                          shrink-0
-                          px-2
-                          py-1
-                          rounded-full
-                          text-[8px]
-                          uppercase
-                          tracking-[2px]
-                          font-black
-                          bg-[#8DFF00]
-                          text-black
-                        "
-                      >
+                    {section.items.map(
+                      (
+                        product
+                      ) => (
 
-                        Featured
+                        <div
+                          key={
+                            product.id
+                          }
+                          className="
+                            rounded-[26px]
+                            overflow-hidden
+                            border
+                            border-white/10
+                            bg-white/5
+                            backdrop-blur-xl
+                          "
+                        >
 
-                      </div>
+                          {/* IMAGE */}
+                          <div className="aspect-square bg-black overflow-hidden relative">
 
+                            {product.image_url ? (
+
+                              <img
+                                src={
+                                  product.image_url
+                                }
+                                alt={
+                                  product.name
+                                }
+                                loading="lazy"
+                                className="
+                                  w-full
+                                  h-full
+                                  object-cover
+                                "
+                              />
+
+                            ) : (
+
+                              <div className="w-full h-full flex items-center justify-center text-white/30 text-xs uppercase">
+
+                                No Image
+
+                              </div>
+
+                            )}
+
+                            {/* STATUS */}
+                            <div
+                              className={`
+                                absolute
+                                top-3
+                                left-3
+                                px-3
+                                py-1
+                                rounded-full
+                                text-[8px]
+                                uppercase
+                                tracking-[2px]
+                                font-black
+                                ${
+                                  product.status ===
+                                  "active"
+                                    ? "bg-[#8DFF00] text-black"
+                                    : "bg-red-500 text-white"
+                                }
+                              `}
+                            >
+
+                              {
+                                product.status
+                              }
+
+                            </div>
+
+                            {/* FEATURED */}
+                            {product.featured && (
+
+                              <div
+                                className="
+                                  absolute
+                                  top-3
+                                  right-3
+                                  px-3
+                                  py-1
+                                  rounded-full
+                                  text-[8px]
+                                  uppercase
+                                  tracking-[2px]
+                                  font-black
+                                  bg-white
+                                  text-black
+                                "
+                              >
+
+                                Featured
+
+                              </div>
+
+                            )}
+
+                          </div>
+
+                          {/* CONTENT */}
+                          <div className="p-4">
+
+                            <h3
+                              className="uppercase font-black leading-tight"
+                              style={{
+                                fontSize:
+                                  "clamp(16px, 4vw, 24px)",
+                              }}
+                            >
+
+                              {
+                                product.name
+                              }
+
+                            </h3>
+
+                            <p
+                              className="mt-2 font-black"
+                              style={{
+                                color:
+                                  BREEZE_GREEN,
+                              }}
+                            >
+
+                              {
+                                product.price
+                              }
+
+                            </p>
+
+                            <p className="mt-2 text-white/60 text-xs line-clamp-3">
+
+                              {
+                                product.description
+                              }
+
+                            </p>
+
+                            {/* ACTIONS */}
+                            <div className="mt-4 grid grid-cols-2 gap-2">
+
+                              <button
+                                onClick={() =>
+                                  editProduct(
+                                    product
+                                  )
+                                }
+                                className="
+                                  py-3
+                                  rounded-xl
+                                  bg-white
+                                  text-black
+                                  text-[10px]
+                                  uppercase
+                                  tracking-[2px]
+                                  font-black
+                                "
+                              >
+
+                                Edit
+
+                              </button>
+
+                              <button
+                                onClick={() =>
+                                  deleteProduct(
+                                    product.id
+                                  )
+                                }
+                                className="
+                                  py-3
+                                  rounded-xl
+                                  bg-red-500
+                                  text-white
+                                  text-[10px]
+                                  uppercase
+                                  tracking-[2px]
+                                  font-black
+                                "
+                              >
+
+                                Delete
+
+                              </button>
+
+                            </div>
+
+                            <button
+                              onClick={() =>
+                                toggleStatus(
+                                  product.id,
+                                  product.status
+                                )
+                              }
+                              className={`
+                                mt-2
+                                w-full
+                                py-3
+                                rounded-xl
+                                text-[10px]
+                                uppercase
+                                tracking-[2px]
+                                font-black
+                                ${
+                                  product.status ===
+                                  "active"
+                                    ? "bg-yellow-400 text-black"
+                                    : "bg-[#8DFF00] text-black"
+                                }
+                              `}
+                            >
+
+                              {product.status ===
+                              "active"
+                                ? "Hide Product"
+                                : "Activate Product"}
+
+                            </button>
+
+                          </div>
+
+                        </div>
+
+                      )
                     )}
 
                   </div>
 
-                  <p
-                    className="mt-2 text-xs uppercase tracking-[3px]"
-                    style={{
-                      color:
-                        BREEZE_GREEN,
-                    }}
-                  >
-
-                    {
-                      product.category
-                    }
-
-                  </p>
-
-                  <p className="mt-2 text-white/60 text-xs line-clamp-3">
-
-                    {
-                      product.description
-                    }
-
-                  </p>
-
-                  <p
-                    className="mt-3 font-black"
-                    style={{
-                      color:
-                        BREEZE_GREEN,
-                    }}
-                  >
-
-                    {
-                      product.price
-                    }
-
-                  </p>
-
-                  {/* ACTIONS */}
-                  <div className="mt-4 grid grid-cols-2 gap-2">
-
-                    <button
-                      onClick={() =>
-                        editProduct(
-                          product
-                        )
-                      }
-                      className="
-                        py-3
-                        rounded-xl
-                        bg-white
-                        text-black
-                        text-[10px]
-                        uppercase
-                        tracking-[2px]
-                        font-black
-                      "
-                    >
-
-                      Edit
-
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        deleteProduct(
-                          product.id
-                        )
-                      }
-                      className="
-                        py-3
-                        rounded-xl
-                        bg-red-500
-                        text-white
-                        text-[10px]
-                        uppercase
-                        tracking-[2px]
-                        font-black
-                      "
-                    >
-
-                      Delete
-
-                    </button>
-
-                  </div>
-
-                  <button
-                    onClick={() =>
-                      toggleStatus(
-                        product.id,
-                        product.status
-                      )
-                    }
-                    className={`
-                      mt-2
-                      w-full
-                      py-3
-                      rounded-xl
-                      text-[10px]
-                      uppercase
-                      tracking-[2px]
-                      font-black
-                      ${
-                        product.status ===
-                        "active"
-                          ? "bg-yellow-400 text-black"
-                          : "bg-[#8DFF00] text-black"
-                      }
-                    `}
-                  >
-
-                    {product.status ===
-                    "active"
-                      ? "Hide Product"
-                      : "Activate Product"}
-
-                  </button>
-
-                </div>
+                )}
 
               </div>
 
