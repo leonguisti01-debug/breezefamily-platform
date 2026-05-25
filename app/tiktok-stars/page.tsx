@@ -427,7 +427,7 @@ export default function TikTokStarsPage() {
             </motion.div>
 
             {/* ========================= */}
-            {/* SEASON 3 */}
+            {/* SEASON 2, KIDS EDITION */}
             {/* ========================= */}
 
             <motion.div
