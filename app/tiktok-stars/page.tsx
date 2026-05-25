@@ -230,7 +230,7 @@ export default function TikTokStarsPage() {
                         }}
                       >
 
-                        NAME
+                        SETH
 
                       </h4>
 
@@ -261,7 +261,7 @@ export default function TikTokStarsPage() {
                         }}
                       >
 
-                        NAME
+                        GUMEDE
 
                       </h4>
 
