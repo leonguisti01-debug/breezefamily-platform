@@ -1,182 +1,354 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  "https://xwzathzitijhmupqqxux.supabase.co",
-
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
-);
 
 const BREEZE_GREEN = "#8DFF00";
 
+const supabase = createClient(
+  "https://xwzathzitijhmupqqxux.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
+);
+
+const categories = [
+  "My Merch",
+  "Tech",
+  "Fun Stuff",
+  "Affiliated",
+  "Sponsors",
+];
+
 export default function MerchManagerPage() {
 
-  const [title, setTitle] = useState("");
+  const [products,
+    setProducts] =
+    useState<any[]>([]);
 
-  const [description, setDescription] =
-    useState("");
-
-  const [price, setPrice] = useState("");
-
-  const [image, setImage] =
-    useState<File | null>(null);
-
-  const [items, setItems] = useState<any[]>([]);
-
-  const [loading, setLoading] =
+  const [loading,
+    setLoading] =
     useState(false);
 
-  const fetchItems = async () => {
+  const [editingId,
+    setEditingId] =
+    useState<number | null>(
+      null
+    );
 
-    const { data } = await supabase
-      .from("merch_items")
-      .select("*")
-      .order("created_at", {
-        ascending: false,
-      });
+  const [form,
+    setForm] =
+    useState({
+      name: "",
+      description: "",
+      price: "",
+      category:
+        "My Merch",
+      featured: false,
+    });
 
-    if (data) {
-      setItems(data);
-    }
-  };
+  const [image,
+    setImage] =
+    useState<File | null>(
+      null
+    );
 
   useEffect(() => {
 
-    fetchItems();
+    fetchProducts();
 
   }, []);
 
-  const uploadMerch = async () => {
+  /* FETCH */
+  const fetchProducts =
+    async () => {
 
-    if (!image || !title) return;
+      const { data } =
+        await supabase
+          .from(
+            "merch_products"
+          )
+          .select("*")
+          .order(
+            "created_at",
+            {
+              ascending:
+                false,
+            }
+          );
 
-    setLoading(true);
+      if (data) {
 
-    const fileName =
-      `${Date.now()}-${image.name}`;
+        setProducts(data);
+      }
+    };
 
-    const { error: uploadError } =
-      await supabase.storage
-        .from("merch-images")
-        .upload(fileName, image);
+  /* HANDLE INPUT */
+  const handleChange =
+    (
+      key: string,
+      value: any
+    ) => {
 
-    if (uploadError) {
+      setForm(
+        (
+          prev
+        ) => ({
+          ...prev,
+          [key]:
+            value,
+        })
+      );
+    };
 
-      alert(uploadError.message);
+  /* RESET */
+  const resetForm =
+    () => {
+
+      setForm({
+        name: "",
+        description:
+          "",
+        price: "",
+        category:
+          "My Merch",
+        featured:
+          false,
+      });
+
+      setImage(null);
+
+      setEditingId(
+        null
+      );
+    };
+
+  /* SAVE */
+  const saveProduct =
+    async () => {
+
+      if (
+        !form.name
+      )
+        return;
+
+      setLoading(true);
+
+      let imageUrl = "";
+
+      /* IMAGE */
+      if (image) {
+
+        const fileName =
+          `${Date.now()}-${image.name}`;
+
+        await supabase.storage
+          .from(
+            "merch-images"
+          )
+          .upload(
+            fileName,
+            image
+          );
+
+        const {
+          data: {
+            publicUrl,
+          },
+        } =
+          supabase.storage
+            .from(
+              "merch-images"
+            )
+            .getPublicUrl(
+              fileName
+            );
+
+        imageUrl =
+          publicUrl;
+      }
+
+      /* EDIT */
+      if (
+        editingId
+      ) {
+
+        await supabase
+          .from(
+            "merch_products"
+          )
+          .update({
+            name:
+              form.name,
+            description:
+              form.description,
+            price:
+              form.price,
+            category:
+              form.category,
+            featured:
+              form.featured,
+            ...(imageUrl && {
+              image_url:
+                imageUrl,
+            }),
+          })
+          .eq(
+            "id",
+            editingId
+          );
+
+      } else {
+
+        /* CREATE */
+        await supabase
+          .from(
+            "merch_products"
+          )
+          .insert([
+            {
+              name:
+                form.name,
+              description:
+                form.description,
+              price:
+                form.price,
+              category:
+                form.category,
+              featured:
+                form.featured,
+              image_url:
+                imageUrl,
+              status:
+                "active",
+            },
+          ]);
+      }
+
+      resetForm();
+
+      fetchProducts();
 
       setLoading(false);
+    };
 
-      return;
-    }
+  /* EDIT */
+  const editProduct =
+    (
+      product: any
+    ) => {
 
-    const {
-      data: { publicUrl },
-    } = supabase.storage
-      .from("merch-images")
-      .getPublicUrl(fileName);
+      setEditingId(
+        product.id
+      );
 
-    const { error } = await supabase
-      .from("merch_items")
-      .insert([
-        {
-          title,
-          description,
-          price,
-          image_url: publicUrl,
-          active: true,
-          created_at:
-            new Date().toISOString(),
-        },
-      ]);
+      setForm({
+        name:
+          product.name,
+        description:
+          product.description,
+        price:
+          product.price,
+        category:
+          product.category,
+        featured:
+          product.featured,
+      });
 
-    if (error) {
+      window.scrollTo({
+        top: 0,
+        behavior:
+          "smooth",
+      });
+    };
 
-      alert(error.message);
+  /* DELETE */
+  const deleteProduct =
+    async (
+      id: number
+    ) => {
 
-      setLoading(false);
+      const confirmed =
+        window.confirm(
+          "Delete product?"
+        );
 
-      return;
-    }
+      if (
+        !confirmed
+      )
+        return;
 
-    setTitle("");
+      await supabase
+        .from(
+          "merch_products"
+        )
+        .delete()
+        .eq(
+          "id",
+          id
+        );
 
-    setDescription("");
+      fetchProducts();
+    };
 
-    setPrice("");
+  /* TOGGLE STATUS */
+  const toggleStatus =
+    async (
+      id: number,
+      current:
+        string
+    ) => {
 
-    setImage(null);
+      await supabase
+        .from(
+          "merch_products"
+        )
+        .update({
+          status:
+            current ===
+            "active"
+              ? "hidden"
+              : "active",
+        })
+        .eq(
+          "id",
+          id
+        );
 
-    fetchItems();
-
-    setLoading(false);
-  };
-
-  const deleteItem = async (
-    id: number
-  ) => {
-
-    const confirmed = window.confirm(
-      "Delete this merch item?"
-    );
-
-    if (!confirmed) return;
-
-    await supabase
-      .from("merch_items")
-      .delete()
-      .eq("id", id);
-
-    fetchItems();
-  };
-
-  const toggleActive = async (
-    id: number,
-    current: boolean
-  ) => {
-
-    await supabase
-      .from("merch_items")
-      .update({
-        active: !current,
-      })
-      .eq("id", id);
-
-    fetchItems();
-  };
+      fetchProducts();
+    };
 
   return (
-    <main className="min-h-screen bg-black text-white px-4 md:px-6 py-28">
+    <main className="min-h-screen bg-black text-white overflow-x-hidden px-4 py-24 relative">
 
       {/* BACKGROUND */}
       <div
-        className="fixed top-[-300px] left-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full pointer-events-none"
+        className="fixed top-[-250px] left-[-250px] w-[500px] h-[500px] rounded-full blur-[180px] pointer-events-none"
         style={{
-          background: `${BREEZE_GREEN}18`,
+          background:
+            `${BREEZE_GREEN}12`,
         }}
       />
 
       <div
-        className="fixed bottom-[-300px] right-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full pointer-events-none"
+        className="fixed bottom-[-250px] right-[-250px] w-[500px] h-[500px] rounded-full blur-[180px] pointer-events-none"
         style={{
-          background: `${BREEZE_GREEN}10`,
+          background:
+            `${BREEZE_GREEN}08`,
         }}
       />
 
-      <div className="max-w-7xl mx-auto relative z-20">
+      <div className="relative z-20 max-w-7xl mx-auto">
 
-        {/* TITLE */}
+        {/* HEADER */}
         <div className="text-center">
 
           <p
-            className="uppercase tracking-[5px] text-xs"
+            className="uppercase tracking-[4px] text-[10px]"
             style={{
-              color: BREEZE_GREEN,
+              color:
+                BREEZE_GREEN,
             }}
           >
-            ADMIN PANEL
+            Breeze Family
           </p>
 
           <h1
@@ -185,8 +357,9 @@ export default function MerchManagerPage() {
               fontFamily:
                 "Bebas Neue, sans-serif",
               fontSize:
-                "clamp(60px, 10vw, 140px)",
-              lineHeight: "0.82",
+                "clamp(60px, 14vw, 140px)",
+              lineHeight:
+                "0.82",
             }}
           >
 
@@ -194,7 +367,8 @@ export default function MerchManagerPage() {
             <span
               className="block"
               style={{
-                color: BREEZE_GREEN,
+                color:
+                  BREEZE_GREEN,
               }}
             >
               MANAGER
@@ -205,95 +379,200 @@ export default function MerchManagerPage() {
         </div>
 
         {/* FORM */}
-        <div className="mt-16 rounded-[34px] border border-[#8DFF00]/20 bg-white/5 backdrop-blur-2xl p-6 md:p-10">
+        <div className="mt-12 rounded-[30px] border border-[#8DFF00]/20 bg-white/5 backdrop-blur-2xl p-5">
 
-          <div className="grid gap-5">
+          <div className="space-y-4">
 
+            {/* NAME */}
             <input
               type="text"
-              placeholder="Merch Title"
-              value={title}
-              onChange={(e) =>
-                setTitle(e.target.value)
+              placeholder="Product Name"
+              value={
+                form.name
               }
-              className="
-                rounded-2xl
-                bg-black/40
-                border
-                border-white/10
-                px-5
-                py-4
-                text-white
-                placeholder:text-white/40
-                focus:outline-none
-                focus:border-[#8DFF00]
-              "
-            />
-
-            <textarea
-              placeholder="Merch Description"
-              value={description}
-              onChange={(e) =>
-                setDescription(e.target.value)
-              }
-              className="
-                rounded-2xl
-                bg-black/40
-                border
-                border-white/10
-                px-5
-                py-4
-                min-h-[140px]
-                text-white
-                placeholder:text-white/40
-                focus:outline-none
-                focus:border-[#8DFF00]
-              "
-            />
-
-            <input
-              type="text"
-              placeholder="Price (Example: R399)"
-              value={price}
-              onChange={(e) =>
-                setPrice(e.target.value)
-              }
-              className="
-                rounded-2xl
-                bg-black/40
-                border
-                border-white/10
-                px-5
-                py-4
-                text-white
-                placeholder:text-white/40
-                focus:outline-none
-                focus:border-[#8DFF00]
-              "
-            />
-
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) =>
-                setImage(
-                  e.target.files?.[0] || null
+              onChange={(
+                e
+              ) =>
+                handleChange(
+                  "name",
+                  e.target
+                    .value
                 )
               }
               className="
+                w-full
+                px-5
+                py-4
                 rounded-2xl
                 bg-black/40
                 border
                 border-white/10
-                px-5
-                py-4
               "
             />
 
-            <button
-              onClick={uploadMerch}
-              disabled={loading}
+            {/* DESCRIPTION */}
+            <textarea
+              placeholder="Description"
+              value={
+                form.description
+              }
+              onChange={(
+                e
+              ) =>
+                handleChange(
+                  "description",
+                  e.target
+                    .value
+                )
+              }
               className="
+                w-full
+                px-5
+                py-4
+                rounded-2xl
+                bg-black/40
+                border
+                border-white/10
+                min-h-[120px]
+              "
+            />
+
+            {/* PRICE */}
+            <input
+              type="text"
+              placeholder="Price"
+              value={
+                form.price
+              }
+              onChange={(
+                e
+              ) =>
+                handleChange(
+                  "price",
+                  e.target
+                    .value
+                )
+              }
+              className="
+                w-full
+                px-5
+                py-4
+                rounded-2xl
+                bg-black/40
+                border
+                border-white/10
+              "
+            />
+
+            {/* CATEGORY */}
+            <select
+              value={
+                form.category
+              }
+              onChange={(
+                e
+              ) =>
+                handleChange(
+                  "category",
+                  e.target
+                    .value
+                )
+              }
+              className="
+                w-full
+                px-5
+                py-4
+                rounded-2xl
+                bg-black/40
+                border
+                border-white/10
+              "
+            >
+
+              {categories.map(
+                (
+                  category
+                ) => (
+
+                  <option
+                    key={
+                      category
+                    }
+                    value={
+                      category
+                    }
+                  >
+
+                    {category}
+
+                  </option>
+
+                )
+              )}
+
+            </select>
+
+            {/* FEATURED */}
+            <label className="flex items-center gap-3 px-2">
+
+              <input
+                type="checkbox"
+                checked={
+                  form.featured
+                }
+                onChange={(
+                  e
+                ) =>
+                  handleChange(
+                    "featured",
+                    e.target
+                      .checked
+                  )
+                }
+              />
+
+              <span className="uppercase text-xs tracking-[3px]">
+
+                Featured Product
+
+              </span>
+
+            </label>
+
+            {/* IMAGE */}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(
+                e
+              ) =>
+                setImage(
+                  e.target
+                    .files?.[0] ||
+                    null
+                )
+              }
+              className="
+                w-full
+                px-5
+                py-4
+                rounded-2xl
+                bg-black/40
+                border
+                border-white/10
+              "
+            />
+
+            {/* BUTTON */}
+            <button
+              onClick={
+                saveProduct
+              }
+              disabled={
+                loading
+              }
+              className="
+                w-full
                 py-4
                 rounded-2xl
                 bg-[#8DFF00]
@@ -301,15 +580,14 @@ export default function MerchManagerPage() {
                 font-black
                 uppercase
                 tracking-[4px]
-                hover:scale-[1.01]
-                transition
-                duration-300
               "
             >
 
               {loading
-                ? "Uploading..."
-                : "Upload Merch"}
+                ? "Saving..."
+                : editingId
+                ? "Update Product"
+                : "Create Product"}
 
             </button>
 
@@ -317,105 +595,218 @@ export default function MerchManagerPage() {
 
         </div>
 
-        {/* ITEMS */}
-        <div className="mt-20 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8">
+        {/* PRODUCTS */}
+        <div className="mt-14 grid grid-cols-2 gap-4">
 
-          {items.map((item) => (
+          {products.map(
+            (
+              product
+            ) => (
 
-            <div
-              key={item.id}
-              className="
-                rounded-[30px]
-                overflow-hidden
-                border
-                border-[#8DFF00]/20
-                bg-white/5
-                backdrop-blur-2xl
-              "
-            >
+              <div
+                key={
+                  product.id
+                }
+                className="
+                  rounded-[26px]
+                  overflow-hidden
+                  border
+                  border-white/10
+                  bg-white/5
+                  backdrop-blur-xl
+                "
+              >
 
-              <img
-                src={item.image_url}
-                alt={item.title}
-                className="w-full h-[320px] object-cover"
-              />
+                {/* IMAGE */}
+                <div className="aspect-square bg-black overflow-hidden">
 
-              <div className="p-6">
+                  {product.image_url ? (
 
-                <h2
-                  className="uppercase font-black"
-                  style={{
-                    fontSize: "28px",
-                    lineHeight: "1",
-                  }}
-                >
-                  {item.title}
-                </h2>
+                    <img
+                      src={
+                        product.image_url
+                      }
+                      alt={
+                        product.name
+                      }
+                      loading="lazy"
+                      className="
+                        w-full
+                        h-full
+                        object-cover
+                      "
+                    />
 
-                {item.price && (
+                  ) : (
+
+                    <div className="w-full h-full flex items-center justify-center text-white/30 text-xs uppercase">
+
+                      No Image
+
+                    </div>
+
+                  )}
+
+                </div>
+
+                {/* CONTENT */}
+                <div className="p-4">
+
+                  <div className="flex items-start justify-between gap-2">
+
+                    <h2
+                      className="uppercase font-black leading-tight"
+                      style={{
+                        fontSize:
+                          "clamp(16px, 4vw, 24px)",
+                      }}
+                    >
+
+                      {
+                        product.name
+                      }
+
+                    </h2>
+
+                    {product.featured && (
+
+                      <div
+                        className="
+                          shrink-0
+                          px-2
+                          py-1
+                          rounded-full
+                          text-[8px]
+                          uppercase
+                          tracking-[2px]
+                          font-black
+                          bg-[#8DFF00]
+                          text-black
+                        "
+                      >
+
+                        Featured
+
+                      </div>
+
+                    )}
+
+                  </div>
 
                   <p
-                    className="mt-3 font-bold"
+                    className="mt-2 text-xs uppercase tracking-[3px]"
                     style={{
-                      color: BREEZE_GREEN,
+                      color:
+                        BREEZE_GREEN,
                     }}
                   >
-                    {item.price}
+
+                    {
+                      product.category
+                    }
+
                   </p>
 
-                )}
+                  <p className="mt-2 text-white/60 text-xs line-clamp-3">
 
-                <p className="mt-4 text-white/60 text-sm leading-relaxed">
-                  {item.description}
-                </p>
+                    {
+                      product.description
+                    }
 
-                {/* ACTIONS */}
-                <div className="mt-6 flex flex-col gap-3">
+                  </p>
+
+                  <p
+                    className="mt-3 font-black"
+                    style={{
+                      color:
+                        BREEZE_GREEN,
+                    }}
+                  >
+
+                    {
+                      product.price
+                    }
+
+                  </p>
+
+                  {/* ACTIONS */}
+                  <div className="mt-4 grid grid-cols-2 gap-2">
+
+                    <button
+                      onClick={() =>
+                        editProduct(
+                          product
+                        )
+                      }
+                      className="
+                        py-3
+                        rounded-xl
+                        bg-white
+                        text-black
+                        text-[10px]
+                        uppercase
+                        tracking-[2px]
+                        font-black
+                      "
+                    >
+
+                      Edit
+
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        deleteProduct(
+                          product.id
+                        )
+                      }
+                      className="
+                        py-3
+                        rounded-xl
+                        bg-red-500
+                        text-white
+                        text-[10px]
+                        uppercase
+                        tracking-[2px]
+                        font-black
+                      "
+                    >
+
+                      Delete
+
+                    </button>
+
+                  </div>
 
                   <button
                     onClick={() =>
-                      toggleActive(
-                        item.id,
-                        item.active
+                      toggleStatus(
+                        product.id,
+                        product.status
                       )
                     }
                     className={`
+                      mt-2
+                      w-full
                       py-3
                       rounded-xl
-                      font-black
+                      text-[10px]
                       uppercase
                       tracking-[2px]
-                      transition
+                      font-black
                       ${
-                        item.active
+                        product.status ===
+                        "active"
                           ? "bg-yellow-400 text-black"
-                          : "bg-green-400 text-black"
+                          : "bg-[#8DFF00] text-black"
                       }
                     `}
                   >
 
-                    {item.active
-                      ? "Disable Item"
-                      : "Enable Item"}
-
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      deleteItem(item.id)
-                    }
-                    className="
-                      py-3
-                      rounded-xl
-                      bg-red-500
-                      text-white
-                      font-black
-                      uppercase
-                      tracking-[2px]
-                    "
-                  >
-
-                    Delete Item
+                    {product.status ===
+                    "active"
+                      ? "Hide Product"
+                      : "Activate Product"}
 
                   </button>
 
@@ -423,9 +814,8 @@ export default function MerchManagerPage() {
 
               </div>
 
-            </div>
-
-          ))}
+            )
+          )}
 
         </div>
 
