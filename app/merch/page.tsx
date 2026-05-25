@@ -33,7 +33,7 @@ export default function MerchPage() {
 
   }, []);
 
-  /* FETCH PRODUCTS */
+  /* FETCH */
   const fetchProducts =
     async () => {
 
@@ -58,7 +58,7 @@ export default function MerchPage() {
       setLoading(false);
     };
 
-  /* LOAD CART COUNT */
+  /* CART */
   const loadCartCount =
     () => {
 
@@ -82,54 +82,6 @@ export default function MerchPage() {
       );
     };
 
-  /* ADD TO CART */
-  const addToCart =
-    (product: any) => {
-
-      const cart =
-        JSON.parse(
-          localStorage.getItem(
-            "cart"
-          ) || "[]"
-        );
-
-      const existing =
-        cart.find(
-          (item: any) =>
-            item.id ===
-            product.id
-        );
-
-      if (existing) {
-
-        existing.quantity += 1;
-
-      } else {
-
-        cart.push({
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          image_url:
-            product.image_url,
-          quantity: 1,
-          category:
-            product.category,
-        });
-      }
-
-      localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
-      );
-
-      loadCartCount();
-
-      alert(
-        `${product.name} added to cart`
-      );
-    };
-
   /* CATEGORIES */
   const categories = [
     "My Merch",
@@ -139,7 +91,7 @@ export default function MerchPage() {
     "Sponsors",
   ];
 
-  /* GROUP PRODUCTS */
+  /* GROUP */
   const groupedProducts =
     useMemo(() => {
 
@@ -184,35 +136,38 @@ export default function MerchPage() {
   return (
     <main className="min-h-screen bg-black text-white overflow-x-hidden">
 
-      {/* BACKGROUND */}
+      {/* BG */}
       <div
         className="fixed top-[-300px] left-[-300px] w-[400px] h-[400px] blur-[160px] rounded-full pointer-events-none"
         style={{
-          background: `${BREEZE_GREEN}10`,
+          background:
+            `${BREEZE_GREEN}10`,
         }}
       />
 
       <div
         className="fixed bottom-[-300px] right-[-300px] w-[400px] h-[400px] blur-[160px] rounded-full pointer-events-none"
         style={{
-          background: `${BREEZE_GREEN}08`,
+          background:
+            `${BREEZE_GREEN}08`,
         }}
       />
 
       {/* HERO */}
-      <section className="relative px-4 pt-20 pb-8">
+      <section className="relative px-4 pt-20 pb-10">
 
         <div className="max-w-7xl mx-auto">
 
-          {/* TOP BAR */}
-          <div className="flex items-start justify-between gap-4 mb-8">
+          {/* TOP */}
+          <div className="flex items-start justify-between gap-4">
 
             <div>
 
               <p
                 className="uppercase tracking-[3px] text-[10px]"
                 style={{
-                  color: BREEZE_GREEN,
+                  color:
+                    BREEZE_GREEN,
                 }}
               >
                 Breeze Family
@@ -225,7 +180,8 @@ export default function MerchPage() {
                     "Bebas Neue, sans-serif",
                   fontSize:
                     "clamp(42px, 11vw, 90px)",
-                  lineHeight: "0.82",
+                  lineHeight:
+                    "0.82",
                 }}
               >
 
@@ -233,7 +189,8 @@ export default function MerchPage() {
                 <span
                   className="block"
                   style={{
-                    color: BREEZE_GREEN,
+                    color:
+                      BREEZE_GREEN,
                   }}
                 >
                   STORE
@@ -265,12 +222,12 @@ export default function MerchPage() {
 
           </div>
 
-          {/* DESCRIPTION */}
-          <p className="text-white/50 leading-relaxed max-w-xl text-xs">
+          {/* DESC */}
+          <p className="mt-5 text-white/50 leading-relaxed text-xs max-w-md">
 
-            Official Breeze Family products,
-            lifestyle items, collaborations,
-            tech gear and exclusive drops.
+            Browse collections, collaborations,
+            exclusive drops and official
+            Breeze Family merchandise.
 
           </p>
 
@@ -278,220 +235,187 @@ export default function MerchPage() {
 
       </section>
 
-      {/* STORE */}
-      <section className="px-3 pb-24">
+      {/* COLLECTIONS */}
+      <section className="px-4 pb-24">
 
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto space-y-5">
 
           {groupedProducts.map(
-            (section, index) => (
+            (
+              section,
+              index
+            ) => {
 
-              <div
-                key={index}
-                className="mb-12"
-              >
+              const preview =
+                section.items.slice(
+                  0,
+                  4
+                );
 
-                {/* CATEGORY HEADER */}
-                <div className="mb-4">
+              return (
 
-                  <p
-                    className="uppercase tracking-[3px] text-[9px]"
-                    style={{
-                      color: BREEZE_GREEN,
-                    }}
-                  >
-                    Collection
-                  </p>
+                <Link
+                  key={index}
+                  href={`/merch/${encodeURIComponent(
+                    section.title
+                  )}`}
+                  className="
+                    block
+                    rounded-[28px]
+                    border
+                    border-white/10
+                    bg-white/5
+                    backdrop-blur-xl
+                    overflow-hidden
+                    active:scale-[0.98]
+                    transition
+                  "
+                >
 
-                  <h2
-                    className="uppercase italic font-black mt-1"
-                    style={{
-                      fontFamily:
-                        "Bebas Neue, sans-serif",
-                      fontSize:
-                        "clamp(28px, 7vw, 50px)",
-                      lineHeight: "0.9",
-                    }}
-                  >
+                  <div className="p-5">
 
-                    {section.title}
+                    {/* TOP */}
+                    <div className="flex items-start justify-between gap-4">
 
-                  </h2>
+                      <div>
 
-                </div>
+                        <p
+                          className="uppercase tracking-[3px] text-[9px]"
+                          style={{
+                            color:
+                              BREEZE_GREEN,
+                          }}
+                        >
+                          Collection
+                        </p>
 
-                {/* EMPTY */}
-                {section.items.length ===
-                0 ? (
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-8 text-center text-white/40 uppercase tracking-[3px] text-[10px]">
-
-                    Products Coming Soon
-
-                  </div>
-
-                ) : (
-
-                  /* SMALLER MOBILE GRID */
-                  <div className="grid grid-cols-2 gap-3">
-
-                    {section.items.map(
-                      (
-                        product
-                      ) => (
-
-                        <div
-                          key={
-                            product.id
-                          }
-                          className="
-                            rounded-[20px]
-                            overflow-hidden
-                            border
-                            border-white/10
-                            bg-white/5
-                            backdrop-blur-xl
-                          "
+                        <h2
+                          className="uppercase italic font-black mt-1"
+                          style={{
+                            fontFamily:
+                              "Bebas Neue, sans-serif",
+                            fontSize:
+                              "clamp(32px, 8vw, 60px)",
+                            lineHeight:
+                              "0.9",
+                          }}
                         >
 
-                          {/* IMAGE */}
-                          <div className="relative bg-black aspect-square overflow-hidden">
+                          {
+                            section.title
+                          }
 
-                            {product.image_url ? (
+                        </h2>
 
-                              <img
-                                src={
-                                  product.image_url
-                                }
-                                alt={
-                                  product.name
-                                }
-                                loading="lazy"
-                                className="
-                                  w-full
-                                  h-full
-                                  object-cover
-                                "
-                              />
+                      </div>
 
-                            ) : (
+                      <div
+                        className="
+                          px-3
+                          py-2
+                          rounded-full
+                          bg-[#8DFF00]
+                          text-black
+                          text-[10px]
+                          uppercase
+                          tracking-[1px]
+                          font-black
+                          shrink-0
+                        "
+                      >
 
-                              <div className="w-full h-full flex items-center justify-center text-white/30 text-[9px] uppercase">
+                        {
+                          section.items
+                            .length
+                        } Products
 
-                                No Image
+                      </div>
+
+                    </div>
+
+                    {/* PREVIEW */}
+                    <div className="mt-5 flex items-center gap-3 overflow-x-auto no-scrollbar">
+
+                      {preview.length ===
+                      0 ? (
+
+                        <div className="text-white/30 uppercase text-[10px] tracking-[2px] py-6">
+
+                          Products Coming Soon
+
+                        </div>
+
+                      ) : (
+
+                        preview.map(
+                          (
+                            product
+                          ) => (
+
+                            <div
+                              key={
+                                product.id
+                              }
+                              className="
+                                shrink-0
+                                w-[78px]
+                              "
+                            >
+
+                              <div className="w-[78px] h-[78px] rounded-[20px] overflow-hidden bg-black border border-white/10">
+
+                                {product.image_url ? (
+
+                                  <img
+                                    src={
+                                      product.image_url
+                                    }
+                                    alt={
+                                      product.name
+                                    }
+                                    loading="lazy"
+                                    className="
+                                      w-full
+                                      h-full
+                                      object-cover
+                                    "
+                                  />
+
+                                ) : (
+
+                                  <div className="w-full h-full flex items-center justify-center text-white/30 text-[8px] uppercase">
+
+                                    No Image
+
+                                  </div>
+
+                                )}
 
                               </div>
 
-                            )}
+                              <p className="mt-2 text-[9px] uppercase leading-tight font-black line-clamp-2 text-white/70">
 
-                            {/* CATEGORY TAG */}
-                            <div
-                              className="
-                                absolute
-                                top-2
-                                left-2
-                                px-2
-                                py-1
-                                rounded-full
-                                text-[7px]
-                                font-black
-                                uppercase
-                                tracking-[1px]
-                                bg-black/70
-                                backdrop-blur-xl
-                              "
-                              style={{
-                                color:
-                                  BREEZE_GREEN,
-                                border:
-                                  `1px solid ${BREEZE_GREEN}40`,
-                              }}
-                            >
+                                {
+                                  product.name
+                                }
 
-                              {product.category}
+                              </p>
 
                             </div>
 
-                          </div>
+                          )
+                        )
 
-                          {/* CONTENT */}
-                          <div className="p-2.5">
+                      )}
 
-                            <h3
-                              className="
-                                uppercase
-                                font-black
-                                leading-tight
-                                line-clamp-2
-                              "
-                              style={{
-                                fontSize:
-                                  "clamp(11px, 3vw, 14px)",
-                              }}
-                            >
-
-                              {
-                                product.name
-                              }
-
-                            </h3>
-
-                            {/* PRICE */}
-                            <p
-                              className="mt-1 font-black"
-                              style={{
-                                color:
-                                  BREEZE_GREEN,
-                                fontSize:
-                                  "clamp(11px, 3vw, 14px)",
-                              }}
-                            >
-
-                              {
-                                product.price
-                              }
-
-                            </p>
-
-                            {/* BUTTON */}
-                            <button
-                              onClick={() =>
-                                addToCart(
-                                  product
-                                )
-                              }
-                              className="
-                                mt-2
-                                w-full
-                                py-2
-                                rounded-xl
-                                bg-[#8DFF00]
-                                text-black
-                                font-black
-                                uppercase
-                                text-[9px]
-                                tracking-[1px]
-                                active:scale-95
-                                transition
-                              "
-                            >
-
-                              Add
-
-                            </button>
-
-                          </div>
-
-                        </div>
-                      )
-                    )}
+                    </div>
 
                   </div>
 
-                )}
+                </Link>
 
-              </div>
-            )
+              );
+            }
           )}
 
         </div>
