@@ -204,14 +204,17 @@ export default function CartPage() {
 
       if (error) {
 
-        console.log(error);
+  console.log(
+    "SUPABASE ERROR:",
+    error
+  );
 
-        alert(
-          "Order failed."
-        );
+  alert(
+    JSON.stringify(error)
+  );
 
-        return;
-      }
+  return;
+}
 
       /* WHATSAPP */
       let message =
