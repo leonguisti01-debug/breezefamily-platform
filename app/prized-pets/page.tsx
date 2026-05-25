@@ -613,46 +613,100 @@ export default function PrizedPetsPage() {
 
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 gap-6">
 
-                    <WinnerBubble
-                      name={
-                        winner.third_place_name
-                      }
-                      photo={
-                        winner.third_place_photo
-                      }
-                      label="3rd"
-                      setSelectedImage={
-                        setSelectedImage
-                      }
-                    />
+                    {/* THIRD PLACE */}
+                    <div>
 
-                    <WinnerBubble
-                      name={
-                        winner.second_place_name
-                      }
-                      photo={
-                        winner.second_place_photo
-                      }
-                      label="2nd"
-                      setSelectedImage={
-                        setSelectedImage
-                      }
-                    />
+                      <p
+                        className="uppercase tracking-[4px] text-xs text-center mb-4"
+                        style={{
+                          color:
+                            "#ffffff",
+                        }}
+                      >
+                        3rd Place Winners
+                      </p>
 
-                    <WinnerBubble
-                      name={
-                        winner.first_place_name
-                      }
-                      photo={
-                        winner.first_place_photo
-                      }
-                      label="1st"
-                      setSelectedImage={
-                        setSelectedImage
-                      }
-                    />
+                      <div className="grid grid-cols-2 gap-4">
+
+                        <WinnerBubble
+                          name="Sors's Napoleon"
+                          photo="https://xwzathzitijhmupqqxux.supabase.co/storage/v1/object/public/prized-pets/sors.jpg"
+                          label="3rd"
+                          setSelectedImage={
+                            setSelectedImage
+                          }
+                        />
+
+                        <WinnerBubble
+                          name="Jaxster"
+                          photo="https://xwzathzitijhmupqqxux.supabase.co/storage/v1/object/public/prized-pets/jaxster.jpeg"
+                          label="3rd"
+                          setSelectedImage={
+                            setSelectedImage
+                          }
+                        />
+
+                      </div>
+
+                    </div>
+
+                    {/* SECOND PLACE */}
+                    <div>
+
+                      <p
+                        className="uppercase tracking-[4px] text-xs text-center mb-4"
+                        style={{
+                          color:
+                            "#cccccc",
+                        }}
+                      >
+                        2nd Place Winner
+                      </p>
+
+                      <div className="flex justify-center">
+
+                        <WinnerBubble
+                          name="Jessica"
+                          photo="https://xwzathzitijhmupqqxux.supabase.co/storage/v1/object/public/prized-pets/Jessica.jpg"
+                          label="2nd"
+                          setSelectedImage={
+                            setSelectedImage
+                          }
+                        />
+
+                      </div>
+
+                    </div>
+
+                    {/* FIRST PLACE */}
+                    <div>
+
+                      <p
+                        className="uppercase tracking-[4px] text-xs text-center mb-4"
+                        style={{
+                          color:
+                            BREEZE_GREEN,
+                        }}
+                      >
+                        1st Place Winner
+                      </p>
+
+                      <div className="flex justify-center">
+
+                        <WinnerBubble
+                          name="Kinnie - Titan & Raven"
+                          photo="https://xwzathzitijhmupqqxux.supabase.co/storage/v1/object/public/prized-pets/kinnie-titan&raven.jpeg"
+                          label="1st"
+                          setSelectedImage={
+                            setSelectedImage
+                          }
+                        />
+
+                      </div>
+
+                    </div>
 
                   </div>
 
@@ -893,6 +947,7 @@ function PrizeCard({
       </h2>
 
     </div>
+
   );
 }
 
