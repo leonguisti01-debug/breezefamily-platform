@@ -25,7 +25,7 @@ export default function TikTokStarsPage() {
       />
 
       {/* HERO */}
-      <section className="relative z-20 px-4 pt-10 pb-10">
+      <section className="relative z-20 px-4 pt-10 pb-8">
 
         <div className="text-center">
 
@@ -44,7 +44,7 @@ export default function TikTokStarsPage() {
               fontFamily:
                 "Bebas Neue, sans-serif",
               fontSize:
-                "clamp(58px, 15vw, 140px)",
+                "clamp(54px, 14vw, 120px)",
               lineHeight: "0.82",
               letterSpacing: "0.08em",
             }}
@@ -67,7 +67,7 @@ export default function TikTokStarsPage() {
       </section>
 
       {/* MOBILE CARDS */}
-      <section className="relative z-20 px-4 pb-24">
+      <section className="relative z-20 px-4 pb-20">
 
         <div
           className="
@@ -83,285 +83,6 @@ export default function TikTokStarsPage() {
         >
 
           {/* ========================= */}
-          {/* SEASON 1 */}
-          {/* ========================= */}
-
-          <motion.div
-            whileTap={{
-              scale: 0.98,
-            }}
-            className="snap-center shrink-0 w-[82vw]"
-          >
-
-            <div
-              className="
-                rounded-[34px]
-                border
-                bg-white/5
-                backdrop-blur-2xl
-                overflow-hidden
-                p-5
-                min-h-[640px]
-              "
-              style={{
-                borderColor:
-                  `${BREEZE_GREEN}25`,
-              }}
-            >
-
-              <p
-                className="uppercase tracking-[4px] text-[10px]"
-                style={{
-                  color: BREEZE_GREEN,
-                }}
-              >
-                Original Season
-              </p>
-
-              <h2
-                className="mt-4 uppercase italic font-black"
-                style={{
-                  fontFamily:
-                    "Bebas Neue, sans-serif",
-                  fontSize:
-                    "clamp(44px, 10vw, 70px)",
-                  lineHeight: "0.9",
-                }}
-              >
-
-                Season 1
-
-              </h2>
-
-              {/* WINNER */}
-              <div className="mt-10 text-center">
-
-                <div
-                  className="
-                    w-[130px]
-                    h-[130px]
-                    rounded-full
-                    overflow-hidden
-                    border-4
-                    mx-auto
-                  "
-                  style={{
-                    borderColor:
-                      BREEZE_GREEN,
-                  }}
-                >
-
-                  <img
-                    src="/season1-winner.jpg"
-                    alt="Winner"
-                    loading="lazy"
-                    className="
-                      w-full
-                      h-full
-                      object-cover
-                    "
-                  />
-
-                </div>
-
-                <p
-                  className="mt-5 uppercase tracking-[4px] text-[10px]"
-                  style={{
-                    color:
-                      BREEZE_GREEN,
-                  }}
-                >
-                  Winner
-                </p>
-
-                <h3
-                  className="mt-2 uppercase italic font-black"
-                  style={{
-                    fontFamily:
-                      "Bebas Neue, sans-serif",
-                    fontSize:
-                      "clamp(30px, 8vw, 42px)",
-                  }}
-                >
-
-                  NAME
-
-                </h3>
-
-              </div>
-
-              {/* RUNNERS */}
-              <div className="grid grid-cols-2 gap-4 mt-10">
-
-                <RunnerBubble
-                  image="/season1-runnerup1.jpg"
-                  name="SETH"
-                />
-
-                <RunnerBubble
-                  image="/season1-runnerup2.jpg"
-                  name="GUMEDE"
-                />
-
-              </div>
-
-            </div>
-
-          </motion.div>
-
-          {/* ========================= */}
-          {/* SEASON 2 */}
-          {/* ========================= */}
-
-          <motion.div
-            whileTap={{
-              scale: 0.98,
-            }}
-            className="snap-center shrink-0 w-[82vw]"
-          >
-
-            <div
-              className="
-                rounded-[34px]
-                border
-                bg-white/5
-                backdrop-blur-2xl
-                overflow-hidden
-                p-5
-                min-h-[640px]
-              "
-              style={{
-                borderColor:
-                  `${BREEZE_GREEN}25`,
-              }}
-            >
-
-              <p
-                className="uppercase tracking-[4px] text-[10px]"
-                style={{
-                  color: BREEZE_GREEN,
-                }}
-              >
-                Creator Evolution
-              </p>
-
-              <h2
-                className="mt-4 uppercase italic font-black"
-                style={{
-                  fontFamily:
-                    "Bebas Neue, sans-serif",
-                  fontSize:
-                    "clamp(44px, 10vw, 70px)",
-                  lineHeight: "0.9",
-                }}
-              >
-
-                Season 2
-
-              </h2>
-
-              {/* WINNER */}
-              <div className="mt-10 text-center">
-
-                <div
-                  className="
-                    w-[130px]
-                    h-[130px]
-                    rounded-full
-                    overflow-hidden
-                    border-4
-                    mx-auto
-                  "
-                  style={{
-                    borderColor:
-                      BREEZE_GREEN,
-                  }}
-                >
-
-                  <img
-                    src="/season2-winner.jpg"
-                    alt="Winner"
-                    loading="lazy"
-                    className="
-                      w-full
-                      h-full
-                      object-cover
-                    "
-                  />
-
-                </div>
-
-                <p
-                  className="mt-5 uppercase tracking-[4px] text-[10px]"
-                  style={{
-                    color:
-                      BREEZE_GREEN,
-                  }}
-                >
-                  Winner
-                </p>
-
-                <h3
-                  className="mt-2 uppercase italic font-black"
-                  style={{
-                    fontFamily:
-                      "Bebas Neue, sans-serif",
-                    fontSize:
-                      "clamp(30px, 8vw, 42px)",
-                  }}
-                >
-
-                  CARLETHEIA
-
-                </h3>
-
-              </div>
-
-              {/* SECOND */}
-              <div className="mt-12 text-center">
-
-                <div className="w-[110px] h-[110px] rounded-full overflow-hidden border border-white/20 mx-auto">
-
-                  <img
-                    src="/season2-runnerup.jpg"
-                    alt="Runner Up"
-                    loading="lazy"
-                    className="
-                      w-full
-                      h-full
-                      object-cover
-                    "
-                  />
-
-                </div>
-
-                <p className="mt-4 uppercase tracking-[3px] text-[10px] text-white/50">
-
-                  Second Place
-
-                </p>
-
-                <h4
-                  className="mt-2 uppercase italic font-black"
-                  style={{
-                    fontFamily:
-                      "Bebas Neue, sans-serif",
-                    fontSize:
-                      "clamp(24px, 7vw, 36px)",
-                  }}
-                >
-
-                  KUTLWANO
-
-                </h4>
-
-              </div>
-
-            </div>
-
-          </motion.div>
-
-          {/* ========================= */}
           {/* KIDS EDITION */}
           {/* ========================= */}
 
@@ -369,18 +90,18 @@ export default function TikTokStarsPage() {
             whileTap={{
               scale: 0.98,
             }}
-            className="snap-center shrink-0 w-[82vw]"
+            className="snap-center shrink-0 w-[72vw] max-w-[320px]"
           >
 
             <div
               className="
-                rounded-[34px]
+                rounded-[30px]
                 border
                 bg-white/5
                 backdrop-blur-2xl
                 overflow-hidden
                 p-5
-                min-h-[640px]
+                min-h-[540px]
                 flex
                 flex-col
                 justify-between
@@ -428,7 +149,7 @@ export default function TikTokStarsPage() {
                     fontFamily:
                       "Bebas Neue, sans-serif",
                     fontSize:
-                      "clamp(40px, 9vw, 64px)",
+                      "clamp(34px, 8vw, 56px)",
                     lineHeight: "0.9",
                   }}
                 >
@@ -440,7 +161,7 @@ export default function TikTokStarsPage() {
 
                 </h2>
 
-                <p className="mt-8 text-white/70 text-sm leading-relaxed">
+                <p className="mt-6 text-white/70 text-sm leading-relaxed">
 
                   South Africa’s next generation of performers,
                   creators and entertainers are ready to shine.
@@ -449,7 +170,7 @@ export default function TikTokStarsPage() {
 
               </div>
 
-              <div className="mt-12 space-y-4">
+              <div className="mt-10 space-y-4">
 
                 <a
                   href="https://www.breezefamily.co.za/kids-edition/entries"
@@ -459,15 +180,15 @@ export default function TikTokStarsPage() {
 
                   <div
                     className="
-                      rounded-[22px]
+                      rounded-[20px]
                       border
                       border-white/10
                       bg-white/5
-                      py-5
+                      py-4
                       text-center
                       uppercase
                       tracking-[3px]
-                      text-[11px]
+                      text-[10px]
                       font-black
                     "
                   >
@@ -486,14 +207,14 @@ export default function TikTokStarsPage() {
 
                   <div
                     className="
-                      rounded-[22px]
+                      rounded-[20px]
                       bg-[#8DFF00]
                       text-black
-                      py-5
+                      py-4
                       text-center
                       uppercase
                       tracking-[3px]
-                      text-[11px]
+                      text-[10px]
                       font-black
                     "
                   >
@@ -503,6 +224,285 @@ export default function TikTokStarsPage() {
                   </div>
 
                 </a>
+
+              </div>
+
+            </div>
+
+          </motion.div>
+
+          {/* ========================= */}
+          {/* SEASON 1 */}
+          {/* ========================= */}
+
+          <motion.div
+            whileTap={{
+              scale: 0.98,
+            }}
+            className="snap-center shrink-0 w-[72vw] max-w-[320px]"
+          >
+
+            <div
+              className="
+                rounded-[30px]
+                border
+                bg-white/5
+                backdrop-blur-2xl
+                overflow-hidden
+                p-5
+                min-h-[540px]
+              "
+              style={{
+                borderColor:
+                  `${BREEZE_GREEN}25`,
+              }}
+            >
+
+              <p
+                className="uppercase tracking-[4px] text-[10px]"
+                style={{
+                  color: BREEZE_GREEN,
+                }}
+              >
+                Original Season
+              </p>
+
+              <h2
+                className="mt-4 uppercase italic font-black"
+                style={{
+                  fontFamily:
+                    "Bebas Neue, sans-serif",
+                  fontSize:
+                    "clamp(36px, 9vw, 60px)",
+                  lineHeight: "0.9",
+                }}
+              >
+
+                Season 1
+
+              </h2>
+
+              {/* WINNER */}
+              <div className="mt-8 text-center">
+
+                <div
+                  className="
+                    w-[105px]
+                    h-[105px]
+                    rounded-full
+                    overflow-hidden
+                    border-4
+                    mx-auto
+                  "
+                  style={{
+                    borderColor:
+                      BREEZE_GREEN,
+                  }}
+                >
+
+                  <img
+                    src="/season1-winner.jpg"
+                    alt="Winner"
+                    loading="lazy"
+                    className="
+                      w-full
+                      h-full
+                      object-cover
+                    "
+                  />
+
+                </div>
+
+                <p
+                  className="mt-4 uppercase tracking-[4px] text-[10px]"
+                  style={{
+                    color:
+                      BREEZE_GREEN,
+                  }}
+                >
+                  Winner
+                </p>
+
+                <h3
+                  className="mt-2 uppercase italic font-black"
+                  style={{
+                    fontFamily:
+                      "Bebas Neue, sans-serif",
+                    fontSize:
+                      "clamp(24px, 7vw, 38px)",
+                  }}
+                >
+
+                  NAME
+
+                </h3>
+
+              </div>
+
+              {/* RUNNERS */}
+              <div className="grid grid-cols-2 gap-3 mt-8">
+
+                <RunnerBubble
+                  image="/season1-runnerup1.jpg"
+                  name="SETH"
+                />
+
+                <RunnerBubble
+                  image="/season1-runnerup2.jpg"
+                  name="GUMEDE"
+                />
+
+              </div>
+
+            </div>
+
+          </motion.div>
+
+          {/* ========================= */}
+          {/* SEASON 2 */}
+          {/* ========================= */}
+
+          <motion.div
+            whileTap={{
+              scale: 0.98,
+            }}
+            className="snap-center shrink-0 w-[72vw] max-w-[320px]"
+          >
+
+            <div
+              className="
+                rounded-[30px]
+                border
+                bg-white/5
+                backdrop-blur-2xl
+                overflow-hidden
+                p-5
+                min-h-[540px]
+              "
+              style={{
+                borderColor:
+                  `${BREEZE_GREEN}25`,
+              }}
+            >
+
+              <p
+                className="uppercase tracking-[4px] text-[10px]"
+                style={{
+                  color: BREEZE_GREEN,
+                }}
+              >
+                Creator Evolution
+              </p>
+
+              <h2
+                className="mt-4 uppercase italic font-black"
+                style={{
+                  fontFamily:
+                    "Bebas Neue, sans-serif",
+                  fontSize:
+                    "clamp(36px, 9vw, 60px)",
+                  lineHeight: "0.9",
+                }}
+              >
+
+                Season 2
+
+              </h2>
+
+              {/* WINNER */}
+              <div className="mt-8 text-center">
+
+                <div
+                  className="
+                    w-[105px]
+                    h-[105px]
+                    rounded-full
+                    overflow-hidden
+                    border-4
+                    mx-auto
+                  "
+                  style={{
+                    borderColor:
+                      BREEZE_GREEN,
+                  }}
+                >
+
+                  <img
+                    src="/season2-winner.jpg"
+                    alt="Winner"
+                    loading="lazy"
+                    className="
+                      w-full
+                      h-full
+                      object-cover
+                    "
+                  />
+
+                </div>
+
+                <p
+                  className="mt-4 uppercase tracking-[4px] text-[10px]"
+                  style={{
+                    color:
+                      BREEZE_GREEN,
+                  }}
+                >
+                  Winner
+                </p>
+
+                <h3
+                  className="mt-2 uppercase italic font-black"
+                  style={{
+                    fontFamily:
+                      "Bebas Neue, sans-serif",
+                    fontSize:
+                      "clamp(24px, 7vw, 38px)",
+                  }}
+                >
+
+                  CARLETHEIA
+
+                </h3>
+
+              </div>
+
+              {/* SECOND */}
+              <div className="mt-10 text-center">
+
+                <div className="w-[90px] h-[90px] rounded-full overflow-hidden border border-white/20 mx-auto">
+
+                  <img
+                    src="/season2-runnerup.jpg"
+                    alt="Runner Up"
+                    loading="lazy"
+                    className="
+                      w-full
+                      h-full
+                      object-cover
+                    "
+                  />
+
+                </div>
+
+                <p className="mt-3 uppercase tracking-[3px] text-[10px] text-white/50">
+
+                  Second Place
+
+                </p>
+
+                <h4
+                  className="mt-1 uppercase italic font-black"
+                  style={{
+                    fontFamily:
+                      "Bebas Neue, sans-serif",
+                    fontSize:
+                      "clamp(20px, 6vw, 32px)",
+                  }}
+                >
+
+                  KUTLWANO
+
+                </h4>
 
               </div>
 
@@ -527,7 +527,7 @@ function RunnerBubble({
 
     <div className="text-center">
 
-      <div className="w-[90px] h-[90px] rounded-full overflow-hidden border border-white/20 mx-auto">
+      <div className="w-[72px] h-[72px] rounded-full overflow-hidden border border-white/20 mx-auto">
 
         <img
           src={image}
@@ -542,7 +542,7 @@ function RunnerBubble({
 
       </div>
 
-      <p className="mt-3 uppercase tracking-[3px] text-[10px] text-white/50">
+      <p className="mt-3 uppercase tracking-[3px] text-[9px] text-white/50">
 
         Runner Up
 
@@ -554,7 +554,7 @@ function RunnerBubble({
           fontFamily:
             "Bebas Neue, sans-serif",
           fontSize:
-            "clamp(20px, 5vw, 28px)",
+            "clamp(18px, 4vw, 24px)",
         }}
       >
 
