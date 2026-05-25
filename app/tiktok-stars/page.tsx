@@ -154,7 +154,7 @@ export default function TikTokStarsPage() {
                   }}
                 >
 
-                  Season 3
+                  Season 2
                   <span className="block">
                     Kids Edition
                   </span>
