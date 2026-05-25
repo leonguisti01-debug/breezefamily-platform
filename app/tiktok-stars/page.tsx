@@ -192,6 +192,19 @@ export default function TikTokStarsPage() {
                       font-black
                     "
                   >
+                    <div className="mt-6 rounded-[26px] overflow-hidden border border-white/10 bg-black">
+
+  <img
+    src="/kids-edition-poster.jpg"
+    alt="TikTok Stars Kids Edition"
+    className="
+      w-full
+      h-auto
+      object-cover
+    "
+  />
+
+</div>
 
                     View Accepted Entries
 
