@@ -250,7 +250,7 @@ export default function CartPage() {
         `Address: ${address}`;
 
       window.open(
-        `https://wa.me/27660725752?text=${message}`,
+        `https://wa.me/27715921593?text=${message}`,
         "_blank"
       );
 
