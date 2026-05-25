@@ -171,7 +171,7 @@ export default function MerchPage() {
           className="uppercase font-black"
           style={{
             fontSize:
-              "clamp(30px, 8vw, 60px)",
+              "clamp(24px, 6vw, 40px)",
           }}
         >
           Loading Store...
@@ -186,31 +186,31 @@ export default function MerchPage() {
 
       {/* BACKGROUND */}
       <div
-        className="fixed top-[-300px] left-[-300px] w-[500px] h-[500px] blur-[180px] rounded-full pointer-events-none"
+        className="fixed top-[-300px] left-[-300px] w-[400px] h-[400px] blur-[160px] rounded-full pointer-events-none"
         style={{
-          background: `${BREEZE_GREEN}12`,
+          background: `${BREEZE_GREEN}10`,
         }}
       />
 
       <div
-        className="fixed bottom-[-300px] right-[-300px] w-[500px] h-[500px] blur-[180px] rounded-full pointer-events-none"
+        className="fixed bottom-[-300px] right-[-300px] w-[400px] h-[400px] blur-[160px] rounded-full pointer-events-none"
         style={{
           background: `${BREEZE_GREEN}08`,
         }}
       />
 
       {/* HERO */}
-      <section className="relative px-4 pt-24 pb-12">
+      <section className="relative px-4 pt-20 pb-8">
 
         <div className="max-w-7xl mx-auto">
 
           {/* TOP BAR */}
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex items-start justify-between gap-4 mb-8">
 
             <div>
 
               <p
-                className="uppercase tracking-[4px] text-xs"
+                className="uppercase tracking-[3px] text-[10px]"
                 style={{
                   color: BREEZE_GREEN,
                 }}
@@ -224,7 +224,7 @@ export default function MerchPage() {
                   fontFamily:
                     "Bebas Neue, sans-serif",
                   fontSize:
-                    "clamp(52px, 12vw, 120px)",
+                    "clamp(42px, 11vw, 90px)",
                   lineHeight: "0.82",
                 }}
               >
@@ -247,15 +247,15 @@ export default function MerchPage() {
               href="/cart"
               className="
                 shrink-0
-                px-5
-                py-3
-                rounded-2xl
+                px-4
+                py-2.5
+                rounded-xl
                 bg-[#8DFF00]
                 text-black
                 font-black
                 uppercase
-                text-xs
-                tracking-[2px]
+                text-[10px]
+                tracking-[1px]
               "
             >
 
@@ -266,7 +266,7 @@ export default function MerchPage() {
           </div>
 
           {/* DESCRIPTION */}
-          <p className="text-white/60 leading-relaxed max-w-xl text-sm md:text-base">
+          <p className="text-white/50 leading-relaxed max-w-xl text-xs">
 
             Official Breeze Family products,
             lifestyle items, collaborations,
@@ -279,7 +279,7 @@ export default function MerchPage() {
       </section>
 
       {/* STORE */}
-      <section className="px-4 pb-28">
+      <section className="px-3 pb-24">
 
         <div className="max-w-7xl mx-auto">
 
@@ -288,14 +288,14 @@ export default function MerchPage() {
 
               <div
                 key={index}
-                className="mb-16"
+                className="mb-12"
               >
 
                 {/* CATEGORY HEADER */}
-                <div className="mb-6">
+                <div className="mb-4">
 
                   <p
-                    className="uppercase tracking-[4px] text-[10px]"
+                    className="uppercase tracking-[3px] text-[9px]"
                     style={{
                       color: BREEZE_GREEN,
                     }}
@@ -304,12 +304,12 @@ export default function MerchPage() {
                   </p>
 
                   <h2
-                    className="uppercase italic font-black mt-2"
+                    className="uppercase italic font-black mt-1"
                     style={{
                       fontFamily:
                         "Bebas Neue, sans-serif",
                       fontSize:
-                        "clamp(34px, 8vw, 64px)",
+                        "clamp(28px, 7vw, 50px)",
                       lineHeight: "0.9",
                     }}
                   >
@@ -324,7 +324,7 @@ export default function MerchPage() {
                 {section.items.length ===
                 0 ? (
 
-                  <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-10 text-center text-white/40 uppercase tracking-[3px] text-xs">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-8 text-center text-white/40 uppercase tracking-[3px] text-[10px]">
 
                     Products Coming Soon
 
@@ -332,8 +332,8 @@ export default function MerchPage() {
 
                 ) : (
 
-                  /* MOBILE FIRST GRID */
-                  <div className="grid grid-cols-2 gap-4">
+                  /* SMALLER MOBILE GRID */
+                  <div className="grid grid-cols-2 gap-3">
 
                     {section.items.map(
                       (
@@ -345,7 +345,7 @@ export default function MerchPage() {
                             product.id
                           }
                           className="
-                            rounded-[28px]
+                            rounded-[20px]
                             overflow-hidden
                             border
                             border-white/10
@@ -376,7 +376,7 @@ export default function MerchPage() {
 
                             ) : (
 
-                              <div className="w-full h-full flex items-center justify-center text-white/30 text-xs uppercase">
+                              <div className="w-full h-full flex items-center justify-center text-white/30 text-[9px] uppercase">
 
                                 No Image
 
@@ -384,19 +384,19 @@ export default function MerchPage() {
 
                             )}
 
-                            {/* TAG */}
+                            {/* CATEGORY TAG */}
                             <div
                               className="
                                 absolute
-                                top-3
-                                left-3
-                                px-3
+                                top-2
+                                left-2
+                                px-2
                                 py-1
                                 rounded-full
-                                text-[9px]
+                                text-[7px]
                                 font-black
                                 uppercase
-                                tracking-[2px]
+                                tracking-[1px]
                                 bg-black/70
                                 backdrop-blur-xl
                               "
@@ -415,13 +415,18 @@ export default function MerchPage() {
                           </div>
 
                           {/* CONTENT */}
-                          <div className="p-4">
+                          <div className="p-2.5">
 
                             <h3
-                              className="uppercase font-black leading-tight"
+                              className="
+                                uppercase
+                                font-black
+                                leading-tight
+                                line-clamp-2
+                              "
                               style={{
                                 fontSize:
-                                  "clamp(16px, 4vw, 24px)",
+                                  "clamp(11px, 3vw, 14px)",
                               }}
                             >
 
@@ -433,26 +438,17 @@ export default function MerchPage() {
 
                             {/* PRICE */}
                             <p
-                              className="mt-2 font-black"
+                              className="mt-1 font-black"
                               style={{
                                 color:
                                   BREEZE_GREEN,
                                 fontSize:
-                                  "clamp(14px, 3vw, 18px)",
+                                  "clamp(11px, 3vw, 14px)",
                               }}
                             >
 
                               {
                                 product.price
-                              }
-
-                            </p>
-
-                            {/* DESCRIPTION */}
-                            <p className="mt-3 text-white/50 text-xs leading-relaxed line-clamp-3">
-
-                              {
-                                product.description
                               }
 
                             </p>
@@ -465,22 +461,22 @@ export default function MerchPage() {
                                 )
                               }
                               className="
-                                mt-4
+                                mt-2
                                 w-full
-                                py-3
-                                rounded-2xl
+                                py-2
+                                rounded-xl
                                 bg-[#8DFF00]
                                 text-black
                                 font-black
                                 uppercase
-                                text-[11px]
-                                tracking-[2px]
+                                text-[9px]
+                                tracking-[1px]
                                 active:scale-95
                                 transition
                               "
                             >
 
-                              Add To Cart
+                              Add
 
                             </button>
 
