@@ -61,11 +61,18 @@ export default function MerchManagerPage() {
 
   }, []);
 
-  /* FETCH */
+  /* FETCH PRODUCTS */
   const fetchProducts =
     async () => {
 
-      const { data } =
+      console.log(
+        "Fetching products..."
+      );
+
+      const {
+        data,
+        error,
+      } =
         await supabase
           .from(
             "merch_products"
@@ -79,13 +86,32 @@ export default function MerchManagerPage() {
             }
           );
 
+      console.log(
+        "FETCH DATA:",
+        data
+      );
+
+      console.log(
+        "FETCH ERROR:",
+        error
+      );
+
+      if (error) {
+
+        alert(
+          error.message
+        );
+
+        return;
+      }
+
       if (data) {
 
         setProducts(data);
       }
     };
 
-  /* GROUPED */
+  /* GROUP PRODUCTS */
   const groupedProducts =
     useMemo(() => {
 
@@ -108,7 +134,7 @@ export default function MerchManagerPage() {
 
     }, [products]);
 
-  /* INPUT */
+  /* HANDLE INPUT */
   const handleChange =
     (
       key: string,
@@ -150,113 +176,227 @@ export default function MerchManagerPage() {
       );
     };
 
-  /* SAVE */
+  /* SAVE PRODUCT */
   const saveProduct =
     async () => {
 
-      if (
-        !form.name
-      )
-        return;
+      try {
 
-      setLoading(true);
+        if (!form.name) {
 
-      let imageUrl = "";
-
-      /* IMAGE */
-      if (image) {
-
-        const fileName =
-          `${Date.now()}-${image.name}`;
-
-        await supabase.storage
-          .from(
-            "merch-images"
-          )
-          .upload(
-            fileName,
-            image
+          alert(
+            "Please add a product name"
           );
 
-        const {
-          data: {
-            publicUrl,
-          },
-        } =
-          supabase.storage
-            .from(
-              "merch-images"
-            )
-            .getPublicUrl(
-              fileName
+          return;
+        }
+
+        setLoading(true);
+
+        let imageUrl = "";
+
+        /* IMAGE */
+        if (image) {
+
+          const fileName =
+            `${Date.now()}-${image.name}`;
+
+          console.log(
+            "Uploading image..."
+          );
+
+          const {
+            data:
+              uploadData,
+            error:
+              uploadError,
+          } =
+            await supabase.storage
+              .from(
+                "merch-images"
+              )
+              .upload(
+                fileName,
+                image
+              );
+
+          console.log(
+            "UPLOAD DATA:",
+            uploadData
+          );
+
+          console.log(
+            "UPLOAD ERROR:",
+            uploadError
+          );
+
+          if (
+            uploadError
+          ) {
+
+            alert(
+              uploadError.message
             );
 
-        imageUrl =
-          publicUrl;
-      }
+            setLoading(
+              false
+            );
 
-      /* UPDATE */
-      if (
-        editingId
-      ) {
+            return;
+          }
 
-        await supabase
-          .from(
-            "merch_products"
-          )
-          .update({
-            name:
-              form.name,
-            description:
-              form.description,
-            price:
-              form.price,
-            category:
-              form.category,
-            featured:
-              form.featured,
-            ...(imageUrl && {
-              image_url:
-                imageUrl,
-            }),
-          })
-          .eq(
-            "id",
-            editingId
+          const {
+            data: {
+              publicUrl,
+            },
+          } =
+            supabase.storage
+              .from(
+                "merch-images"
+              )
+              .getPublicUrl(
+                fileName
+              );
+
+          imageUrl =
+            publicUrl;
+        }
+
+        console.log(
+          "Creating product..."
+        );
+
+        const payload = {
+          name:
+            form.name,
+          description:
+            form.description,
+          price:
+            form.price,
+          category:
+            form.category,
+          featured:
+            form.featured,
+          image_url:
+            imageUrl,
+          status:
+            "active",
+        };
+
+        console.log(
+          "PAYLOAD:",
+          payload
+        );
+
+        /* UPDATE */
+        if (
+          editingId
+        ) {
+
+          const {
+            error,
+          } =
+            await supabase
+              .from(
+                "merch_products"
+              )
+              .update({
+                ...payload,
+                ...(imageUrl && {
+                  image_url:
+                    imageUrl,
+                }),
+              })
+              .eq(
+                "id",
+                editingId
+              );
+
+          console.log(
+            "UPDATE ERROR:",
+            error
           );
 
-      } else {
+          if (
+            error
+          ) {
 
-        /* CREATE */
-        await supabase
-          .from(
-            "merch_products"
-          )
-          .insert([
-            {
-              name:
-                form.name,
-              description:
-                form.description,
-              price:
-                form.price,
-              category:
-                form.category,
-              featured:
-                form.featured,
-              image_url:
-                imageUrl,
-              status:
-                "active",
-            },
-          ]);
+            alert(
+              error.message
+            );
+
+            setLoading(
+              false
+            );
+
+            return;
+          }
+
+        } else {
+
+          const {
+            data,
+            error,
+          } =
+            await supabase
+              .from(
+                "merch_products"
+              )
+              .insert([
+                payload,
+              ])
+              .select();
+
+          console.log(
+            "INSERT DATA:",
+            data
+          );
+
+          console.log(
+            "INSERT ERROR:",
+            error
+          );
+
+          if (
+            error
+          ) {
+
+            alert(
+              error.message
+            );
+
+            setLoading(
+              false
+            );
+
+            return;
+          }
+        }
+
+        alert(
+          "Product created successfully!"
+        );
+
+        resetForm();
+
+        fetchProducts();
+
+        setLoading(false);
+
+      } catch (
+        err: any
+      ) {
+
+        console.error(
+          err
+        );
+
+        alert(
+          err.message
+        );
+
+        setLoading(false);
       }
-
-      resetForm();
-
-      fetchProducts();
-
-      setLoading(false);
     };
 
   /* EDIT */
@@ -309,20 +449,28 @@ export default function MerchManagerPage() {
       )
         return;
 
-      await supabase
-        .from(
-          "merch_products"
-        )
-        .delete()
-        .eq(
-          "id",
-          id
-        );
+      const {
+        error,
+      } =
+        await supabase
+          .from(
+            "merch_products"
+          )
+          .delete()
+          .eq(
+            "id",
+            id
+          );
+
+      console.log(
+        "DELETE ERROR:",
+        error
+      );
 
       fetchProducts();
     };
 
-  /* STATUS */
+  /* TOGGLE STATUS */
   const toggleStatus =
     async (
       id: number,
@@ -330,21 +478,29 @@ export default function MerchManagerPage() {
         string
     ) => {
 
-      await supabase
-        .from(
-          "merch_products"
-        )
-        .update({
-          status:
-            current ===
-            "active"
-              ? "hidden"
-              : "active",
-        })
-        .eq(
-          "id",
-          id
-        );
+      const {
+        error,
+      } =
+        await supabase
+          .from(
+            "merch_products"
+          )
+          .update({
+            status:
+              current ===
+              "active"
+                ? "hidden"
+                : "active",
+          })
+          .eq(
+            "id",
+            id
+          );
+
+      console.log(
+        "STATUS ERROR:",
+        error
+      );
 
       fetchProducts();
     };
@@ -416,7 +572,6 @@ export default function MerchManagerPage() {
 
           <div className="space-y-4">
 
-            {/* PREVIEW */}
             {imagePreview && (
 
               <div className="aspect-square rounded-[26px] overflow-hidden bg-black">
@@ -660,311 +815,6 @@ export default function MerchManagerPage() {
             </button>
 
           </div>
-
-        </div>
-
-        {/* DIVISIONS */}
-        <div className="mt-16 space-y-16">
-
-          {groupedProducts.map(
-            (
-              section
-            ) => (
-
-              <div
-                key={
-                  section.category
-                }
-              >
-
-                {/* HEADER */}
-                <div className="mb-6">
-
-                  <p
-                    className="uppercase tracking-[4px] text-[10px]"
-                    style={{
-                      color:
-                        BREEZE_GREEN,
-                    }}
-                  >
-                    Division
-                  </p>
-
-                  <h2
-                    className="mt-2 uppercase italic font-black"
-                    style={{
-                      fontFamily:
-                        "Bebas Neue, sans-serif",
-                      fontSize:
-                        "clamp(38px, 8vw, 70px)",
-                      lineHeight:
-                        "0.9",
-                    }}
-                  >
-
-                    {
-                      section.category
-                    }
-
-                  </h2>
-
-                </div>
-
-                {/* EMPTY */}
-                {section.items
-                  .length ===
-                  0 ? (
-
-                  <div className="rounded-[26px] border border-white/10 bg-white/5 p-8 text-center uppercase tracking-[4px] text-xs text-white/40">
-
-                    No Products
-
-                  </div>
-
-                ) : (
-
-                  <div className="grid grid-cols-2 gap-4">
-
-                    {section.items.map(
-                      (
-                        product
-                      ) => (
-
-                        <div
-                          key={
-                            product.id
-                          }
-                          className="
-                            rounded-[26px]
-                            overflow-hidden
-                            border
-                            border-white/10
-                            bg-white/5
-                            backdrop-blur-xl
-                          "
-                        >
-
-                          {/* IMAGE */}
-                          <div className="aspect-square bg-black overflow-hidden relative">
-
-                            {product.image_url ? (
-
-                              <img
-                                src={
-                                  product.image_url
-                                }
-                                alt={
-                                  product.name
-                                }
-                                loading="lazy"
-                                className="
-                                  w-full
-                                  h-full
-                                  object-cover
-                                "
-                              />
-
-                            ) : (
-
-                              <div className="w-full h-full flex items-center justify-center text-white/30 text-xs uppercase">
-
-                                No Image
-
-                              </div>
-
-                            )}
-
-                            {/* STATUS */}
-                            <div
-                              className={`
-                                absolute
-                                top-3
-                                left-3
-                                px-3
-                                py-1
-                                rounded-full
-                                text-[8px]
-                                uppercase
-                                tracking-[2px]
-                                font-black
-                                ${
-                                  product.status ===
-                                  "active"
-                                    ? "bg-[#8DFF00] text-black"
-                                    : "bg-red-500 text-white"
-                                }
-                              `}
-                            >
-
-                              {
-                                product.status
-                              }
-
-                            </div>
-
-                            {/* FEATURED */}
-                            {product.featured && (
-
-                              <div
-                                className="
-                                  absolute
-                                  top-3
-                                  right-3
-                                  px-3
-                                  py-1
-                                  rounded-full
-                                  text-[8px]
-                                  uppercase
-                                  tracking-[2px]
-                                  font-black
-                                  bg-white
-                                  text-black
-                                "
-                              >
-
-                                Featured
-
-                              </div>
-
-                            )}
-
-                          </div>
-
-                          {/* CONTENT */}
-                          <div className="p-4">
-
-                            <h3
-                              className="uppercase font-black leading-tight"
-                              style={{
-                                fontSize:
-                                  "clamp(16px, 4vw, 24px)",
-                              }}
-                            >
-
-                              {
-                                product.name
-                              }
-
-                            </h3>
-
-                            <p
-                              className="mt-2 font-black"
-                              style={{
-                                color:
-                                  BREEZE_GREEN,
-                              }}
-                            >
-
-                              {
-                                product.price
-                              }
-
-                            </p>
-
-                            <p className="mt-2 text-white/60 text-xs line-clamp-3">
-
-                              {
-                                product.description
-                              }
-
-                            </p>
-
-                            {/* ACTIONS */}
-                            <div className="mt-4 grid grid-cols-2 gap-2">
-
-                              <button
-                                onClick={() =>
-                                  editProduct(
-                                    product
-                                  )
-                                }
-                                className="
-                                  py-3
-                                  rounded-xl
-                                  bg-white
-                                  text-black
-                                  text-[10px]
-                                  uppercase
-                                  tracking-[2px]
-                                  font-black
-                                "
-                              >
-
-                                Edit
-
-                              </button>
-
-                              <button
-                                onClick={() =>
-                                  deleteProduct(
-                                    product.id
-                                  )
-                                }
-                                className="
-                                  py-3
-                                  rounded-xl
-                                  bg-red-500
-                                  text-white
-                                  text-[10px]
-                                  uppercase
-                                  tracking-[2px]
-                                  font-black
-                                "
-                              >
-
-                                Delete
-
-                              </button>
-
-                            </div>
-
-                            <button
-                              onClick={() =>
-                                toggleStatus(
-                                  product.id,
-                                  product.status
-                                )
-                              }
-                              className={`
-                                mt-2
-                                w-full
-                                py-3
-                                rounded-xl
-                                text-[10px]
-                                uppercase
-                                tracking-[2px]
-                                font-black
-                                ${
-                                  product.status ===
-                                  "active"
-                                    ? "bg-yellow-400 text-black"
-                                    : "bg-[#8DFF00] text-black"
-                                }
-                              `}
-                            >
-
-                              {product.status ===
-                              "active"
-                                ? "Hide Product"
-                                : "Activate Product"}
-
-                            </button>
-
-                          </div>
-
-                        </div>
-
-                      )
-                    )}
-
-                  </div>
-
-                )}
-
-              </div>
-
-            )
-          )}
 
         </div>
 
