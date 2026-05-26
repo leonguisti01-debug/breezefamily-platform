@@ -9,6 +9,15 @@ import { createClient } from "@supabase/supabase-js";
 
 const BREEZE_GREEN = "#8DFF00";
 
+const APPAREL_SIZES = [
+  "S",
+  "M",
+  "L",
+  "XL",
+  "2XL",
+  "3XL",
+];
+
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
@@ -35,6 +44,10 @@ export default function CategoryPage() {
   const [cartCount,
     setCartCount] =
     useState(0);
+
+  const [selectedSizes,
+    setSelectedSizes] =
+    useState<Record<string, string>>({});
 
   useEffect(() => {
 
@@ -100,9 +113,43 @@ export default function CategoryPage() {
       );
     };
 
+  /* APPAREL */
+  const isApparel =
+    (product: any) => {
+
+      const name =
+        product.name?.toLowerCase() || "";
+
+      return (
+        name.includes("hoodie") ||
+        name.includes("shirt") ||
+        name.includes("tee")
+      );
+    };
+
   /* ADD */
   const addToCart =
     (product: any) => {
+
+      const apparel =
+        isApparel(product);
+
+      const selectedSize =
+        selectedSizes[
+          product.id
+        ];
+
+      if (
+        apparel &&
+        !selectedSize
+      ) {
+
+        alert(
+          "Please select a size."
+        );
+
+        return;
+      }
 
       const cart =
         JSON.parse(
@@ -115,7 +162,9 @@ export default function CategoryPage() {
         cart.find(
           (item: any) =>
             item.id ===
-            product.id
+              product.id &&
+            item.size ===
+              selectedSize
         );
 
       if (existing) {
@@ -133,6 +182,8 @@ export default function CategoryPage() {
           quantity: 1,
           category:
             product.category,
+          size:
+            selectedSize || null,
         });
       }
 
@@ -285,125 +336,201 @@ export default function CategoryPage() {
               {products.map(
                 (
                   product
-                ) => (
+                ) => {
 
-                  <div
-                    key={
-                      product.id
-                    }
-                    className="
-                      rounded-[20px]
-                      overflow-hidden
-                      border
-                      border-white/10
-                      bg-white/5
-                      backdrop-blur-xl
-                    "
-                  >
+                  const apparel =
+                    isApparel(
+                      product
+                    );
 
-                    {/* IMAGE */}
-                    <div className="relative bg-black aspect-square overflow-hidden">
+                  return (
 
-                      {product.image_url ? (
+                    <div
+                      key={
+                        product.id
+                      }
+                      className="
+                        rounded-[20px]
+                        overflow-hidden
+                        border
+                        border-white/10
+                        bg-white/5
+                        backdrop-blur-xl
+                      "
+                    >
 
-                        <img
-                          src={
-                            product.image_url
-                          }
-                          alt={
+                      {/* IMAGE */}
+                      <div className="relative bg-black aspect-square overflow-hidden">
+
+                        {product.image_url ? (
+
+                          <img
+                            src={
+                              product.image_url
+                            }
+                            alt={
+                              product.name
+                            }
+                            loading="lazy"
+                            className="
+                              w-full
+                              h-full
+                              object-cover
+                            "
+                          />
+
+                        ) : (
+
+                          <div className="w-full h-full flex items-center justify-center text-white/30 text-[9px] uppercase">
+
+                            No Image
+
+                          </div>
+
+                        )}
+
+                      </div>
+
+                      {/* CONTENT */}
+                      <div className="p-2.5">
+
+                        <h3
+                          className="
+                            uppercase
+                            font-black
+                            leading-tight
+                            line-clamp-2
+                          "
+                          style={{
+                            fontSize:
+                              "clamp(11px, 3vw, 14px)",
+                          }}
+                        >
+
+                          {
                             product.name
                           }
-                          loading="lazy"
+
+                        </h3>
+
+                        {/* PRICE */}
+                        <p
+                          className="mt-1 font-black"
+                          style={{
+                            color:
+                              BREEZE_GREEN,
+                            fontSize:
+                              "clamp(11px, 3vw, 14px)",
+                          }}
+                        >
+
+                          {
+                            product.price
+                          }
+
+                        </p>
+
+                        {/* SIZE SELECTOR */}
+                        {apparel && (
+
+                          <div className="mt-3">
+
+                            <p className="text-[8px] uppercase tracking-[2px] text-white/40 mb-2">
+
+                              Select Size
+
+                            </p>
+
+                            <div className="flex flex-wrap gap-1">
+
+                              {APPAREL_SIZES.map(
+                                (
+                                  size
+                                ) => (
+
+                                  <button
+                                    key={
+                                      size
+                                    }
+                                    onClick={() =>
+                                      setSelectedSizes(
+                                        (
+                                          prev
+                                        ) => ({
+                                          ...prev,
+                                          [product.id]:
+                                            size,
+                                        })
+                                      )
+                                    }
+                                    className={`
+                                      px-2
+                                      py-1
+                                      rounded-lg
+                                      text-[8px]
+                                      font-black
+                                      border
+                                      uppercase
+                                      transition
+                                      ${
+                                        selectedSizes[
+                                          product.id
+                                        ] ===
+                                        size
+                                          ? "bg-[#8DFF00] text-black border-[#8DFF00]"
+                                          : "bg-black text-white border-white/10"
+                                      }
+                                    `}
+                                  >
+
+                                    {
+                                      size
+                                    }
+
+                                  </button>
+
+                                )
+                              )}
+
+                            </div>
+
+                          </div>
+
+                        )}
+
+                        {/* BUTTON */}
+                        <button
+                          onClick={() =>
+                            addToCart(
+                              product
+                            )
+                          }
                           className="
+                            mt-3
                             w-full
-                            h-full
-                            object-cover
+                            py-2
+                            rounded-xl
+                            bg-[#8DFF00]
+                            text-black
+                            font-black
+                            uppercase
+                            text-[9px]
+                            tracking-[1px]
+                            active:scale-95
+                            transition
                           "
-                        />
+                        >
 
-                      ) : (
+                          Add
 
-                        <div className="w-full h-full flex items-center justify-center text-white/30 text-[9px] uppercase">
+                        </button>
 
-                          No Image
-
-                        </div>
-
-                      )}
+                      </div>
 
                     </div>
 
-                    {/* CONTENT */}
-                    <div className="p-2.5">
-
-                      <h3
-                        className="
-                          uppercase
-                          font-black
-                          leading-tight
-                          line-clamp-2
-                        "
-                        style={{
-                          fontSize:
-                            "clamp(11px, 3vw, 14px)",
-                        }}
-                      >
-
-                        {
-                          product.name
-                        }
-
-                      </h3>
-
-                      {/* PRICE */}
-                      <p
-                        className="mt-1 font-black"
-                        style={{
-                          color:
-                            BREEZE_GREEN,
-                          fontSize:
-                            "clamp(11px, 3vw, 14px)",
-                        }}
-                      >
-
-                        {
-                          product.price
-                        }
-
-                      </p>
-
-                      {/* BUTTON */}
-                      <button
-                        onClick={() =>
-                          addToCart(
-                            product
-                          )
-                        }
-                        className="
-                          mt-2
-                          w-full
-                          py-2
-                          rounded-xl
-                          bg-[#8DFF00]
-                          text-black
-                          font-black
-                          uppercase
-                          text-[9px]
-                          tracking-[1px]
-                          active:scale-95
-                          transition
-                        "
-                      >
-
-                        Add
-
-                      </button>
-
-                    </div>
-
-                  </div>
-
-                )
+                  );
+                }
               )}
 
             </div>
