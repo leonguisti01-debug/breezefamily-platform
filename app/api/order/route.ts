@@ -3,10 +3,6 @@ import { Resend } from "resend";
 const resend = new Resend(
   process.env.RESEND_API_KEY
 );
-console.log(
-  "RESEND KEY:",
-  process.env.RESEND_API_KEY
-);
 
 export async function POST(
   req: Request
@@ -14,8 +10,17 @@ export async function POST(
 
   try {
 
+    console.log(
+      "API ROUTE HIT"
+    );
+
     const body =
       await req.json();
+
+    console.log(
+      "BODY:",
+      body
+    );
 
     const {
       orderId,
@@ -29,98 +34,76 @@ export async function POST(
       total,
     } = body;
 
-    const orderItems =
-      cart
-        .map(
-          (item: any) =>
-            `${item.quantity} x ${item.name} (${item.price})`
-        )
-        .join("<br/>");
+    console.log(
+      "SENDING ADMIN EMAIL"
+    );
 
-    /* ADMIN EMAIL */
-    await resend.emails.send({
+    const adminEmail =
+      await resend.emails.send({
 
-      from:
-        "orders@breezefamily.co.za",
+        from:
+          "orders@breezefamily.co.za",
 
-      to:
-        "orders@breezefamily.co.za",
+        to:
+          "orders@breezefamily.co.za",
 
-      subject:
-        `New Merch Order #${orderId}`,
+        subject:
+          `New Merch Order #${orderId}`,
 
-      html: `
-        <h1>New Order</h1>
+        html: `
+          <h1>New Order</h1>
 
-        <p><strong>Name:</strong> ${name}</p>
+          <p>${name}</p>
+        `,
+      });
 
-        <p><strong>Email:</strong> ${email}</p>
+    console.log(
+      "ADMIN EMAIL RESPONSE:",
+      adminEmail
+    );
 
-        <p><strong>Phone:</strong> ${phone}</p>
+    console.log(
+      "SENDING CUSTOMER EMAIL"
+    );
 
-        <p><strong>Address:</strong> ${address}</p>
+    const customerEmail =
+      await resend.emails.send({
 
-        <hr />
+        from:
+          "orders@breezefamily.co.za",
 
-        <h2>Items</h2>
+        to: email,
 
-        <p>${orderItems}</p>
+        subject:
+          "Order Received",
 
-        <hr />
+        html: `
+          <h1>Thank You</h1>
+        `,
+      });
 
-        <p><strong>Subtotal:</strong> R${subtotal}</p>
-
-        <p><strong>Courier:</strong> R${courier}</p>
-
-        <h2>Total: R${total}</h2>
-      `,
-    });
-
-    /* CUSTOMER EMAIL */
-    await resend.emails.send({
-
-      from:
-        "orders@breezefamily.co.za",
-
-      to: email,
-
-      subject:
-        "Your Breeze Family Order Was Received",
-
-      html: `
-        <h1>Thank You For Your Order</h1>
-
-        <p>Hi ${name},</p>
-
-        <p>
-          We have received your order and
-          will contact you shortly with
-          payment and courier details.
-        </p>
-
-        <p>
-          <strong>Total:</strong>
-          R${total}
-        </p>
-
-        <p>
-          Thank you for supporting
-          Breeze Family.
-        </p>
-      `,
-    });
+    console.log(
+      "CUSTOMER EMAIL RESPONSE:",
+      customerEmail
+    );
 
     return Response.json({
       success: true,
     });
 
-  } catch (error) {
+  } catch (error: any) {
 
-    console.log(error);
+    console.log(
+      "FULL ERROR:",
+      error
+    );
 
     return Response.json(
       {
         success: false,
+        error:
+          error?.message ||
+          "Unknown error",
       },
       {
         status: 500,
