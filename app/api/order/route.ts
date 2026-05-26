@@ -3,6 +3,10 @@ import { Resend } from "resend";
 const resend = new Resend(
   process.env.re_SNzNHB1u_9SLQea14jmkNHwyv8r546X8C
 );
+console.log(
+  "RESEND KEY:",
+  process.env.RESEND_API_KEY
+);
 
 export async function POST(
   req: Request
