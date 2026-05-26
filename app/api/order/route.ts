@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 const resend = new Resend(
-  process.env.re_SNzNHB1u_9SLQea14jmkNHwyv8r546X8C
+  process.env.RESEND_API_KEY
 );
 console.log(
   "RESEND KEY:",
@@ -41,7 +41,7 @@ export async function POST(
     await resend.emails.send({
 
       from:
-        "Breeze Family <orders@breezefamily.co.za>",
+        "orders@breezefamily.co.za",
 
       to:
         "orders@breezefamily.co.za",
@@ -80,7 +80,7 @@ export async function POST(
     await resend.emails.send({
 
       from:
-        "Breeze Family <orders@breezefamily.co.za>",
+        "orders@breezefamily.co.za",
 
       to: email,
 
