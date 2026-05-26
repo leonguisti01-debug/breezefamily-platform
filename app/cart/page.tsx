@@ -27,9 +27,21 @@ export default function CartPage() {
     setPhone] =
     useState("");
 
+  const [email,
+    setEmail] =
+    useState("");
+
   const [address,
     setAddress] =
     useState("");
+
+  const [loading,
+    setLoading] =
+    useState(false);
+
+  const [success,
+    setSuccess] =
+    useState(false);
 
   useEffect(() => {
 
@@ -37,7 +49,7 @@ export default function CartPage() {
 
   }, []);
 
-  /* LOAD CART */
+  /* LOAD */
   const loadCart =
     () => {
 
@@ -51,7 +63,7 @@ export default function CartPage() {
       setCart(storedCart);
     };
 
-  /* SAVE CART */
+  /* SAVE */
   const saveCart =
     (updatedCart: any[]) => {
 
@@ -163,13 +175,14 @@ export default function CartPage() {
     subtotal +
     COURIER_FEE;
 
-  /* CHECKOUT */
-  const checkoutWhatsApp =
+  /* PLACE ORDER */
+  const placeOrder =
     async () => {
 
       if (
         !name ||
         !phone ||
+        !email ||
         !address
       ) {
 
@@ -180,8 +193,11 @@ export default function CartPage() {
         return;
       }
 
-      /* SAVE ORDER */
+      setLoading(true);
+
+      /* SAVE TO SUPABASE */
       const {
+        data,
         error
       } = await supabase
         .from("merch_orders")
@@ -200,59 +216,61 @@ export default function CartPage() {
               `R${total}`,
             status: "new",
           },
-        ]);
+        ])
+        .select()
+        .single();
 
       if (error) {
 
-  console.log(
-    "SUPABASE ERROR:",
-    error
-  );
+        console.log(error);
 
-  alert(
-    JSON.stringify(error)
-  );
+        alert(
+          "Order failed."
+        );
 
-  return;
-}
+        setLoading(false);
 
-      /* WHATSAPP */
-      let message =
-        `Hi Breeze Family,%0A%0A`;
+        return;
+      }
 
-      message +=
-        `I would like to place an order:%0A%0A`;
+      /* SEND EMAIL */
+      const response =
+        await fetch(
+          "/api/order",
+          {
+            method: "POST",
 
-      cart.forEach(
-        (item) => {
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
 
-          message +=
-            `${item.quantity} x ${item.name} - ${item.price}%0A`;
-        }
-      );
+            body: JSON.stringify({
+              orderId:
+                data.id,
+              name,
+              phone,
+              email,
+              address,
+              cart,
+              subtotal,
+              courier:
+                COURIER_FEE,
+              total,
+            }),
+          }
+        );
 
-      message +=
-        `%0ASubtotal: R${subtotal}%0A`;
+      if (!response.ok) {
 
-      message +=
-        `Courier: R${COURIER_FEE}%0A`;
+        alert(
+          "Email failed."
+        );
 
-      message +=
-        `TOTAL: R${total}%0A%0A`;
+        setLoading(false);
 
-      message +=
-        `Name: ${name}%0A`;
-
-      message +=
-        `Phone: ${phone}%0A`;
-
-      message +=
-        `Address: ${address}`;
-
-      window.open(
-        `https://wa.me/27715921593?text=${message}`,
-        "_blank"
-      );
+        return;
+      }
 
       localStorage.removeItem(
         "cart"
@@ -260,15 +278,15 @@ export default function CartPage() {
 
       setCart([]);
 
-      alert(
-        "Order submitted!"
-      );
+      setSuccess(true);
+
+      setLoading(false);
     };
 
   return (
     <main className="min-h-screen bg-black text-white overflow-x-hidden px-4 py-20">
 
-      {/* BACKGROUND */}
+      {/* BG */}
       <div
         className="fixed top-[-300px] left-[-300px] w-[400px] h-[400px] blur-[160px] rounded-full pointer-events-none"
         style={{
@@ -287,34 +305,24 @@ export default function CartPage() {
 
       <div className="max-w-3xl mx-auto relative z-20">
 
-        {/* HEADER */}
-        <div className="flex items-start justify-between gap-4">
+        {/* SUCCESS */}
+        {success && (
 
-          <div>
+          <div className="rounded-[30px] border border-[#8DFF00]/30 bg-[#8DFF00]/10 p-10 text-center">
 
-            <p
-              className="uppercase tracking-[3px] text-[10px]"
-              style={{
-                color:
-                  BREEZE_GREEN,
-              }}
-            >
-              Breeze Family
-            </p>
-
-            <h1
-              className="mt-2 uppercase italic font-black"
+            <h2
+              className="uppercase italic font-black"
               style={{
                 fontFamily:
                   "Bebas Neue, sans-serif",
                 fontSize:
-                  "clamp(42px, 11vw, 80px)",
+                  "clamp(46px, 9vw, 80px)",
                 lineHeight:
-                  "0.82",
+                  "0.9",
               }}
             >
 
-              YOUR
+              ORDER
               <span
                 className="block"
                 style={{
@@ -322,201 +330,316 @@ export default function CartPage() {
                     BREEZE_GREEN,
                 }}
               >
-                CART
+                RECEIVED
               </span>
 
-            </h1>
-
-          </div>
-
-          <Link
-            href="/merch"
-            className="
-              shrink-0
-              px-4
-              py-3
-              rounded-xl
-              bg-white
-              text-black
-              font-black
-              uppercase
-              text-[10px]
-              tracking-[1px]
-            "
-          >
-
-            Shop
-
-          </Link>
-
-        </div>
-
-        {/* EMPTY */}
-        {cart.length === 0 && (
-
-          <div className="mt-12 rounded-[28px] bg-white/5 border border-white/10 p-10 text-center">
-
-            <h2 className="text-2xl font-black uppercase">
-
-              Your Cart Is Empty
-
             </h2>
+
+            <p className="mt-5 text-white/70 text-sm leading-relaxed">
+
+              Thank you for supporting
+              Breeze Family.
+
+              <br /><br />
+
+              We will contact you shortly
+              with payment and delivery
+              details.
+
+            </p>
+
+            <Link
+              href="/merch"
+              className="
+                inline-flex
+                mt-8
+                px-6
+                py-4
+                rounded-2xl
+                bg-[#8DFF00]
+                text-black
+                font-black
+                uppercase
+                text-sm
+                tracking-[2px]
+              "
+            >
+
+              Continue Shopping
+
+            </Link>
 
           </div>
 
         )}
 
-        {/* CART */}
-        {cart.length > 0 && (
+        {!success && (
 
-          <div className="mt-10 space-y-4">
+          <>
+            {/* HEADER */}
+            <div className="flex items-start justify-between gap-4">
 
-            {/* ITEMS */}
-            {cart.map(
-              (item) => (
+              <div>
 
-                <div
-                  key={item.id}
-                  className="
-                    rounded-[24px]
-                    bg-white/5
-                    border
-                    border-white/10
-                    overflow-hidden
-                  "
+                <p
+                  className="uppercase tracking-[3px] text-[10px]"
+                  style={{
+                    color:
+                      BREEZE_GREEN,
+                  }}
+                >
+                  Breeze Family
+                </p>
+
+                <h1
+                  className="mt-2 uppercase italic font-black"
+                  style={{
+                    fontFamily:
+                      "Bebas Neue, sans-serif",
+                    fontSize:
+                      "clamp(42px, 11vw, 80px)",
+                    lineHeight:
+                      "0.82",
+                  }}
                 >
 
-                  <div className="flex">
+                  YOUR
+                  <span
+                    className="block"
+                    style={{
+                      color:
+                        BREEZE_GREEN,
+                    }}
+                  >
+                    CART
+                  </span>
 
-                    {/* IMAGE */}
-                    <div className="w-[110px] h-[110px] bg-black shrink-0">
+                </h1>
 
-                      {item.image_url ? (
+              </div>
 
-                        <img
-                          src={
-                            item.image_url
-                          }
-                          alt={
-                            item.name
-                          }
-                          className="
-                            w-full
-                            h-full
-                            object-cover
-                          "
-                        />
+              <Link
+                href="/merch"
+                className="
+                  shrink-0
+                  px-4
+                  py-3
+                  rounded-xl
+                  bg-white
+                  text-black
+                  font-black
+                  uppercase
+                  text-[10px]
+                  tracking-[1px]
+                "
+              >
 
-                      ) : (
+                Shop
 
-                        <div className="w-full h-full flex items-center justify-center text-white/30 text-[10px] uppercase">
+              </Link>
 
-                          No Image
+            </div>
+
+            {/* EMPTY */}
+            {cart.length === 0 && (
+
+              <div className="mt-12 rounded-[28px] bg-white/5 border border-white/10 p-10 text-center">
+
+                <h2 className="text-2xl font-black uppercase">
+
+                  Your Cart Is Empty
+
+                </h2>
+
+              </div>
+
+            )}
+
+            {/* CART */}
+            {cart.length > 0 && (
+
+              <div className="mt-10 space-y-4">
+
+                {/* ITEMS */}
+                {cart.map(
+                  (item) => (
+
+                    <div
+                      key={item.id}
+                      className="
+                        rounded-[24px]
+                        bg-white/5
+                        border
+                        border-white/10
+                        overflow-hidden
+                      "
+                    >
+
+                      <div className="flex">
+
+                        <div className="w-[110px] h-[110px] bg-black shrink-0">
+
+                          <img
+                            src={
+                              item.image_url
+                            }
+                            alt={
+                              item.name
+                            }
+                            className="
+                              w-full
+                              h-full
+                              object-cover
+                            "
+                          />
 
                         </div>
 
-                      )}
+                        <div className="flex-1 p-4">
 
-                    </div>
+                          <h2
+                            className="uppercase font-black leading-tight"
+                            style={{
+                              fontSize:
+                                "clamp(14px, 4vw, 20px)",
+                            }}
+                          >
 
-                    {/* CONTENT */}
-                    <div className="flex-1 p-4">
+                            {item.name}
 
-                      <h2
-                        className="uppercase font-black leading-tight"
-                        style={{
-                          fontSize:
-                            "clamp(14px, 4vw, 20px)",
-                        }}
-                      >
+                          </h2>
 
-                        {item.name}
+                          <p
+                            className="mt-1 font-black"
+                            style={{
+                              color:
+                                BREEZE_GREEN,
+                            }}
+                          >
 
-                      </h2>
+                            {item.price}
 
-                      <p
-                        className="mt-1 font-black"
-                        style={{
-                          color:
-                            BREEZE_GREEN,
-                        }}
-                      >
+                          </p>
 
-                        {item.price}
+                          <div className="mt-3 flex items-center gap-2">
 
-                      </p>
+                            <button
+                              onClick={() =>
+                                decreaseQuantity(
+                                  item.id
+                                )
+                              }
+                              className="
+                                w-8
+                                h-8
+                                rounded-lg
+                                bg-white
+                                text-black
+                                font-black
+                              "
+                            >
 
-                      {/* QUANTITY */}
-                      <div className="mt-3 flex items-center gap-2">
+                              -
 
-                        <button
-                          onClick={() =>
-                            decreaseQuantity(
-                              item.id
-                            )
-                          }
-                          className="
-                            w-8
-                            h-8
-                            rounded-lg
-                            bg-white
-                            text-black
-                            font-black
-                          "
-                        >
+                            </button>
 
-                          -
+                            <div className="text-sm font-black min-w-[20px] text-center">
 
-                        </button>
+                              {
+                                item.quantity
+                              }
 
-                        <div className="text-sm font-black min-w-[20px] text-center">
+                            </div>
 
-                          {item.quantity}
+                            <button
+                              onClick={() =>
+                                increaseQuantity(
+                                  item.id
+                                )
+                              }
+                              className="
+                                w-8
+                                h-8
+                                rounded-lg
+                                bg-[#8DFF00]
+                                text-black
+                                font-black
+                              "
+                            >
+
+                              +
+
+                            </button>
+
+                          </div>
+
+                          <button
+                            onClick={() =>
+                              removeItem(
+                                item.id
+                              )
+                            }
+                            className="
+                              mt-3
+                              text-[10px]
+                              uppercase
+                              tracking-[1px]
+                              text-red-400
+                              font-black
+                            "
+                          >
+
+                            Remove
+
+                          </button>
 
                         </div>
-
-                        <button
-                          onClick={() =>
-                            increaseQuantity(
-                              item.id
-                            )
-                          }
-                          className="
-                            w-8
-                            h-8
-                            rounded-lg
-                            bg-[#8DFF00]
-                            text-black
-                            font-black
-                          "
-                        >
-
-                          +
-
-                        </button>
 
                       </div>
 
-                      {/* REMOVE */}
-                      <button
-                        onClick={() =>
-                          removeItem(
-                            item.id
-                          )
-                        }
-                        className="
-                          mt-3
-                          text-[10px]
-                          uppercase
-                          tracking-[1px]
-                          text-red-400
-                          font-black
-                        "
-                      >
+                    </div>
 
-                        Remove
+                  )
+                )}
 
-                      </button>
+                {/* TOTALS */}
+                <div className="rounded-[28px] bg-[#8DFF00] text-black p-6">
+
+                  <div className="space-y-3">
+
+                    <div className="flex items-center justify-between font-black uppercase text-sm">
+
+                      <span>
+                        Subtotal
+                      </span>
+
+                      <span>
+                        R{subtotal}
+                      </span>
+
+                    </div>
+
+                    <div className="flex items-center justify-between font-black uppercase text-sm">
+
+                      <span>
+                        Courier
+                      </span>
+
+                      <span>
+                        R150
+                      </span>
+
+                    </div>
+
+                    <div className="border-t border-black/20 pt-3 flex items-center justify-between font-black uppercase text-lg">
+
+                      <span>
+                        Total
+                      </span>
+
+                      <span>
+                        R{total}
+                      </span>
 
                     </div>
 
@@ -524,156 +647,139 @@ export default function CartPage() {
 
                 </div>
 
-              )
+                {/* DETAILS */}
+                <div className="rounded-[28px] bg-white/5 border border-white/10 p-5">
+
+                  <h2 className="text-2xl font-black uppercase">
+
+                    Customer Details
+
+                  </h2>
+
+                  <div className="mt-5 space-y-4">
+
+                    <input
+                      type="text"
+                      placeholder="Full Name"
+                      value={name}
+                      onChange={(e) =>
+                        setName(
+                          e.target.value
+                        )
+                      }
+                      className="
+                        w-full
+                        px-4
+                        py-4
+                        rounded-2xl
+                        bg-black
+                        border
+                        border-white/10
+                        text-white
+                      "
+                    />
+
+                    <input
+                      type="email"
+                      placeholder="Email Address"
+                      value={email}
+                      onChange={(e) =>
+                        setEmail(
+                          e.target.value
+                        )
+                      }
+                      className="
+                        w-full
+                        px-4
+                        py-4
+                        rounded-2xl
+                        bg-black
+                        border
+                        border-white/10
+                        text-white
+                      "
+                    />
+
+                    <input
+                      type="text"
+                      placeholder="Phone Number"
+                      value={phone}
+                      onChange={(e) =>
+                        setPhone(
+                          e.target.value
+                        )
+                      }
+                      className="
+                        w-full
+                        px-4
+                        py-4
+                        rounded-2xl
+                        bg-black
+                        border
+                        border-white/10
+                        text-white
+                      "
+                    />
+
+                    <textarea
+                      placeholder="Delivery Address"
+                      value={address}
+                      onChange={(e) =>
+                        setAddress(
+                          e.target.value
+                        )
+                      }
+                      className="
+                        w-full
+                        px-4
+                        py-4
+                        rounded-2xl
+                        bg-black
+                        border
+                        border-white/10
+                        text-white
+                        min-h-[120px]
+                      "
+                    />
+
+                  </div>
+
+                  {/* BUTTON */}
+                  <button
+                    onClick={
+                      placeOrder
+                    }
+                    disabled={
+                      loading
+                    }
+                    className="
+                      mt-6
+                      w-full
+                      py-4
+                      rounded-2xl
+                      bg-[#8DFF00]
+                      text-black
+                      font-black
+                      uppercase
+                      text-sm
+                      tracking-[2px]
+                      disabled:opacity-50
+                    "
+                  >
+
+                    {loading
+                      ? "Placing Order..."
+                      : "Place Order"}
+
+                  </button>
+
+                </div>
+
+              </div>
+
             )}
 
-            {/* TOTALS */}
-            <div className="rounded-[28px] bg-[#8DFF00] text-black p-6">
-
-              <div className="space-y-3">
-
-                <div className="flex items-center justify-between font-black uppercase text-sm">
-
-                  <span>
-                    Subtotal
-                  </span>
-
-                  <span>
-                    R{subtotal}
-                  </span>
-
-                </div>
-
-                <div className="flex items-center justify-between font-black uppercase text-sm">
-
-                  <span>
-                    Courier
-                  </span>
-
-                  <span>
-                    R150
-                  </span>
-
-                </div>
-
-                <div className="border-t border-black/20 pt-3 flex items-center justify-between font-black uppercase text-lg">
-
-                  <span>
-                    Total
-                  </span>
-
-                  <span>
-                    R{total}
-                  </span>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            {/* DETAILS */}
-            <div className="rounded-[28px] bg-white/5 border border-white/10 p-5">
-
-              <h2 className="text-2xl font-black uppercase">
-
-                Customer Details
-
-              </h2>
-
-              <div className="mt-5 space-y-4">
-
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  value={name}
-                  onChange={(e) =>
-                    setName(
-                      e.target.value
-                    )
-                  }
-                  className="
-                    w-full
-                    px-4
-                    py-4
-                    rounded-2xl
-                    bg-black
-                    border
-                    border-white/10
-                    text-white
-                  "
-                />
-
-                <input
-                  type="text"
-                  placeholder="Phone Number"
-                  value={phone}
-                  onChange={(e) =>
-                    setPhone(
-                      e.target.value
-                    )
-                  }
-                  className="
-                    w-full
-                    px-4
-                    py-4
-                    rounded-2xl
-                    bg-black
-                    border
-                    border-white/10
-                    text-white
-                  "
-                />
-
-                <textarea
-                  placeholder="Delivery Address"
-                  value={address}
-                  onChange={(e) =>
-                    setAddress(
-                      e.target.value
-                    )
-                  }
-                  className="
-                    w-full
-                    px-4
-                    py-4
-                    rounded-2xl
-                    bg-black
-                    border
-                    border-white/10
-                    text-white
-                    min-h-[120px]
-                  "
-                />
-
-              </div>
-
-              {/* ORDER */}
-              <button
-                onClick={
-                  checkoutWhatsApp
-                }
-                className="
-                  mt-6
-                  w-full
-                  py-4
-                  rounded-2xl
-                  bg-[#8DFF00]
-                  text-black
-                  font-black
-                  uppercase
-                  text-sm
-                  tracking-[2px]
-                "
-              >
-
-                Order On WhatsApp
-
-              </button>
-
-            </div>
-
-          </div>
+          </>
 
         )}
 
