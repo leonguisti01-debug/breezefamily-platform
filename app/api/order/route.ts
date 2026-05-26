@@ -4,6 +4,11 @@ const resend = new Resend(
   process.env.RESEND_API_KEY
 );
 
+console.log(
+  "RESEND KEY:",
+  process.env.RESEND_API_KEY
+);
+
 export async function POST(
   req: Request
 ) {
@@ -42,10 +47,10 @@ export async function POST(
       await resend.emails.send({
 
         from:
-          "orders@breezefamily.co.za",
+          "onboarding@resend.dev",
 
         to:
-          "orders@breezefamily.co.za",
+          "onboarding@resend.dev",
 
         subject:
           `New Merch Order #${orderId}`,
@@ -53,7 +58,51 @@ export async function POST(
         html: `
           <h1>New Order</h1>
 
-          <p>${name}</p>
+          <p><strong>Name:</strong> ${name}</p>
+
+          <p><strong>Email:</strong> ${email}</p>
+
+          <p><strong>Phone:</strong> ${phone}</p>
+
+          <p><strong>Address:</strong> ${address}</p>
+
+          <hr />
+
+          <h2>Items</h2>
+
+          <p>
+            ${cart
+              ?.map(
+                (item: any) =>
+                  `
+                    ${item.quantity} x
+                    ${item.name}
+                    ${
+                      item.size
+                        ? `(Size ${item.size})`
+                        : ""
+                    }
+                    - ${item.price}
+                  `
+              )
+              .join("<br/>")}
+          </p>
+
+          <hr />
+
+          <p>
+            <strong>Subtotal:</strong>
+            R${subtotal}
+          </p>
+
+          <p>
+            <strong>Courier:</strong>
+            R${courier}
+          </p>
+
+          <h2>
+            Total: R${total}
+          </h2>
         `,
       });
 
@@ -70,15 +119,37 @@ export async function POST(
       await resend.emails.send({
 
         from:
-          "orders@breezefamily.co.za",
+          "onboarding@resend.dev",
 
         to: email,
 
         subject:
-          "Order Received",
+          "Your Breeze Family Order Was Received",
 
         html: `
-          <h1>Thank You</h1>
+          <h1>
+            Thank You For Your Order
+          </h1>
+
+          <p>
+            Hi ${name},
+          </p>
+
+          <p>
+            We have received your order
+            and will contact you shortly
+            with payment and courier details.
+          </p>
+
+          <p>
+            <strong>Total:</strong>
+            R${total}
+          </p>
+
+          <p>
+            Thank you for supporting
+            Breeze Family.
+          </p>
         `,
       });
 
@@ -89,13 +160,19 @@ export async function POST(
 
     return Response.json({
       success: true,
+      adminEmail,
+      customerEmail,
     });
 
   } catch (error: any) {
 
     console.log(
       "FULL ERROR:",
-      error
+      JSON.stringify(
+        error,
+        null,
+        2
+      )
     );
 
     return Response.json(
