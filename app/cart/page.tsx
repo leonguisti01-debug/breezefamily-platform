@@ -189,6 +189,9 @@ export default function CartPage() {
   /* PLACE ORDER */
   const placeOrder =
     async () => {
+      console.log(
+  "PLACE ORDER CLICKED"
+);
 
       if (
         !name ||
