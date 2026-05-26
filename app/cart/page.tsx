@@ -79,12 +79,17 @@ export default function CartPage() {
 
   /* REMOVE */
   const removeItem =
-    (id: number) => {
+    (id: number,
+      size?: string
+    ) => {
 
       const updatedCart =
         cart.filter(
           (item) =>
-            item.id !== id
+            !(
+              item.id === id &&
+              item.size === size
+            )
         );
 
       saveCart(updatedCart);
@@ -92,13 +97,16 @@ export default function CartPage() {
 
   /* INCREASE */
   const increaseQuantity =
-    (id: number) => {
+    (id: number,
+      size?: string
+    ) => {
 
       const updatedCart =
         cart.map((item) => {
 
           if (
-            item.id === id
+            item.id === id &&
+            item.size === size
           ) {
 
             return {
@@ -116,13 +124,16 @@ export default function CartPage() {
 
   /* DECREASE */
   const decreaseQuantity =
-    (id: number) => {
+    (id: number,
+      size?: string
+    ) => {
 
       const updatedCart =
         cart.map((item) => {
 
           if (
             item.id === id &&
+            item.size === size &&
             item.quantity > 1
           ) {
 
@@ -206,6 +217,7 @@ export default function CartPage() {
             customer_name:
               name,
             phone,
+            email,
             address,
             items: cart,
             subtotal:
@@ -222,7 +234,10 @@ export default function CartPage() {
 
       if (error) {
 
-        console.log(error);
+        console.log(
+          "SUPABASE ERROR:",
+          error
+        );
 
         alert(
           "Order failed."
@@ -234,37 +249,74 @@ export default function CartPage() {
       }
 
       /* SEND EMAIL */
-      const response =
-        await fetch(
-          "/api/order",
-          {
-            method: "POST",
+      console.log(
+        "SENDING ORDER..."
+      );
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
+      try {
 
-            body: JSON.stringify({
-              orderId:
-                data.id,
-              name,
-              phone,
-              email,
-              address,
-              cart,
-              subtotal,
-              courier:
-                COURIER_FEE,
-              total,
-            }),
-          }
+        const response =
+          await fetch(
+            "/api/order",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+
+              body: JSON.stringify({
+                orderId:
+                  data.id,
+                name,
+                phone,
+                email,
+                address,
+                cart,
+                subtotal,
+                courier:
+                  COURIER_FEE,
+                total,
+              }),
+            }
+          );
+
+        console.log(
+          "FETCH RESPONSE:",
+          response
         );
 
-      if (!response.ok) {
+        const result =
+          await response.json();
+
+        console.log(
+          "FETCH RESULT:",
+          result
+        );
+
+        if (!response.ok) {
+
+          alert(
+            JSON.stringify(
+              result
+            )
+          );
+
+          setLoading(false);
+
+          return;
+        }
+
+      } catch (err) {
+
+        console.log(
+          "FETCH ERROR:",
+          err
+        );
 
         alert(
-          "Email failed."
+          "Fetch crashed"
         );
 
         setLoading(false);
@@ -460,12 +512,11 @@ export default function CartPage() {
 
               <div className="mt-10 space-y-4">
 
-                {/* ITEMS */}
                 {cart.map(
                   (item) => (
 
                     <div
-                      key={item.id}
+                      key={`${item.id}-${item.size || "default"}`}
                       className="
                         rounded-[24px]
                         bg-white/5
@@ -477,6 +528,7 @@ export default function CartPage() {
 
                       <div className="flex">
 
+                        {/* IMAGE */}
                         <div className="w-[110px] h-[110px] bg-black shrink-0">
 
                           <img
@@ -495,6 +547,7 @@ export default function CartPage() {
 
                         </div>
 
+                        {/* CONTENT */}
                         <div className="flex-1 p-4">
 
                           <h2
@@ -509,8 +562,19 @@ export default function CartPage() {
 
                           </h2>
 
+                          {/* SIZE */}
+                          {item.size && (
+
+                            <p className="mt-1 text-[10px] uppercase tracking-[2px] text-white/50">
+
+                              Size: {item.size}
+
+                            </p>
+
+                          )}
+
                           <p
-                            className="mt-1 font-black"
+                            className="mt-2 font-black"
                             style={{
                               color:
                                 BREEZE_GREEN,
@@ -521,12 +585,14 @@ export default function CartPage() {
 
                           </p>
 
+                          {/* QUANTITY */}
                           <div className="mt-3 flex items-center gap-2">
 
                             <button
                               onClick={() =>
                                 decreaseQuantity(
-                                  item.id
+                                  item.id,
+                                  item.size
                                 )
                               }
                               className="
@@ -545,16 +611,15 @@ export default function CartPage() {
 
                             <div className="text-sm font-black min-w-[20px] text-center">
 
-                              {
-                                item.quantity
-                              }
+                              {item.quantity}
 
                             </div>
 
                             <button
                               onClick={() =>
                                 increaseQuantity(
-                                  item.id
+                                  item.id,
+                                  item.size
                                 )
                               }
                               className="
@@ -573,10 +638,12 @@ export default function CartPage() {
 
                           </div>
 
+                          {/* REMOVE */}
                           <button
                             onClick={() =>
                               removeItem(
-                                item.id
+                                item.id,
+                                item.size
                               )
                             }
                             className="
@@ -744,7 +811,7 @@ export default function CartPage() {
 
                   </div>
 
-                  {/* BUTTON */}
+                  {/* ORDER */}
                   <button
                     onClick={
                       placeOrder
