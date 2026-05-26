@@ -6,6 +6,15 @@ import { createClient } from "@supabase/supabase-js";
 
 const BREEZE_GREEN = "#8DFF00";
 
+const APPAREL_SIZES = [
+  "S",
+  "M",
+  "L",
+  "XL",
+  "2XL",
+  "3XL",
+];
+
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
@@ -24,6 +33,10 @@ export default function MerchPage() {
   const [cartCount,
     setCartCount] =
     useState(0);
+
+  const [selectedSizes,
+    setSelectedSizes] =
+    useState<Record<string, string>>({});
 
   useEffect(() => {
 
@@ -79,6 +92,92 @@ export default function MerchPage() {
             item.quantity,
           0
         )
+      );
+    };
+
+  /* APPAREL CHECK */
+  const isApparel =
+    (product: any) => {
+
+      const name =
+        product.name?.toLowerCase() || "";
+
+      return (
+        name.includes("hoodie") ||
+        name.includes("shirt") ||
+        name.includes("tee")
+      );
+    };
+
+  /* ADD TO CART */
+  const addToCart =
+    (product: any) => {
+
+      const apparel =
+        isApparel(product);
+
+      const selectedSize =
+        selectedSizes[
+          product.id
+        ];
+
+      if (
+        apparel &&
+        !selectedSize
+      ) {
+
+        alert(
+          "Please select a size."
+        );
+
+        return;
+      }
+
+      const cart =
+        JSON.parse(
+          localStorage.getItem(
+            "cart"
+          ) || "[]"
+        );
+
+      const existing =
+        cart.find(
+          (item: any) =>
+            item.id ===
+              product.id &&
+            item.size ===
+              selectedSize
+        );
+
+      if (existing) {
+
+        existing.quantity += 1;
+
+      } else {
+
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image_url:
+            product.image_url,
+          quantity: 1,
+          category:
+            product.category,
+          size:
+            selectedSize || null,
+        });
+      }
+
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+      );
+
+      loadCartCount();
+
+      alert(
+        `${product.name} added to cart`
       );
     };
 
@@ -254,11 +353,8 @@ export default function MerchPage() {
 
               return (
 
-                <Link
+                <div
                   key={index}
-                  href={`/merch/${encodeURIComponent(
-                    section.title
-                  )}`}
                   className="
                     block
                     rounded-[28px]
@@ -267,152 +363,258 @@ export default function MerchPage() {
                     bg-white/5
                     backdrop-blur-xl
                     overflow-hidden
-                    active:scale-[0.98]
-                    transition
                   "
                 >
 
-                  <div className="p-5">
+                  <Link
+                    href={`/merch/${encodeURIComponent(
+                      section.title
+                    )}`}
+                  >
 
-                    {/* TOP */}
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="p-5">
 
-                      <div>
+                      {/* TOP */}
+                      <div className="flex items-start justify-between gap-4">
 
-                        <p
-                          className="uppercase tracking-[3px] text-[9px]"
-                          style={{
-                            color:
-                              BREEZE_GREEN,
-                          }}
-                        >
-                          Collection
-                        </p>
+                        <div>
 
-                        <h2
-                          className="uppercase italic font-black mt-1"
-                          style={{
-                            fontFamily:
-                              "Bebas Neue, sans-serif",
-                            fontSize:
-                              "clamp(32px, 8vw, 60px)",
-                            lineHeight:
-                              "0.9",
-                          }}
-                        >
+                          <p
+                            className="uppercase tracking-[3px] text-[9px]"
+                            style={{
+                              color:
+                                BREEZE_GREEN,
+                            }}
+                          >
+                            Collection
+                          </p>
 
-                          {
-                            section.title
-                          }
+                          <h2
+                            className="uppercase italic font-black mt-1"
+                            style={{
+                              fontFamily:
+                                "Bebas Neue, sans-serif",
+                              fontSize:
+                                "clamp(32px, 8vw, 60px)",
+                              lineHeight:
+                                "0.9",
+                            }}
+                          >
 
-                        </h2>
+                            {
+                              section.title
+                            }
 
-                      </div>
-
-                      <div
-                        className="
-                          px-3
-                          py-2
-                          rounded-full
-                          bg-[#8DFF00]
-                          text-black
-                          text-[10px]
-                          uppercase
-                          tracking-[1px]
-                          font-black
-                          shrink-0
-                        "
-                      >
-
-                        {
-                          section.items
-                            .length
-                        } Products
-
-                      </div>
-
-                    </div>
-
-                    {/* PREVIEW */}
-                    <div className="mt-5 flex items-center gap-3 overflow-x-auto no-scrollbar">
-
-                      {preview.length ===
-                      0 ? (
-
-                        <div className="text-white/30 uppercase text-[10px] tracking-[2px] py-6">
-
-                          Products Coming Soon
+                          </h2>
 
                         </div>
 
-                      ) : (
+                        <div
+                          className="
+                            px-3
+                            py-2
+                            rounded-full
+                            bg-[#8DFF00]
+                            text-black
+                            text-[10px]
+                            uppercase
+                            tracking-[1px]
+                            font-black
+                            shrink-0
+                          "
+                        >
 
-                        preview.map(
-                          (
-                            product
-                          ) => (
+                          {
+                            section.items
+                              .length
+                          } Products
 
-                            <div
-                              key={
-                                product.id
-                              }
-                              className="
-                                shrink-0
-                                w-[78px]
-                              "
-                            >
+                        </div>
 
-                              <div className="w-[78px] h-[78px] rounded-[20px] overflow-hidden bg-black border border-white/10">
+                      </div>
 
-                                {product.image_url ? (
+                      {/* PREVIEW */}
+                      <div className="mt-5 flex items-start gap-3 overflow-x-auto no-scrollbar">
 
-                                  <img
-                                    src={
-                                      product.image_url
-                                    }
-                                    alt={
-                                      product.name
-                                    }
-                                    loading="lazy"
-                                    className="
-                                      w-full
-                                      h-full
-                                      object-cover
-                                    "
-                                  />
+                        {preview.length ===
+                        0 ? (
 
-                                ) : (
+                          <div className="text-white/30 uppercase text-[10px] tracking-[2px] py-6">
 
-                                  <div className="w-full h-full flex items-center justify-center text-white/30 text-[8px] uppercase">
+                            Products Coming Soon
 
-                                    No Image
+                          </div>
+
+                        ) : (
+
+                          preview.map(
+                            (
+                              product
+                            ) => {
+
+                              const apparel =
+                                isApparel(
+                                  product
+                                );
+
+                              return (
+
+                                <div
+                                  key={
+                                    product.id
+                                  }
+                                  className="
+                                    shrink-0
+                                    w-[90px]
+                                  "
+                                >
+
+                                  <div className="w-[90px] h-[90px] rounded-[22px] overflow-hidden bg-black border border-white/10">
+
+                                    {product.image_url ? (
+
+                                      <img
+                                        src={
+                                          product.image_url
+                                        }
+                                        alt={
+                                          product.name
+                                        }
+                                        loading="lazy"
+                                        className="
+                                          w-full
+                                          h-full
+                                          object-cover
+                                        "
+                                      />
+
+                                    ) : (
+
+                                      <div className="w-full h-full flex items-center justify-center text-white/30 text-[8px] uppercase">
+
+                                        No Image
+
+                                      </div>
+
+                                    )}
 
                                   </div>
 
-                                )}
+                                  <p className="mt-2 text-[9px] uppercase leading-tight font-black line-clamp-2 text-white/70">
 
-                              </div>
+                                    {
+                                      product.name
+                                    }
 
-                              <p className="mt-2 text-[9px] uppercase leading-tight font-black line-clamp-2 text-white/70">
+                                  </p>
 
-                                {
-                                  product.name
-                                }
+                                  {/* SIZE SELECTOR */}
+                                  {apparel && (
 
-                              </p>
+                                    <div className="mt-2 flex flex-wrap gap-1">
 
-                            </div>
+                                      {APPAREL_SIZES.map(
+                                        (
+                                          size
+                                        ) => (
 
+                                          <button
+                                            key={
+                                              size
+                                            }
+                                            onClick={(
+                                              e
+                                            ) => {
+
+                                              e.preventDefault();
+
+                                              setSelectedSizes(
+                                                (
+                                                  prev
+                                                ) => ({
+                                                  ...prev,
+                                                  [product.id]:
+                                                    size,
+                                                })
+                                              );
+                                            }}
+                                            className={`
+                                              px-1.5
+                                              py-1
+                                              rounded-md
+                                              text-[7px]
+                                              font-black
+                                              border
+                                              uppercase
+                                              ${
+                                                selectedSizes[
+                                                  product.id
+                                                ] ===
+                                                size
+                                                  ? "bg-[#8DFF00] text-black border-[#8DFF00]"
+                                                  : "bg-black text-white border-white/10"
+                                              }
+                                            `}
+                                          >
+
+                                            {
+                                              size
+                                            }
+
+                                          </button>
+
+                                        )
+                                      )}
+
+                                    </div>
+
+                                  )}
+
+                                  {/* ADD */}
+                                  <button
+                                    onClick={(
+                                      e
+                                    ) => {
+
+                                      e.preventDefault();
+
+                                      addToCart(
+                                        product
+                                      );
+                                    }}
+                                    className="
+                                      mt-2
+                                      w-full
+                                      py-2
+                                      rounded-xl
+                                      bg-[#8DFF00]
+                                      text-black
+                                      font-black
+                                      uppercase
+                                      text-[8px]
+                                      tracking-[1px]
+                                    "
+                                  >
+
+                                    Add
+
+                                  </button>
+
+                                </div>
+
+                              );
+                            }
                           )
-                        )
 
-                      )}
+                        )}
+
+                      </div>
 
                     </div>
 
-                  </div>
+                  </Link>
 
-                </Link>
+                </div>
 
               );
             }
