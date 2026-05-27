@@ -180,8 +180,8 @@ export default function HomePage() {
                 }}
               >
 
-                From our family to yours, join millions of fans
-                following the journey of our life, our pets,
+                From my home to yours, join thousands of fans
+                following the journey of my life, my joys
                 and everything in between.
 
               </p>
@@ -288,7 +288,7 @@ export default function HomePage() {
 
                     <h3 className="font-black text-2xl">
 
-                      1.5M+
+                      10K+
 
                     </h3>
 
@@ -304,7 +304,7 @@ export default function HomePage() {
 
                     <h3 className="font-black text-2xl">
 
-                      200M+
+                      120K+
 
                     </h3>
 
