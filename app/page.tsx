@@ -27,7 +27,6 @@ export default function HomePage() {
   const incrementViews =
     async () => {
 
-      /* GET */
       const {
         data
       } =
@@ -49,7 +48,6 @@ export default function HomePage() {
           data.homepage_views
         ) + 1;
 
-      /* UPDATE */
       await supabase
         .from(
           "site_stats"
@@ -76,7 +74,7 @@ export default function HomePage() {
         className="absolute top-[-300px] left-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full"
         style={{
           background:
-            `${BREEZE_GREEN}30`,
+            `${BREEZE_GREEN}25`,
         }}
       />
 
@@ -84,7 +82,7 @@ export default function HomePage() {
         className="absolute bottom-[-300px] right-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full"
         style={{
           background:
-            `${BREEZE_GREEN}20`,
+            `${BREEZE_GREEN}15`,
         }}
       />
 
@@ -99,137 +97,57 @@ export default function HomePage() {
         }}
       />
 
-      {/* VISIT COUNTER */}
-      <section className="relative z-30 px-4 pt-24">
-
-        <div className="max-w-7xl mx-auto">
-
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.8,
-            }}
-            className="
-              mx-auto
-              w-full
-              max-w-[360px]
-              rounded-[30px]
-              border
-              bg-white/5
-              backdrop-blur-2xl
-              px-6
-              py-5
-              text-center
-              shadow-[0_0_60px_rgba(141,255,0,0.10)]
-            "
-            style={{
-              borderColor:
-                `${BREEZE_GREEN}40`,
-            }}
-          >
-
-            <p
-              className="
-                uppercase
-                tracking-[4px]
-                text-[10px]
-                font-black
-              "
-              style={{
-                color:
-                  BREEZE_GREEN,
-              }}
-            >
-
-              LIVE FAMILY VISITS
-
-            </p>
-
-            <h2
-              className="
-                mt-3
-                uppercase
-                italic
-                font-black
-              "
-              style={{
-                fontFamily:
-                  "Bebas Neue, sans-serif",
-                fontSize:
-                  "clamp(52px, 12vw, 90px)",
-                lineHeight:
-                  "0.9",
-                letterSpacing:
-                  "0.05em",
-              }}
-            >
-
-              {views.toLocaleString()}
-
-            </h2>
-
-          </motion.div>
-
-        </div>
-
-      </section>
-
       {/* HERO */}
-      <section className="relative z-20 px-4 md:px-6 pt-10 md:pt-16 pb-20">
+      <section className="relative z-20 overflow-hidden">
 
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
+        <div className="max-w-[1600px] mx-auto px-4 md:px-8 pt-10 md:pt-16">
 
-          {/* LEFT SIDE */}
-          <div className="relative z-20">
+          <div className="grid lg:grid-cols-[1fr_540px_320px] gap-10 items-center">
 
-            {/* SMALL TOP TEXT */}
-            <p
-              className="uppercase font-black"
-              style={{
-                fontFamily:
-                  "Bebas Neue, sans-serif",
-                fontSize:
-                  "clamp(13px, 1vw, 16px)",
-                letterSpacing:
-                  "0.12em",
-                marginBottom:
-                  "16px",
-                color:
-                  BREEZE_GREEN,
-              }}
-            >
+            {/* LEFT */}
+            <div className="order-2 lg:order-1 text-center lg:text-left">
 
-              A NEW CHAPTER. A BIGGER MOVEMENT.
-
-            </p>
-
-            {/* MAIN HEADING */}
-            <div className="leading-none">
-
-              <h1
-                className="uppercase italic font-black text-white"
+              <p
+                className="
+                  uppercase
+                  font-black
+                  text-[#8DFF00]
+                "
                 style={{
                   fontFamily:
                     "Bebas Neue, sans-serif",
                   fontSize:
-                    "clamp(78px, 10vw, 160px)",
-                  lineHeight:
-                    "0.82",
+                    "clamp(14px, 1vw, 18px)",
                   letterSpacing:
-                    "0.12em",
+                    "0.2em",
                 }}
               >
 
-                <span className="block">
+                LIVE FAMILY. REAL FUN. PRIZED PETS.
 
-                  A NEW
+              </p>
+
+              <h1
+                className="
+                  mt-6
+                  uppercase
+                  italic
+                  font-black
+                  leading-[0.88]
+                "
+                style={{
+                  fontFamily:
+                    "Bebas Neue, sans-serif",
+                  fontSize:
+                    "clamp(70px, 9vw, 150px)",
+                  letterSpacing:
+                    "0.02em",
+                }}
+              >
+
+                <span className="block text-white">
+
+                  A NEW CHAPTER.
 
                 </span>
 
@@ -241,125 +159,213 @@ export default function HomePage() {
                   }}
                 >
 
-                  BREEZE
-
-                </span>
-
-                <span className="block mt-2">
-
-                  ERA
+                  A BIGGER MOVEMENT.
 
                 </span>
 
               </h1>
 
+              <p
+                className="
+                  mt-8
+                  text-white/75
+                  leading-relaxed
+                  max-w-[520px]
+                  mx-auto
+                  lg:mx-0
+                "
+                style={{
+                  fontSize:
+                    "clamp(18px, 1.4vw, 26px)",
+                }}
+              >
+
+                From our family to yours, join millions of fans
+                following the journey of our life, our pets,
+                and everything in between.
+
+              </p>
+
             </div>
 
-            {/* SLOGAN */}
-            <p
-              className="text-white/80"
-              style={{
-                marginTop:
-                  "24px",
-                fontSize:
-                  "clamp(18px, 1.4vw, 26px)",
-                fontWeight:
-                  300,
-                letterSpacing:
-                  "-0.02em",
-              }}
-            >
+            {/* CENTER IMAGE */}
+            <div className="relative flex justify-center order-1 lg:order-2">
 
-              Faith. Family. Loyalty.
+              {/* GLOW */}
+              <div className="absolute inset-0 bg-[#8DFF00]/20 blur-[120px] rounded-full scale-75" />
 
-            </p>
-
-          </div>
-
-          {/* RIGHT SIDE */}
-          <div className="relative h-[620px] md:h-[760px] mt-10 lg:mt-0">
-
-            {/* MAIN CARD */}
-            <motion.div
-              animate={{
-                y: [0, -15, 0],
-              }}
-              transition={{
-                repeat:
-                  Infinity,
-                duration:
-                  6,
-              }}
-              className="absolute top-0 right-0 w-[240px] md:w-[380px] rounded-[34px] overflow-hidden border bg-white/5 backdrop-blur-2xl shadow-[0_0_60px_rgba(141,255,0,0.08)]"
-              style={{
-                borderColor:
-                  `${BREEZE_GREEN}40`,
-              }}
-            >
-
-              <img
-                src="/hero-main.jpg"
+              {/* IMAGE */}
+              <motion.img
+                animate={{
+                  y: [0, -12, 0],
+                }}
+                transition={{
+                  repeat:
+                    Infinity,
+                  duration:
+                    6,
+                }}
+                src="/hero-pets.png"
                 alt="Breeze Family"
-                className="w-full h-[300px] md:h-[460px] object-cover"
+                className="
+                  relative
+                  z-20
+                  w-full
+                  max-w-[620px]
+                  object-contain
+                  drop-shadow-[0_0_40px_rgba(141,255,0,0.35)]
+                "
               />
 
-            </motion.div>
+            </div>
 
-            {/* KIDS CARD */}
-            <motion.div
-              animate={{
-                y: [0, 12, 0],
-                rotate: [-8, -10, -8],
-              }}
-              transition={{
-                repeat:
-                  Infinity,
-                duration:
-                  6,
-              }}
-              className="absolute top-[150px] left-0 md:left-[-10px] w-[200px] md:w-[290px] rounded-[28px] overflow-hidden border bg-black/80 backdrop-blur-2xl shadow-[0_0_60px_rgba(141,255,0,0.12)]"
-              style={{
-                borderColor:
-                  `${BREEZE_GREEN}40`,
-              }}
-            >
+            {/* RIGHT PANEL */}
+            <div className="order-3 flex justify-center lg:justify-end">
 
-              <img
-                src="/kids-poster.jpg"
-                alt="Kids Talent Show"
-                className="w-full h-[280px] md:h-[410px] object-cover"
-              />
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  x: 40,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                }}
+                transition={{
+                  duration: 1,
+                }}
+                className="
+                  w-full
+                  max-w-[320px]
+                  rounded-[40px]
+                  border
+                  border-[#8DFF00]/40
+                  bg-black/70
+                  backdrop-blur-2xl
+                  p-8
+                  shadow-[0_0_60px_rgba(141,255,0,0.08)]
+                "
+              >
 
-            </motion.div>
+                <p
+                  className="
+                    uppercase
+                    tracking-[4px]
+                    text-xs
+                    font-black
+                    text-[#8DFF00]
+                  "
+                >
 
-            {/* MERCH CARD */}
-            <motion.div
-              animate={{
-                y: [0, -10, 0],
-                rotate: [6, 8, 6],
-              }}
-              transition={{
-                repeat:
-                  Infinity,
-                duration:
-                  7,
-              }}
-              className="absolute bottom-[20px] right-0 md:right-[-30px] w-[200px] md:w-[270px] rounded-[28px] overflow-hidden border bg-black/80 backdrop-blur-2xl shadow-[0_0_60px_rgba(141,255,0,0.12)]"
-              style={{
-                borderColor:
-                  `${BREEZE_GREEN}40`,
-              }}
-            >
+                  LIVE FAMILY VISITS
 
-              <img
-                src="/merch-card.jpg"
-                alt="Breeze Merch"
-                className="w-full h-[280px] md:h-[390px] object-cover"
-              />
+                </p>
 
-            </motion.div>
+                <h2
+                  className="
+                    mt-5
+                    italic
+                    font-black
+                    leading-none
+                  "
+                  style={{
+                    fontFamily:
+                      "Bebas Neue, sans-serif",
+                    fontSize:
+                      "clamp(70px, 8vw, 120px)",
+                  }}
+                >
+
+                  {views.toLocaleString()}
+
+                </h2>
+
+                <div className="h-px bg-[#8DFF00]/20 my-8" />
+
+                <div className="space-y-8">
+
+                  <div>
+
+                    <h3 className="font-black text-2xl">
+
+                      1.5M+
+
+                    </h3>
+
+                    <p className="uppercase tracking-[2px] text-white/70 text-xs">
+
+                      FOLLOWERS
+
+                    </p>
+
+                  </div>
+
+                  <div>
+
+                    <h3 className="font-black text-2xl">
+
+                      200M+
+
+                    </h3>
+
+                    <p className="uppercase tracking-[2px] text-white/70 text-xs">
+
+                      VIEWS
+
+                    </p>
+
+                  </div>
+
+                  <div>
+
+                    <h3 className="font-black text-[#8DFF00] text-2xl">
+
+                      PRIZED PETS
+
+                    </h3>
+
+                    <p className="uppercase tracking-[2px] text-white/70 text-xs">
+
+                      & COUNTING
+
+                    </p>
+
+                  </div>
+
+                  <div>
+
+                    <h3 className="font-black text-[#8DFF00] text-2xl">
+
+                      DAILY UPLOADS
+
+                    </h3>
+
+                    <p className="uppercase tracking-[2px] text-white/70 text-xs">
+
+                      ON TIKTOK
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </motion.div>
+
+            </div>
 
           </div>
+
+        </div>
+
+        {/* TORN EFFECT */}
+        <div className="relative mt-[-20px] z-30">
+
+          <img
+            src="/torn-divider.png"
+            alt=""
+            className="w-full object-cover"
+          />
 
         </div>
 
