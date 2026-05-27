@@ -696,7 +696,7 @@ export default function PrizedPetsPage() {
                       <div className="flex justify-center">
 
                         <WinnerBubble
-                          name="Kinnie - Titan & Raven"
+                          name="Kinnie - Titan &"
                           photo="https://xwzathzitijhmupqqxux.supabase.co/storage/v1/object/public/prized-pets/kinnie-titan&raven.jpeg"
                           label="1st"
                           setSelectedImage={
@@ -722,155 +722,172 @@ export default function PrizedPetsPage() {
       </section>
 
       {/* ENTRIES */}
-      <section
-        id="pet-gallery"
-        className="relative z-20 px-4 pt-20 pb-[220px]"
+<section
+  id="pet-gallery"
+  className="relative z-20 px-4 pt-20 pb-[220px]"
+>
+
+  <div className="text-center mb-10">
+
+    <p
+      className="uppercase tracking-[5px] text-xs"
+      style={{
+        color:
+          BREEZE_GREEN,
+      }}
+    >
+      LIVE ENTRIES
+    </p>
+
+    <h2
+      className="mt-4 uppercase italic font-black"
+      style={{
+        fontFamily:
+          "Bebas Neue, sans-serif",
+        fontSize:
+          "clamp(42px, 9vw, 120px)",
+        lineHeight:
+          "0.82",
+      }}
+    >
+
+      PET
+      <span
+        className="block"
+        style={{
+          color:
+            BREEZE_GREEN,
+        }}
       >
+        GALLERY
+      </span>
 
-        <div className="text-center mb-10">
+    </h2>
 
-          <p
-            className="uppercase tracking-[5px] text-xs"
-            style={{
-              color:
-                BREEZE_GREEN,
+  </div>
+
+  {entriesLoading ? (
+
+    <div className="text-center py-20 text-white/50 uppercase tracking-[4px]">
+
+      Loading Entries...
+
+    </div>
+
+  ) : (
+
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+
+      {entries.map(
+        (
+          entry,
+          index
+        ) => (
+
+          <motion.div
+            key={index}
+            whileHover={{
+              scale: 1.03,
+            }}
+            transition={{
+              duration: 0.2,
             }}
           >
-            LIVE ENTRIES
-          </p>
 
-          <h2
-            className="mt-4 uppercase italic font-black"
-            style={{
-              fontFamily:
-                "Bebas Neue, sans-serif",
-              fontSize:
-                "clamp(42px, 9vw, 120px)",
-              lineHeight:
-                "0.82",
-            }}
-          >
-
-            PET
-            <span
-              className="block"
+            <div
+              onClick={() =>
+                setSelectedImage(
+                  entry.photo_url
+                )
+              }
+              className="
+                relative
+                rounded-[28px]
+                overflow-hidden
+                border-2
+                bg-black
+                aspect-[4/5]
+                cursor-pointer
+                shadow-[0_0_30px_rgba(141,255,0,0.08)]
+              "
               style={{
-                color:
-                  BREEZE_GREEN,
+                borderColor:
+                  `${BREEZE_GREEN}35`,
               }}
             >
-              GALLERY
-            </span>
 
-          </h2>
+              {/* IMAGE */}
+              <img
+                src={
+                  entry.photo_url
+                }
+                alt={
+                  entry.name
+                }
+                loading="lazy"
+                className="
+                  w-full
+                  h-full
+                  object-cover
+                  transition
+                  duration-300
+                  hover:scale-105
+                "
+              />
 
-        </div>
+              {/* OVERLAY */}
+              <div
+                className="
+                  absolute
+                  inset-0
+                  bg-gradient-to-t
+                  from-black/70
+                  via-black/0
+                  to-transparent
+                "
+              />
 
-        {entriesLoading ? (
+              {/* NAME */}
+              <div className="absolute bottom-0 left-0 right-0 p-4">
 
-          <div className="text-center py-20 text-white/50 uppercase tracking-[4px]">
-
-            Loading Entries...
-
-          </div>
-
-        ) : (
-
-          <div className="grid grid-cols-3 gap-5">
-
-            {entries.map(
-              (
-                entry,
-                index
-              ) => (
-
-                <motion.div
-                  key={index}
-                  whileHover={{
-                    scale: 1.05,
+                <h3
+                  className="
+                    uppercase
+                    italic
+                    font-black
+                    text-white
+                    break-words
+                  "
+                  style={{
+                    fontFamily:
+                      "Bebas Neue, sans-serif",
+                    fontSize:
+                      "clamp(18px, 4vw, 28px)",
+                    lineHeight:
+                      "0.9",
+                    letterSpacing:
+                      "0.05em",
                   }}
                 >
 
-                  <div className="flex flex-col items-center text-center">
+                  {entry.name}
 
-                    <div
-                      onClick={() =>
-                        setSelectedImage(
-                          entry.photo_url
-                        )
-                      }
-                      className="
-                        relative
-                        rounded-full
-                        overflow-hidden
-                        border-2
-                        bg-black
-                        w-[72px]
-                        h-[72px]
-                        flex
-                        items-center
-                        justify-center
-                        cursor-pointer
-                      "
-                      style={{
-                        borderColor:
-                          `${BREEZE_GREEN}50`,
-                      }}
-                    >
+                </h3>
 
-                      <img
-                        src={
-                          entry.photo_url
-                        }
-                        alt={
-                          entry.name
-                        }
-                        loading="lazy"
-                        className="
-                          w-full
-                          h-full
-                          object-contain
-                          bg-black
-                        "
-                      />
+              </div>
 
-                    </div>
+            </div>
 
-                    <h3
-                      className="mt-3 uppercase italic font-black break-words"
-                      style={{
-                        fontFamily:
-                          "Bebas Neue, sans-serif",
-                        fontSize:
-                          "clamp(12px, 3vw, 18px)",
-                        lineHeight:
-                          "0.95",
-                        letterSpacing:
-                          "0.05em",
-                        maxWidth:
-                          "80px",
-                      }}
-                    >
+          </motion.div>
 
-                      {
-                        entry.name
-                      }
+        )
+      )}
 
-                    </h3>
+    </div>
 
-                  </div>
+  )}
 
-                </motion.div>
-
-              )
-            )}
-
-          </div>
-
-        )}
-
-      </section>
-
+</section>
       {/* IMAGE MODAL */}
       {selectedImage && (
 

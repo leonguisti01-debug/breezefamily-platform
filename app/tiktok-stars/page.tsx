@@ -318,7 +318,7 @@ export default function TikTokStarsPage() {
                   }}
                 >
 
-                  R35K
+                  R40K
 
                 </h3>
 
