@@ -2,580 +2,336 @@
 
 import { motion } from "framer-motion";
 
-const BREEZE_GREEN = "#8DFF00";
-
 export default function TikTokStarsPage() {
 
   return (
-    <main className="min-h-screen bg-black text-white overflow-x-hidden relative">
+    <main className="min-h-screen bg-[#050816] text-white overflow-hidden relative">
 
-      {/* BACKGROUND */}
-      <div
-        className="fixed top-[-220px] left-[-220px] w-[420px] h-[420px] blur-[160px] rounded-full pointer-events-none"
-        style={{
-          background: `${BREEZE_GREEN}12`,
-        }}
-      />
+      {/* BACKGROUND LIGHTS */}
+      <div className="absolute top-[-200px] left-[-120px] w-[500px] h-[500px] bg-pink-500/20 blur-[180px] rounded-full pointer-events-none" />
 
-      <div
-        className="fixed bottom-[-220px] right-[-220px] w-[420px] h-[420px] blur-[160px] rounded-full pointer-events-none"
-        style={{
-          background: `${BREEZE_GREEN}08`,
-        }}
-      />
+      <div className="absolute top-[120px] right-[-100px] w-[450px] h-[450px] bg-cyan-500/20 blur-[180px] rounded-full pointer-events-none" />
+
+      <div className="absolute bottom-[-200px] left-[20%] w-[500px] h-[500px] bg-purple-500/20 blur-[200px] rounded-full pointer-events-none" />
 
       {/* HERO */}
-      <section className="relative z-20 px-4 pt-10 pb-8">
+      <section className="relative z-20 min-h-screen flex items-center px-5 py-14">
 
-        <div className="text-center">
+        <div className="max-w-7xl mx-auto w-full">
 
-          <p
-            className="uppercase tracking-[4px] text-[10px]"
-            style={{
-              color: BREEZE_GREEN,
-            }}
-          >
-            South Africa's Digital Star Platform
-          </p>
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
 
-          <h1
-            className="mt-5 uppercase italic font-black"
-            style={{
-              fontFamily:
-                "Bebas Neue, sans-serif",
-              fontSize:
-                "clamp(54px, 14vw, 120px)",
-              lineHeight: "0.82",
-              letterSpacing: "0.08em",
-            }}
-          >
-
-            TIKTOK
-            <span
-              className="block"
-              style={{
-                color: BREEZE_GREEN,
+            {/* LEFT */}
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 40,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.7,
               }}
             >
-              STARS
-            </span>
 
-          </h1>
+              <p className="uppercase tracking-[5px] text-[11px] text-cyan-400 font-black">
+
+                South Africa's Biggest Kids Talent Search
+
+              </p>
+
+              <h1
+                className="
+                  mt-5
+                  uppercase
+                  font-black
+                  italic
+                  leading-[0.9]
+                "
+                style={{
+                  fontFamily:
+                    "Bebas Neue, sans-serif",
+                  fontSize:
+                    "clamp(64px, 10vw, 150px)",
+                }}
+              >
+
+                BE THE NEXT
+
+                <span className="block text-cyan-400">
+
+                  TIKTOK
+
+                </span>
+
+                <span className="block text-pink-500">
+
+                  STAR
+
+                </span>
+
+              </h1>
+
+              <h2 className="mt-6 text-xl md:text-3xl font-black uppercase">
+
+                Sing. Dance. Perform. Shine.
+
+              </h2>
+
+              <p className="mt-4 text-white/70 max-w-xl leading-relaxed text-sm md:text-lg">
+
+                The Ultimate Kids Talent Search for Ages 2–17.
+                Upload your performance, grow your audience,
+                and stand a chance to become South Africa’s
+                next digital superstar.
+
+              </p>
+
+              {/* FEATURES */}
+              <div className="mt-8 space-y-3">
+
+                {[
+                  "Open to all young talent in South Africa",
+                  "Upload your audition online",
+                  "Win massive prizes",
+                  "Be seen live on TikTok",
+                ].map((item, index) => (
+
+                  <div
+                    key={index}
+                    className="flex items-center gap-3"
+                  >
+
+                    <div className="w-5 h-5 rounded-full bg-pink-500 flex items-center justify-center text-[10px] font-black">
+
+                      ✓
+
+                    </div>
+
+                    <p className="text-sm md:text-base text-white/80">
+
+                      {item}
+
+                    </p>
+
+                  </div>
+
+                ))}
+
+              </div>
+
+              {/* BUTTONS */}
+              <div className="mt-10 flex flex-col sm:flex-row gap-4">
+
+                <a
+                  href="/kids-edition/register"
+                  className="
+                    group
+                    relative
+                    overflow-hidden
+                    rounded-2xl
+                    bg-gradient-to-r
+                    from-pink-500
+                    to-pink-600
+                    px-8
+                    py-5
+                    uppercase
+                    font-black
+                    tracking-[3px]
+                    text-sm
+                    text-center
+                    shadow-[0_0_35px_rgba(236,72,153,0.6)]
+                    transition
+                    hover:scale-[1.02]
+                  "
+                >
+
+                  ENTER NOW
+
+                </a>
+
+                <a
+                  href="/kids-edition/entries"
+                  className="
+                    rounded-2xl
+                    border
+                    border-white/15
+                    bg-white/5
+                    backdrop-blur-xl
+                    px-8
+                    py-5
+                    uppercase
+                    font-black
+                    tracking-[3px]
+                    text-sm
+                    text-center
+                    hover:bg-white/10
+                    transition
+                  "
+                >
+
+                  VIEW ENTRIES
+
+                </a>
+
+              </div>
+
+              <p className="mt-6 text-white/40 text-sm">
+
+                Entries open from 1 June – 30 September 2026
+
+              </p>
+
+            </motion.div>
+
+            {/* RIGHT */}
+            <motion.div
+              initial={{
+                opacity: 0,
+                scale: 0.9,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+              }}
+              transition={{
+                duration: 0.8,
+              }}
+              className="relative"
+            >
+
+              {/* GLOW */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/20 via-cyan-500/10 to-purple-500/20 blur-[120px] rounded-full scale-110" />
+
+              {/* IMAGE */}
+              <div
+                className="
+                  relative
+                  rounded-[40px]
+                  overflow-hidden
+                  border
+                  border-white/10
+                  shadow-[0_0_60px_rgba(0,255,255,0.15)]
+                "
+              >
+
+                <img
+                  src="/kids-edition-poster.jpg"
+                  alt="TikTok Stars"
+                  className="
+                    w-full
+                    h-auto
+                    object-cover
+                  "
+                />
+
+              </div>
+
+            </motion.div>
+
+          </div>
 
         </div>
 
       </section>
 
-      {/* MOBILE CARDS */}
-      <section className="relative z-20 px-4 pb-20">
+      {/* LOWER SECTION */}
+      <section className="relative z-20 px-5 pb-24">
 
-        <div
-          className="
-            flex
-            gap-4
-            overflow-x-auto
-            snap-x
-            snap-mandatory
-            no-scrollbar
-            pb-4
-            pr-[18vw]
-          "
-        >
+        <div className="max-w-7xl mx-auto">
 
-          {/* ========================= */}
-          {/* KIDS EDITION */}
-          {/* ========================= */}
-
-          <motion.div
-            whileTap={{
-              scale: 0.98,
-            }}
-            className="snap-center shrink-0 w-[72vw] max-w-[320px]"
+          <div
+            className="
+              rounded-[40px]
+              border
+              border-white/10
+              bg-white/5
+              backdrop-blur-2xl
+              p-8
+            "
           >
 
-            <div
-              className="
-                rounded-[30px]
-                border
-                bg-white/5
-                backdrop-blur-2xl
-                overflow-hidden
-                p-5
-                min-h-[540px]
-                flex
-                flex-col
-                justify-between
-              "
-              style={{
-                borderColor:
-                  `${BREEZE_GREEN}40`,
-              }}
-            >
+            <div className="flex items-center justify-between flex-wrap gap-4">
 
               <div>
 
-                <div
-                  className="
-                    inline-flex
-                    rounded-full
-                    bg-[#8DFF00]
-                    text-black
-                    px-4
-                    py-2
-                    text-[10px]
-                    uppercase
-                    tracking-[3px]
-                    font-black
-                  "
-                >
+                <p className="uppercase tracking-[4px] text-[10px] text-cyan-400">
 
-                  OPEN NOW
+                  Competition Status
 
-                </div>
-
-                <p
-                  className="uppercase tracking-[4px] text-[10px] mt-6"
-                  style={{
-                    color:
-                      BREEZE_GREEN,
-                  }}
-                >
-                  The Next Generation
                 </p>
 
                 <h2
-                  className="mt-4 uppercase italic font-black"
+                  className="
+                    mt-3
+                    uppercase
+                    italic
+                    font-black
+                  "
                   style={{
                     fontFamily:
                       "Bebas Neue, sans-serif",
                     fontSize:
-                      "clamp(34px, 8vw, 56px)",
-                    lineHeight: "0.9",
+                      "clamp(42px, 7vw, 90px)",
+                    lineHeight:
+                      "0.9",
                   }}
                 >
 
-                  Season 2
-                  <span className="block">
-                    Kids Edition
+                  SEASON 2
+                  <span className="block text-pink-500">
+
+                    KIDS EDITION
+
                   </span>
 
                 </h2>
 
-                <p className="mt-6 text-white/70 text-sm leading-relaxed">
-
-                  South Africa’s next generation of performers,
-                  creators and entertainers are ready to shine.
-
-                </p>
-
               </div>
 
-              <div className="mt-10 space-y-4">
-
-                <a
-                  href="https://www.breezefamily.co.za/kids-edition/entries"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-
-                  <div
-                    className="
-                      rounded-[20px]
-                      border
-                      border-white/10
-                      bg-white/5
-                      py-4
-                      text-center
-                      uppercase
-                      tracking-[3px]
-                      text-[10px]
-                      font-black
-                    "
-                  >
-                    <div className="mt-6 rounded-[26px] overflow-hidden border border-white/10 bg-black">
-
-  <img
-    src="/kids-edition-poster.jpg"
-    alt="TikTok Stars Kids Edition"
-    className="
-      w-full
-      h-auto
-      object-cover
-    "
-  />
-
-</div>
-
-                    View Accepted Entries
-
-                  </div>
-
-                </a>
-
-                <a
-                  href="https://www.breezefamily.co.za/kids-edition/register"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-
-                  <div
-                    className="
-                      rounded-[20px]
-                      bg-[#8DFF00]
-                      text-black
-                      py-4
-                      text-center
-                      uppercase
-                      tracking-[3px]
-                      text-[10px]
-                      font-black
-                    "
-                  >
-
-                    Enter Kids Edition
-
-                  </div>
-
-                </a>
-
-              </div>
-
-            </div>
-
-          </motion.div>
-
-          {/* ========================= */}
-          {/* SEASON 1 */}
-          {/* ========================= */}
-
-          <motion.div
-            whileTap={{
-              scale: 0.98,
-            }}
-            className="snap-center shrink-0 w-[72vw] max-w-[320px]"
-          >
-
-            <div
-              className="
-                rounded-[30px]
-                border
-                bg-white/5
-                backdrop-blur-2xl
-                overflow-hidden
-                p-5
-                min-h-[540px]
-              "
-              style={{
-                borderColor:
-                  `${BREEZE_GREEN}25`,
-              }}
-            >
-
-              <p
-                className="uppercase tracking-[4px] text-[10px]"
-                style={{
-                  color: BREEZE_GREEN,
-                }}
-              >
-                Original Season
-              </p>
-
-              <h2
-                className="mt-4 uppercase italic font-black"
-                style={{
-                  fontFamily:
-                    "Bebas Neue, sans-serif",
-                  fontSize:
-                    "clamp(36px, 9vw, 60px)",
-                  lineHeight: "0.9",
-                }}
+              <div
+                className="
+                  rounded-2xl
+                  bg-gradient-to-r
+                  from-cyan-500
+                  to-pink-500
+                  px-6
+                  py-5
+                  text-center
+                  min-w-[180px]
+                "
               >
 
-                Season 1
+                <p className="uppercase text-[10px] tracking-[3px] font-black">
 
-              </h2>
+                  Starting Prize
 
-              {/* WINNER */}
-              <div className="mt-8 text-center">
-
-                <div
-                  className="
-                    w-[105px]
-                    h-[105px]
-                    rounded-full
-                    overflow-hidden
-                    border-4
-                    mx-auto
-                  "
-                  style={{
-                    borderColor:
-                      BREEZE_GREEN,
-                  }}
-                >
-
-                  <img
-                    src="/season1-winner.jpg"
-                    alt="Winner"
-                    loading="lazy"
-                    className="
-                      w-full
-                      h-full
-                      object-cover
-                    "
-                  />
-
-                </div>
-
-                <p
-                  className="mt-4 uppercase tracking-[4px] text-[10px]"
-                  style={{
-                    color:
-                      BREEZE_GREEN,
-                  }}
-                >
-                  Winner
                 </p>
 
                 <h3
-                  className="mt-2 uppercase italic font-black"
+                  className="mt-2 font-black"
                   style={{
-                    fontFamily:
-                      "Bebas Neue, sans-serif",
                     fontSize:
-                      "clamp(24px, 7vw, 38px)",
+                      "clamp(36px, 6vw, 60px)",
                   }}
                 >
 
-                  NAME
+                  R35K
 
                 </h3>
 
               </div>
 
-              {/* RUNNERS */}
-              <div className="grid grid-cols-2 gap-3 mt-8">
-
-                <RunnerBubble
-                  image="/season1-runnerup1.jpg"
-                  name="SETH"
-                />
-
-                <RunnerBubble
-                  image="/season1-runnerup2.jpg"
-                  name="GUMEDE"
-                />
-
-              </div>
-
             </div>
 
-          </motion.div>
-
-          {/* ========================= */}
-          {/* SEASON 2 */}
-          {/* ========================= */}
-
-          <motion.div
-            whileTap={{
-              scale: 0.98,
-            }}
-            className="snap-center shrink-0 w-[72vw] max-w-[320px]"
-          >
-
-            <div
-              className="
-                rounded-[30px]
-                border
-                bg-white/5
-                backdrop-blur-2xl
-                overflow-hidden
-                p-5
-                min-h-[540px]
-              "
-              style={{
-                borderColor:
-                  `${BREEZE_GREEN}25`,
-              }}
-            >
-
-              <p
-                className="uppercase tracking-[4px] text-[10px]"
-                style={{
-                  color: BREEZE_GREEN,
-                }}
-              >
-                Creator Evolution
-              </p>
-
-              <h2
-                className="mt-4 uppercase italic font-black"
-                style={{
-                  fontFamily:
-                    "Bebas Neue, sans-serif",
-                  fontSize:
-                    "clamp(36px, 9vw, 60px)",
-                  lineHeight: "0.9",
-                }}
-              >
-
-                Season 2
-
-              </h2>
-
-              {/* WINNER */}
-              <div className="mt-8 text-center">
-
-                <div
-                  className="
-                    w-[105px]
-                    h-[105px]
-                    rounded-full
-                    overflow-hidden
-                    border-4
-                    mx-auto
-                  "
-                  style={{
-                    borderColor:
-                      BREEZE_GREEN,
-                  }}
-                >
-
-                  <img
-                    src="/season2-winner.jpg"
-                    alt="Winner"
-                    loading="lazy"
-                    className="
-                      w-full
-                      h-full
-                      object-cover
-                    "
-                  />
-
-                </div>
-
-                <p
-                  className="mt-4 uppercase tracking-[4px] text-[10px]"
-                  style={{
-                    color:
-                      BREEZE_GREEN,
-                  }}
-                >
-                  Winner
-                </p>
-
-                <h3
-                  className="mt-2 uppercase italic font-black"
-                  style={{
-                    fontFamily:
-                      "Bebas Neue, sans-serif",
-                    fontSize:
-                      "clamp(24px, 7vw, 38px)",
-                  }}
-                >
-
-                  CARLETHEIA
-
-                </h3>
-
-              </div>
-
-              {/* SECOND */}
-              <div className="mt-10 text-center">
-
-                <div className="w-[90px] h-[90px] rounded-full overflow-hidden border border-white/20 mx-auto">
-
-                  <img
-                    src="/season2-runnerup.jpg"
-                    alt="Runner Up"
-                    loading="lazy"
-                    className="
-                      w-full
-                      h-full
-                      object-cover
-                    "
-                  />
-
-                </div>
-
-                <p className="mt-3 uppercase tracking-[3px] text-[10px] text-white/50">
-
-                  Second Place
-
-                </p>
-
-                <h4
-                  className="mt-1 uppercase italic font-black"
-                  style={{
-                    fontFamily:
-                      "Bebas Neue, sans-serif",
-                    fontSize:
-                      "clamp(20px, 6vw, 32px)",
-                  }}
-                >
-
-                  KUTLWANO
-
-                </h4>
-
-              </div>
-
-            </div>
-
-          </motion.div>
+          </div>
 
         </div>
 
       </section>
 
     </main>
-  );
-}
-
-function RunnerBubble({
-  image,
-  name,
-}: any) {
-
-  return (
-
-    <div className="text-center">
-
-      <div className="w-[72px] h-[72px] rounded-full overflow-hidden border border-white/20 mx-auto">
-
-        <img
-          src={image}
-          alt={name}
-          loading="lazy"
-          className="
-            w-full
-            h-full
-            object-cover
-          "
-        />
-
-      </div>
-
-      <p className="mt-3 uppercase tracking-[3px] text-[9px] text-white/50">
-
-        Runner Up
-
-      </p>
-
-      <h4
-        className="mt-1 uppercase italic font-black"
-        style={{
-          fontFamily:
-            "Bebas Neue, sans-serif",
-          fontSize:
-            "clamp(18px, 4vw, 24px)",
-        }}
-      >
-
-        {name}
-
-      </h4>
-
-    </div>
-
   );
 }
