@@ -34,11 +34,15 @@ export default function PrizedPetsPage() {
 
   const [selectedImage,
     setSelectedImage] =
-    useState<string | null>(
+    useState<any | null>(
       null
     );
 
   const [name, setName] =
+    useState("");
+
+  const [petName,
+    setPetName] =
     useState("");
 
   const [phone, setPhone] =
@@ -184,6 +188,8 @@ export default function PrizedPetsPage() {
           .insert([
             {
               name,
+              pet_name:
+                petName,
               phone,
               photo_url:
                 photoUrl,
@@ -211,6 +217,8 @@ export default function PrizedPetsPage() {
 
       setName("");
 
+      setPetName("");
+
       setPhone("");
 
       setPetPhoto(
@@ -225,235 +233,12 @@ export default function PrizedPetsPage() {
   return (
     <main className="min-h-screen bg-black text-white relative overflow-x-hidden">
 
-      {/* BACKGROUND */}
-      <div
-        className="fixed top-[-300px] left-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full pointer-events-none z-0"
-        style={{
-          background: `${BREEZE_GREEN}18`,
-        }}
-      />
-
-      <div
-        className="fixed bottom-[-300px] right-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full pointer-events-none z-0"
-        style={{
-          background: `${BREEZE_GREEN}10`,
-        }}
-      />
-
-      {/* GRID */}
-      <div
-        className="fixed inset-0 opacity-[0.04] pointer-events-none z-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
-          backgroundSize:
-            "70px 70px",
-        }}
-      />
-
-      {/* HERO */}
-      <section className="relative z-20 px-4 pt-10 pb-12">
-
-        <div className="max-w-7xl mx-auto text-center">
-
-          <p
-            className="uppercase tracking-[5px] text-xs"
-            style={{
-              color:
-                BREEZE_GREEN,
-            }}
-          >
-            BREEZE FAMILY PRESENTS
-          </p>
-
-          <h1
-            className="mt-4 uppercase italic font-black"
-            style={{
-              fontFamily:
-                "Bebas Neue, sans-serif",
-              fontSize:
-                "clamp(64px, 14vw, 180px)",
-              letterSpacing:
-                "0.1em",
-              lineHeight:
-                "0.82",
-            }}
-          >
-
-            PRIZED
-            <span
-              className="block"
-              style={{
-                color:
-                  BREEZE_GREEN,
-              }}
-            >
-              PETS
-            </span>
-
-          </h1>
-
-          <p
-            className="mt-8 text-white/70 max-w-2xl mx-auto px-2 text-sm leading-relaxed"
-          >
-
-            Enter your pet into
-            the Breeze Family
-            Prized Pets competition.
-
-          </p>
-
-        </div>
-
-      </section>
-
-      {/* LIVE DRAW */}
-      <section className="relative z-20 px-4 pb-10">
-
-        <div className="max-w-5xl mx-auto rounded-[34px] overflow-hidden border border-[#8DFF00]/20 bg-white/5 backdrop-blur-2xl">
-
-          <div className="p-6 text-center">
-
-            <p
-              className="uppercase tracking-[5px] text-xs"
-              style={{
-                color:
-                  BREEZE_GREEN,
-              }}
-            >
-              LIVE DRAW EVENT
-            </p>
-
-            <h2
-              className="mt-4 uppercase italic font-black"
-              style={{
-                fontFamily:
-                  "Bebas Neue, sans-serif",
-                fontSize:
-                  "clamp(42px, 10vw, 90px)",
-                lineHeight:
-                  "0.82",
-              }}
-            >
-
-              FRIDAY
-              <span
-                className="block"
-                style={{
-                  color:
-                    BREEZE_GREEN,
-                }}
-              >
-                8PM LIVE
-              </span>
-
-            </h2>
-
-            <p className="mt-8 text-white/70 leading-relaxed text-sm">
-
-              Winners are selected
-              LIVE during Kent Breeze
-              TikTok Live.
-
-              <br />
-              <br />
-
-              If your name is called,
-              you MUST be present
-              in the live.
-
-              <br />
-              <br />
-
-              If absent,
-              the prize is forfeited
-              and a redraw happens.
-
-            </p>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* PRIZES */}
-      <section className="relative z-20 px-4">
-
-        <div className="grid grid-cols-3 gap-3">
-
-          <PrizeCard
-            title="1st"
-            amount="R500"
-          />
-
-          <PrizeCard
-            title="2nd"
-            amount="R250"
-          />
-
-          <PrizeCard
-            title="3rd"
-            amount="R200"
-          />
-
-        </div>
-
-      </section>
-
       {/* ENTRY FORM */}
       <section className="relative z-20 px-4 pt-16">
 
         <div className="max-w-3xl mx-auto">
 
           <div className="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-[34px] p-5">
-
-            <h2
-              className="uppercase italic font-black text-center"
-              style={{
-                fontFamily:
-                  "Bebas Neue, sans-serif",
-                fontSize:
-                  "clamp(46px, 8vw, 90px)",
-                lineHeight:
-                  "0.9",
-                letterSpacing:
-                  "0.08em",
-              }}
-            >
-
-              ENTER
-              <span
-                className="block"
-                style={{
-                  color:
-                    BREEZE_GREEN,
-                }}
-              >
-                NOW
-              </span>
-
-            </h2>
-
-            {success && (
-
-              <div className="mt-6 p-4 rounded-2xl bg-[#8DFF00]/10 border border-[#8DFF00]/20 text-[#8DFF00] text-sm">
-
-                {success}
-
-              </div>
-
-            )}
-
-            {error && (
-
-              <div className="mt-6 p-4 rounded-2xl bg-red-500/10 border border-red-400/20 text-red-300 text-sm">
-
-                {error}
-
-              </div>
-
-            )}
 
             <form
               onSubmit={
@@ -465,12 +250,28 @@ export default function PrizedPetsPage() {
               <input
                 type="text"
                 required
-                placeholder="Your Name"
+                placeholder="Owner Name"
                 value={name}
                 onChange={(
                   e
                 ) =>
                   setName(
+                    e.target
+                      .value
+                  )
+                }
+                className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10"
+              />
+
+              <input
+                type="text"
+                required
+                placeholder="Pet Name"
+                value={petName}
+                onChange={(
+                  e
+                ) =>
+                  setPetName(
                     e.target
                       .value
                   )
@@ -532,177 +333,170 @@ export default function PrizedPetsPage() {
 
       </section>
 
-      {/* WINNERS */}
-      <section className="relative z-20 px-4 pt-20">
+      {/* ENTRIES */}
+      <section
+        id="pet-gallery"
+        className="relative z-20 px-4 pt-20 pb-[220px]"
+      >
 
-        <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-10">
 
-          <div className="text-center mb-12">
+          <p
+            className="uppercase tracking-[5px] text-xs"
+            style={{
+              color:
+                BREEZE_GREEN,
+            }}
+          >
+            LIVE ENTRIES
+          </p>
 
-            <p
-              className="uppercase tracking-[5px] text-xs"
+          <h2
+            className="mt-4 uppercase italic font-black"
+            style={{
+              fontFamily:
+                "Bebas Neue, sans-serif",
+              fontSize:
+                "clamp(42px, 9vw, 120px)",
+              lineHeight:
+                "0.82",
+            }}
+          >
+
+            PET
+            <span
+              className="block"
               style={{
                 color:
                   BREEZE_GREEN,
               }}
             >
-              WINNER ARCHIVE
-            </p>
+              GALLERY
+            </span>
 
-            <h2
-              className="mt-4 uppercase italic font-black"
-              style={{
-                fontFamily:
-                  "Bebas Neue, sans-serif",
-                fontSize:
-                  "clamp(42px, 9vw, 100px)",
-                lineHeight:
-                  "0.82",
-              }}
-            >
+          </h2>
 
-              HALL OF
-              <span
-                className="block"
-                style={{
-                  color:
-                    BREEZE_GREEN,
-                }}
-              >
-                FAME
-              </span>
+        </div>
 
-            </h2>
+        {entriesLoading ? (
+
+          <div className="text-center py-20 text-white/50 uppercase tracking-[4px]">
+
+            Loading Entries...
 
           </div>
 
-          <div className="space-y-8">
+        ) : (
 
-            {winners.map(
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+
+            {entries.map(
               (
-                winner,
+                entry,
                 index
               ) => (
 
-                <div
+                <motion.div
                   key={index}
-                  className="rounded-[34px] border border-[#8DFF00]/20 bg-white/5 backdrop-blur-2xl p-5"
+                  whileHover={{
+                    scale: 1.03,
+                  }}
+                  transition={{
+                    duration: 0.2,
+                  }}
                 >
 
-                  <div className="text-center mb-8">
+                  <div
+                    onClick={() =>
+                      setSelectedImage(
+                        entry
+                      )
+                    }
+                    className="
+                      relative
+                      rounded-[22px]
+                      overflow-hidden
+                      border-2
+                      bg-black
+                      aspect-square
+                      cursor-pointer
+                      shadow-[0_0_30px_rgba(141,255,0,0.08)]
+                    "
+                    style={{
+                      borderColor:
+                        `${BREEZE_GREEN}35`,
+                    }}
+                  >
 
-                    <p
-                      className="uppercase tracking-[4px] text-xs"
-                      style={{
-                        color:
-                          BREEZE_GREEN,
-                      }}
-                    >
-                      Friday Night Draw
-                    </p>
-
-                    <h3
-                      className="mt-3 uppercase font-black text-2xl"
-                    >
-
-                      {
-                        winner.draw_date
+                    <img
+                      src={
+                        entry.photo_url
                       }
+                      alt={
+                        entry.name
+                      }
+                      loading="lazy"
+                      className="
+                        w-full
+                        h-full
+                        object-cover
+                        transition
+                        duration-300
+                        hover:scale-105
+                      "
+                    />
 
-                    </h3>
+                    <div
+                      className="
+                        absolute
+                        inset-0
+                        bg-gradient-to-t
+                        from-black/80
+                        via-black/10
+                        to-transparent
+                      "
+                    />
 
-                  </div>
+                    <div className="absolute bottom-0 left-0 right-0 p-3">
 
-                  <div className="grid grid-cols-1 gap-6">
+                      <div className="space-y-1">
 
-                    {/* THIRD PLACE */}
-                    <div>
+                        <p
+                          className="
+                            text-white
+                            uppercase
+                            tracking-[2px]
+                            text-[10px]
+                            sm:text-xs
+                            font-bold
+                          "
+                        >
+                          Owner: {entry.name}
+                        </p>
 
-                      <p
-                        className="uppercase tracking-[4px] text-xs text-center mb-4"
-                        style={{
-                          color:
-                            "#ffffff",
-                        }}
-                      >
-                        3rd Place Winners
-                      </p>
+                        <h3
+                          className="
+                            uppercase
+                            italic
+                            font-black
+                            text-white
+                            break-words
+                          "
+                          style={{
+                            fontFamily:
+                              "Bebas Neue, sans-serif",
+                            fontSize:
+                              "clamp(14px, 3vw, 22px)",
+                            lineHeight:
+                              "0.9",
+                            letterSpacing:
+                              "0.05em",
+                          }}
+                        >
 
-                      <div className="grid grid-cols-2 gap-4">
+                          Pet: {entry.pet_name}
 
-                        <WinnerBubble
-                          name="Sors's Napoleon"
-                          photo="https://xwzathzitijhmupqqxux.supabase.co/storage/v1/object/public/prized-pets/sors.jpg"
-                          label="3rd"
-                          setSelectedImage={
-                            setSelectedImage
-                          }
-                        />
-
-                        <WinnerBubble
-                          name="Jaxster"
-                          photo="https://xwzathzitijhmupqqxux.supabase.co/storage/v1/object/public/prized-pets/jaxster.jpeg"
-                          label="3rd"
-                          setSelectedImage={
-                            setSelectedImage
-                          }
-                        />
-
-                      </div>
-
-                    </div>
-
-                    {/* SECOND PLACE */}
-                    <div>
-
-                      <p
-                        className="uppercase tracking-[4px] text-xs text-center mb-4"
-                        style={{
-                          color:
-                            "#cccccc",
-                        }}
-                      >
-                        2nd Place Winner
-                      </p>
-
-                      <div className="flex justify-center">
-
-                        <WinnerBubble
-                          name="Jessica"
-                          photo="https://xwzathzitijhmupqqxux.supabase.co/storage/v1/object/public/prized-pets/Jessica.jpg"
-                          label="2nd"
-                          setSelectedImage={
-                            setSelectedImage
-                          }
-                        />
-
-                      </div>
-
-                    </div>
-
-                    {/* FIRST PLACE */}
-                    <div>
-
-                      <p
-                        className="uppercase tracking-[4px] text-xs text-center mb-4"
-                        style={{
-                          color:
-                            BREEZE_GREEN,
-                        }}
-                      >
-                        1st Place Winner
-                      </p>
-
-                      <div className="flex justify-center">
-
-                        <WinnerBubble
-                          name="Kinnie - Titan &"
-                          photo="https://xwzathzitijhmupqqxux.supabase.co/storage/v1/object/public/prized-pets/kinnie-titan&raven.jpeg"
-                          label="1st"
-                          setSelectedImage={
-                            setSelectedImage
-                          }
-                        />
+                        </h3>
 
                       </div>
 
@@ -710,184 +504,17 @@ export default function PrizedPetsPage() {
 
                   </div>
 
-                </div>
+                </motion.div>
 
               )
             )}
 
           </div>
 
-        </div>
+        )}
 
       </section>
 
-      {/* ENTRIES */}
-<section
-  id="pet-gallery"
-  className="relative z-20 px-4 pt-20 pb-[220px]"
->
-
-  <div className="text-center mb-10">
-
-    <p
-      className="uppercase tracking-[5px] text-xs"
-      style={{
-        color:
-          BREEZE_GREEN,
-      }}
-    >
-      LIVE ENTRIES
-    </p>
-
-    <h2
-      className="mt-4 uppercase italic font-black"
-      style={{
-        fontFamily:
-          "Bebas Neue, sans-serif",
-        fontSize:
-          "clamp(42px, 9vw, 120px)",
-        lineHeight:
-          "0.82",
-      }}
-    >
-
-      PET
-      <span
-        className="block"
-        style={{
-          color:
-            BREEZE_GREEN,
-        }}
-      >
-        GALLERY
-      </span>
-
-    </h2>
-
-  </div>
-
-  {entriesLoading ? (
-
-    <div className="text-center py-20 text-white/50 uppercase tracking-[4px]">
-
-      Loading Entries...
-
-    </div>
-
-  ) : (
-
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
-
-      {entries.map(
-        (
-          entry,
-          index
-        ) => (
-
-          <motion.div
-            key={index}
-            whileHover={{
-              scale: 1.03,
-            }}
-            transition={{
-              duration: 0.2,
-            }}
-          >
-
-            <div
-              onClick={() =>
-                setSelectedImage(
-                  entry.photo_url
-                )
-              }
-              className="
-                relative
-                rounded-[28px]
-                overflow-hidden
-                border-2
-                bg-black
-                aspect-[4/5]
-                cursor-pointer
-                shadow-[0_0_30px_rgba(141,255,0,0.08)]
-              "
-              style={{
-                borderColor:
-                  `${BREEZE_GREEN}35`,
-              }}
-            >
-
-              {/* IMAGE */}
-              <img
-                src={
-                  entry.photo_url
-                }
-                alt={
-                  entry.name
-                }
-                loading="lazy"
-                className="
-                  w-full
-                  h-full
-                  object-cover
-                  transition
-                  duration-300
-                  hover:scale-105
-                "
-              />
-
-              {/* OVERLAY */}
-              <div
-                className="
-                  absolute
-                  inset-0
-                  bg-gradient-to-t
-                  from-black/70
-                  via-black/0
-                  to-transparent
-                "
-              />
-
-              {/* NAME */}
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-
-                <h3
-                  className="
-                    uppercase
-                    italic
-                    font-black
-                    text-white
-                    break-words
-                  "
-                  style={{
-                    fontFamily:
-                      "Bebas Neue, sans-serif",
-                    fontSize:
-                      "clamp(18px, 4vw, 28px)",
-                    lineHeight:
-                      "0.9",
-                    letterSpacing:
-                      "0.05em",
-                  }}
-                >
-
-                  {entry.name}
-
-                </h3>
-
-              </div>
-
-            </div>
-
-          </motion.div>
-
-        )
-      )}
-
-    </div>
-
-  )}
-
-</section>
       {/* IMAGE MODAL */}
       {selectedImage && (
 
@@ -909,133 +536,65 @@ export default function PrizedPetsPage() {
           "
         >
 
-          <img
-            src={
-              selectedImage
-            }
-            alt="Pet"
-            className="
-              max-w-full
-              max-h-full
-              object-contain
-              rounded-[30px]
-            "
-          />
+          <div className="relative w-full max-w-3xl">
+
+            <img
+              src={
+                selectedImage.photo_url
+              }
+              alt="Pet"
+              className="
+                w-full
+                max-h-[85vh]
+                object-contain
+                rounded-[30px]
+              "
+            />
+
+            <div className="absolute bottom-8 left-0 right-0 text-center px-6">
+
+              <p
+                className="
+                  uppercase
+                  tracking-[3px]
+                  text-xs
+                  text-white/80
+                  font-bold
+                "
+              >
+                Owner: {selectedImage.name}
+              </p>
+
+              <h2
+                className="
+                  mt-2
+                  uppercase
+                  italic
+                  font-black
+                  text-white
+                "
+                style={{
+                  fontFamily:
+                    "Bebas Neue, sans-serif",
+                  fontSize:
+                    "clamp(34px, 7vw, 70px)",
+                  lineHeight:
+                    "0.9",
+                  letterSpacing:
+                    "0.08em",
+                }}
+              >
+                Pet: {selectedImage.pet_name}
+              </h2>
+
+            </div>
+
+          </div>
 
         </div>
 
       )}
 
     </main>
-  );
-}
-
-function PrizeCard({
-  title,
-  amount,
-}: any) {
-
-  return (
-
-    <div className="bg-white/5 border border-[#8DFF00]/20 backdrop-blur-2xl rounded-[24px] p-4 text-center">
-
-      <p
-        className="uppercase tracking-[4px] text-[10px]"
-        style={{
-          color:
-            BREEZE_GREEN,
-        }}
-      >
-        {title} Place
-      </p>
-
-      <h2
-        className="mt-3 uppercase italic font-black"
-        style={{
-          fontFamily:
-            "Bebas Neue, sans-serif",
-          fontSize:
-            "clamp(24px, 6vw, 42px)",
-        }}
-      >
-
-        {amount}
-
-      </h2>
-
-    </div>
-
-  );
-}
-
-function WinnerBubble({
-  name,
-  photo,
-  label,
-  setSelectedImage,
-}: any) {
-
-  return (
-
-    <div className="text-center">
-
-      <div
-        onClick={() =>
-          setSelectedImage(
-            photo
-          )
-        }
-        className="
-          relative
-          mx-auto
-          rounded-full
-          overflow-hidden
-          border-2
-          w-[85px]
-          h-[85px]
-          cursor-pointer
-        "
-        style={{
-          borderColor:
-            label === "1st"
-              ? "#8DFF00"
-              : "white",
-        }}
-      >
-
-        <img
-          src={photo}
-          alt={name}
-          className="
-            w-full
-            h-full
-            object-cover
-          "
-        />
-
-      </div>
-
-      <p
-        className="mt-3 uppercase tracking-[3px] text-[10px]"
-        style={{
-          color:
-            label === "1st"
-              ? "#8DFF00"
-              : "white",
-        }}
-      >
-        {label} Place
-      </p>
-
-      <h3
-        className="mt-2 uppercase font-black break-words text-sm"
-      >
-
-        {name}
-
-      </h3>
-
-    </div>
-
   );
 }
