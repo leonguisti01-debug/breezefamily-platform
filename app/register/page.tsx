@@ -1,10 +1,99 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
+import { createClient } from "@supabase/supabase-js";
 
 const BREEZE_GREEN = "#8DFF00";
 
+const supabase = createClient(
+  "https://xwzathzitijhmupqqxux.supabase.co",
+  "YOUR_SUPABASE_ANON_KEY"
+);
+
 export default function JoinTheFamilyPage() {
+
+  const [fullName,
+    setFullName] =
+    useState("");
+
+  const [email,
+    setEmail] =
+    useState("");
+
+  const [phone,
+    setPhone] =
+    useState("");
+
+  const [password,
+    setPassword] =
+    useState("");
+
+  const [loading,
+    setLoading] =
+    useState(false);
+
+  const [success,
+    setSuccess] =
+    useState("");
+
+  const [error,
+    setError] =
+    useState("");
+
+  const handleSubmit =
+    async (
+      e: React.FormEvent
+    ) => {
+
+      e.preventDefault();
+
+      setLoading(true);
+
+      setError("");
+
+      setSuccess("");
+
+      const { error } =
+        await supabase
+          .from(
+            "family_members"
+          )
+          .insert([
+            {
+              full_name:
+                fullName,
+              email,
+              phone,
+              password,
+            },
+          ]);
+
+      if (error) {
+
+        setError(
+          error.message
+        );
+
+        setLoading(false);
+
+        return;
+      }
+
+      setSuccess(
+        "Welcome to the Breeze Family!"
+      );
+
+      setFullName("");
+
+      setEmail("");
+
+      setPhone("");
+
+      setPassword("");
+
+      setLoading(false);
+    };
 
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden relative">
@@ -113,31 +202,6 @@ export default function JoinTheFamilyPage() {
 
             </p>
 
-            {/* FEATURES */}
-            <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-5">
-
-              <FeatureCard
-                title="Exclusive Giveaways"
-                text="Get access to members-only competitions and prizes."
-              />
-
-              <FeatureCard
-                title="Live Events"
-                text="Join TikTok Lives, announcements and exclusive reveals."
-              />
-
-              <FeatureCard
-                title="Featured Community"
-                text="Get your pets, videos and moments showcased online."
-              />
-
-              <FeatureCard
-                title="Early Access"
-                text="Be first in line for merch drops and special launches."
-              />
-
-            </div>
-
           </motion.div>
 
           {/* RIGHT */}
@@ -181,38 +245,96 @@ export default function JoinTheFamilyPage() {
 
               </h2>
 
-              <form className="mt-10 space-y-4">
+              {success && (
+
+                <div className="mt-6 p-4 rounded-2xl bg-[#8DFF00]/10 border border-[#8DFF00]/20 text-[#8DFF00] text-sm">
+
+                  {success}
+
+                </div>
+
+              )}
+
+              {error && (
+
+                <div className="mt-6 p-4 rounded-2xl bg-red-500/10 border border-red-400/20 text-red-300 text-sm">
+
+                  {error}
+
+                </div>
+
+              )}
+
+              <form
+                onSubmit={
+                  handleSubmit
+                }
+                className="mt-10 space-y-4"
+              >
 
                 <input
                   type="text"
+                  required
                   placeholder="Full Name"
+                  value={fullName}
+                  onChange={(e) =>
+                    setFullName(
+                      e.target.value
+                    )
+                  }
                   className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 outline-none focus:border-[#8DFF00]"
                 />
 
                 <input
                   type="email"
+                  required
                   placeholder="Email Address"
+                  value={email}
+                  onChange={(e) =>
+                    setEmail(
+                      e.target.value
+                    )
+                  }
                   className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 outline-none focus:border-[#8DFF00]"
                 />
 
                 <input
                   type="tel"
+                  required
                   placeholder="Phone Number"
+                  value={phone}
+                  onChange={(e) =>
+                    setPhone(
+                      e.target.value
+                    )
+                  }
                   className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 outline-none focus:border-[#8DFF00]"
                 />
 
                 <input
                   type="password"
+                  required
                   placeholder="Create Password"
+                  value={password}
+                  onChange={(e) =>
+                    setPassword(
+                      e.target.value
+                    )
+                  }
                   className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 outline-none focus:border-[#8DFF00]"
                 />
 
                 <button
                   type="submit"
+                  disabled={
+                    loading
+                  }
                   className="w-full py-4 rounded-2xl bg-[#8DFF00] text-black font-black uppercase tracking-[4px] hover:scale-[1.02] transition shadow-[0_0_40px_rgba(141,255,0,0.35)]"
                 >
 
-                  JOIN THE FAMILY
+                  {loading
+                    ? "CREATING ACCOUNT..."
+                    : "JOIN THE FAMILY"}
 
                 </button>
 
@@ -234,43 +356,5 @@ export default function JoinTheFamilyPage() {
       </section>
 
     </main>
-  );
-}
-
-function FeatureCard({
-  title,
-  text,
-}: any) {
-
-  return (
-
-    <div className="rounded-[24px] border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-
-      <h3
-        className="uppercase font-black"
-        style={{
-          fontFamily:
-            "Bebas Neue, sans-serif",
-          fontSize:
-            "28px",
-          color:
-            BREEZE_GREEN,
-          letterSpacing:
-            "0.05em",
-        }}
-      >
-
-        {title}
-
-      </h3>
-
-      <p className="mt-3 text-white/70 text-sm leading-relaxed">
-
-        {text}
-
-      </p>
-
-    </div>
-
   );
 }
