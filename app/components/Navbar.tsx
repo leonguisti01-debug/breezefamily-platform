@@ -13,10 +13,10 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 w-full z-50 px-2 md:px-4 pt-3">
 
-      <div className="w-full max-w-[1400px] mx-auto h-[56px] rounded-[12px] border border-white/10 bg-black/90 backdrop-blur-2xl flex items-center justify-between px-4 md:px-6 overflow-hidden">
+      <div className="w-full max-w-[1400px] mx-auto min-h-[56px] rounded-[12px] border border-white/10 bg-black/90 backdrop-blur-2xl flex items-center justify-between px-4 md:px-6 py-3 overflow-hidden">
 
         {/* LEFT */}
-        <div className="flex items-center gap-4 md:gap-8 min-w-0">
+        <div className="flex items-center gap-4 md:gap-8 min-w-0 flex-1 overflow-hidden">
 
           {/* LOGO */}
           <Link href="/" className="shrink-0">
@@ -288,11 +288,11 @@ export default function Navbar() {
 
         </div>
 
-        {/* RIGHT */}
-        <div className="hidden md:flex items-center gap-4 shrink-0">
+        {/* RIGHT SIDE */}
+        <div className="flex items-center gap-3 shrink-0 ml-3">
 
-          {/* SOCIALS */}
-          <div className="flex items-center gap-3">
+          {/* SOCIALS - HIDE ONLY SOME ON MOBILE */}
+          <div className="flex items-center gap-2 md:gap-3">
 
             <a
               href="https://www.tiktok.com/@itskentbreezy"
@@ -310,6 +310,7 @@ export default function Navbar() {
               href="https://www.instagram.com/itskentbreezy"
               target="_blank"
               rel="noopener noreferrer"
+              className="hidden sm:block"
             >
               <img
                 src="/instagram-icon.png"
@@ -322,6 +323,7 @@ export default function Navbar() {
               href="https://youtube.com"
               target="_blank"
               rel="noopener noreferrer"
+              className="hidden md:block"
             >
               <img
                 src="/youtube-icon.png"
@@ -334,6 +336,7 @@ export default function Navbar() {
               href="https://whatsapp.com/channel/0029VbD9d4P9sBI9ue1ekp2z"
               target="_blank"
               rel="noopener noreferrer"
+              className="hidden md:block"
             >
               <img
                 src="/whatsapp-icon.png"
@@ -353,10 +356,13 @@ export default function Navbar() {
                 text-black
                 uppercase
                 font-black
-                tracking-[2px]
-                text-[10px]
-                px-5
-                h-[38px]
+                tracking-[1px]
+                text-[9px]
+                md:text-[10px]
+                px-3
+                md:px-5
+                h-[34px]
+                md:h-[38px]
                 rounded-full
                 hover:scale-105
                 transition
