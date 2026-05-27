@@ -83,7 +83,7 @@ export default function TikTokStarsPage() {
               <p className="mt-4 text-white/70 max-w-xl leading-relaxed text-sm md:text-lg">
 
                 The Ultimate Kids Talent Search for Ages 2–17.
-                Upload your performance, grow your audience,
+                Apply online, grow your audience,
                 and stand a chance to become South Africa’s
                 next digital superstar.
 
@@ -94,7 +94,7 @@ export default function TikTokStarsPage() {
 
                 {[
                   "Open to all young talent in South Africa",
-                  "Upload your audition online",
+                  "Apply online",
                   "Win massive prizes",
                   "Be seen live on TikTok",
                 ].map((item, index) => (
