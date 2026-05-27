@@ -180,7 +180,7 @@ export default function TikTokStarsPage() {
 
               <p className="mt-6 text-white/40 text-sm">
 
-                Entries open from 1 June – 30 September 2026
+                ENTRIES CLOSE 31 MAY 2026
 
               </p>
 
