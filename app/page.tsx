@@ -326,7 +326,7 @@ export default function HomePage() {
 
                     <p className="uppercase tracking-[2px] text-white/70 text-xs">
 
-                      & COUNTING
+                      & MORE
 
                     </p>
 
