@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@supabase/supabase-js";
+import Link from "next/link";
 
 const BREEZE_GREEN = "#8DFF00";
 
@@ -366,6 +367,210 @@ export default function HomePage() {
             alt=""
             className="w-full object-cover"
           />
+
+        </div>
+
+      </section>
+
+      {/* FEATURE CARDS */}
+      <section className="relative z-20 px-4 pb-24 -mt-4">
+
+        <div className="max-w-7xl mx-auto">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+
+            {/* PRIZED PETS */}
+            <Link href="/prized-pets">
+
+              <div className="group relative overflow-hidden rounded-[26px] border border-[#8DFF00]/30 bg-black h-[190px] cursor-pointer">
+
+                <img
+                  src="/prized-pets-card.jpg"
+                  alt="Prized Pets"
+                  className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition duration-500"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+
+                <div className="absolute bottom-5 left-5">
+
+                  <h2
+                    className="uppercase italic font-black leading-none text-white"
+                    style={{
+                      fontFamily:
+                        "Bebas Neue, sans-serif",
+                      fontSize:
+                        "clamp(42px, 4vw, 60px)",
+                    }}
+                  >
+
+                    PRIZED PETS
+
+                  </h2>
+
+                  <p className="uppercase tracking-[3px] text-[#8DFF00] text-xs font-bold mt-2">
+
+                    MEET THE FAMILY
+
+                  </p>
+
+                </div>
+
+                <div className="absolute right-5 bottom-5 w-10 h-10 rounded-full bg-[#8DFF00] flex items-center justify-center text-black font-black">
+
+                  →
+
+                </div>
+
+              </div>
+
+            </Link>
+
+            {/* TIKTOK STARS */}
+            <Link href="/tiktok-stars">
+
+              <div className="group relative overflow-hidden rounded-[26px] border border-pink-500/40 bg-black h-[190px] cursor-pointer">
+
+                <img
+                  src="/tiktok-stars-card.jpg"
+                  alt="TikTok Stars"
+                  className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition duration-500"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+
+                <div className="absolute bottom-5 left-5">
+
+                  <h2
+                    className="uppercase italic font-black leading-none text-white"
+                    style={{
+                      fontFamily:
+                        "Bebas Neue, sans-serif",
+                      fontSize:
+                        "clamp(42px, 4vw, 60px)",
+                    }}
+                  >
+
+                    TIKTOK
+                    <span className="block">
+                      STARS
+                    </span>
+
+                  </h2>
+
+                  <p className="uppercase tracking-[3px] text-[#8DFF00] text-xs font-bold mt-2">
+
+                    WATCH & FOLLOW
+
+                  </p>
+
+                </div>
+
+                <div className="absolute right-5 bottom-5 w-10 h-10 rounded-full bg-[#8DFF00] flex items-center justify-center text-black font-black">
+
+                  →
+
+                </div>
+
+              </div>
+
+            </Link>
+
+            {/* MERCH */}
+            <Link href="/merch">
+
+              <div className="group relative overflow-hidden rounded-[26px] border border-cyan-500/40 bg-black h-[190px] cursor-pointer">
+
+                <img
+                  src="/merch-card-home.jpg"
+                  alt="Merch"
+                  className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition duration-500"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+
+                <div className="absolute bottom-5 left-5">
+
+                  <h2
+                    className="uppercase italic font-black leading-none text-white"
+                    style={{
+                      fontFamily:
+                        "Bebas Neue, sans-serif",
+                      fontSize:
+                        "clamp(42px, 4vw, 60px)",
+                    }}
+                  >
+
+                    MERCH
+
+                  </h2>
+
+                  <p className="uppercase tracking-[3px] text-[#8DFF00] text-xs font-bold mt-2">
+
+                    REP THE FAMILY
+
+                  </p>
+
+                </div>
+
+                <div className="absolute right-5 bottom-5 w-10 h-10 rounded-full bg-[#8DFF00] flex items-center justify-center text-black font-black">
+
+                  →
+
+                </div>
+
+              </div>
+
+            </Link>
+
+            {/* HIGHLIGHTS */}
+            <Link href="/highlights">
+
+              <div className="group relative overflow-hidden rounded-[26px] border border-purple-500/40 bg-black h-[190px] cursor-pointer">
+
+                <img
+                  src="/highlights-card.jpg"
+                  alt="Highlights"
+                  className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition duration-500"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+
+                <div className="absolute bottom-5 left-5">
+
+                  <h2
+                    className="uppercase italic font-black leading-none text-white"
+                    style={{
+                      fontFamily:
+                        "Bebas Neue, sans-serif",
+                      fontSize:
+                        "clamp(42px, 4vw, 60px)",
+                    }}
+                  >
+
+                    HIGHLIGHTS
+
+                  </h2>
+
+                  <p className="uppercase tracking-[3px] text-[#8DFF00] text-xs font-bold mt-2">
+
+                    TOP MOMENTS
+
+                  </p>
+
+                </div>
+
+                <div className="absolute right-5 bottom-5 w-10 h-10 rounded-full bg-[#8DFF00] flex items-center justify-center text-black font-black">
+
+                  →
+
+                </div>
+
+              </div>
+
+            </Link>
+
+          </div>
 
         </div>
 
