@@ -24,7 +24,6 @@ export default function HomePage() {
 
   }, []);
 
-  /* VISITS */
   const incrementViews =
     async () => {
 
@@ -103,7 +102,8 @@ export default function HomePage() {
 
         <div className="max-w-[1600px] mx-auto px-4 md:px-8 pt-10 md:pt-16">
 
-          <div className="grid lg:grid-cols-[1fr_540px_320px] gap-10 items-center">
+          {/* MOBILE FIX */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_540px_320px] gap-10 items-start">
 
             {/* LEFT */}
             <div className="order-2 lg:order-1 text-center lg:text-left">
@@ -174,6 +174,7 @@ export default function HomePage() {
                   max-w-[520px]
                   mx-auto
                   lg:mx-0
+                  mb-12
                 "
                 style={{
                   fontSize:
@@ -192,10 +193,8 @@ export default function HomePage() {
             {/* CENTER IMAGE */}
             <div className="relative flex justify-center order-1 lg:order-2">
 
-              {/* GLOW */}
               <div className="absolute inset-0 bg-[#8DFF00]/20 blur-[120px] rounded-full scale-75" />
 
-              {/* IMAGE */}
               <motion.img
                 animate={{
                   y: [0, -12, 0],
@@ -373,7 +372,7 @@ export default function HomePage() {
       </section>
 
       {/* FEATURE CARDS */}
-      <section className="relative z-20 px-4 pb-24 -mt-2 md:-mt-4">
+      <section className="relative z-20 px-4 pb-24 mt-8 md:-mt-4">
 
         <div className="max-w-7xl mx-auto">
 
@@ -382,7 +381,7 @@ export default function HomePage() {
             {/* PRIZED PETS */}
             <Link href="/prized-pets">
 
-              <div className="group relative overflow-hidden rounded-[22px] border border-[#8DFF00]/30 bg-black h-[140px] md:h-[190px] cursor-pointer">
+              <div className="group relative overflow-hidden rounded-[22px] border border-[#8DFF00]/30 bg-black h-[130px] md:h-[190px] cursor-pointer">
 
                 <img
                   src="/prized-pets-card.jpg"
@@ -392,7 +391,7 @@ export default function HomePage() {
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
-                <div className="absolute bottom-3 md:bottom-5 left-3 md:left-5">
+                <div className="absolute bottom-3 left-3 md:bottom-5 md:left-5">
 
                   <h2
                     className="uppercase italic font-black leading-none text-white"
@@ -400,7 +399,7 @@ export default function HomePage() {
                       fontFamily:
                         "Bebas Neue, sans-serif",
                       fontSize:
-                        "clamp(28px, 3vw, 52px)",
+                        "clamp(22px, 3vw, 52px)",
                     }}
                   >
 
@@ -408,7 +407,7 @@ export default function HomePage() {
 
                   </h2>
 
-                  <p className="uppercase tracking-[2px] md:tracking-[3px] text-[#8DFF00] text-[9px] md:text-xs font-bold mt-1 md:mt-2">
+                  <p className="uppercase tracking-[2px] text-[#8DFF00] text-[8px] md:text-xs font-bold mt-1">
 
                     MEET THE FAMILY
 
@@ -416,20 +415,14 @@ export default function HomePage() {
 
                 </div>
 
-                <div className="absolute right-3 md:right-5 bottom-3 md:bottom-5 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#8DFF00] flex items-center justify-center text-black font-black text-sm md:text-base">
-
-                  →
-
-                </div>
-
               </div>
 
             </Link>
 
-            {/* TIKTOK STARS */}
+            {/* TIKTOK */}
             <Link href="/tiktok-stars">
 
-              <div className="group relative overflow-hidden rounded-[22px] border border-pink-500/40 bg-black h-[140px] md:h-[190px] cursor-pointer">
+              <div className="group relative overflow-hidden rounded-[22px] border border-pink-500/40 bg-black h-[130px] md:h-[190px] cursor-pointer">
 
                 <img
                   src="/tiktok-stars-card.jpg"
@@ -439,7 +432,7 @@ export default function HomePage() {
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
-                <div className="absolute bottom-3 md:bottom-5 left-3 md:left-5">
+                <div className="absolute bottom-3 left-3 md:bottom-5 md:left-5">
 
                   <h2
                     className="uppercase italic font-black leading-none text-white"
@@ -447,7 +440,7 @@ export default function HomePage() {
                       fontFamily:
                         "Bebas Neue, sans-serif",
                       fontSize:
-                        "clamp(28px, 3vw, 52px)",
+                        "clamp(22px, 3vw, 52px)",
                     }}
                   >
 
@@ -458,18 +451,6 @@ export default function HomePage() {
 
                   </h2>
 
-                  <p className="uppercase tracking-[2px] md:tracking-[3px] text-[#8DFF00] text-[9px] md:text-xs font-bold mt-1 md:mt-2">
-
-                    WATCH & FOLLOW
-
-                  </p>
-
-                </div>
-
-                <div className="absolute right-3 md:right-5 bottom-3 md:bottom-5 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#8DFF00] flex items-center justify-center text-black font-black text-sm md:text-base">
-
-                  →
-
                 </div>
 
               </div>
@@ -479,7 +460,7 @@ export default function HomePage() {
             {/* MERCH */}
             <Link href="/merch">
 
-              <div className="group relative overflow-hidden rounded-[22px] border border-cyan-500/40 bg-black h-[140px] md:h-[190px] cursor-pointer">
+              <div className="group relative overflow-hidden rounded-[22px] border border-cyan-500/40 bg-black h-[130px] md:h-[190px] cursor-pointer">
 
                 <img
                   src="/merch-card-home.jpg"
@@ -489,7 +470,7 @@ export default function HomePage() {
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
-                <div className="absolute bottom-3 md:bottom-5 left-3 md:left-5">
+                <div className="absolute bottom-3 left-3 md:bottom-5 md:left-5">
 
                   <h2
                     className="uppercase italic font-black leading-none text-white"
@@ -497,25 +478,13 @@ export default function HomePage() {
                       fontFamily:
                         "Bebas Neue, sans-serif",
                       fontSize:
-                        "clamp(28px, 3vw, 52px)",
+                        "clamp(22px, 3vw, 52px)",
                     }}
                   >
 
                     MERCH
 
                   </h2>
-
-                  <p className="uppercase tracking-[2px] md:tracking-[3px] text-[#8DFF00] text-[9px] md:text-xs font-bold mt-1 md:mt-2">
-
-                    REP THE FAMILY
-
-                  </p>
-
-                </div>
-
-                <div className="absolute right-3 md:right-5 bottom-3 md:bottom-5 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#8DFF00] flex items-center justify-center text-black font-black text-sm md:text-base">
-
-                  →
 
                 </div>
 
@@ -526,7 +495,7 @@ export default function HomePage() {
             {/* HIGHLIGHTS */}
             <Link href="/highlights">
 
-              <div className="group relative overflow-hidden rounded-[22px] border border-purple-500/40 bg-black h-[140px] md:h-[190px] cursor-pointer">
+              <div className="group relative overflow-hidden rounded-[22px] border border-purple-500/40 bg-black h-[130px] md:h-[190px] cursor-pointer">
 
                 <img
                   src="/highlights-card.jpg"
@@ -536,7 +505,7 @@ export default function HomePage() {
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
-                <div className="absolute bottom-3 md:bottom-5 left-3 md:left-5">
+                <div className="absolute bottom-3 left-3 md:bottom-5 md:left-5">
 
                   <h2
                     className="uppercase italic font-black leading-none text-white"
@@ -544,25 +513,13 @@ export default function HomePage() {
                       fontFamily:
                         "Bebas Neue, sans-serif",
                       fontSize:
-                        "clamp(28px, 3vw, 52px)",
+                        "clamp(22px, 3vw, 52px)",
                     }}
                   >
 
                     HIGHLIGHTS
 
                   </h2>
-
-                  <p className="uppercase tracking-[2px] md:tracking-[3px] text-[#8DFF00] text-[9px] md:text-xs font-bold mt-1 md:mt-2">
-
-                    TOP MOMENTS
-
-                  </p>
-
-                </div>
-
-                <div className="absolute right-3 md:right-5 bottom-3 md:bottom-5 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#8DFF00] flex items-center justify-center text-black font-black text-sm md:text-base">
-
-                  →
 
                 </div>
 
