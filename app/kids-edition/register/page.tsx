@@ -105,6 +105,7 @@ export default function RegisterPage() {
       photoUrl = publicUrl;
     }
 
+    /* MAIN ENTRY */
     const { error } =
       await supabase
         .from("contestants")
@@ -136,11 +137,38 @@ export default function RegisterPage() {
       return;
     }
 
+    /* MARKETING DATABASE */
+    await supabase
+      .from("marketing_contacts")
+      .upsert([
+        {
+          full_name:
+            parentFullName,
+          cellphone:
+            parentPhone,
+          email:
+            parentEmail,
+          source:
+            "kids-edition",
+        },
+      ]);
+
     setSuccess(
       "Entry submitted successfully. Your application is now awaiting review from the Breeze Family team."
     );
 
     setLoading(false);
+
+    /* RESET */
+    setFullName("");
+    setAge("");
+    setParentFullName("");
+    setParentIdNumber("");
+    setParentPhone("");
+    setParentEmail("");
+    setTalent("Singing");
+    setTiktokUsername("");
+    setPhoto(null);
   };
 
   return (

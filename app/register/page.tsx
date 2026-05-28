@@ -8,7 +8,7 @@ const BREEZE_GREEN = "#8DFF00";
 
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 );
 
 export default function JoinTheFamilyPage() {
@@ -54,6 +54,7 @@ export default function JoinTheFamilyPage() {
 
       setSuccess("");
 
+      /* FAMILY MEMBERS TABLE */
       const { error } =
         await supabase
           .from(
@@ -79,6 +80,24 @@ export default function JoinTheFamilyPage() {
 
         return;
       }
+
+      /* MARKETING DATABASE */
+      await supabase
+        .from(
+          "marketing_contacts"
+        )
+        .upsert([
+          {
+            full_name:
+              fullName,
+            cellphone:
+              phone,
+            email:
+              email,
+            source:
+              "join-family",
+          },
+        ]);
 
       setSuccess(
         "Welcome to the Breeze Family!"
@@ -238,7 +257,7 @@ export default function JoinTheFamilyPage() {
                   style={{
                     color:
                       BREEZE_GREEN,
-                  }}
+                    }}
                 >
                   ACCOUNT
                 </span>
