@@ -288,7 +288,7 @@ export default function HomePage() {
 
                     <h3 className="font-black text-2xl">
 
-                      10K+
+                      120K+
 
                     </h3>
 
