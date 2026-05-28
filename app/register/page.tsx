@@ -8,7 +8,7 @@ const BREEZE_GREEN = "#8DFF00";
 
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
 );
 
 export default function JoinTheFamilyPage() {
@@ -54,7 +54,32 @@ export default function JoinTheFamilyPage() {
 
       setSuccess("");
 
-      /* FAMILY MEMBERS TABLE */
+      /* CHECK IF EMAIL EXISTS */
+      const {
+        data: existingUser
+      } = await supabase
+        .from(
+          "family_members"
+        )
+        .select("id")
+        .eq(
+          "email",
+          email
+        )
+        .maybeSingle();
+
+      if (existingUser) {
+
+        setError(
+          "This email is already registered with the Breeze Family."
+        );
+
+        setLoading(false);
+
+        return;
+      }
+
+      /* INSERT MEMBER */
       const { error } =
         await supabase
           .from(
@@ -73,7 +98,7 @@ export default function JoinTheFamilyPage() {
       if (error) {
 
         setError(
-          error.message
+          "Something went wrong. Please try again."
         );
 
         setLoading(false);
@@ -257,7 +282,7 @@ export default function JoinTheFamilyPage() {
                   style={{
                     color:
                       BREEZE_GREEN,
-                    }}
+                  }}
                 >
                   ACCOUNT
                 </span>
