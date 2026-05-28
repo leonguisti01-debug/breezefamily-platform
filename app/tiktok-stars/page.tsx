@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function TikTokStarsPage() {
 
@@ -238,7 +239,7 @@ export default function TikTokStarsPage() {
       </section>
 
       {/* LOWER SECTION */}
-      <section className="relative z-20 px-5 pb-24">
+      <section className="relative z-20 px-5 pb-16">
 
         <div className="max-w-7xl mx-auto">
 
@@ -325,6 +326,159 @@ export default function TikTokStarsPage() {
               </div>
 
             </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* SEASONS */}
+      <section className="relative z-20 px-5 pb-24">
+
+        <div className="max-w-7xl mx-auto">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            {/* SEASON 1 */}
+            <Link href="/tiktok-stars/season-1">
+
+              <div
+                className="
+                  group
+                  relative
+                  overflow-hidden
+                  rounded-[32px]
+                  border
+                  border-cyan-400/30
+                  bg-black
+                  h-[220px]
+                  md:h-[300px]
+                  cursor-pointer
+                "
+              >
+
+                <img
+                  src="/season-1-card.jpg"
+                  alt="Season 1"
+                  className="
+                    absolute
+                    inset-0
+                    w-full
+                    h-full
+                    object-cover
+                    opacity-80
+                    group-hover:scale-105
+                    transition
+                    duration-500
+                  "
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+
+                <div className="absolute bottom-6 left-6">
+
+                  <p className="uppercase tracking-[4px] text-cyan-400 text-[10px] md:text-xs font-black">
+
+                    TIKTOK STARS
+
+                  </p>
+
+                  <h2
+                    className="
+                      mt-2
+                      uppercase
+                      italic
+                      font-black
+                      leading-none
+                    "
+                    style={{
+                      fontFamily:
+                        "Bebas Neue, sans-serif",
+                      fontSize:
+                        "clamp(48px, 6vw, 90px)",
+                    }}
+                  >
+
+                    SEASON 1
+
+                  </h2>
+
+                </div>
+
+              </div>
+
+            </Link>
+
+            {/* SEASON 2 */}
+            <Link href="/tiktok-stars/season-2">
+
+              <div
+                className="
+                  group
+                  relative
+                  overflow-hidden
+                  rounded-[32px]
+                  border
+                  border-pink-500/30
+                  bg-black
+                  h-[220px]
+                  md:h-[300px]
+                  cursor-pointer
+                "
+              >
+
+                <img
+                  src="/season-2-card.jpg"
+                  alt="Season 2"
+                  className="
+                    absolute
+                    inset-0
+                    w-full
+                    h-full
+                    object-cover
+                    opacity-80
+                    group-hover:scale-105
+                    transition
+                    duration-500
+                  "
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+
+                <div className="absolute bottom-6 left-6">
+
+                  <p className="uppercase tracking-[4px] text-pink-500 text-[10px] md:text-xs font-black">
+
+                    TIKTOK STARS
+
+                  </p>
+
+                  <h2
+                    className="
+                      mt-2
+                      uppercase
+                      italic
+                      font-black
+                      leading-none
+                    "
+                    style={{
+                      fontFamily:
+                        "Bebas Neue, sans-serif",
+                      fontSize:
+                        "clamp(48px, 6vw, 90px)",
+                    }}
+                  >
+
+                    SEASON 2
+
+                  </h2>
+
+                </div>
+
+              </div>
+
+            </Link>
 
           </div>
 
