@@ -2,21 +2,53 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 const BREEZE_GREEN = "#8DFF00";
 
 export default function Navbar() {
+  const pathname = usePathname();
 
-  const pathname =
-    usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] =
+    useState(false);
+
+  const navItems = [
+    {
+      href: "/",
+      label: "Home",
+    },
+    {
+      href: "/prized-pets",
+      label: "Prized Pets",
+    },
+    {
+      href: "/tiktok-stars",
+      label: "TikTok Stars",
+    },
+    {
+      href: "/merch",
+      label: "Merch",
+    },
+    {
+      href: "/highlights",
+      label: "Highlights",
+    },
+    {
+      href: "/about",
+      label: "About",
+    },
+    {
+      href: "/contact",
+      label: "Contact",
+    },
+  ];
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 px-2 md:px-4 pt-3">
 
-      <div className="w-full max-w-[1400px] mx-auto min-h-[56px] rounded-[12px] border border-white/10 bg-black/90 backdrop-blur-2xl flex items-center justify-between px-4 md:px-6 py-3 overflow-hidden">
+      <div className="w-full max-w-[1400px] mx-auto rounded-[12px] border border-white/10 bg-black/90 backdrop-blur-2xl">
 
-        {/* LEFT */}
-        <div className="flex items-center gap-4 md:gap-8 min-w-0 flex-1 overflow-hidden">
+        <div className="h-[56px] flex items-center justify-between px-4 md:px-6">
 
           {/* LOGO */}
           <Link href="/" className="shrink-0">
@@ -29,270 +61,64 @@ export default function Navbar() {
 
           </Link>
 
-          {/* NAVIGATION */}
-          <nav className="flex items-center gap-4 md:gap-8 overflow-x-auto no-scrollbar">
-
-            {/* HOME */}
-            <Link href="/">
-
-              <div className="relative pb-1">
-
-                <span
-                  className={`
-                    text-[10px]
-                    md:text-[11px]
-                    uppercase
-                    tracking-[2px]
-                    font-bold
-                    whitespace-nowrap
-                    transition
-                    ${
-                      pathname === "/"
-                        ? "text-white"
-                        : "text-white/80 hover:text-[#8DFF00]"
-                    }
-                  `}
-                >
-
-                  Home
-
-                </span>
-
-                {pathname === "/" && (
-
-                  <div className="absolute left-0 bottom-0 w-full h-[2px] bg-[#8DFF00] rounded-full" />
-
-                )}
-
-              </div>
-
-            </Link>
-
-            {/* PRIZED PETS */}
-            <Link href="/prized-pets">
-
-              <div className="relative pb-1">
-
-                <span
-                  className={`
-                    text-[10px]
-                    md:text-[11px]
-                    uppercase
-                    tracking-[2px]
-                    font-bold
-                    whitespace-nowrap
-                    transition
-                    ${
-                      pathname === "/prized-pets"
-                        ? "text-white"
-                        : "text-white/80 hover:text-[#8DFF00]"
-                    }
-                  `}
-                >
-
-                  Prized Pets
-
-                </span>
-
-                {pathname === "/prized-pets" && (
-
-                  <div className="absolute left-0 bottom-0 w-full h-[2px] bg-[#8DFF00] rounded-full" />
-
-                )}
-
-              </div>
-
-            </Link>
-
-            {/* TIKTOK STARS */}
-            <Link href="/tiktok-stars">
-
-              <div className="relative pb-1">
-
-                <span
-                  className={`
-                    text-[10px]
-                    md:text-[11px]
-                    uppercase
-                    tracking-[2px]
-                    font-bold
-                    whitespace-nowrap
-                    transition
-                    ${
-                      pathname === "/tiktok-stars"
-                        ? "text-white"
-                        : "text-white/80 hover:text-[#8DFF00]"
-                    }
-                  `}
-                >
-
-                  TikTok Stars
-
-                </span>
-
-                {pathname === "/tiktok-stars" && (
-
-                  <div className="absolute left-0 bottom-0 w-full h-[2px] bg-[#8DFF00] rounded-full" />
-
-                )}
-
-              </div>
-
-            </Link>
-
-            {/* MERCH */}
-            <Link href="/merch">
-
-              <div className="relative pb-1">
-
-                <span
-                  className={`
-                    text-[10px]
-                    md:text-[11px]
-                    uppercase
-                    tracking-[2px]
-                    font-bold
-                    whitespace-nowrap
-                    transition
-                    ${
-                      pathname === "/merch"
-                        ? "text-white"
-                        : "text-white/80 hover:text-[#8DFF00]"
-                    }
-                  `}
-                >
-
-                  Merch
-
-                </span>
-
-                {pathname === "/merch" && (
-
-                  <div className="absolute left-0 bottom-0 w-full h-[2px] bg-[#8DFF00] rounded-full" />
-
-                )}
-
-              </div>
-
-            </Link>
-
-            {/* HIGHLIGHTS */}
-            <Link href="/highlights">
-
-              <div className="relative pb-1">
-
-                <span
-                  className={`
-                    text-[10px]
-                    md:text-[11px]
-                    uppercase
-                    tracking-[2px]
-                    font-bold
-                    whitespace-nowrap
-                    transition
-                    ${
-                      pathname === "/highlights"
-                        ? "text-white"
-                        : "text-white/80 hover:text-[#8DFF00]"
-                    }
-                  `}
-                >
-
-                  Highlights
-
-                </span>
-
-                {pathname === "/highlights" && (
-
-                  <div className="absolute left-0 bottom-0 w-full h-[2px] bg-[#8DFF00] rounded-full" />
-
-                )}
-
-              </div>
-
-            </Link>
-
-            {/* ABOUT */}
-            <Link href="/about">
-
-              <div className="relative pb-1">
-
-                <span
-                  className={`
-                    text-[10px]
-                    md:text-[11px]
-                    uppercase
-                    tracking-[2px]
-                    font-bold
-                    whitespace-nowrap
-                    transition
-                    ${
-                      pathname === "/about"
-                        ? "text-white"
-                        : "text-white/80 hover:text-[#8DFF00]"
-                    }
-                  `}
-                >
-
-                  About
-
-                </span>
-
-                {pathname === "/about" && (
-
-                  <div className="absolute left-0 bottom-0 w-full h-[2px] bg-[#8DFF00] rounded-full" />
-
-                )}
-
-              </div>
-
-            </Link>
-
-            {/* CONTACT */}
-            <Link href="/contact">
-
-              <div className="relative pb-1">
-
-                <span
-                  className={`
-                    text-[10px]
-                    md:text-[11px]
-                    uppercase
-                    tracking-[2px]
-                    font-bold
-                    whitespace-nowrap
-                    transition
-                    ${
-                      pathname === "/contact"
-                        ? "text-white"
-                        : "text-white/80 hover:text-[#8DFF00]"
-                    }
-                  `}
-                >
-
-                  Contact
-
-                </span>
-
-                {pathname === "/contact" && (
-
-                  <div className="absolute left-0 bottom-0 w-full h-[2px] bg-[#8DFF00] rounded-full" />
-
-                )}
-
-              </div>
-
-            </Link>
+          {/* DESKTOP NAV */}
+          <nav className="hidden md:flex items-center gap-8">
+
+            {navItems.map((item) => (
+
+              <Link
+                key={item.href}
+                href={item.href}
+              >
+
+                <div className="relative pb-1">
+
+                  <span
+                    className={`
+                      text-[11px]
+                      uppercase
+                      tracking-[2px]
+                      font-bold
+                      whitespace-nowrap
+                      transition
+                      ${
+                        pathname === item.href
+                          ? "text-white"
+                          : "text-white/80 hover:text-[#8DFF00]"
+                      }
+                    `}
+                  >
+
+                    {item.label}
+
+                  </span>
+
+                  {pathname === item.href && (
+
+                    <div
+                      className="
+                        absolute
+                        left-0
+                        bottom-0
+                        w-full
+                        h-[2px]
+                        bg-[#8DFF00]
+                        rounded-full
+                      "
+                    />
+
+                  )}
+
+                </div>
+
+              </Link>
+
+            ))}
 
           </nav>
 
-        </div>
-
-        {/* RIGHT SIDE */}
-        <div className="flex items-center gap-3 shrink-0 ml-3">
-
-          {/* SOCIALS - HIDE ONLY SOME ON MOBILE */}
-          <div className="flex items-center gap-2 md:gap-3">
+          {/* DESKTOP RIGHT */}
+          <div className="hidden md:flex items-center gap-3">
 
             <a
               href="https://www.tiktok.com/@itskentbreezy"
@@ -310,7 +136,6 @@ export default function Navbar() {
               href="https://www.instagram.com/itskentbreezy"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:block"
             >
               <img
                 src="/instagram-icon.png"
@@ -323,7 +148,6 @@ export default function Navbar() {
               href="https://youtube.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:block"
             >
               <img
                 src="/youtube-icon.png"
@@ -336,7 +160,6 @@ export default function Navbar() {
               href="https://whatsapp.com/channel/0029VbD9d4P9sBI9ue1ekp2z"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:block"
             >
               <img
                 src="/whatsapp-icon.png"
@@ -345,39 +168,169 @@ export default function Navbar() {
               />
             </a>
 
+            <Link href="/register">
+
+              <button
+                className="
+                  bg-[#8DFF00]
+                  text-black
+                  uppercase
+                  font-black
+                  tracking-[1px]
+                  text-[10px]
+                  px-5
+                  h-[38px]
+                  rounded-full
+                  hover:scale-105
+                  transition
+                  shadow-[0_0_30px_rgba(141,255,0,0.35)]
+                "
+              >
+
+                JOIN THE FAMILY
+
+              </button>
+
+            </Link>
+
           </div>
 
-          {/* JOIN BUTTON */}
-          <Link href="/register">
+          {/* MOBILE MENU BUTTON */}
+          <button
+            onClick={() =>
+              setMobileMenuOpen(
+                !mobileMenuOpen
+              )
+            }
+            className="md:hidden text-white text-3xl font-bold"
+          >
 
-            <button
-              className="
-                bg-[#8DFF00]
-                text-black
-                uppercase
-                font-black
-                tracking-[1px]
-                text-[9px]
-                md:text-[10px]
-                px-3
-                md:px-5
-                h-[34px]
-                md:h-[38px]
-                rounded-full
-                hover:scale-105
-                transition
-                shadow-[0_0_30px_rgba(141,255,0,0.35)]
-                whitespace-nowrap
-              "
-            >
+            ☰
 
-              JOIN THE FAMILY
-
-            </button>
-
-          </Link>
+          </button>
 
         </div>
+
+        {/* MOBILE MENU */}
+        {mobileMenuOpen && (
+
+          <div
+            className="
+              md:hidden
+              border-t
+              border-white/10
+              p-5
+            "
+          >
+
+            <div className="flex flex-col gap-5">
+
+              {navItems.map((item) => (
+
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() =>
+                    setMobileMenuOpen(
+                      false
+                    )
+                  }
+                >
+
+                  <span
+                    className={`
+                      uppercase
+                      tracking-[2px]
+                      font-bold
+                      ${
+                        pathname === item.href
+                          ? "text-[#8DFF00]"
+                          : "text-white"
+                      }
+                    `}
+                  >
+
+                    {item.label}
+
+                  </span>
+
+                </Link>
+
+              ))}
+
+              <div className="flex items-center gap-4 pt-2">
+
+                <a
+                  href="https://www.tiktok.com/@itskentbreezy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="/tiktok-icon.png"
+                    alt="TikTok"
+                    className="w-5 h-5"
+                  />
+                </a>
+
+                <a
+                  href="https://www.instagram.com/itskentbreezy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="/instagram-icon.png"
+                    alt="Instagram"
+                    className="w-5 h-5"
+                  />
+                </a>
+
+                <a
+                  href="https://whatsapp.com/channel/0029VbD9d4P9sBI9ue1ekp2z"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="/whatsapp-icon.png"
+                    alt="WhatsApp"
+                    className="w-5 h-5"
+                  />
+                </a>
+
+              </div>
+
+              <Link
+                href="/register"
+                onClick={() =>
+                  setMobileMenuOpen(
+                    false
+                  )
+                }
+              >
+
+                <button
+                  className="
+                    w-full
+                    h-[44px]
+                    bg-[#8DFF00]
+                    text-black
+                    uppercase
+                    font-black
+                    rounded-full
+                    shadow-[0_0_30px_rgba(141,255,0,0.35)]
+                  "
+                >
+
+                  JOIN THE FAMILY
+
+                </button>
+
+              </Link>
+
+            </div>
+
+          </div>
+
+        )}
 
       </div>
 
