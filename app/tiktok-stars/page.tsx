@@ -4,16 +4,15 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 export default function TikTokStarsPage() {
-
   return (
     <main className="min-h-screen bg-[#050816] text-white overflow-hidden relative">
 
-      {/* BACKGROUND LIGHTS */}
-      <div className="absolute top-[-200px] left-[-120px] w-[500px] h-[500px] bg-pink-500/20 blur-[180px] rounded-full pointer-events-none" />
+      {/* LIGHTS */}
+      <div className="absolute top-[-150px] left-[-80px] w-[320px] h-[320px] bg-pink-500/20 blur-[90px] rounded-full pointer-events-none" />
 
-      <div className="absolute top-[120px] right-[-100px] w-[450px] h-[450px] bg-cyan-500/20 blur-[180px] rounded-full pointer-events-none" />
+      <div className="absolute top-[100px] right-[-80px] w-[300px] h-[300px] bg-cyan-500/20 blur-[90px] rounded-full pointer-events-none" />
 
-      <div className="absolute bottom-[-200px] left-[20%] w-[500px] h-[500px] bg-purple-500/20 blur-[200px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[-150px] left-[20%] w-[350px] h-[350px] bg-purple-500/20 blur-[110px] rounded-full pointer-events-none" />
 
       {/* HERO */}
       <section className="relative z-20 min-h-screen flex items-center px-5 py-14">
@@ -24,73 +23,44 @@ export default function TikTokStarsPage() {
 
             {/* LEFT */}
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 40,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                duration: 0.7,
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
             >
 
               <p className="uppercase tracking-[5px] text-[11px] text-cyan-400 font-black">
-
                 South Africa's Biggest Kids Talent Search
-
               </p>
 
               <h1
-                className="
-                  mt-5
-                  uppercase
-                  font-black
-                  italic
-                  leading-[0.9]
-                "
+                className="mt-5 uppercase font-black italic leading-[0.9]"
                 style={{
-                  fontFamily:
-                    "Bebas Neue, sans-serif",
-                  fontSize:
-                    "clamp(64px, 10vw, 150px)",
+                  fontFamily: "Bebas Neue, sans-serif",
+                  fontSize: "clamp(64px,10vw,150px)",
                 }}
               >
-
                 BE THE NEXT
 
                 <span className="block text-cyan-400">
-
                   TIKTOK
-
                 </span>
 
                 <span className="block text-pink-500">
-
                   STAR
-
                 </span>
-
               </h1>
 
               <h2 className="mt-6 text-xl md:text-3xl font-black uppercase">
-
                 Sing. Dance. Perform. Shine.
-
               </h2>
 
               <p className="mt-4 text-white/70 max-w-xl leading-relaxed text-sm md:text-lg">
-
                 The Ultimate Kids Talent Search for Ages 2–17.
                 Apply online, grow your audience,
-                and stand a chance to become South Africa’s
+                and stand a chance to become South Africa's
                 next digital superstar.
-
               </p>
 
-              {/* FEATURES */}
               <div className="mt-8 space-y-3">
 
                 {[
@@ -106,15 +76,11 @@ export default function TikTokStarsPage() {
                   >
 
                     <div className="w-5 h-5 rounded-full bg-pink-500 flex items-center justify-center text-[10px] font-black">
-
                       ✓
-
                     </div>
 
                     <p className="text-sm md:text-base text-white/80">
-
                       {item}
-
                     </p>
 
                   </div>
@@ -126,12 +92,9 @@ export default function TikTokStarsPage() {
               {/* BUTTONS */}
               <div className="mt-10 flex flex-col sm:flex-row gap-4">
 
-                <a
+                <Link
                   href="/kids-edition/register"
                   className="
-                    group
-                    relative
-                    overflow-hidden
                     rounded-2xl
                     bg-gradient-to-r
                     from-pink-500
@@ -148,12 +111,10 @@ export default function TikTokStarsPage() {
                     hover:scale-[1.02]
                   "
                 >
-
                   ENTER NOW
+                </Link>
 
-                </a>
-
-                <a
+                <Link
                   href="/kids-edition/entries"
                   className="
                     rounded-2xl
@@ -172,60 +133,33 @@ export default function TikTokStarsPage() {
                     transition
                   "
                 >
-
                   VIEW ENTRIES
-
-                </a>
+                </Link>
 
               </div>
 
               <p className="mt-6 text-white/40 text-sm">
-
                 ENTRIES CLOSE 31 MAY 2026
-
               </p>
 
             </motion.div>
 
-            {/* RIGHT */}
+            {/* DESKTOP IMAGE ONLY */}
             <motion.div
-              initial={{
-                opacity: 0,
-                scale: 0.9,
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-              }}
-              transition={{
-                duration: 0.8,
-              }}
-              className="relative"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="relative hidden lg:block"
             >
 
-              {/* GLOW */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/20 via-cyan-500/10 to-purple-500/20 blur-[120px] rounded-full scale-110" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/20 via-cyan-500/10 to-purple-500/20 blur-[70px] rounded-full scale-110" />
 
-              {/* IMAGE */}
-              <div
-                className="
-                  relative
-                  rounded-[40px]
-                  overflow-hidden
-                  border
-                  border-white/10
-                  shadow-[0_0_60px_rgba(0,255,255,0.15)]
-                "
-              >
+              <div className="relative rounded-[40px] overflow-hidden border border-white/10">
 
                 <img
                   src="/kids-edition-poster.jpg"
                   alt="TikTok Stars"
-                  className="
-                    w-full
-                    h-auto
-                    object-cover
-                  "
+                  className="w-full h-auto object-cover"
                 />
 
               </div>
@@ -238,89 +172,52 @@ export default function TikTokStarsPage() {
 
       </section>
 
-      {/* LOWER SECTION */}
+      {/* STATUS */}
       <section className="relative z-20 px-5 pb-16">
 
         <div className="max-w-7xl mx-auto">
 
-          <div
-            className="
-              rounded-[40px]
-              border
-              border-white/10
-              bg-white/5
-              backdrop-blur-2xl
-              p-8
-            "
-          >
+          <div className="rounded-[40px] border border-white/10 bg-white/5 backdrop-blur-xl p-8">
 
             <div className="flex items-center justify-between flex-wrap gap-4">
 
               <div>
 
                 <p className="uppercase tracking-[4px] text-[10px] text-cyan-400">
-
                   Competition Status
-
                 </p>
 
                 <h2
-                  className="
-                    mt-3
-                    uppercase
-                    italic
-                    font-black
-                  "
+                  className="mt-3 uppercase italic font-black"
                   style={{
-                    fontFamily:
-                      "Bebas Neue, sans-serif",
-                    fontSize:
-                      "clamp(42px, 7vw, 90px)",
-                    lineHeight:
-                      "0.9",
+                    fontFamily: "Bebas Neue, sans-serif",
+                    fontSize: "clamp(42px,7vw,90px)",
+                    lineHeight: "0.9",
                   }}
                 >
-
                   SEASON 2
+
                   <span className="block text-pink-500">
-
                     KIDS EDITION
-
                   </span>
 
                 </h2>
 
               </div>
 
-              <div
-                className="
-                  rounded-2xl
-                  bg-gradient-to-r
-                  from-cyan-500
-                  to-pink-500
-                  px-6
-                  py-5
-                  text-center
-                  min-w-[180px]
-                "
-              >
+              <div className="rounded-2xl bg-gradient-to-r from-cyan-500 to-pink-500 px-6 py-5 text-center min-w-[180px]">
 
                 <p className="uppercase text-[10px] tracking-[3px] font-black">
-
                   Starting Prize
-
                 </p>
 
                 <h3
                   className="mt-2 font-black"
                   style={{
-                    fontSize:
-                      "clamp(36px, 6vw, 60px)",
+                    fontSize: "clamp(36px,6vw,60px)",
                   }}
                 >
-
                   R40K
-
                 </h3>
 
               </div>
@@ -333,75 +230,40 @@ export default function TikTokStarsPage() {
 
       </section>
 
-      {/* SEASONS */}
-      <section className="relative z-20 px-5 pb-24">
+      {/* DESKTOP ONLY SEASONS */}
+      <section className="hidden md:block relative z-20 px-5 pb-24">
 
         <div className="max-w-7xl mx-auto">
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-            {/* SEASON 1 */}
             <Link href="/tiktok-stars/season-1">
 
-              <div
-                className="
-                  group
-                  relative
-                  overflow-hidden
-                  rounded-[32px]
-                  border
-                  border-cyan-400/30
-                  bg-black
-                  h-[220px]
-                  md:h-[300px]
-                  cursor-pointer
-                "
-              >
+              <div className="group relative overflow-hidden rounded-[32px] border border-cyan-400/30 bg-black h-[300px] cursor-pointer">
 
                 <img
+                  loading="lazy"
                   src="/season-1-card.jpg"
                   alt="Season 1"
-                  className="
-                    absolute
-                    inset-0
-                    w-full
-                    h-full
-                    object-cover
-                    opacity-80
-                    group-hover:scale-105
-                    transition
-                    duration-500
-                  "
+                  className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition duration-500"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
                 <div className="absolute bottom-6 left-6">
 
-                  <p className="uppercase tracking-[4px] text-cyan-400 text-[10px] md:text-xs font-black">
-
+                  <p className="uppercase tracking-[4px] text-cyan-400 text-xs font-black">
                     TIKTOK STARS
-
                   </p>
 
                   <h2
-                    className="
-                      mt-2
-                      uppercase
-                      italic
-                      font-black
-                      leading-none
-                    "
+                    className="mt-2 uppercase italic font-black leading-none"
                     style={{
-                      fontFamily:
-                        "Bebas Neue, sans-serif",
-                      fontSize:
-                        "clamp(48px, 6vw, 90px)",
+                      fontFamily: "Bebas Neue, sans-serif",
+                      fontSize: "clamp(48px,6vw,90px)",
                     }}
                   >
-
                     SEASON 1
-
                   </h2>
 
                 </div>
@@ -410,68 +272,33 @@ export default function TikTokStarsPage() {
 
             </Link>
 
-            {/* SEASON 2 */}
             <Link href="/tiktok-stars/season-2">
 
-              <div
-                className="
-                  group
-                  relative
-                  overflow-hidden
-                  rounded-[32px]
-                  border
-                  border-pink-500/30
-                  bg-black
-                  h-[220px]
-                  md:h-[300px]
-                  cursor-pointer
-                "
-              >
+              <div className="group relative overflow-hidden rounded-[32px] border border-pink-500/30 bg-black h-[300px] cursor-pointer">
 
                 <img
+                  loading="lazy"
                   src="/season-2-card.jpg"
                   alt="Season 2"
-                  className="
-                    absolute
-                    inset-0
-                    w-full
-                    h-full
-                    object-cover
-                    opacity-80
-                    group-hover:scale-105
-                    transition
-                    duration-500
-                  "
+                  className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition duration-500"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
                 <div className="absolute bottom-6 left-6">
 
-                  <p className="uppercase tracking-[4px] text-pink-500 text-[10px] md:text-xs font-black">
-
+                  <p className="uppercase tracking-[4px] text-pink-500 text-xs font-black">
                     TIKTOK STARS
-
                   </p>
 
                   <h2
-                    className="
-                      mt-2
-                      uppercase
-                      italic
-                      font-black
-                      leading-none
-                    "
+                    className="mt-2 uppercase italic font-black leading-none"
                     style={{
-                      fontFamily:
-                        "Bebas Neue, sans-serif",
-                      fontSize:
-                        "clamp(48px, 6vw, 90px)",
+                      fontFamily: "Bebas Neue, sans-serif",
+                      fontSize: "clamp(48px,6vw,90px)",
                     }}
                   >
-
                     SEASON 2
-
                   </h2>
 
                 </div>
