@@ -358,21 +358,12 @@ export default function HomePage() {
 
         </div>
 
-        {/* TORN EFFECT */}
-        <div className="relative mt-[-20px] z-30">
-
-          <img
-            src="/torn-divider.png"
-            alt=""
-            className="w-full object-cover"
-          />
-
-        </div>
-
+        
       </section>
 
       {/* FEATURE CARDS */}
-      <section className="relative z-20 px-4 pb-24 mt-8 md:-mt-4">
+      {/* FEATURE CARDS */}
+<section className="relative z-20 px-4 pb-24 mt-12">
 
         <div className="max-w-7xl mx-auto">
 
