@@ -1,10 +1,89 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 
 const BREEZE_GREEN = "#8DFF00";
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
 export default function AdminV2Page() {
+
+  const [stats, setStats] =
+  useState({
+    members: 0,
+    contacts: 0,
+    entries: 0,
+    hits: 0,
+  });
+
+useEffect(() => {
+
+  loadStats();
+
+}, []);
+
+const loadStats =
+  async () => {
+
+    const [
+      members,
+      contacts,
+      entries,
+      hits,
+    ] = await Promise.all([
+
+      supabase
+        .from("members")
+        .select("*", {
+          count: "exact",
+          head: true,
+        }),
+
+      supabase
+        .from("marketing_contacts")
+        .select("*", {
+          count: "exact",
+          head: true,
+        }),
+
+      supabase
+        .from("contestants")
+        .select("*", {
+          count: "exact",
+          head: true,
+        }),
+
+      supabase
+        .from("site_hits")
+        .select("*", {
+          count: "exact",
+          head: true,
+        }),
+
+    ]);
+
+    setStats({
+
+      members:
+        members.count || 0,
+
+      contacts:
+        contacts.count || 0,
+
+      entries:
+        entries.count || 0,
+
+      hits:
+        hits.count || 0,
+
+    });
+
+  };
 
   const router = useRouter();
 
@@ -115,8 +194,8 @@ export default function AdminV2Page() {
               Members
             </div>
             <div className="text-4xl font-black mt-2">
-              --
-            </div>
+  {stats.members}
+</div>
           </div>
 
           <div className="rounded-[24px] bg-white/5 border border-white/10 p-6 text-center">
@@ -124,8 +203,8 @@ export default function AdminV2Page() {
               Contacts
             </div>
             <div className="text-4xl font-black mt-2">
-              --
-            </div>
+  {stats.contacts}
+</div>
           </div>
 
           <div className="rounded-[24px] bg-white/5 border border-white/10 p-6 text-center">
@@ -133,8 +212,8 @@ export default function AdminV2Page() {
               Entries
             </div>
             <div className="text-4xl font-black mt-2">
-              --
-            </div>
+  {stats.entries}
+</div>
           </div>
 
           <div className="rounded-[24px] bg-white/5 border border-white/10 p-6 text-center">
@@ -142,8 +221,8 @@ export default function AdminV2Page() {
               Site Hits
             </div>
             <div className="text-4xl font-black mt-2">
-              --
-            </div>
+  {stats.hits}
+</div>
           </div>
 
         </div>
