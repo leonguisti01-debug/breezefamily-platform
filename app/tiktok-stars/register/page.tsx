@@ -3,40 +3,49 @@
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
+const BREEZE_GREEN = "#8DFF00";
+
 const supabase = createClient(
   "https://xwzathzitijhmupqqxux.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
 );
 
-export default function RegisterPage() {
+export default function RegisterPageV2() {
 
-  const [accepted,
-    setAccepted] =
-    useState(false);
+  /* =========================
+     LEGAL GATE
+  ========================= */
 
-  const [showPopup,
-    setShowPopup] =
+  const [showLegalGate, setShowLegalGate] =
     useState(true);
 
-  const [loading,
-    setLoading] =
+  const [pdfDownloaded, setPdfDownloaded] =
     useState(false);
 
-  const [success,
-    setSuccess] =
+  const [parentConsent, setParentConsent] =
+    useState(false);
+
+  /* =========================
+     SYSTEM
+  ========================= */
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [success, setSuccess] =
+    useState(false);
+
+  const [error, setError] =
     useState("");
 
-  const [error,
-    setError] =
+  /* =========================
+     FORM
+  ========================= */
+
+  const [fullName, setFullName] =
     useState("");
 
-  /* FORM */
-  const [fullName,
-    setFullName] =
-    useState("");
-
-  const [age,
-    setAge] =
+  const [age, setAge] =
     useState("");
 
   const [parentFullName,
@@ -67,184 +76,196 @@ export default function RegisterPage() {
     setPhoto] =
     useState<File | null>(null);
 
-  /* SUBMIT */
-  const handleSubmit =
-    async (
-      e: React.FormEvent
-    ) => {
+  /* =========================
+     SUBMIT
+  ========================= */
 
-      e.preventDefault();
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
 
-      setLoading(true);
+    e.preventDefault();
 
-      setError("");
+    setLoading(true);
 
-      setSuccess("");
+    setError("");
 
-      /* AGE LIMIT */
+    try {
+
+      /* AGE VALIDATION */
+
       if (
+        Number(age) < 2 ||
         Number(age) > 17
       ) {
 
-        setError(
-          "Kids Edition is only open to contestants aged 17 years and younger."
+        throw new Error(
+          "Kids Edition is only open to contestants aged 2 to 17."
         );
 
-        setLoading(false);
-
-        return;
       }
 
-      if (!accepted) {
+      /* PHOTO VALIDATION */
 
-        setError(
-          "You must accept the legal consent and POPIA terms."
+      if (!photo) {
+
+        throw new Error(
+          "Please upload a photo."
         );
 
-        setLoading(false);
-
-        return;
       }
 
-      let photoUrl = "";
-      if (photo) {
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+      ];
 
-  const allowedTypes = [
-    "image/jpeg",
-    "image/jpg",
-  ];
+      if (
+        !allowedTypes.includes(
+          photo.type
+        )
+      ) {
 
-  if (!allowedTypes.includes(photo.type)) {
+        throw new Error(
+          "Only JPG/JPEG images are allowed."
+        );
 
-    setError(
-      "Please upload a JPG image only."
-    );
+      }
 
-    setLoading(false);
+      if (
+        photo.size >
+        2 * 1024 * 1024
+      ) {
 
-    return;
-  }
+        throw new Error(
+          "Image must be smaller than 2MB."
+        );
 
-  if (
-    photo.size >
-    5 * 1024 * 1024
-  ) {
-
-    setError(
-      "Image must be smaller than 5MB."
-    );
-
-    setLoading(false);
-
-    return;
-  }
-
-}
+      }
 
       /* PHOTO UPLOAD */
-      if (photo) {
 
-        const fileName =
-          `${Date.now()}-${photo.name}`;
+      const fileName =
+        `${Date.now()}-${photo.name}`;
 
-        const {
-          error: uploadError
-        } = await supabase.storage
-          .from(
-            "contestant-photos"
-          )
-          .upload(
-            fileName,
-            photo
-          );
+      let photoUrl = "";
 
-        if (uploadError) {
-
-          setError(
-            uploadError.message
-          );
-
-          setLoading(false);
-
-          return;
-        }
-
-        const {
-          data: { publicUrl },
-        } = supabase.storage
-          .from(
-            "contestant-photos"
-          )
-          .getPublicUrl(
-            fileName
-          );
-
-        photoUrl =
-          publicUrl;
-      }
-
-      /* SAVE */
-      const { error } =
-        await supabase
-          .from(
-            "contestants"
-          )
-          .insert([
-            {
-              full_name:
-                fullName,
-
-              age,
-
-              parent_full_name:
-                parentFullName,
-
-              parent_id_number:
-                parentIdNumber,
-
-              parent_phone:
-                parentPhone,
-
-              parent_email:
-                parentEmail,
-
-              talent_category:
-                talent,
-
-              tiktok_username:
-                tiktokUsername,
-
-              photo_url:
-                photoUrl,
-
-              popia_accepted:
-                true,
-
-              indemnity_accepted:
-                true,
-
-              status:
-                "pending",
-
-              created_at:
-                new Date().toISOString(),
-            },
-          ]);
-
-      if (error) {
-
-        setError(
-          error.message
+      const {
+        error: uploadError
+      } = await supabase.storage
+        .from(
+          "contestant-photos"
+        )
+        .upload(
+          fileName,
+          photo
         );
 
-        setLoading(false);
+      if (uploadError) {
 
-        return;
+        throw uploadError;
+
       }
 
-      setSuccess(
-        "Entry submitted successfully. Your application is now awaiting review from the Breeze Family team."
-      );
+      const {
+        data: {
+          publicUrl
+        }
+      } = supabase.storage
+        .from(
+          "contestant-photos"
+        )
+        .getPublicUrl(
+          fileName
+        );
+
+      photoUrl = publicUrl;
+
+      /* SAVE CONTESTANT */
+
+      const {
+        error: contestantError
+      } = await supabase
+        .from(
+          "contestants"
+        )
+        .insert([
+          {
+            full_name:
+              fullName,
+
+            age,
+
+            parent_full_name:
+              parentFullName,
+
+            parent_id_number:
+              parentIdNumber,
+
+            parent_phone:
+              parentPhone,
+
+            parent_email:
+              parentEmail,
+
+            talent_category:
+              talent,
+
+            tiktok_username:
+              tiktokUsername,
+
+            photo_url:
+              photoUrl,
+
+            popia_accepted:
+              true,
+
+            indemnity_accepted:
+              true,
+
+            status:
+              "pending",
+
+            created_at:
+              new Date().toISOString(),
+          },
+        ]);
+
+      if (
+        contestantError
+      ) {
+
+        throw contestantError;
+
+      }
+
+      /* SAVE MARKETING CONTACT */
+
+      await supabase
+        .from(
+          "marketing_contacts"
+        )
+        .insert([
+          {
+            full_name:
+              parentFullName,
+
+            cellphone:
+              parentPhone,
+
+            email:
+              parentEmail,
+
+            source:
+              "Kids Edition",
+
+            notes:
+              "TikTok Stars Entry",
+          },
+        ]);
+      /* SUCCESS */
+
+      setSuccess(true);
 
       setFullName("");
 
@@ -260,332 +281,779 @@ export default function RegisterPage() {
 
       setTiktokUsername("");
 
+      setTalent("Singing");
+
       setPhoto(null);
 
+    } catch (err: any) {
+
+      setError(
+        err.message ||
+        "Something went wrong."
+      );
+
+    } finally {
+
       setLoading(false);
-    };
+
+    }
+
+  };
+
+  /* =========================
+     SUCCESS SCREEN
+  ========================= */
+
+  if (success) {
+
+    return (
+
+      <main
+        className="
+          min-h-screen
+          bg-black
+          text-white
+          flex
+          items-center
+          justify-center
+          px-6
+        "
+      >
+
+        <div
+          className="
+            max-w-2xl
+            w-full
+            text-center
+            border
+            border-white/10
+            rounded-[32px]
+            bg-white/5
+            backdrop-blur-xl
+            p-10
+          "
+        >
+
+          <div
+            className="
+              w-20
+              h-20
+              mx-auto
+              rounded-full
+              flex
+              items-center
+              justify-center
+              text-black
+              text-4xl
+              font-black
+            "
+            style={{
+              background:
+                BREEZE_GREEN,
+            }}
+          >
+            ✓
+          </div>
+
+          <h1
+            className="
+              mt-8
+              text-4xl
+              md:text-6xl
+              font-black
+              uppercase
+            "
+          >
+            Entry Received
+          </h1>
+
+          <p
+            className="
+              mt-6
+              text-white/70
+              text-lg
+              leading-relaxed
+            "
+          >
+            Thank you for entering
+            TikTok Stars Kids Edition.
+
+            <br />
+            <br />
+
+            Your application has
+            been received and is
+            awaiting review by the
+            Breeze Family team.
+          </p>
+
+          <a
+            href="https://www.tiktok.com/@itskentbreezy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              mt-10
+              inline-block
+              px-8
+              py-4
+              rounded-2xl
+              font-black
+              uppercase
+              text-black
+            "
+            style={{
+              background:
+                BREEZE_GREEN,
+            }}
+          >
+            Follow @itskentbreezy
+          </a>
+
+        </div>
+
+      </main>
+
+    );
+
+  }
 
   return (
+
     <main
-      className="min-h-screen text-white overflow-hidden"
-      style={{
-        backgroundImage:
-          "url('/bg.jpg')",
-        backgroundSize:
-          "cover",
-        backgroundPosition:
-          "center",
-        backgroundRepeat:
-          "no-repeat",
-        backgroundAttachment:
-          "fixed",
-      }}
+      className="
+        min-h-screen
+        bg-black
+        text-white
+      "
     >
 
-      <div className="min-h-screen bg-black/60">
+      {/* LEGAL GATE */}
 
-        {/* LEGAL POPUP */}
-        {showPopup && (
+      {showLegalGate && (
 
-          <div className="fixed inset-0 z-[999] bg-black/80 backdrop-blur-md flex items-center justify-center p-6">
+        <div
+          className="
+            fixed
+            inset-0
+            z-[999]
+            bg-black/90
+            backdrop-blur-md
+            flex
+            items-center
+            justify-center
+            p-6
+          "
+        >
 
-            <div className="w-full max-w-3xl bg-[#0d0d0d] border border-green-500/20 rounded-3xl p-6 md:p-10 overflow-y-auto max-h-[90vh]">
+          <div
+            className="
+              w-full
+              max-w-3xl
+              rounded-[32px]
+              border
+              border-white/10
+              bg-[#0b0b0b]
+              p-6
+              md:p-10
+              max-h-[90vh]
+              overflow-y-auto
+            "
+          >
 
-              <h2 className="text-3xl md:text-5xl font-black uppercase text-center">
+            <h2
+              className="
+                text-center
+                text-4xl
+                md:text-6xl
+                font-black
+                uppercase
+              "
+            >
+              Parent Consent
+            </h2>
 
-                Parent Consent & POPIA
+            <p
+              className="
+                mt-6
+                text-center
+                text-white/70
+              "
+            >
+              Before continuing,
+              please download and
+              review the indemnity
+              document and confirm
+              you are the legal
+              parent or guardian.
+            </p>
 
-              </h2>
+            <a
+              href="/kids-indemnity.pdf"
+              target="_blank"
+              onClick={() =>
+                setPdfDownloaded(
+                  true
+                )
+              }
+              className="
+                mt-8
+                block
+                w-full
+                py-5
+                rounded-2xl
+                text-center
+                font-black
+                uppercase
+                text-black
+              "
+              style={{
+                background:
+                  BREEZE_GREEN,
+              }}
+            >
+              Download Indemnity PDF
+            </a>
+                        <div
+              className="
+                mt-8
+                rounded-2xl
+                border
+                border-white/10
+                bg-white/5
+                p-5
+              "
+            >
 
-              <div className="mt-8 space-y-5 text-white/75 leading-relaxed">
-
-                <div className="bg-black/30 border border-white/10 rounded-2xl p-5">
-
-                  By entering this competition, the parent or legal guardian confirms that permission is granted for the child to participate in the Breeze Family Kids Edition competition.
-
-                </div>
-
-                <div className="bg-black/30 border border-white/10 rounded-2xl p-5">
-
-                  The parent or guardian acknowledges and consents to photos, videos and submitted content being used across Breeze Family platforms, social media, livestreams and promotional content.
-
-                </div>
-
-                <div className="bg-black/30 border border-white/10 rounded-2xl p-5">
-
-                  POPIA consent is acknowledged for competition administration, contestant communication and platform management purposes.
-
-                </div>
-
-                <div className="bg-black/30 border border-white/10 rounded-2xl p-5">
-
-                  The parent or guardian accepts the indemnity conditions and confirms that all information submitted is accurate and lawful.
-
-                </div>
-
-              </div>
-
-              {/* PDF */}
-              <a
-                href="/kids-indemnity.pdf"
-                target="_blank"
-                className="mt-8 block w-full py-4 rounded-2xl bg-white text-black text-center font-black uppercase"
+              <label
+                className="
+                  flex
+                  items-start
+                  gap-4
+                  cursor-pointer
+                "
               >
 
-                Download Legal PDF
+                <input
+                  type="checkbox"
+                  checked={pdfDownloaded}
+                  onChange={(e) =>
+                    setPdfDownloaded(
+                      e.target.checked
+                    )
+                  }
+                  className="
+                    mt-1
+                    w-5
+                    h-5
+                  "
+                />
 
-              </a>
+                <span
+                  className="
+                    text-white/80
+                  "
+                >
+                  I have downloaded
+                  and reviewed the
+                  indemnity document.
+                </span>
 
-              {/* CHECKBOX */}
-              <div className="mt-8 flex items-start gap-4 bg-black/30 border border-white/10 rounded-2xl p-5">
+              </label>
+
+            </div>
+
+            <div
+              className="
+                mt-4
+                rounded-2xl
+                border
+                border-white/10
+                bg-white/5
+                p-5
+              "
+            >
+
+              <label
+                className="
+                  flex
+                  items-start
+                  gap-4
+                  cursor-pointer
+                "
+              >
 
                 <input
-  type="file"
-  accept=".jpg,.jpeg,image/jpeg"
-  required
-  onChange={(e) =>
-    setPhoto(
-      e.target.files?.[0] || null
-    )
-  }
-  className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
-/>
+                  type="checkbox"
+                  checked={
+                    parentConsent
+                  }
+                  onChange={(e) =>
+                    setParentConsent(
+                      e.target.checked
+                    )
+                  }
+                  className="
+                    mt-1
+                    w-5
+                    h-5
+                  "
+                />
 
-<p className="text-sm text-white/60 mt-2">
-  JPG only • Maximum 5MB
-</p>
-                <p className="text-white/85">
+                <span
+                  className="
+                    text-white/80
+                  "
+                >
+                  I confirm that I
+                  am the parent or
+                  legal guardian and
+                  I consent to the
+                  contestant
+                  participating in
+                  TikTok Stars Kids
+                  Edition.
+                </span>
 
-                  I confirm that I am the parent or legal guardian and I accept the indemnity, media release and POPIA terms.
+              </label>
 
+            </div>
+
+            <button
+              type="button"
+              disabled={
+                !pdfDownloaded ||
+                !parentConsent
+              }
+              onClick={() =>
+                setShowLegalGate(
+                  false
+                )
+              }
+              className={`
+                mt-8
+                w-full
+                py-5
+                rounded-2xl
+                font-black
+                uppercase
+                transition
+
+                ${
+                  pdfDownloaded &&
+                  parentConsent
+                    ? ""
+                    : "opacity-50 cursor-not-allowed"
+                }
+              `}
+              style={{
+                background:
+                  pdfDownloaded &&
+                  parentConsent
+                    ? BREEZE_GREEN
+                    : "#444",
+                color:
+                  pdfDownloaded &&
+                  parentConsent
+                    ? "#000"
+                    : "#aaa",
+              }}
+            >
+              Continue To Entry Form
+            </button>
+
+          </div>
+
+        </div>
+
+      )}
+
+      {/* PAGE */}
+
+      <section
+        className="
+          px-6
+          pt-24
+          pb-24
+        "
+      >
+
+        <div
+          className="
+            max-w-4xl
+            mx-auto
+          "
+        >
+
+          <h1
+            className="
+              text-center
+              text-5xl
+              md:text-7xl
+              font-black
+              uppercase
+            "
+          >
+            TikTok Stars
+
+            <br />
+
+            <span
+              style={{
+                color:
+                  BREEZE_GREEN,
+              }}
+            >
+              Kids Edition
+            </span>
+
+          </h1>
+
+          <p
+            className="
+              mt-6
+              text-center
+              text-white/60
+              max-w-2xl
+              mx-auto
+            "
+          >
+            Enter now for your
+            chance to become the
+            next TikTok Stars Kids
+            Edition champion.
+          </p>
+
+          {error && (
+
+            <div
+              className="
+                mt-8
+                rounded-2xl
+                border
+                border-red-500/20
+                bg-red-500/10
+                p-5
+                text-red-300
+              "
+            >
+
+              {error}
+
+            </div>
+
+          )}
+
+          <div
+            className="
+              mt-10
+              rounded-[32px]
+              border
+              border-white/10
+              bg-white/5
+              backdrop-blur-xl
+              p-6
+              md:p-10
+            "
+          >
+
+            <form
+              onSubmit={
+                handleSubmit
+              }
+              className="
+                space-y-6
+              "
+            >              <input
+                type="text"
+                required
+                placeholder="Contestant Full Name"
+                value={fullName}
+                onChange={(e) =>
+                  setFullName(
+                    e.target.value
+                  )
+                }
+                className="
+                  w-full
+                  px-5
+                  py-4
+                  rounded-2xl
+                  bg-black/40
+                  border
+                  border-white/10
+                  text-white
+                "
+              />
+
+              <input
+                type="number"
+                required
+                min="2"
+                max="17"
+                placeholder="Age"
+                value={age}
+                onChange={(e) =>
+                  setAge(
+                    e.target.value
+                  )
+                }
+                className="
+                  w-full
+                  px-5
+                  py-4
+                  rounded-2xl
+                  bg-black/40
+                  border
+                  border-white/10
+                  text-white
+                "
+              />
+
+              <input
+                type="text"
+                required
+                placeholder="Parent / Guardian Full Name"
+                value={
+                  parentFullName
+                }
+                onChange={(e) =>
+                  setParentFullName(
+                    e.target.value
+                  )
+                }
+                className="
+                  w-full
+                  px-5
+                  py-4
+                  rounded-2xl
+                  bg-black/40
+                  border
+                  border-white/10
+                  text-white
+                "
+              />
+
+              <input
+                type="text"
+                required
+                placeholder="Parent ID Number"
+                value={
+                  parentIdNumber
+                }
+                onChange={(e) =>
+                  setParentIdNumber(
+                    e.target.value
+                  )
+                }
+                className="
+                  w-full
+                  px-5
+                  py-4
+                  rounded-2xl
+                  bg-black/40
+                  border
+                  border-white/10
+                  text-white
+                "
+              />
+
+              <input
+                type="text"
+                required
+                placeholder="Parent Contact Number"
+                value={parentPhone}
+                onChange={(e) =>
+                  setParentPhone(
+                    e.target.value
+                  )
+                }
+                className="
+                  w-full
+                  px-5
+                  py-4
+                  rounded-2xl
+                  bg-black/40
+                  border
+                  border-white/10
+                  text-white
+                "
+              />
+
+              <input
+                type="email"
+                required
+                placeholder="Parent Email Address"
+                value={parentEmail}
+                onChange={(e) =>
+                  setParentEmail(
+                    e.target.value
+                  )
+                }
+                className="
+                  w-full
+                  px-5
+                  py-4
+                  rounded-2xl
+                  bg-black/40
+                  border
+                  border-white/10
+                  text-white
+                "
+              />
+
+              <input
+                type="text"
+                required
+                placeholder="@TikTok Username"
+                value={
+                  tiktokUsername
+                }
+                onChange={(e) =>
+                  setTiktokUsername(
+                    e.target.value
+                  )
+                }
+                className="
+                  w-full
+                  px-5
+                  py-4
+                  rounded-2xl
+                  bg-black/40
+                  border
+                  border-white/10
+                  text-white
+                "
+              />
+
+              <select
+                value={talent}
+                onChange={(e) =>
+                  setTalent(
+                    e.target.value
+                  )
+                }
+                className="
+                  w-full
+                  px-5
+                  py-4
+                  rounded-2xl
+                  bg-black/40
+                  border
+                  border-white/10
+                  text-white
+                "
+              >
+                <option>
+                  Singing
+                </option>
+
+                <option>
+                  Dancing
+                </option>
+
+                <option>
+                  Comedy
+                </option>
+
+                <option>
+                  Instrument
+                </option>
+
+                <option>
+                  Other
+                </option>
+
+              </select>
+
+              <div
+                className="
+                  rounded-2xl
+                  border
+                  border-white/10
+                  bg-black/30
+                  p-5
+                "
+              >
+
+                <label
+                  className="
+                    block
+                    text-sm
+                    uppercase
+                    font-black
+                    mb-3
+                  "
+                  style={{
+                    color:
+                      BREEZE_GREEN,
+                  }}
+                >
+                  Upload Contestant Photo
+                </label>
+
+                <input
+                  type="file"
+                  required
+                  accept=".jpg,.jpeg,image/jpeg"
+                  onChange={(e) =>
+                    setPhoto(
+                      e.target
+                        .files?.[0] ||
+                        null
+                    )
+                  }
+                  className="
+                    w-full
+                    text-white
+                  "
+                />
+
+                <p
+                  className="
+                    mt-3
+                    text-sm
+                    text-white/60
+                  "
+                >
+                  JPG / JPEG only.
+                  Maximum file size:
+                  2MB.
                 </p>
 
               </div>
 
               <button
-                disabled={!accepted}
-                onClick={() =>
-                  setShowPopup(false)
-                }
-                className={`mt-10 w-full py-5 rounded-2xl font-black text-lg transition ${
-                  accepted
-                    ? "bg-gradient-to-r from-green-400 to-lime-300 text-black"
-                    : "bg-gray-700 text-gray-400"
-                }`}
+                type="submit"
+                disabled={loading}
+                className="
+                  w-full
+                  py-5
+                  rounded-2xl
+                  font-black
+                  uppercase
+                  text-black
+                  transition
+                "
+                style={{
+                  background:
+                    BREEZE_GREEN,
+                }}
               >
-
-                CONTINUE
-
+                {loading
+                  ? "UPLOADING PHOTO... PLEASE WAIT"
+                  : "SUBMIT ENTRY"}
               </button>
 
-            </div>
-
-          </div>
-        )}
-
-        {/* PAGE */}
-        <section className="relative z-20 px-6 pt-20 md:pt-32 pb-24">
-
-          <div className="max-w-4xl mx-auto">
-
-            <h1 className="text-5xl md:text-7xl font-black uppercase text-center">
-
-              ENTER THE
-
-              <br />
-
-              <span className="bg-gradient-to-r from-cyan-300 via-white to-pink-400 text-transparent bg-clip-text">
-
-                COMPETITION
-
-              </span>
-
-            </h1>
-
-            {/* FORM */}
-            <div className="mt-14 bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-12">
-
-              {success && (
-
-                <div className="mb-6 p-6 rounded-2xl bg-green-500/10 border border-green-400/20 text-green-300 text-lg">
-
-                  {success}
-
-                </div>
-              )}
-
-              {error && (
-
-                <div className="mb-6 p-6 rounded-2xl bg-red-500/10 border border-red-400/20 text-red-300">
-
-                  {error}
-
-                </div>
-              )}
-
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-8"
-              >
-
-                <input
-                  type="text"
-                  required
-                  placeholder="Contestant Full Name"
-                  value={fullName}
-                  onChange={(e) =>
-                    setFullName(
-                      e.target.value
-                    )
-                  }
-                  className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
-                />
-
-                <input
-                  type="number"
-                  required
-                  max="17"
-                  placeholder="Age"
-                  value={age}
-                  onChange={(e) =>
-                    setAge(
-                      e.target.value
-                    )
-                  }
-                  className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
-                />
-
-                <input
-                  type="text"
-                  required
-                  placeholder="Parent / Guardian Full Name"
-                  value={parentFullName}
-                  onChange={(e) =>
-                    setParentFullName(
-                      e.target.value
-                    )
-                  }
-                  className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
-                />
-
-                <input
-                  type="text"
-                  required
-                  placeholder="Parent ID Number"
-                  value={parentIdNumber}
-                  onChange={(e) =>
-                    setParentIdNumber(
-                      e.target.value
-                    )
-                  }
-                  className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
-                />
-
-                <input
-                  type="text"
-                  required
-                  placeholder="Parent Contact Number"
-                  value={parentPhone}
-                  onChange={(e) =>
-                    setParentPhone(
-                      e.target.value
-                    )
-                  }
-                  className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
-                />
-
-                <input
-                  type="email"
-                  required
-                  placeholder="Parent Email Address"
-                  value={parentEmail}
-                  onChange={(e) =>
-                    setParentEmail(
-                      e.target.value
-                    )
-                  }
-                  className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
-                />
-
-                <input
-                  type="text"
-                  required
-                  placeholder="@TikTok Username"
-                  value={tiktokUsername}
-                  onChange={(e) =>
-                    setTiktokUsername(
-                      e.target.value
-                    )
-                  }
-                  className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
-                />
-
-                <select
-                  value={talent}
-                  onChange={(e) =>
-                    setTalent(
-                      e.target.value
-                    )
-                  }
-                  className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
-                >
-
-                  <option>
-                    Singing
-                  </option>
-
-                  <option>
-                    Dancing
-                  </option>
-
-                  <option>
-                    Comedy
-                  </option>
-
-                  <option>
-                    Instrument
-                  </option>
-
-                  <option>
-                    Other
-                  </option>
-
-                </select>
-
-                <input
-                  type="file"
-                  accept="image/*"
-                  required
-                  onChange={(e) =>
-                    setPhoto(
-                      e.target.files?.[0] || null
-                    )
-                  }
-                  className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
-                />
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-5 rounded-2xl bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white font-black text-lg shadow-[0_0_50px_rgba(255,0,140,0.4)]"
-                >
-
-                  {loading
-  ? "UPLOADING PHOTO... PLEASE WAIT"
-  : "SUBMIT ENTRY"}
-
-                </button>
-
-              </form>
-
-            </div>
+            </form>
 
           </div>
 
-        </section>
+        </div>
 
-      </div>
+      </section>
 
     </main>
+
   );
+
 }
