@@ -54,9 +54,29 @@ export default function LoginPage() {
 
         }
 
-        router.push(
-          "/portal"
-        );
+        const { data: member } =
+  await supabase
+    .from("members")
+    .select("role")
+    .eq("email", email)
+    .single();
+
+if (
+  member?.role ===
+  "admin"
+) {
+
+  router.push(
+    "/admin"
+  );
+
+} else {
+
+  router.push(
+    "/portal"
+  );
+
+}
 
       } catch (err: any) {
 
