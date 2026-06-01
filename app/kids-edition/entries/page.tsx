@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const BREEZE_GREEN = "#8DFF00";
 
@@ -13,91 +13,177 @@ const supabase = createClient(
 
 export default function EntriesPage() {
 
-  const [entries, setEntries] = useState<any[]>([]);
+  const [entries, setEntries] =
+    useState<any[]>([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] =
+    useState(true);
+
+  const [selectedEntry,
+    setSelectedEntry] =
+    useState<any>(null);
 
   useEffect(() => {
 
-    const fetchEntries = async () => {
+    const fetchEntries =
+      async () => {
 
-      const { data, error } = await supabase
-        .from("contestants")
-        .select("*")
-        .eq("status", "accepted")
-        .order("created_at", {
-          ascending: false,
-        });
+        const {
+          data,
+          error,
+        } = await supabase
+          .from("contestants")
+          .select("*")
+          .eq(
+            "status",
+            "accepted"
+          )
+          .order(
+            "created_at",
+            {
+              ascending: false,
+            }
+          );
 
-      if (!error && data) {
+        if (
+          !error &&
+          data
+        ) {
 
-        setEntries(data);
-      }
+          setEntries(data);
 
-      setLoading(false);
-    };
+        }
+
+        setLoading(false);
+
+      };
 
     fetchEntries();
 
   }, []);
 
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden relative">
+
+    <main
+      className="
+        min-h-screen
+        bg-black
+        text-white
+        overflow-hidden
+        relative
+      "
+    >
 
       {/* BACKGROUND */}
+
       <div
-        className="absolute top-[-300px] left-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full"
+        className="
+          absolute
+          top-[-300px]
+          left-[-300px]
+          w-[700px]
+          h-[700px]
+          blur-[220px]
+          rounded-full
+        "
         style={{
-          background: `${BREEZE_GREEN}18`,
+          background:
+            `${BREEZE_GREEN}18`,
         }}
       />
 
       <div
-        className="absolute bottom-[-300px] right-[-300px] w-[700px] h-[700px] blur-[220px] rounded-full"
+        className="
+          absolute
+          bottom-[-300px]
+          right-[-300px]
+          w-[700px]
+          h-[700px]
+          blur-[220px]
+          rounded-full
+        "
         style={{
-          background: `${BREEZE_GREEN}12`,
+          background:
+            `${BREEZE_GREEN}12`,
         }}
       />
 
-      {/* GRID */}
       <div
-        className="absolute inset-0 opacity-[0.04]"
+        className="
+          absolute
+          inset-0
+          opacity-[0.04]
+        "
         style={{
           backgroundImage:
             "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
-          backgroundSize: "70px 70px",
+          backgroundSize:
+            "70px 70px",
         }}
       />
 
       {/* HERO */}
-      <section className="relative z-20 px-4 md:px-6 pt-10 md:pt-14 pb-16">
 
-        <div className="max-w-7xl mx-auto text-center">
+      <section
+        className="
+          relative
+          z-20
+          px-4
+          md:px-6
+          pt-10
+          md:pt-14
+          pb-12
+        "
+      >
+
+        <div
+          className="
+            max-w-7xl
+            mx-auto
+            text-center
+          "
+        >
 
           <p
-            className="uppercase tracking-[5px] text-xs"
+            className="
+              uppercase
+              tracking-[5px]
+              text-xs
+            "
             style={{
-              color: BREEZE_GREEN,
+              color:
+                BREEZE_GREEN,
             }}
           >
             TIKTOK STARS
           </p>
 
           <h1
-            className="mt-4 uppercase italic font-black"
+            className="
+              mt-4
+              uppercase
+              italic
+              font-black
+            "
             style={{
-              fontFamily: "Bebas Neue, sans-serif",
-              fontSize: "clamp(70px, 10vw, 160px)",
-              letterSpacing: "0.1em",
-              lineHeight: "0.82",
+              fontFamily:
+                "Bebas Neue, sans-serif",
+              fontSize:
+                "clamp(60px, 9vw, 140px)",
+              letterSpacing:
+                "0.1em",
+              lineHeight:
+                "0.82",
             }}
           >
 
             ACCEPTED
+
             <span
               className="block"
               style={{
-                color: BREEZE_GREEN,
+                color:
+                  BREEZE_GREEN,
               }}
             >
               ENTRIES
@@ -106,151 +192,149 @@ export default function EntriesPage() {
           </h1>
 
           <p
-            className="mt-8 text-white/70 max-w-2xl mx-auto"
-            style={{
-              fontSize: "18px",
-              lineHeight: "1.7",
-            }}
+            className="
+              mt-6
+              text-white/70
+              max-w-2xl
+              mx-auto
+            "
           >
-
-            Meet the next generation of performers,
-            creators and digital stars entering
-            the Breeze Family Kids Edition.
-
+            Meet the next
+            generation of
+            performers,
+            creators and
+            digital stars.
           </p>
 
         </div>
 
-      </section>
+      </section>      {/* ENTRIES GRID */}
 
-      {/* ENTRIES GRID */}
-      <section className="relative z-20 px-4 md:px-6 pb-28">
+      <section
+        className="
+          relative
+          z-20
+          px-4
+          md:px-6
+          pb-24
+        "
+      >
 
-        <div className="max-w-7xl mx-auto">
+        <div
+          className="
+            max-w-7xl
+            mx-auto
+          "
+        >
 
           {loading ? (
 
-            <div className="text-center py-32 text-white/50 uppercase tracking-[4px]">
-
+            <div
+              className="
+                text-center
+                py-32
+                text-white/50
+                uppercase
+                tracking-[4px]
+              "
+            >
               Loading Entries...
-
             </div>
 
           ) : (
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div
+              className="
+                grid
+                grid-cols-2
+                md:grid-cols-4
+                xl:grid-cols-6
+                gap-3
+              "
+            >
 
-              {entries.map((entry, index) => (
+              {entries.map(
+                (
+                  entry,
+                  index
+                ) => (
 
-                <motion.div
-                  key={index}
-                  whileHover={{
-                    y: -8,
-                    scale: 1.02,
-                  }}
-                  transition={{
-                    duration: 0.3,
-                  }}
-                >
-
-                  <div
-                    className="
-                      relative
-                      overflow-hidden
-                      rounded-[30px]
-                      border
-                      bg-white/5
-                      backdrop-blur-2xl
-                    "
-                    style={{
-                      borderColor: `${BREEZE_GREEN}25`,
+                  <motion.div
+                    key={index}
+                    whileHover={{
+                      y: -4,
                     }}
+                    onClick={() =>
+                      setSelectedEntry(
+                        entry
+                      )
+                    }
+                    className="
+                      cursor-pointer
+                    "
                   >
 
-                    {/* IMAGE */}
-                    <div className="relative">
+                    <div
+                      className="
+                        overflow-hidden
+                        rounded-[20px]
+                        border
+                        bg-white/5
+                      "
+                      style={{
+                        borderColor:
+                          `${BREEZE_GREEN}25`,
+                      }}
+                    >
 
                       <img
-                        src={entry.photo_url}
-                        alt={entry.full_name}
-                        className="w-full h-[360px] object-cover"
+                        src={
+                          entry.photo_url
+                        }
+                        alt={
+                          entry.full_name
+                        }
+                        className="
+                          w-full
+                          h-[220px]
+                          object-cover
+                        "
                       />
 
-                      {/* OVERLAY */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-
-                      {/* BADGE */}
                       <div
                         className="
-                          absolute
-                          top-4
-                          right-4
-                          rounded-full
-                          bg-[#8DFF00]
-                          text-black
-                          px-4
-                          py-2
-                          text-[10px]
-                          uppercase
-                          tracking-[3px]
-                          font-black
+                          p-3
                         "
                       >
-                        Accepted
-                      </div>
 
-                    </div>
-
-                    {/* CONTENT */}
-                    <div className="p-6">
-
-                      <p
-                        className="uppercase tracking-[4px] text-[10px]"
-                        style={{
-                          color: BREEZE_GREEN,
-                        }}
-                      >
-                        {entry.talent_category}
-                      </p>
-
-                      <h2
-                        className="mt-3 uppercase italic font-black"
-                        style={{
-                          fontFamily: "Bebas Neue, sans-serif",
-                          fontSize: "38px",
-                          letterSpacing: "0.08em",
-                          lineHeight: "0.9",
-                        }}
-                      >
-
-                        {entry.full_name}
-
-                      </h2>
-
-                      <div className="mt-5 flex items-center justify-between text-sm text-white/60">
-
-                        <span>
-                          Age {entry.age}
-                        </span>
-
-                        <a
-                          href={`https://www.tiktok.com/@${entry.tiktok_username.replace("@", "")}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-[#8DFF00] transition"
+                        <h3
+                          className="
+                            font-black
+                            uppercase
+                            text-sm
+                            truncate
+                          "
                         >
-                          {entry.tiktok_username}
-                        </a>
+                          {entry.full_name}
+                        </h3>
+
+                        <p
+                          className="
+                            text-xs
+                            text-white/60
+                          "
+                        >
+                          Age {entry.age}
+                        </p>
 
                       </div>
 
                     </div>
 
-                  </div>
+                  </motion.div>
 
-                </motion.div>
-
-              ))}
+                )
+              )}
 
             </div>
 
@@ -260,6 +344,146 @@ export default function EntriesPage() {
 
       </section>
 
+      {/* MODAL */}
+
+      <AnimatePresence>
+
+        {selectedEntry && (
+
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            onClick={() =>
+              setSelectedEntry(
+                null
+              )
+            }
+            className="
+              fixed
+              inset-0
+              bg-black/90
+              z-50
+              flex
+              items-center
+              justify-center
+              p-4
+            "
+          >
+
+            <motion.div
+              initial={{
+                scale: 0.9,
+              }}
+              animate={{
+                scale: 1,
+              }}
+              exit={{
+                scale: 0.9,
+              }}
+              onClick={(e) =>
+                e.stopPropagation()
+              }
+              className="
+                max-w-2xl
+                w-full
+                bg-[#111]
+                rounded-[30px]
+                overflow-hidden
+                border
+              "
+              style={{
+                borderColor:
+                  `${BREEZE_GREEN}30`,
+              }}
+            >
+
+              <img
+                src={
+                  selectedEntry.photo_url
+                }
+                alt={
+                  selectedEntry.full_name
+                }
+                className="
+                  w-full
+                  max-h-[70vh]
+                  object-cover
+                "
+              />
+
+              <div
+                className="
+                  p-6
+                "
+              >
+
+                <h2
+                  className="
+                    text-3xl
+                    font-black
+                    uppercase
+                  "
+                >
+                  {
+                    selectedEntry.full_name
+                  }
+                </h2>
+
+                <p
+                  className="
+                    mt-2
+                    text-white/70
+                  "
+                >
+                  Age {
+                    selectedEntry.age
+                  }
+                </p>
+
+                <p
+                  className="
+                    mt-2
+                  "
+                  style={{
+                    color:
+                      BREEZE_GREEN,
+                  }}
+                >
+                  {
+                    selectedEntry.talent_category
+                  }
+                </p>
+
+                <p
+                  className="
+                    mt-3
+                    text-white/70
+                  "
+                >
+                  {
+                    selectedEntry.tiktok_username
+                  }
+                </p>
+
+              </div>
+
+            </motion.div>
+
+          </motion.div>
+
+        )}
+
+      </AnimatePresence>
+
     </main>
+
   );
+
 }
