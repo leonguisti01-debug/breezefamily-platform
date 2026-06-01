@@ -1,779 +1,210 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  "https://xwzathzitijhmupqqxux.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3emF0aHppdGlqaG11cHFxeHV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MDA5NzUsImV4cCI6MjA5NDM3Njk3NX0.uz0NqLhb8cfSh6b8141Fvio3PYDKT1UwZz9K7ZAREr0"
-);
-
-export default function AdminPage() {
-
-  const router =
-    useRouter();
-
-  const [authorized,
-    setAuthorized] =
-    useState(false);
-
-  const [contestants,
-    setContestants] =
-    useState<any[]>([]);
-
-  const [season2Contestants,
-    setSeason2Contestants] =
-    useState<any[]>([]);
-
-  const [judges,
-    setJudges] =
-    useState<any[]>([]);
-
-  const [siteHits,
-    setSiteHits] =
-    useState(0);
-
-  const [judgesVotingOpen,
-    setJudgesVotingOpen] =
-    useState(true);
-
-  const [top10VotingOpen,
-    setTop10VotingOpen] =
-    useState(true);
-
-  const [loading,
-    setLoading] =
-    useState(true);
-
-  useEffect(() => {
-
-    const checkAuth =
-      async () => {
-
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-
-        if (!session) {
-
-          window.location.href =
-            "/admin-login";
-
-          return;
-        }
-
-        setAuthorized(true);
-
-        await fetchContestants();
-
-        await fetchSeason2Contestants();
-
-        await fetchJudges();
-
-        await fetchSettings();
-
-        await fetchHits();
-      };
-
-    checkAuth();
-
-  }, []);
-
-  /* LOGOUT */
-  const logout =
-    async () => {
-
-      await supabase.auth.signOut();
-
-      window.location.href =
-        "/admin-login";
-    };
-
-  /* SETTINGS */
-  const fetchSettings =
-    async () => {
-
-      const { data } =
-        await supabase
-          .from("site_settings")
-          .select("*");
-
-      if (!data) return;
-
-      const judgesSetting =
-        data.find(
-          (s: any) =>
-            s.key ===
-            "judges_voting_open"
-        );
-
-      const top10Setting =
-        data.find(
-          (s: any) =>
-            s.key ===
-            "top10_voting_open"
-        );
-
-      setJudgesVotingOpen(
-        judgesSetting?.value === true ||
-        judgesSetting?.value === "true"
-      );
-
-      setTop10VotingOpen(
-        top10Setting?.value === true ||
-        top10Setting?.value === "true"
-      );
-    };
-
-  /* HITS */
-  const fetchHits =
-    async () => {
-
-      const {
-        count
-      } = await supabase
-        .from("site_hits")
-        .select("*", {
-          count: "exact",
-          head: true,
-        });
-
-      setSiteHits(
-        count || 0
-      );
-    };
-
-  /* TOGGLE */
-  const toggleSetting =
-    async (
-      key: string,
-      current: boolean
-    ) => {
-
-      await supabase
-        .from("site_settings")
-        .update({
-          value: !current,
-        })
-        .eq("key", key);
-
-      fetchSettings();
-    };
-
-  /* FETCH */
-  const fetchContestants =
-    async () => {
-
-      const { data } =
-        await supabase
-          .from("contestants")
-          .select("*")
-          .order(
-            "created_at",
-            {
-              ascending: false,
-            }
-          );
-
-      if (data)
-        setContestants(data);
-    };
-
-  const fetchSeason2Contestants =
-    async () => {
-
-      const { data } =
-        await supabase
-          .from("season2_finalists")
-          .select("*")
-          .order("votes", {
-            ascending: false,
-          });
-
-      if (data)
-        setSeason2Contestants(data);
-    };
-
-  const fetchJudges =
-    async () => {
-
-      const { data } =
-        await supabase
-          .from("fan_favorite_judges")
-          .select("*")
-          .order("votes", {
-            ascending: false,
-          });
-
-      if (data)
-        setJudges(data);
-
-      setLoading(false);
-    };
-
-  /* KIDS STATUS */
-  const updateKidsStatus =
-    async (
-      id: number,
-      status: string
-    ) => {
-
-      await supabase
-        .from("contestants")
-        .update({
-          status,
-        })
-        .eq("id", id);
-
-      fetchContestants();
-    };
-
-  /* FINALIST STATUS */
-  const updateFinalistStatus =
-    async (
-      id: number,
-      status: string
-    ) => {
-
-      await supabase
-        .from("season2_finalists")
-        .update({
-          status,
-        })
-        .eq("id", id);
-
-      fetchSeason2Contestants();
-    };
-
-  /* JUDGE STATUS */
-  const updateJudgeStatus =
-    async (
-      id: number,
-      status: string
-    ) => {
-
-      await supabase
-        .from("fan_favorite_judges")
-        .update({
-          status,
-        })
-        .eq("id", id);
-
-      fetchJudges();
-    };
-
-  /* UPLOAD FINALIST PHOTO */
-  const uploadTop10Image =
-    async (
-      e: any,
-      contestantId: number
-    ) => {
-
-      const file =
-        e.target.files[0];
-
-      if (!file) return;
-
-      const fileName =
-        `${Date.now()}-${file.name}`;
-
-      await supabase.storage
-        .from("contestant-photos")
-        .upload(
-          fileName,
-          file
-        );
-
-      const {
-        data: publicUrlData,
-      } = supabase.storage
-        .from("contestant-photos")
-        .getPublicUrl(
-          fileName
-        );
-
-      await supabase
-        .from("season2_finalists")
-        .update({
-          image_url:
-            publicUrlData.publicUrl,
-        })
-        .eq("id", contestantId);
-
-      fetchSeason2Contestants();
-
-      alert("Photo uploaded!");
-    };
-
-  /* UPLOAD JUDGE VIDEO */
-  const uploadJudgeVideo =
-    async (
-      e: any,
-      judgeId: number
-    ) => {
-
-      const file =
-        e.target.files[0];
-
-      if (!file) return;
-
-      const fileName =
-        `${Date.now()}-${file.name}`;
-
-      await supabase.storage
-        .from("judges")
-        .upload(
-          fileName,
-          file
-        );
-
-      const {
-        data: publicUrlData,
-      } = supabase.storage
-        .from("judges")
-        .getPublicUrl(
-          fileName
-        );
-
-      await supabase
-        .from("fan_favorite_judges")
-        .update({
-          video_url:
-            publicUrlData.publicUrl,
-        })
-        .eq("id", judgeId);
-
-      fetchJudges();
-
-      alert("Video uploaded!");
-    };
-
-  if (
-    !authorized ||
-    loading
-  ) {
-
-    return (
-      <main className="min-h-screen bg-black text-white flex items-center justify-center">
-
-        <h1 className="text-4xl font-black uppercase">
-          Loading Admin...
-        </h1>
-
-      </main>
-    );
-  }
+const BREEZE_GREEN = "#8DFF00";
+
+export default function AdminV2Page() {
+
+  const router = useRouter();
+
+  const cards = [
+    {
+      title: "Kids Edition",
+      icon: "⭐",
+      route: "/admin/kids",
+    },
+    {
+      title: "Top 10 Finalists",
+      icon: "🏆",
+      route: "/admin/top10",
+    },
+    {
+      title: "Fan Favourite Judges",
+      icon: "🎤",
+      route: "/admin/judges",
+    },
+    {
+      title: "Merch Manager",
+      icon: "🛒",
+      route: "/merch/merch-manager-v2",
+    },
+    {
+      title: "Members",
+      icon: "👥",
+      route: "/admin/members",
+    },
+    {
+      title: "Marketing Contacts",
+      icon: "📧",
+      route: "/admin/marketing",
+    },
+    {
+      title: "Statistics",
+      icon: "📊",
+      route: "/admin/stats",
+    },
+    {
+      title: "Settings",
+      icon: "⚙️",
+      route: "/admin/settings",
+    },
+  ];
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-20">
+
+    <main className="min-h-screen bg-black text-white px-4 py-20">
 
       <div className="max-w-7xl mx-auto">
 
         {/* HEADER */}
-        <div className="flex items-center justify-between gap-6">
 
-          <div>
+        <div className="text-center">
 
-            <p className="uppercase tracking-[4px] text-green-300 text-sm">
-              Breeze Family
-            </p>
-
-            <h1 className="mt-4 text-6xl font-black uppercase">
-              Admin Dashboard
-            </h1>
-
-          </div>
-
-          <button
-            onClick={logout}
-            className="px-6 py-4 rounded-2xl bg-red-500 text-white font-black uppercase"
+          <p
+            className="uppercase tracking-[5px] text-xs"
+            style={{
+              color: BREEZE_GREEN,
+            }}
           >
+            Breeze Family
+          </p>
 
-            Logout
+          <h1
+            className="
+              mt-4
+              text-5xl
+              md:text-7xl
+              font-black
+              uppercase
+            "
+          >
+            Admin
+          </h1>
 
-          </button>
+          <h2
+            className="
+              text-5xl
+              md:text-7xl
+              font-black
+              uppercase
+            "
+            style={{
+              color: BREEZE_GREEN,
+            }}
+          >
+            Control Centre
+          </h2>
 
         </div>
 
-        {/* CONTROLS */}
-        <div className="mt-16 grid md:grid-cols-3 gap-8">
+        {/* QUICK STATS */}
 
-          <button
-            onClick={() =>
-              toggleSetting(
-                "judges_voting_open",
-                judgesVotingOpen
-              )
-            }
-            className={`py-8 rounded-3xl font-black uppercase text-2xl ${
-              judgesVotingOpen
-                ? "bg-green-400 text-black"
-                : "bg-red-500 text-white"
-            }`}
-          >
+        <div
+          className="
+            mt-12
+            grid
+            grid-cols-2
+            md:grid-cols-4
+            gap-4
+          "
+        >
 
-            Judges Voting
-            <br />
-            {judgesVotingOpen
-              ? "OPEN"
-              : "CLOSED"}
+          <div className="rounded-[24px] bg-white/5 border border-white/10 p-6 text-center">
+            <div className="text-white/50 text-sm uppercase">
+              Members
+            </div>
+            <div className="text-4xl font-black mt-2">
+              --
+            </div>
+          </div>
 
-          </button>
+          <div className="rounded-[24px] bg-white/5 border border-white/10 p-6 text-center">
+            <div className="text-white/50 text-sm uppercase">
+              Contacts
+            </div>
+            <div className="text-4xl font-black mt-2">
+              --
+            </div>
+          </div>
 
-          <button
-            onClick={() =>
-              toggleSetting(
-                "top10_voting_open",
-                top10VotingOpen
-              )
-            }
-            className={`py-8 rounded-3xl font-black uppercase text-2xl ${
-              top10VotingOpen
-                ? "bg-green-400 text-black"
-                : "bg-red-500 text-white"
-            }`}
-          >
+          <div className="rounded-[24px] bg-white/5 border border-white/10 p-6 text-center">
+            <div className="text-white/50 text-sm uppercase">
+              Entries
+            </div>
+            <div className="text-4xl font-black mt-2">
+              --
+            </div>
+          </div>
 
-            Top 10 Voting
-            <br />
-            {top10VotingOpen
-              ? "OPEN"
-              : "CLOSED"}
-
-          </button>
-
-          <div className="rounded-3xl bg-white/5 border border-white/10 p-8 flex flex-col items-center justify-center">
-
-            <p className="uppercase tracking-[4px] text-white/50 text-sm">
+          <div className="rounded-[24px] bg-white/5 border border-white/10 p-6 text-center">
+            <div className="text-white/50 text-sm uppercase">
               Site Hits
-            </p>
-
-            <h2 className="mt-4 text-6xl font-black">
-              {siteHits}
-            </h2>
-
+            </div>
+            <div className="text-4xl font-black mt-2">
+              --
+            </div>
           </div>
 
         </div>
 
-        {/* TOP 10 */}
-        <section className="mt-24">
-
-          <h2 className="text-5xl font-black uppercase">
-            Top 10 Finalists
-          </h2>
-
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-
-            {season2Contestants.map(
-              (contestant) => (
-
-                <div
-                  key={contestant.id}
-                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
-                >
-
-                  {contestant.image_url ? (
-
-                    <img
-                      src={contestant.image_url}
-                      alt={contestant.name}
-                      className="w-full aspect-square object-cover"
-                    />
-
-                  ) : (
-
-                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
-                      No Image
-                    </div>
-
-                  )}
-
-                  <div className="p-6">
-
-                    <h3 className="text-3xl font-black uppercase">
-                      {contestant.name}
-                    </h3>
-
-                    <p className="mt-3 text-green-300 font-bold">
-                      Votes: {contestant.votes || 0}
-                    </p>
-
-                    <label className="mt-6 block">
-
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) =>
-                          uploadTop10Image(
-                            e,
-                            contestant.id
-                          )
-                        }
-                        className="hidden"
-                      />
-
-                      <div className="cursor-pointer py-3 rounded-2xl bg-white text-black text-center font-black uppercase">
-                        Upload Photo
-                      </div>
-
-                    </label>
-
-                    <div className="mt-6 grid gap-3">
-
-                      <button
-                        onClick={() =>
-                          updateFinalistStatus(
-                            contestant.id,
-                            "safe"
-                          )
-                        }
-                        className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
-                      >
-                        Safe
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          updateFinalistStatus(
-                            contestant.id,
-                            "eliminated"
-                          )
-                        }
-                        className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
-                      >
-                        Eliminated
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          updateFinalistStatus(
-                            contestant.id,
-                            "disqualified"
-                          )
-                        }
-                        className="py-3 rounded-2xl bg-pink-500 text-white font-black uppercase"
-                      >
-                        Disqualified
-                      </button>
-
-                    </div>
-
-                  </div>
-
-                </div>
-              )
-            )}
-
-          </div>
-
-        </section>
-
-        {/* JUDGES */}
-        <section className="mt-24">
-
-          <h2 className="text-5xl font-black uppercase">
-            Fan Favorite Judges
-          </h2>
-
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-
-            {judges.map(
-              (judge) => (
-
-                <div
-                  key={judge.id}
-                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
-                >
-
-                  {judge.video_url ? (
-
-                    <video
-                      src={judge.video_url}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      controls
-                      className="w-full h-auto"
-                    />
-
-                  ) : (
-
-                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
-                      No Video
-                    </div>
-
-                  )}
-
-                  <div className="p-6">
-
-                    <h3 className="text-3xl font-black uppercase">
-                      {judge.name}
-                    </h3>
-
-                    <p className="mt-3 text-pink-300 font-bold">
-                      Votes: {judge.votes || 0}
-                    </p>
-
-                    <label className="mt-6 block">
-
-                      <input
-                        type="file"
-                        accept="video/mp4"
-                        onChange={(e) =>
-                          uploadJudgeVideo(
-                            e,
-                            judge.id
-                          )
-                        }
-                        className="hidden"
-                      />
-
-                      <div className="cursor-pointer py-3 rounded-2xl bg-white text-black text-center font-black uppercase">
-                        Upload Video
-                      </div>
-
-                    </label>
-
-                    <div className="mt-6 grid gap-3">
-
-                      <button
-                        onClick={() =>
-                          updateJudgeStatus(
-                            judge.id,
-                            "safe"
-                          )
-                        }
-                        className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
-                      >
-                        Safe
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          updateJudgeStatus(
-                            judge.id,
-                            "eliminated"
-                          )
-                        }
-                        className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
-                      >
-                        Eliminated
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          updateJudgeStatus(
-                            judge.id,
-                            "disqualified"
-                          )
-                        }
-                        className="py-3 rounded-2xl bg-pink-500 text-white font-black uppercase"
-                      >
-                        Disqualified
-                      </button>
-
-                    </div>
-
-                  </div>
-
-                </div>
-              )
-            )}
-
-          </div>
-
-        </section>
-
-        {/* KIDS */}
-        <section className="mt-24">
-
-          <h2 className="text-5xl font-black uppercase">
-            Kids Entries
-          </h2>
-
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-
-            {contestants.map(
-              (contestant) => (
-
-                <div
-                  key={contestant.id}
-                  className="rounded-3xl overflow-hidden bg-white/5 border border-white/10"
-                >
-
-                  {contestant.photo_url ? (
-
-                    <img
-                      src={contestant.photo_url}
-                      alt={contestant.full_name}
-                      className="w-full aspect-square object-cover"
-                    />
-
-                  ) : (
-
-                    <div className="w-full aspect-square bg-black flex items-center justify-center text-white/30">
-                      No Photo
-                    </div>
-
-                  )}
-
-                  <div className="p-6">
-
-                    <h3 className="text-3xl font-black uppercase">
-                      {contestant.full_name}
-                    </h3>
-
-                    <p className="mt-3 text-white/70">
-                      Age: {contestant.age}
-                    </p>
-
-                    <p className="mt-2 text-white/40 uppercase text-sm">
-                      {contestant.status || "pending"}
-                    </p>
-
-                    <div className="mt-6 grid grid-cols-2 gap-3">
-
-                      <button
-                        onClick={() =>
-                          updateKidsStatus(
-                            contestant.id,
-                            "accepted"
-                          )
-                        }
-                        className="py-3 rounded-2xl bg-green-500 text-black font-black uppercase"
-                      >
-                        Accept
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          updateKidsStatus(
-                            contestant.id,
-                            "rejected"
-                          )
-                        }
-                        className="py-3 rounded-2xl bg-red-500 text-white font-black uppercase"
-                      >
-                        Decline
-                      </button>
-
-                    </div>
-
-                  </div>
-
-                </div>
-              )
-            )}
-
-          </div>
-
-        </section>
+        {/* ADMIN CARDS */}
+
+        <div
+          className="
+            mt-12
+            grid
+            md:grid-cols-2
+            xl:grid-cols-4
+            gap-5
+          "
+        >
+
+          {cards.map((card) => (
+
+            <button
+              key={card.title}
+              onClick={() =>
+                router.push(card.route)
+              }
+              className="
+                rounded-[30px]
+                border
+                border-[#8DFF00]/20
+                bg-white/5
+                p-8
+                text-left
+                transition
+                hover:border-[#8DFF00]
+                hover:bg-white/10
+              "
+            >
+
+              <div className="text-5xl">
+                {card.icon}
+              </div>
+
+              <h3
+                className="
+                  mt-5
+                  text-2xl
+                  font-black
+                  uppercase
+                "
+              >
+                {card.title}
+              </h3>
+
+            </button>
+
+          ))}
+
+        </div>
 
       </div>
 
     </main>
+
   );
+
 }
