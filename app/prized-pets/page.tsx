@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { motion } from "framer-motion";
+import HallOfFame from "./components/HallOfFame";
 
 const BREEZE_GREEN = "#8DFF00";
 
@@ -232,6 +233,8 @@ export default function PrizedPetsPage() {
 
   return (
     <main className="min-h-screen bg-black text-white relative overflow-x-hidden">
+
+        <HallOfFame />
 
       {/* ENTRY FORM */}
       <section className="relative z-20 px-4 pt-16">
