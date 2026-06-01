@@ -107,6 +107,39 @@ export default function RegisterPage() {
       }
 
       let photoUrl = "";
+      if (photo) {
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/jpg",
+  ];
+
+  if (!allowedTypes.includes(photo.type)) {
+
+    setError(
+      "Please upload a JPG image only."
+    );
+
+    setLoading(false);
+
+    return;
+  }
+
+  if (
+    photo.size >
+    5 * 1024 * 1024
+  ) {
+
+    setError(
+      "Image must be smaller than 5MB."
+    );
+
+    setLoading(false);
+
+    return;
+  }
+
+}
 
       /* PHOTO UPLOAD */
       if (photo) {
@@ -227,6 +260,8 @@ export default function RegisterPage() {
 
       setTiktokUsername("");
 
+      setPhoto(null);
+
       setLoading(false);
     };
 
@@ -305,16 +340,20 @@ export default function RegisterPage() {
               <div className="mt-8 flex items-start gap-4 bg-black/30 border border-white/10 rounded-2xl p-5">
 
                 <input
-                  type="checkbox"
-                  checked={accepted}
-                  onChange={(e) =>
-                    setAccepted(
-                      e.target.checked
-                    )
-                  }
-                  className="mt-1 w-5 h-5"
-                />
+  type="file"
+  accept=".jpg,.jpeg,image/jpeg"
+  required
+  onChange={(e) =>
+    setPhoto(
+      e.target.files?.[0] || null
+    )
+  }
+  className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10 text-white"
+/>
 
+<p className="text-sm text-white/60 mt-2">
+  JPG only • Maximum 5MB
+</p>
                 <p className="text-white/85">
 
                   I confirm that I am the parent or legal guardian and I accept the indemnity, media release and POPIA terms.
@@ -532,8 +571,8 @@ export default function RegisterPage() {
                 >
 
                   {loading
-                    ? "SUBMITTING..."
-                    : "SUBMIT ENTRY"}
+  ? "UPLOADING PHOTO... PLEASE WAIT"
+  : "SUBMIT ENTRY"}
 
                 </button>
 
