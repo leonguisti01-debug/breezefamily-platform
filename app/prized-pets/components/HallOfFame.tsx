@@ -106,8 +106,10 @@ export default function HallOfFame() {
                 <div
                   className="
                     grid
-                    md:grid-cols-3
-                    gap-5
+grid-cols-2
+md:grid-cols-4
+xl:grid-cols-6
+gap-3
                   "
                 >
 
@@ -132,12 +134,12 @@ export default function HallOfFame() {
                           alt=""
                           className="
                             w-full
-                            h-[300px]
+                            h-[160px]
                             object-cover
                           "
                         />
 
-                        <div className="p-5">
+                        <div className="p-3">
 
                           <div
                             className="
@@ -155,7 +157,7 @@ export default function HallOfFame() {
 
                           <h4
                             className="
-                              text-2xl
+                              text-base
                               font-black
                               mt-2
                             "
