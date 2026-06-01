@@ -94,6 +94,11 @@ const loadStats =
       route: "/admin/kids",
     },
     {
+  title: "Prized Pets",
+  icon: "🐾",
+  route: "/admin/pets",
+},
+    {
       title: "Top 10 Finalists",
       icon: "🏆",
       route: "/admin/top10",
