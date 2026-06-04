@@ -1,27 +1,63 @@
 export default function CallOfDutyPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-black text-white pb-20">
 
       {/* HERO */}
 
-      <section className="max-w-6xl mx-auto px-6 pt-8">
+      <section className="max-w-7xl mx-auto px-6 pt-6">
 
         <div
           className="
-            rounded-[30px]
+            relative
             overflow-hidden
+            rounded-[30px]
             border
             border-[#8DFF00]/20
-            bg-gradient-to-br
-            from-black
-            via-[#111]
-            to-black
+            min-h-[500px]
           "
         >
 
-          <div className="p-8 md:p-16">
+          <img
+            src="/cod-hero.jpg"
+            alt="Call Of Duty Tournament"
+            className="
+              absolute
+              inset-0
+              w-full
+              h-full
+              object-cover
+            "
+          />
 
-            <div className="text-[#8DFF00] font-black tracking-[4px] uppercase">
+          <div
+            className="
+              absolute
+              inset-0
+              bg-gradient-to-r
+              from-black
+              via-black/70
+              to-black/20
+            "
+          />
+
+          <div
+            className="
+              relative
+              z-10
+              p-8
+              md:p-16
+              max-w-3xl
+            "
+          >
+
+            <div
+              className="
+                text-[#8DFF00]
+                font-black
+                uppercase
+                tracking-[4px]
+              "
+            >
               Breeze Family Esports
             </div>
 
@@ -40,60 +76,68 @@ export default function CallOfDutyPage() {
 
             <h2
               className="
-                mt-2
                 text-3xl
                 md:text-5xl
                 font-black
                 text-[#8DFF00]
+                mt-2
               "
             >
               Tournament
             </h2>
 
+            <div
+              className="
+                mt-8
+                inline-block
+                px-6
+                py-4
+                rounded-2xl
+                border
+                border-[#8DFF00]
+                bg-black/50
+              "
+            >
+
+              <div className="text-white/60 uppercase text-sm">
+                Prize Pool
+              </div>
+
+              <div className="text-[#8DFF00] text-5xl font-black">
+                R5 000
+              </div>
+
+            </div>
+
             <p
               className="
-                mt-6
+                mt-8
                 text-white/80
                 text-lg
-                max-w-2xl
+                max-w-xl
               "
             >
               Assemble your squad, battle against the best,
               and compete for your share of the prize pool.
             </p>
 
-            <div className="flex flex-wrap gap-4 mt-8">
-
-              <a
-                href="#register"
-                className="
-                  bg-[#8DFF00]
-                  text-black
-                  font-black
-                  px-8
-                  py-4
-                  rounded-full
-                "
-              >
-                REGISTER NOW
-              </a>
-
-              <a
-                href="#details"
-                className="
-                  border
-                  border-[#8DFF00]
-                  text-[#8DFF00]
-                  font-black
-                  px-8
-                  py-4
-                  rounded-full
-                "
-              >
-                VIEW DETAILS
-              </a>
-
-            </div>
+            <a
+              href="#register"
+              className="
+                inline-block
+                mt-8
+                bg-[#8DFF00]
+                text-black
+                font-black
+                px-8
+                py-4
+                rounded-full
+                hover:scale-105
+                transition
+              "
+            >
+              REGISTER NOW
+            </a>
 
           </div>
 
@@ -101,95 +145,104 @@ export default function CallOfDutyPage() {
 
       </section>
 
-      {/* PRIZE */}
+      {/* INFO CARDS */}
 
-      <section className="max-w-6xl mx-auto px-6 mt-8">
+      <section className="max-w-7xl mx-auto px-6 mt-8">
 
-        <div
-          className="
-            rounded-[30px]
-            border
-            border-[#8DFF00]/20
-            p-8
-            text-center
-          "
-        >
+        <div className="grid md:grid-cols-3 gap-6">
 
-          <div className="text-white/60 uppercase tracking-[4px]">
-            Total Prize Pool
+          <div
+            className="
+              border
+              border-[#8DFF00]/20
+              rounded-[24px]
+              p-8
+              text-center
+            "
+          >
+            <div className="text-[#8DFF00] text-3xl font-black">
+              FREE
+            </div>
+
+            <div className="mt-2 text-white/70">
+              Entry Fee
+            </div>
           </div>
 
           <div
             className="
-              text-[#8DFF00]
-              text-5xl
-              md:text-7xl
-              font-black
-              mt-4
+              border
+              border-[#8DFF00]/20
+              rounded-[24px]
+              p-8
+              text-center
             "
           >
-            R5 000
+            <div className="text-[#8DFF00] text-3xl font-black">
+              SA
+            </div>
+
+            <div className="mt-2 text-white/70">
+              South Africa
+            </div>
+          </div>
+
+          <div
+            className="
+              border
+              border-[#8DFF00]/20
+              rounded-[24px]
+              p-8
+              text-center
+            "
+          >
+            <div className="text-[#8DFF00] text-3xl font-black">
+              CROSSPLAY
+            </div>
+
+            <div className="mt-2 text-white/70">
+              All Platforms
+            </div>
           </div>
 
         </div>
 
       </section>
 
-      {/* DETAILS */}
+      {/* HOW IT WORKS */}
 
-      <section
-        id="details"
-        className="max-w-6xl mx-auto px-6 mt-8"
-      >
+      <section className="max-w-7xl mx-auto px-6 mt-12">
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <h2 className="text-4xl font-black">
+          HOW IT WORKS
+        </h2>
 
-          <div
-            className="
-              rounded-[24px]
-              border
-              border-[#8DFF00]/20
-              p-6
-            "
-          >
-            <h3 className="text-2xl font-black mb-4">
-              Tournament Details
-            </h3>
+        <div className="grid md:grid-cols-4 gap-6 mt-8">
 
-            <div className="space-y-3 text-white/80">
+          {[
+            "Register",
+            "Receive Details",
+            "Compete",
+            "Win Cash",
+          ].map((step, index) => (
+            <div
+              key={index}
+              className="
+                border
+                border-[#8DFF00]/20
+                rounded-[24px]
+                p-6
+              "
+            >
+              <div className="text-[#8DFF00] text-4xl font-black">
+                {index + 1}
+              </div>
 
-              <div>Game: Call of Duty</div>
-              <div>Format: To Be Announced</div>
-              <div>Platform: Cross Platform</div>
-              <div>Entry Fee: FREE</div>
-              <div>Region: South Africa</div>
-
+              <div className="mt-3 font-bold">
+                {step}
+              </div>
             </div>
-
-          </div>
-
-          <div
-            className="
-              rounded-[24px]
-              border
-              border-[#8DFF00]/20
-              p-6
-            "
-          >
-            <h3 className="text-2xl font-black mb-4">
-              How It Works
-            </h3>
-
-            <div className="space-y-3 text-white/80">
-
-              <div>1. Register your squad.</div>
-              <div>2. Tournament brackets released.</div>
-              <div>3. Compete and advance.</div>
-              <div>4. Battle for the championship.</div>
-
-            </div>
-
-          </div>
+          ))}
 
         </div>
 
@@ -199,24 +252,29 @@ export default function CallOfDutyPage() {
 
       <section
         id="register"
-        className="max-w-4xl mx-auto px-6 mt-12 pb-20"
+        className="
+          max-w-4xl
+          mx-auto
+          px-6
+          mt-16
+        "
       >
 
         <div
           className="
-            rounded-[30px]
             border
             border-[#8DFF00]/20
+            rounded-[30px]
             p-8
           "
         >
 
           <h2 className="text-4xl font-black">
-            Register Your Team
+            REGISTER YOUR TEAM
           </h2>
 
-          <p className="text-white/70 mt-3">
-            Complete the form below to enter.
+          <p className="mt-3 text-white/70">
+            Enter your team details below.
           </p>
 
           <form className="grid gap-4 mt-8">
@@ -245,33 +303,15 @@ export default function CallOfDutyPage() {
               className="bg-black border border-white/20 rounded-xl p-4"
             />
 
-            <input
-              type="text"
-              placeholder="Player 2"
-              className="bg-black border border-white/20 rounded-xl p-4"
-            />
-
-            <input
-              type="text"
-              placeholder="Player 3"
-              className="bg-black border border-white/20 rounded-xl p-4"
-            />
-
-            <input
-              type="text"
-              placeholder="Player 4"
-              className="bg-black border border-white/20 rounded-xl p-4"
-            />
-
             <button
               type="submit"
               className="
-                mt-4
                 bg-[#8DFF00]
                 text-black
                 font-black
                 p-4
                 rounded-xl
+                mt-4
               "
             >
               REGISTER TEAM

@@ -18,6 +18,10 @@ export default function Navbar() {
       label: "Home",
     },
     {
+  href: "/call-of-duty",
+  label: "COD Tournament",
+},
+    {
       href: "/prized-pets",
       label: "Prized Pets",
     },
