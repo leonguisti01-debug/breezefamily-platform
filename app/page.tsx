@@ -171,7 +171,7 @@ export default function HomePageV2() {
           </div>
 
           <img
-            src="/kai.png"
+            src="/Kai.png"
             alt="Kai"
             className="
               absolute
