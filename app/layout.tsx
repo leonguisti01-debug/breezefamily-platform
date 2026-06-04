@@ -1,5 +1,6 @@
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import FindKai from "./components/FindKai";
 
 export const metadata = {
   title: "Breeze Family",
@@ -22,6 +23,7 @@ export default function RootLayout({
         {/* PAGE CONTENT */}
         <main className="pt-24 overflow-x-hidden">
           {children}
+          <FindKai />
         </main>
 
       </body>
