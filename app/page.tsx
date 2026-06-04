@@ -76,6 +76,116 @@ export default function HomePageV2() {
 
       </section>
 
+      {/* PELLEGRINI VALLEY */}
+
+<section className="max-w-6xl mx-auto px-6 mt-8">
+
+  <div
+    className="
+      relative
+      overflow-hidden
+      rounded-[30px]
+      border
+      border-[#8DFF00]/20
+      group
+    "
+  >
+
+    <img
+      src="/pv-banner.jpg"
+      alt="Pellegrini Valley"
+      className="
+        w-full
+        h-auto
+        block
+      "
+    />
+
+    <div
+      className="
+        absolute
+        inset-0
+        bg-gradient-to-r
+        from-black/80
+        via-black/20
+        to-transparent
+      "
+    />
+
+    <div
+      className="
+        absolute
+        left-6
+        md:left-10
+        top-1/2
+        -translate-y-1/2
+        z-10
+      "
+    >
+
+      <div
+        className="
+          text-[#8DFF00]
+          text-sm
+          md:text-lg
+          font-bold
+          uppercase
+          tracking-[4px]
+        "
+      >
+        GTA ROLEPLAY SERVER
+      </div>
+
+      <h2
+        className="
+          text-3xl
+          md:text-6xl
+          font-black
+          mt-2
+          uppercase
+        "
+      >
+        Pellegrini Valley
+      </h2>
+
+      <p
+        className="
+          text-white/80
+          mt-3
+          max-w-md
+          text-sm
+          md:text-lg
+        "
+      >
+        Live your story. Leave your legacy.
+      </p>
+
+      <a
+        href="https://discord.gg/cKbz3nQDV"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="
+          inline-flex
+          mt-5
+          bg-[#8DFF00]
+          text-black
+          font-black
+          px-6
+          py-3
+          rounded-full
+          hover:scale-105
+          transition
+        "
+      >
+        JOIN DISCORD
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
       {/* HERO */}
 
       <section className="max-w-6xl mx-auto px-6 mt-8">
