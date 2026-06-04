@@ -3,25 +3,50 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-export default function FindKai() {
-  const pathname = usePathname();
+const SPOTS = [
+  "top-20 left-10",
+  "top-32 right-10",
+  "top-1/2 left-6",
+  "top-1/2 right-6",
+  "bottom-20 left-10",
+  "bottom-20 right-10",
+  "bottom-40 left-1/4",
+  "bottom-40 right-1/4",
+];
 
-  const [showKai, setShowKai] = useState(false);
-  const [found, setFound] = useState(false);
+export default function FindKai() {
+
+  const pathname =
+    usePathname();
+
+  const [found,
+    setFound] =
+    useState(false);
+
+  const [showKai,
+    setShowKai] =
+    useState(false);
+
+  const [spot,
+    setSpot] =
+    useState("");
 
   useEffect(() => {
-    const today = new Date().toDateString();
+
+    const today =
+      new Date()
+        .toDateString();
 
     const storedDate =
-      localStorage.getItem("kai-date");
+      localStorage.getItem(
+        "kai-date"
+      );
 
-    const storedPage =
-      localStorage.getItem("kai-page");
+    if (
+      storedDate !==
+      today
+    ) {
 
-    const foundToday =
-      localStorage.getItem("kai-found");
-
-    if (storedDate !== today) {
       const pages = [
         "/",
         "/prized-pets",
@@ -31,7 +56,16 @@ export default function FindKai() {
       const randomPage =
         pages[
           Math.floor(
-            Math.random() * pages.length
+            Math.random() *
+            pages.length
+          )
+        ];
+
+      const randomSpot =
+        SPOTS[
+          Math.floor(
+            Math.random() *
+            SPOTS.length
           )
         ];
 
@@ -45,60 +79,103 @@ export default function FindKai() {
         randomPage
       );
 
+      localStorage.setItem(
+        "kai-spot",
+        randomSpot
+      );
+
       localStorage.removeItem(
         "kai-found"
       );
+
     }
 
     const page =
-      localStorage.getItem("kai-page");
+      localStorage.getItem(
+        "kai-page"
+      );
+
+    const hidingSpot =
+      localStorage.getItem(
+        "kai-spot"
+      );
+
+    const foundToday =
+      localStorage.getItem(
+        "kai-found"
+      );
+
+    setSpot(
+      hidingSpot || ""
+    );
 
     if (
-      page === pathname &&
+      pathname === page &&
       foundToday !== "yes"
     ) {
-      setShowKai(true);
+
+      setShowKai(
+        true
+      );
+
     }
 
   }, [pathname]);
 
   function foundKai() {
+
     localStorage.setItem(
       "kai-found",
       "yes"
     );
 
-    setFound(true);
-    setShowKai(false);
+    setShowKai(
+      false
+    );
+
+    setFound(
+      true
+    );
+
   }
 
-  if (!showKai && !found) {
+  if (
+    !showKai &&
+    !found
+  ) {
     return null;
   }
 
   return (
     <>
       {showKai && (
+
         <button
-          onClick={foundKai}
-          className="
+          onClick={
+            foundKai
+          }
+          className={`
             fixed
-            bottom-10
-            right-10
             z-50
+            opacity-90
             hover:scale-110
             transition
-          "
+            ${spot}
+          `}
         >
+
           <img
             src="/kai.png"
             alt="Kai"
-            className="w-20"
+            className="w-[60px]"
           />
+
         </button>
+
       )}
 
       {found && (
+
         <div
           className="
             fixed
@@ -110,6 +187,7 @@ export default function FindKai() {
             bg-black/70
           "
         >
+
           <div
             className="
               bg-black
@@ -121,6 +199,7 @@ export default function FindKai() {
               max-w-md
             "
           >
+
             <img
               src="/kai.png"
               alt="Kai"
@@ -141,13 +220,9 @@ export default function FindKai() {
               YOU FOUND KAI!
             </h2>
 
-            <p className="mt-4">
-              Use code:
-            </p>
-
             <div
               className="
-                mt-2
+                mt-4
                 text-4xl
                 font-black
                 text-[#8DFF00]
@@ -157,7 +232,8 @@ export default function FindKai() {
             </div>
 
             <p className="mt-4">
-              for 10% off your order.
+              Use this code for
+              10% off.
             </p>
 
             <button
@@ -176,9 +252,14 @@ export default function FindKai() {
             >
               CLOSE
             </button>
+
           </div>
+
         </div>
+
       )}
+
     </>
   );
+
 }
