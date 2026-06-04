@@ -23,7 +23,6 @@ export default function RootLayout({
         {/* PAGE CONTENT */}
         <main className="pt-24 overflow-x-hidden">
           {children}
-          <FindKai />
         </main>
 
       </body>
