@@ -19,13 +19,25 @@ type PetEntry = {
 };
 
 export default function PrizedPetsAdminPage() {
-  const [entries, setEntries] =
+
+  const [entries,
+    setEntries] =
     useState<PetEntry[]>([]);
 
-  const [carousel, setCarousel] =
+  const [carousel,
+    setCarousel] =
     useState<PetEntry[]>([]);
 
-  const [loading, setLoading] =
+  const [loadingEntries,
+    setLoadingEntries] =
+    useState(true);
+
+  const [spinning,
+    setSpinning] =
+    useState(false);
+
+  const [saving,
+    setSaving] =
     useState(false);
 
   const [thirdPlace,
@@ -46,15 +58,17 @@ export default function PrizedPetsAdminPage() {
       null
     );
 
-  const [saving,
-    setSaving] =
-    useState(false);
-
   useEffect(() => {
+
     loadEntries();
+
   }, []);
 
   async function loadEntries() {
+
+    setLoadingEntries(
+      true
+    );
 
     const { data } =
       await supabase
@@ -70,17 +84,25 @@ export default function PrizedPetsAdminPage() {
           }
         );
 
-    if (!data) return;
+    if (data) {
 
-    setEntries(data);
+      setEntries(
+        data
+      );
 
-    setCarousel([
-      ...data,
-      ...data,
-      ...data,
-      ...data,
-      ...data,
-    ]);
+      setCarousel([
+        ...data,
+        ...data,
+        ...data,
+        ...data,
+        ...data,
+      ]);
+
+    }
+
+    setLoadingEntries(
+      false
+    );
 
   }
 
@@ -104,7 +126,7 @@ export default function PrizedPetsAdminPage() {
       winner,
     ]);
 
-  function getCurrentStage() {
+  function getStage() {
 
     if (!thirdPlace)
       return "third";
@@ -121,12 +143,12 @@ export default function PrizedPetsAdminPage() {
 
   function getWeekNumber() {
 
-    const today =
+    const date =
       new Date();
 
     const firstDay =
       new Date(
-        today.getFullYear(),
+        date.getFullYear(),
         0,
         1
       );
@@ -134,17 +156,19 @@ export default function PrizedPetsAdminPage() {
     const days =
       Math.floor(
         (
-          today.getTime() -
+          date.getTime() -
           firstDay.getTime()
         ) /
           86400000
       );
 
     return Math.ceil(
-      (days +
+      (
+        days +
         firstDay.getDay() +
-        1) /
-        7
+        1
+      ) /
+      7
     );
 
   }
@@ -152,30 +176,34 @@ export default function PrizedPetsAdminPage() {
   async function spinForWinner() {
 
     if (
-      loading ||
-      getCurrentStage() ===
+      spinning ||
+      getStage() ===
         "complete"
-    )
+    ) {
       return;
+    }
 
     if (
       availableEntries.length ===
       0
-    )
+    ) {
       return;
+    }
 
-    setLoading(true);
+    setSpinning(
+      true
+    );
 
-    const finalWinner =
+    const selectedPet =
       availableEntries[
         Math.floor(
           Math.random() *
-            availableEntries.length
+          availableEntries.length
         )
       ];
 
-    let speed = 40;
     let count = 0;
+    let delay = 40;
 
     const animate =
       () => {
@@ -198,23 +226,29 @@ export default function PrizedPetsAdminPage() {
 
         count++;
 
-        speed += 4;
+        delay += 4;
 
-        if (count < 40) {
+        if (
+          count < 50
+        ) {
 
           setTimeout(
             animate,
-            speed
+            delay
           );
 
         } else {
 
           setCarousel([
-            finalWinner,
+            selectedPet,
+            selectedPet,
+            selectedPet,
+            selectedPet,
+            selectedPet,
           ]);
 
           const stage =
-            getCurrentStage();
+            getStage();
 
           if (
             stage ===
@@ -222,7 +256,7 @@ export default function PrizedPetsAdminPage() {
           ) {
 
             setThirdPlace(
-              finalWinner
+              selectedPet
             );
 
           } else if (
@@ -231,18 +265,18 @@ export default function PrizedPetsAdminPage() {
           ) {
 
             setRunnerUp(
-              finalWinner
+              selectedPet
             );
 
           } else {
 
             setWinner(
-              finalWinner
+              selectedPet
             );
 
           }
 
-          setLoading(
+          setSpinning(
             false
           );
 
@@ -254,32 +288,47 @@ export default function PrizedPetsAdminPage() {
 
   }
 
-  async function saveWinners() {
+  async function resetDraw() {
 
-    if (
+    setThirdPlace(
+      null
+    );
+
+    setRunnerUp(
+      null
+    );
+
+    setWinner(
+      null
+    );
+
+    loadEntries();
+
+  }
+
+  async function saveWinners() {    if (
       !thirdPlace ||
       !runnerUp ||
       !winner
     ) {
 
       alert(
-        "Complete all draws first."
+        "Complete the draw first."
       );
 
       return;
 
     }
 
-    setSaving(true);
+    setSaving(
+      true
+    );
 
     const week =
       getWeekNumber();
 
-    const now =
-      new Date()
-        .toISOString();
+    const rows = [
 
-    const payload = [
       {
         week_number:
           week,
@@ -295,8 +344,6 @@ export default function PrizedPetsAdminPage() {
           thirdPlace.photo_url,
         selected_by:
           "admin",
-        created_at:
-          now,
       },
 
       {
@@ -314,8 +361,6 @@ export default function PrizedPetsAdminPage() {
           runnerUp.photo_url,
         selected_by:
           "admin",
-        created_at:
-          now,
       },
 
       {
@@ -333,9 +378,8 @@ export default function PrizedPetsAdminPage() {
           winner.photo_url,
         selected_by:
           "admin",
-        created_at:
-          now,
       },
+
     ];
 
     const { error } =
@@ -344,7 +388,7 @@ export default function PrizedPetsAdminPage() {
           "prized_pets_winners"
         )
         .insert(
-          payload
+          rows
         );
 
     if (error) {
@@ -353,7 +397,9 @@ export default function PrizedPetsAdminPage() {
         error.message
       );
 
-      setSaving(false);
+      setSaving(
+        false
+      );
 
       return;
 
@@ -363,45 +409,39 @@ export default function PrizedPetsAdminPage() {
       "Winners saved successfully."
     );
 
-    setSaving(false);
+    setSaving(
+      false
+    );
 
   }
 
-  const stage =
-    getCurrentStage();
+  return (
 
-  return (    <main className="min-h-screen bg-black text-white px-4 py-12">
+    <main className="min-h-screen bg-black text-white">
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-6 py-16">
 
         <div className="text-center">
 
-          <p
-            className="uppercase tracking-[5px] text-xs"
+          <div
+            className="
+              uppercase
+              tracking-[6px]
+              text-xs
+            "
             style={{
               color:
                 BREEZE_GREEN,
             }}
           >
             Breeze Family
-          </p>
+          </div>
 
           <h1
             className="
               mt-4
-              text-5xl
-              md:text-7xl
-              font-black
-              uppercase
-            "
-          >
-            Prized Pets
-          </h1>
-
-          <h2
-            className="
-              text-4xl
-              md:text-6xl
+              text-6xl
+              md:text-8xl
               font-black
               uppercase
             "
@@ -410,63 +450,59 @@ export default function PrizedPetsAdminPage() {
                 BREEZE_GREEN,
             }}
           >
-            Slot Machine Draw
-          </h2>
+            Prized Pets
+          </h1>
 
-        </div>
-
-        <div
-          className="
-            mt-10
-            text-center
-          "
-        >
-
-          <div
+          <h2
             className="
-              inline-block
-              px-6
-              py-3
-              rounded-full
-              bg-white/5
-              border
-              border-white/10
+              text-3xl
+              md:text-5xl
               font-black
               uppercase
             "
           >
+            Slot Machine Draw
+          </h2>
+          <div
+  className="
+    mt-8
+    inline-flex
+    items-center
+    justify-center
+    px-8
+    py-4
+    rounded-full
+    border
+    border-[#8DFF00]/30
+    bg-[#8DFF00]/10
+    font-black
+    uppercase
+    text-lg
+  "
+>
+  {getStage() === "third" &&
+    "🥉 Draw Third Place"}
 
-            {stage ===
-              "third" &&
-              "🥉 Draw Third Place"}
+  {getStage() === "runner" &&
+    "🥈 Draw Runner Up"}
 
-            {stage ===
-              "runner" &&
-              "🥈 Draw Runner Up"}
+  {getStage() === "winner" &&
+    "🥇 Draw Winner"}
 
-            {stage ===
-              "winner" &&
-              "🥇 Draw Winner"}
-
-            {stage ===
-              "complete" &&
-              "🏆 Draw Complete"}
-
-          </div>
+  {getStage() === "complete" &&
+    "🏆 Draw Complete"}
+</div>
 
         </div>
-
-        {/* SLOT MACHINE */}
 
         <div
           className="
             mt-10
-            rounded-[30px]
+            rounded-[40px]
             border
             border-[#8DFF00]/20
             bg-white/5
-            p-6
-            overflow-hidden
+            p-8
           "
         >
 
@@ -474,9 +510,8 @@ export default function PrizedPetsAdminPage() {
             className="
               text-center
               text-[#8DFF00]
+              text-5xl
               font-black
-              text-4xl
-              mb-4
             "
           >
             ▼
@@ -484,17 +519,18 @@ export default function PrizedPetsAdminPage() {
 
           <div
             className="
-              grid
-              grid-cols-2
-              md:grid-cols-5
+              flex
+              justify-center
               gap-4
+              mt-6
+              overflow-hidden
             "
           >
 
             {carousel
               .slice(
                 0,
-                10
+                5
               )
               .map(
                 (
@@ -506,13 +542,17 @@ export default function PrizedPetsAdminPage() {
                     key={
                       index
                     }
-                    className="
-                      rounded-[24px]
+                    className={`
                       overflow-hidden
-                      border
-                      border-white/10
+                      rounded-[24px]
+                      border-2
                       bg-black
-                    "
+                      ${
+                        index === 2
+                          ? "border-[#8DFF00] shadow-[0_0_60px_#8DFF00]"
+                          : "border-white/10"
+                      }
+                    `}
                   >
 
                     <img
@@ -521,9 +561,10 @@ export default function PrizedPetsAdminPage() {
                       }
                       alt=""
                       className="
-                        w-full
-                        aspect-square
+                        w-[220px]
+                        h-[320px]
                         object-cover
+                        object-center
                       "
                     />
 
@@ -534,6 +575,18 @@ export default function PrizedPetsAdminPage() {
 
           </div>
 
+          <div
+            className="
+              text-center
+              text-[#8DFF00]
+              text-5xl
+              font-black
+              mt-6
+            "
+          >
+            ▲
+          </div>
+
         </div>
 
         <button
@@ -541,8 +594,8 @@ export default function PrizedPetsAdminPage() {
             spinForWinner
           }
           disabled={
-            loading ||
-            stage ===
+            spinning ||
+            getStage() ===
               "complete"
           }
           className="
@@ -553,6 +606,7 @@ export default function PrizedPetsAdminPage() {
             font-black
             uppercase
             text-black
+            text-xl
           "
           style={{
             background:
@@ -560,13 +614,17 @@ export default function PrizedPetsAdminPage() {
           }}
         >
 
-          {loading
-            ? "SPINNING..."
-            : "SPIN"}
+          {spinning
+  ? "SPINNING..."
+  : getStage() === "third"
+  ? "DRAW THIRD PLACE"
+  : getStage() === "runner"
+  ? "DRAW RUNNER UP"
+  : getStage() === "winner"
+  ? "DRAW WINNER"
+  : "DRAW COMPLETE"}
 
         </button>
-
-        {/* WINNERS */}
 
         <div
           className="
@@ -626,32 +684,28 @@ export default function PrizedPetsAdminPage() {
                       alt=""
                       className="
                         w-full
-                        aspect-square
+                        h-[350px]
                         object-cover
+                        object-center
                       "
                     />
 
                     <div className="p-5 text-center">
 
-                      <h3
-                        className="
-                          font-black
-                          uppercase
-                        "
-                      >
+                      <div className="font-black uppercase">
                         {
                           card.title
                         }
-                      </h3>
+                      </div>
 
-                      <div className="mt-2 font-bold">
+                      <div className="mt-2">
                         {
                           card.pet
                             .pet_name
                         }
                       </div>
 
-                      <div className="text-white/60 text-sm">
+                      <div className="text-white/60">
                         Owner:
                         {" "}
                         {
@@ -668,7 +722,7 @@ export default function PrizedPetsAdminPage() {
 
                   <div
                     className="
-                      aspect-square
+                      h-[450px]
                       flex
                       items-center
                       justify-center
@@ -687,35 +741,59 @@ export default function PrizedPetsAdminPage() {
 
         </div>
 
-        <button
-          onClick={
-            saveWinners
-          }
-          disabled={
-            stage !==
-              "complete" ||
-            saving
-          }
+        <div
           className="
             mt-10
-            w-full
-            py-5
-            rounded-[24px]
-            font-black
-            uppercase
-            text-black
+            grid
+            md:grid-cols-2
+            gap-4
           "
-          style={{
-            background:
-              BREEZE_GREEN,
-          }}
         >
 
-          {saving
-            ? "SAVING..."
-            : "SAVE WINNERS"}
+          <button
+            onClick={
+              saveWinners
+            }
+            disabled={
+              saving ||
+              !winner
+            }
+            className="
+              py-5
+              rounded-[24px]
+              font-black
+              uppercase
+              text-black
+            "
+            style={{
+              background:
+                BREEZE_GREEN,
+              opacity:
+                winner
+                  ? 1
+                  : 0.5,
+            }}
+          >
+            SAVE WINNERS
+          </button>
 
-        </button>
+          <button
+            onClick={
+              resetDraw
+            }
+            className="
+              py-5
+              rounded-[24px]
+              font-black
+              uppercase
+              border
+              border-white/20
+            "
+          >
+            RESET DRAW
+          </button>
+
+        </div>
 
       </div>
 
