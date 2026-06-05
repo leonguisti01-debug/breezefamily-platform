@@ -18,8 +18,11 @@ export default function CallOfDutyPage() {
   const [email, setEmail] =
     useState("");
 
-  const [activisionId, setActivisionId] =
-    useState("");
+  const [clanTag, setClanTag] =
+  useState("");
+
+  const [gamertag, setGamertag] =
+  useState("");
 
   const [platform, setPlatform] =
     useState("PC");
@@ -83,8 +86,11 @@ export default function CallOfDutyPage() {
               playerName,
             whatsapp,
             email,
-            activision_id:
-              activisionId,
+            clan_tag:
+  clanTag,
+
+gamertag:
+  gamertag,
             platform,
             team_id:
               Number(teamId),
@@ -114,7 +120,8 @@ export default function CallOfDutyPage() {
       setPlayerName("");
       setWhatsapp("");
       setEmail("");
-      setActivisionId("");
+      setClanTag("");
+setGamertag("");
       setTeamId("");
       setAgreedRules(false);
 
@@ -344,7 +351,7 @@ export default function CallOfDutyPage() {
 
       </section>
 
-      {/* PART 2 FOLLOWS */}      {/* HOW IT WORKS */}
+      {/* HOW IT WORKS */}
 
       <section className="max-w-7xl mx-auto px-6 mt-12">
 
@@ -458,16 +465,27 @@ export default function CallOfDutyPage() {
             />
 
             <input
-              value={activisionId}
-              onChange={(e) =>
-                setActivisionId(
-                  e.target.value
-                )
-              }
-              placeholder="Activision ID"
-              className="bg-black border border-white/20 rounded-xl p-4"
-              required
-            />
+  value={clanTag}
+  onChange={(e) =>
+    setClanTag(
+      e.target.value
+    )
+  }
+  placeholder="Clan Tag"
+  className="bg-black border border-white/20 rounded-xl p-4"
+/>
+
+<input
+  value={gamertag}
+  onChange={(e) =>
+    setGamertag(
+      e.target.value
+    )
+  }
+  placeholder="Gamertag"
+  className="bg-black border border-white/20 rounded-xl p-4"
+  required
+/>
 
             <select
               value={platform}
@@ -696,8 +714,8 @@ export default function CallOfDutyPage() {
                           >
 
                             {player
-                              ? player.player_name
-                              : "EMPTY SLOT"}
+  ? player.gamertag
+  : "EMPTY SLOT"}
 
                           </div>
 
