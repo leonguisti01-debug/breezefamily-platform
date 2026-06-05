@@ -13,39 +13,43 @@ export default function Navbar() {
     useState(false);
 
   const navItems = [
-    {
-      href: "/",
-      label: "Home",
-    },
-    {
-  href: "/call-of-duty",
-  label: "COD Tournament",
-},
-    {
-      href: "/prized-pets",
-      label: "Prized Pets",
-    },
-    {
-      href: "/tiktok-stars",
-      label: "TikTok Stars",
-    },
-    {
-      href: "/merch",
-      label: "Merch",
-    },
-    {
-      href: "/highlights",
-      label: "Highlights",
-    },
-    {
-      href: "/about",
-      label: "About",
-    },
-    {
-      href: "/contact",
-      label: "Contact",
-    },
-  ];
+  {
+    href: "/",
+    label: "Home",
+  },
+  {
+    href: "/call-of-duty",
+    label: "COD Tournament",
+  },
+  {
+    href: "/cod-admin/login",
+    label: "COD Admin",
+  },
+  {
+    href: "/prized-pets",
+    label: "Prized Pets",
+  },
+  {
+    href: "/tiktok-stars",
+    label: "TikTok Stars",
+  },
+  {
+    href: "/merch",
+    label: "Merch",
+  },
+  {
+    href: "/highlights",
+    label: "Highlights",
+  },
+  {
+    href: "/about",
+    label: "About",
+  },
+  {
+    href: "/contact",
+    label: "Contact",
+  },
+];
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 px-2 md:px-4 pt-3">
