@@ -1,30 +1,75 @@
 "use client";
 
-import { useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import { supabase } from "@/lib/supabase";
 
 export default function CallOfDutyPage() {
-  const [playerName, setPlayerName] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
-  const [email, setEmail] = useState("");
-  const [activisionId, setActivisionId] = useState("");
-  const [platform, setPlatform] = useState("PC");
-  const [teamId, setTeamId] = useState("");
-  const [agreedRules, setAgreedRules] = useState(false);
-  const [loading, setLoading] = useState(false);
+
+  const [playerName, setPlayerName] =
+    useState("");
+
+  const [whatsapp, setWhatsapp] =
+    useState("");
+
+  const [email, setEmail] =
+    useState("");
+
+  const [activisionId, setActivisionId] =
+    useState("");
+
+  const [platform, setPlatform] =
+    useState("PC");
+
+  const [teamId, setTeamId] =
+    useState("");
+
+  const [agreedRules, setAgreedRules] =
+    useState(false);
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [players, setPlayers] =
+    useState<any[]>([]);
+
+  useEffect(() => {
+    loadPlayers();
+  }, []);
+
+  async function loadPlayers() {
+
+    const { data } =
+      await supabase
+        .from("cod_players")
+        .select("*")
+        .order("team_id");
+
+    setPlayers(data || []);
+  }
 
   async function handleSubmit(
     e: React.FormEvent
   ) {
+
     e.preventDefault();
 
     if (!agreedRules) {
-      alert("Please accept the rules.");
+
+      alert(
+        "Please accept the rules."
+      );
+
       return;
     }
 
     setLoading(true);
 
     try {
+
       const res = await fetch(
         "/api/cod-register",
         {
@@ -34,13 +79,15 @@ export default function CallOfDutyPage() {
               "application/json",
           },
           body: JSON.stringify({
-            player_name: playerName,
+            player_name:
+              playerName,
             whatsapp,
             email,
             activision_id:
               activisionId,
             platform,
-            team_id: Number(teamId),
+            team_id:
+              Number(teamId),
             agreed_rules:
               agreedRules,
           }),
@@ -51,10 +98,12 @@ export default function CallOfDutyPage() {
         await res.json();
 
       if (!data.success) {
+
         alert(
           data.error ||
             "Registration failed"
         );
+
         return;
       }
 
@@ -69,8 +118,12 @@ export default function CallOfDutyPage() {
       setTeamId("");
       setAgreedRules(false);
 
+      await loadPlayers();
+
     } catch (error) {
+
       console.error(error);
+
       alert(
         "Something went wrong."
       );
@@ -197,8 +250,10 @@ export default function CallOfDutyPage() {
                 max-w-xl
               "
             >
-              Assemble your squad, battle against the best,
-              and compete for your share of the prize pool.
+              Assemble your squad,
+              battle against the best,
+              and compete for your
+              share of the prize pool.
             </p>
 
             <a
@@ -305,6 +360,7 @@ export default function CallOfDutyPage() {
             "Compete",
             "Win Cash",
           ].map((step, index) => (
+
             <div
               key={index}
               className="
@@ -314,6 +370,7 @@ export default function CallOfDutyPage() {
                 p-6
               "
             >
+
               <div className="text-[#8DFF00] text-4xl font-black">
                 {index + 1}
               </div>
@@ -321,7 +378,9 @@ export default function CallOfDutyPage() {
               <div className="mt-3 font-bold">
                 {step}
               </div>
+
             </div>
+
           ))}
 
         </div>
@@ -354,7 +413,7 @@ export default function CallOfDutyPage() {
           </h2>
 
           <p className="mt-3 text-white/70">
-            Join Team 1 - 38 and await approval from tournament admins.
+            Select a team and join the tournament.
           </p>
 
           <form
@@ -442,21 +501,41 @@ export default function CallOfDutyPage() {
               className="bg-black border border-white/20 rounded-xl p-4"
               required
             >
+
               <option value="">
                 Select Team
               </option>
 
               {Array.from(
                 { length: 38 },
-                (_, i) => (
-                  <option
-                    key={i + 1}
-                    value={i + 1}
-                  >
-                    Team {i + 1}
-                  </option>
-                )
+                (_, i) => {
+
+                  const teamNumber =
+                    i + 1;
+
+                  const count =
+                    players.filter(
+                      (player) =>
+                        player.team_id ===
+                        teamNumber
+                    ).length;
+
+                  return (
+
+                    <option
+                      key={teamNumber}
+                      value={teamNumber}
+                    >
+                      Team {teamNumber}
+                      {" "}
+                      ({count}/4)
+                    </option>
+
+                  );
+
+                }
               )}
+
             </select>
 
             <div
@@ -476,7 +555,7 @@ export default function CallOfDutyPage() {
               <ul className="mt-4 space-y-2 text-white/80 text-sm">
 
                 <li>
-                  • No cheating, hacking, scripts or exploits.
+                  • No cheating, hacks, scripts or exploits.
                 </li>
 
                 <li>
@@ -503,9 +582,7 @@ export default function CallOfDutyPage() {
 
               <input
                 type="checkbox"
-                checked={
-                  agreedRules
-                }
+                checked={agreedRules}
                 onChange={(e) =>
                   setAgreedRules(
                     e.target.checked
@@ -537,6 +614,106 @@ export default function CallOfDutyPage() {
             </button>
 
           </form>
+
+        </div>
+
+      </section>
+
+      {/* TOURNAMENT TEAMS */}
+
+      <section className="max-w-7xl mx-auto px-6 mt-20">
+
+        <h2 className="text-4xl font-black mb-8">
+          TOURNAMENT TEAMS
+        </h2>
+
+        <div className="grid md:grid-cols-4 gap-6">
+
+          {Array.from(
+            { length: 38 },
+            (_, i) => {
+
+              const teamNumber =
+                i + 1;
+
+              const teamPlayers =
+                players.filter(
+                  (player) =>
+                    player.team_id ===
+                    teamNumber
+                );
+
+              return (
+
+                <div
+                  key={teamNumber}
+                  className="
+                    border
+                    border-[#8DFF00]/20
+                    rounded-[24px]
+                    p-5
+                    bg-black
+                  "
+                >
+
+                  <div className="flex justify-between items-center">
+
+                    <h3 className="font-black text-xl">
+                      TEAM {teamNumber}
+                    </h3>
+
+                    <div className="text-[#8DFF00] font-bold">
+
+                      {teamPlayers.length >= 4
+                        ? "FULL"
+                        : `${teamPlayers.length}/4`}
+
+                    </div>
+
+                  </div>
+
+                  <div className="mt-4 space-y-2">
+
+                    {[0, 1, 2, 3].map(
+                      (slot) => {
+
+                        const player =
+                          teamPlayers[
+                            slot
+                          ];
+
+                        return (
+
+                          <div
+                            key={slot}
+                            className="
+                              border
+                              border-white/10
+                              rounded-lg
+                              p-3
+                              text-sm
+                            "
+                          >
+
+                            {player
+                              ? player.player_name
+                              : "EMPTY SLOT"}
+
+                          </div>
+
+                        );
+
+                      }
+                    )}
+
+                  </div>
+
+                </div>
+
+              );
+
+            }
+          )}
 
         </div>
 
