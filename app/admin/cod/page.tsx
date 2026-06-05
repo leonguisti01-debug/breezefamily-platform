@@ -26,6 +26,10 @@ export default function AdminCodPage() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
+    console.log(
+  "LOGGED IN EMAIL:",
+  user?.email
+);
 
     if (!user) {
 
