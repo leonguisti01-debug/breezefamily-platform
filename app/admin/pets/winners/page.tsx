@@ -576,15 +576,16 @@ export default function PrizedPetsAdminPage() {
           </div>
 
           <div
-            className="
-  w-full
-  h-[350px]
-  object-contain
-  bg-black
-"
-          >
-            ▲
-          </div>
+  className="
+    mt-6
+    text-center
+    text-[#8DFF00]
+    text-5xl
+    font-black
+  "
+>
+  ▲
+</div>
 
         </div>
 
