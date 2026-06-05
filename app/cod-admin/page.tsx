@@ -50,16 +50,23 @@ export default function AdminCodPage() {
         )
         .single();
 
-    if (!admin) {
+    if (
+  !admin ||
+  !admin.active ||
+  (
+    admin.role !== "super_admin" &&
+    admin.role !== "cod_admin"
+  )
+) {
 
-      alert(
-        "Access Denied"
-      );
+  alert("Access Denied");
 
-      router.push("/");
+  router.push(
+    "/cod-admin/login"
+  );
 
-      return;
-    }
+  return;
+}
 
     setUserEmail(
       user.email || ""
