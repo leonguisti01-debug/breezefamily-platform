@@ -1,22 +1,62 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+
+const BREEZE_GREEN = "#8DFF00";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-const BREEZE_GREEN = "#8DFF00";
+type PetEntry = {
+  id: number;
+  name: string;
+  pet_name: string;
+  photo_url: string;
+  phone?: string;
+};
 
-export default function PetWinnersPage() {
+export default function PrizedPetsAdminPage() {
 
-  const [entries, setEntries] =
-    useState<any[]>([]);
+  const [entries,
+    setEntries] =
+    useState<PetEntry[]>([]);
 
-  const [weekNumber, setWeekNumber] =
-    useState(1);
+  const [carousel,
+    setCarousel] =
+    useState<PetEntry[]>([]);
+
+  const [loadingEntries,
+    setLoadingEntries] =
+    useState(true);
+
+  const [spinning,
+    setSpinning] =
+    useState(false);
+
+  const [saving,
+    setSaving] =
+    useState(false);
+
+  const [thirdPlace,
+    setThirdPlace] =
+    useState<PetEntry | null>(
+      null
+    );
+
+  const [runnerUp,
+    setRunnerUp] =
+    useState<PetEntry | null>(
+      null
+    );
+
+  const [winner,
+    setWinner] =
+    useState<PetEntry | null>(
+      null
+    );
 
   useEffect(() => {
 
@@ -24,142 +64,604 @@ export default function PetWinnersPage() {
 
   }, []);
 
-  const loadEntries =
-    async () => {
+  async function loadEntries() {
 
-      const {
-        data,
-      } = await supabase
-        .from("prized_pets_entries")
+    setLoadingEntries(
+      true
+    );
+
+    const { data } =
+      await supabase
+        .from(
+          "prized_pets_entries"
+        )
         .select("*")
         .order(
           "created_at",
           {
-            ascending: false,
+            ascending:
+              false,
           }
         );
 
-      if (data) {
+    if (data) {
 
-        setEntries(data);
-
-      }
-
-    };
-
-  const saveWinner =
-    async (
-      entry: any,
-      position: string
-    ) => {
-
-      const { error } =
-        await supabase
-          .from(
-            "pet_weekly_winners"
-          )
-          .insert([
-            {
-              week_number:
-                weekNumber,
-
-              position,
-
-              entry_id:
-                entry.id,
-
-              owner_name:
-                entry.name,
-
-              pet_name:
-                entry.pet_name,
-
-              photo_url:
-                entry.photo_url,
-
-              selected_by:
-                "admin",
-            },
-          ]);
-
-      if (error) {
-
-        alert(
-          error.message
-        );
-
-        return;
-
-      }
-
-      alert(
-        `${entry.pet_name} saved as ${position}`
+      setEntries(
+        data
       );
 
-    };
+      setCarousel([
+        ...data,
+        ...data,
+        ...data,
+        ...data,
+        ...data,
+      ]);
+
+    }
+
+    setLoadingEntries(
+      false
+    );
+
+  }
+
+  const availableEntries =
+    useMemo(() => {
+
+      return entries.filter(
+        (entry) =>
+          entry.id !==
+            thirdPlace?.id &&
+          entry.id !==
+            runnerUp?.id &&
+          entry.id !==
+            winner?.id
+      );
+
+    }, [
+      entries,
+      thirdPlace,
+      runnerUp,
+      winner,
+    ]);
+
+  function getStage() {
+
+    if (!thirdPlace)
+      return "third";
+
+    if (!runnerUp)
+      return "runner";
+
+    if (!winner)
+      return "winner";
+
+    return "complete";
+
+  }
+
+  function getWeekNumber() {
+
+    const date =
+      new Date();
+
+    const firstDay =
+      new Date(
+        date.getFullYear(),
+        0,
+        1
+      );
+
+    const days =
+      Math.floor(
+        (
+          date.getTime() -
+          firstDay.getTime()
+        ) /
+          86400000
+      );
+
+    return Math.ceil(
+      (
+        days +
+        firstDay.getDay() +
+        1
+      ) /
+      7
+    );
+
+  }
+
+  async function spinForWinner() {
+
+    if (
+      spinning ||
+      getStage() ===
+        "complete"
+    ) {
+      return;
+    }
+
+    if (
+      availableEntries.length ===
+      0
+    ) {
+      return;
+    }
+
+    setSpinning(
+      true
+    );
+
+    const selectedPet =
+      availableEntries[
+        Math.floor(
+          Math.random() *
+          availableEntries.length
+        )
+      ];
+
+    let count = 0;
+    let delay = 40;
+
+    const animate =
+      () => {
+
+        const shuffled =
+          [
+            ...availableEntries,
+            ...availableEntries,
+            ...availableEntries,
+            ...availableEntries,
+          ].sort(
+            () =>
+              Math.random() -
+              0.5
+          );
+
+        setCarousel(
+          shuffled
+        );
+
+        count++;
+
+        delay += 4;
+
+        if (
+          count < 50
+        ) {
+
+          setTimeout(
+            animate,
+            delay
+          );
+
+        } else {
+
+          setCarousel([
+            selectedPet,
+            selectedPet,
+            selectedPet,
+            selectedPet,
+            selectedPet,
+          ]);
+
+          const stage =
+            getStage();
+
+          if (
+            stage ===
+            "third"
+          ) {
+
+            setThirdPlace(
+              selectedPet
+            );
+
+          } else if (
+            stage ===
+            "runner"
+          ) {
+
+            setRunnerUp(
+              selectedPet
+            );
+
+          } else {
+
+            setWinner(
+              selectedPet
+            );
+
+          }
+
+          setSpinning(
+            false
+          );
+
+        }
+
+      };
+
+    animate();
+
+  }
+
+  async function resetDraw() {
+
+    setThirdPlace(
+      null
+    );
+
+    setRunnerUp(
+      null
+    );
+
+    setWinner(
+      null
+    );
+
+    loadEntries();
+
+  }
+
+  async function saveWinners() {    if (
+      !thirdPlace ||
+      !runnerUp ||
+      !winner
+    ) {
+
+      alert(
+        "Complete the draw first."
+      );
+
+      return;
+
+    }
+
+    setSaving(
+      true
+    );
+
+    const week =
+      getWeekNumber();
+
+    const rows = [
+
+      {
+        week_number:
+          week,
+        position:
+          "third_place",
+        entry_id:
+          thirdPlace.id,
+        owner_name:
+          thirdPlace.name,
+        pet_name:
+          thirdPlace.pet_name,
+        photo_url:
+          thirdPlace.photo_url,
+        selected_by:
+          "admin",
+      },
+
+      {
+        week_number:
+          week,
+        position:
+          "runner_up",
+        entry_id:
+          runnerUp.id,
+        owner_name:
+          runnerUp.name,
+        pet_name:
+          runnerUp.pet_name,
+        photo_url:
+          runnerUp.photo_url,
+        selected_by:
+          "admin",
+      },
+
+      {
+        week_number:
+          week,
+        position:
+          "winner",
+        entry_id:
+          winner.id,
+        owner_name:
+          winner.name,
+        pet_name:
+          winner.pet_name,
+        photo_url:
+          winner.photo_url,
+        selected_by:
+          "admin",
+      },
+
+    ];
+
+    const { error } =
+      await supabase
+        .from(
+          "prized_pets_winners"
+        )
+        .insert(
+          rows
+        );
+
+    if (error) {
+
+      alert(
+        error.message
+      );
+
+      setSaving(
+        false
+      );
+
+      return;
+
+    }
+
+    alert(
+      "Winners saved successfully."
+    );
+
+    setSaving(
+      false
+    );
+
+  }
 
   return (
 
-    <main className="min-h-screen bg-black text-white px-4 py-20">
+    <main className="min-h-screen bg-black text-white">
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-6 py-16">
 
-        <h1
-          className="
-            text-5xl
-            md:text-7xl
-            font-black
-            uppercase
-            mb-10
-          "
-        >
-          Weekly Winners
-        </h1>
+        <div className="text-center">
 
-        <div className="mb-8">
-
-          <label className="block mb-2">
-            Week Number
-          </label>
-
-          <input
-            type="number"
-            min="1"
-            value={weekNumber}
-            onChange={(e) =>
-              setWeekNumber(
-                Number(
-                  e.target.value
-                )
-              )
-            }
+          <div
             className="
-              bg-black
-              border
-              border-white/20
-              rounded-xl
-              px-4
-              py-3
+              uppercase
+              tracking-[6px]
+              text-xs
             "
-          />
+            style={{
+              color:
+                BREEZE_GREEN,
+            }}
+          >
+            Breeze Family
+          </div>
+
+          <h1
+            className="
+              mt-4
+              text-6xl
+              md:text-8xl
+              font-black
+              uppercase
+            "
+            style={{
+              color:
+                BREEZE_GREEN,
+            }}
+          >
+            Prized Pets
+          </h1>
+
+          <h2
+            className="
+              text-3xl
+              md:text-5xl
+              font-black
+              uppercase
+            "
+          >
+            Slot Machine Draw
+          </h2>
+          <div
+  className="
+    mt-8
+    inline-flex
+    items-center
+    justify-center
+    px-8
+    py-4
+    rounded-full
+    border
+    border-[#8DFF00]/30
+    bg-[#8DFF00]/10
+    font-black
+    uppercase
+    text-lg
+  "
+>
+  {getStage() === "third" &&
+    "🥉 Draw Third Place"}
+
+  {getStage() === "runner" &&
+    "🥈 Draw Runner Up"}
+
+  {getStage() === "winner" &&
+    "🥇 Draw Winner"}
+
+  {getStage() === "complete" &&
+    "🏆 Draw Complete"}
+</div>
 
         </div>
 
         <div
           className="
-            grid
-            sm:grid-cols-2
-            lg:grid-cols-3
-            xl:grid-cols-4
-            gap-5
+            mt-10
+            rounded-[40px]
+            border
+            border-[#8DFF00]/20
+            bg-white/5
+            p-8
           "
         >
 
-          {entries.map(
-            (entry) => (
+          <div
+            className="
+              text-center
+              text-[#8DFF00]
+              text-5xl
+              font-black
+            "
+          >
+            ▼
+          </div>
+
+          <div
+            className="
+              flex
+              justify-center
+              gap-4
+              mt-6
+              overflow-hidden
+            "
+          >
+
+            {carousel
+              .slice(
+                0,
+                5
+              )
+              .map(
+                (
+                  pet,
+                  index
+                ) => (
+
+                  <div
+                    key={
+                      index
+                    }
+                    className={`
+                      overflow-hidden
+                      rounded-[24px]
+                      border-2
+                      bg-black
+                      ${
+                        index === 2
+                          ? "border-[#8DFF00] shadow-[0_0_60px_#8DFF00]"
+                          : "border-white/10"
+                      }
+                    `}
+                  >
+
+                    <img
+                      src={
+                        pet.photo_url
+                      }
+                      alt=""
+                      className="
+  w-[220px]
+  h-[320px]
+  object-contain
+  bg-black
+"
+                    />
+
+                  </div>
+
+                )
+              )}
+
+          </div>
+
+          <div
+            className="
+  w-full
+  h-[350px]
+  object-contain
+  bg-black
+"
+          >
+            ▲
+          </div>
+
+        </div>
+
+        <button
+          onClick={
+            spinForWinner
+          }
+          disabled={
+            spinning ||
+            getStage() ===
+              "complete"
+          }
+          className="
+            mt-8
+            w-full
+            py-5
+            rounded-[24px]
+            font-black
+            uppercase
+            text-black
+            text-xl
+          "
+          style={{
+            background:
+              BREEZE_GREEN,
+          }}
+        >
+
+          {spinning
+  ? "SPINNING..."
+  : getStage() === "third"
+  ? "DRAW THIRD PLACE"
+  : getStage() === "runner"
+  ? "DRAW RUNNER UP"
+  : getStage() === "winner"
+  ? "DRAW WINNER"
+  : "DRAW COMPLETE"}
+
+        </button>
+
+        <div
+          className="
+            mt-12
+            grid
+            md:grid-cols-3
+            gap-6
+          "
+        >
+
+          {[
+            {
+              title:
+                "🥉 Third Place",
+              pet:
+                thirdPlace,
+            },
+            {
+              title:
+                "🥈 Runner Up",
+              pet:
+                runnerUp,
+            },
+            {
+              title:
+                "🥇 Winner",
+              pet:
+                winner,
+            },
+          ].map(
+            (
+              card
+            ) => (
 
               <div
-                key={entry.id}
+                key={
+                  card.title
+                }
                 className="
                   rounded-[30px]
                   overflow-hidden
@@ -169,106 +671,126 @@ export default function PetWinnersPage() {
                 "
               >
 
-                <img
-                  src={
-                    entry.photo_url
-                  }
-                  alt={
-                    entry.pet_name
-                  }
-                  className="
-                    w-full
-                    h-[280px]
-                    object-cover
-                  "
-                />
+                {card.pet ? (
 
-                <div className="p-5">
+                  <>
 
-                  <h2
+                    <img
+                      src={
+                        card.pet
+                          .photo_url
+                      }
+                      alt=""
+                      className="
+                        w-full
+                        h-[350px]
+                        object-cover
+                        object-center
+                      "
+                    />
+
+                    <div className="p-5 text-center">
+
+                      <div className="font-black uppercase">
+                        {
+                          card.title
+                        }
+                      </div>
+
+                      <div className="mt-2">
+                        {
+                          card.pet
+                            .pet_name
+                        }
+                      </div>
+
+                      <div className="text-white/60">
+                        Owner:
+                        {" "}
+                        {
+                          card.pet
+                            .name
+                        }
+                      </div>
+
+                    </div>
+
+                  </>
+
+                ) : (
+
+                  <div
                     className="
-                      text-xl
-                      font-black
+                      h-[450px]
+                      flex
+                      items-center
+                      justify-center
+                      text-white/30
                     "
                   >
-                    {
-                      entry.pet_name
-                    }
-                  </h2>
-
-                  <p className="text-white/70">
-                    Owner:
-                    {" "}
-                    {entry.name}
-                  </p>
-
-                  <div className="mt-5 grid gap-2">
-
-                    <button
-                      onClick={() =>
-                        saveWinner(
-                          entry,
-                          "winner"
-                        )
-                      }
-                      className="
-                        py-3
-                        rounded-xl
-                        font-black
-                        text-black
-                      "
-                      style={{
-                        background:
-                          BREEZE_GREEN,
-                      }}
-                    >
-                      Winner
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        saveWinner(
-                          entry,
-                          "runner_up"
-                        )
-                      }
-                      className="
-                        py-3
-                        rounded-xl
-                        bg-yellow-500
-                        text-black
-                        font-black
-                      "
-                    >
-                      Runner Up
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        saveWinner(
-                          entry,
-                          "third_place"
-                        )
-                      }
-                      className="
-                        py-3
-                        rounded-xl
-                        bg-orange-500
-                        text-black
-                        font-black
-                      "
-                    >
-                      Third Place
-                    </button>
-
+                    Waiting...
                   </div>
 
-                </div>
+                )}
 
               </div>
 
             )
           )}
+
+        </div>
+
+        <div
+          className="
+            mt-10
+            grid
+            md:grid-cols-2
+            gap-4
+          "
+        >
+
+          <button
+            onClick={
+              saveWinners
+            }
+            disabled={
+              saving ||
+              !winner
+            }
+            className="
+              py-5
+              rounded-[24px]
+              font-black
+              uppercase
+              text-black
+            "
+            style={{
+              background:
+                BREEZE_GREEN,
+              opacity:
+                winner
+                  ? 1
+                  : 0.5,
+            }}
+          >
+            SAVE WINNERS
+          </button>
+
+          <button
+            onClick={
+              resetDraw
+            }
+            className="
+              py-5
+              rounded-[24px]
+              font-black
+              uppercase
+              border
+              border-white/20
+            "
+          >
+            RESET DRAW
+          </button>
 
         </div>
 
