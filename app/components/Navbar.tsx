@@ -72,19 +72,23 @@ export default function Navbar() {
     };
 
   const publicNavItems = [
-    {
-      href: "/",
-      label: "Home",
-    },
-    {
-      href: "/about",
-      label: "About",
-    },
-    {
-      href: "/contact",
-      label: "Contact",
-    },
-  ];
+  {
+    href: "/",
+    label: "Home",
+  },
+  {
+    href: "/tiktok-stars",
+    label: "TikTok Stars",
+  },
+  {
+    href: "/about",
+    label: "About",
+  },
+  {
+    href: "/contact",
+    label: "Contact",
+  },
+];
 
   const memberNavItems = [
     {
