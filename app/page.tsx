@@ -73,6 +73,16 @@ export default function HomePageV2() {
           />
 
         </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+  <a
+    href="YOUR_DISCORD_LINK"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="rounded-full bg-[#8cc63f] px-10 py-5 text-xl font-bold text-black shadow-lg transition-all hover:scale-105"
+  >
+    JOIN OUR COMMUNITY
+  </a>
+</div>
 
       </section>
 
