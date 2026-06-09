@@ -77,6 +77,14 @@ export default function Navbar() {
     label: "Home",
   },
   {
+    href: "/call-of-duty",
+    label: "COD Tournament",
+  },
+  {
+    href: "/cod-admin/login",
+    label: "COD Admin",
+  },
+  {
     href: "/tiktok-stars",
     label: "TikTok Stars",
   },
