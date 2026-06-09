@@ -1,149 +1,176 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-export default function LeaderboardPage() {
+const BREEZE_GREEN = "#8DFF00";
 
-  const [contestants, setContestants] = useState<any[]>([]);
+export default function LeaderboardPage() {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(true);
+  const [members, setMembers] = useState<any[]>([]);
 
   useEffect(() => {
-    fetchContestants();
+    loadLeaderboard();
   }, []);
 
-  const fetchContestants = async () => {
-
-    const { data, error } = await supabase
-      .from("contestants")
+  const loadLeaderboard = async () => {
+    const { data } = await supabase
+      .from("members")
       .select("*")
-      .eq("approved", true)
-      .order("votes", { ascending: false });
+      .order("breeze_points", {
+        ascending: false,
+      });
 
-    if (error) {
-      console.log(error);
-    } else {
-      setContestants(data || []);
-    }
+    setMembers(data || []);
+    setLoading(false);
   };
 
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-black text-white flex items-center justify-center">
+        Loading...
+      </main>
+    );
+  }
+
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden">
+    <main
+      className="min-h-screen text-white px-4 md:px-8 py-8"
+      style={{
+        background:
+          "radial-gradient(circle at top, rgba(141,255,0,0.10), #000 50%)",
+      }}
+    >
+      <div className="max-w-6xl mx-auto">
 
-      {/* BACKGROUND */}
-      <div className="fixed inset-0 -z-10">
+        <button
+          onClick={() => router.push("/portal")}
+          className="
+            px-5
+            py-3
+            rounded-full
+            bg-white/10
+            border
+            border-white/10
+            mb-8
+          "
+        >
+          ← Back To Portal
+        </button>
 
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-pink-500/20 blur-[140px] rounded-full"></div>
+        <h1 className="text-5xl font-black uppercase mb-2">
+          🏅 Breeze Leaderboard
+        </h1>
 
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-500/10 blur-[140px] rounded-full"></div>
+        <p className="text-white/60 mb-10">
+          Top members ranked by Breeze Points.
+        </p>
 
-      </div>
+        <div className="space-y-4">
 
-      {/* HEADER */}
-      <section className="px-6 lg:px-16 pt-20 pb-10">
-
-        <div className="max-w-7xl mx-auto text-center">
-
-          <h1 className="text-6xl md:text-8xl font-black text-pink-400">
-            LEADERBOARD
-          </h1>
-
-          <p className="mt-6 text-xl text-gray-300">
-            South Africa’s top rising TikTok Stars.
-          </p>
-
-        </div>
-
-      </section>
-
-      {/* LEADERBOARD */}
-      <section className="px-6 lg:px-16 pb-20">
-
-        <div className="max-w-6xl mx-auto space-y-6">
-
-          {contestants.map((contestant, index) => (
+          {members.map((member, index) => (
 
             <div
-              key={contestant.id}
-              className="rounded-[35px] border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden flex flex-col md:flex-row items-center"
+              key={member.id}
+              className="
+                bg-white/5
+                border
+                border-white/10
+                rounded-[24px]
+                p-6
+                flex
+                items-center
+                justify-between
+              "
             >
 
-              {/* POSITION */}
-              <div className="w-full md:w-[180px] flex items-center justify-center p-8">
+              <div className="flex items-center gap-4">
 
-                <div className="text-center">
-
-                  <h2 className="text-6xl font-black text-pink-400">
-                    #{index + 1}
-                  </h2>
-
-                  <p className="text-gray-400 mt-2">
-                    Entry
-                  </p>
-
+                <div
+                  className="
+                    w-12
+                    h-12
+                    rounded-full
+                    bg-[#8DFF00]/20
+                    flex
+                    items-center
+                    justify-center
+                    font-black
+                    text-[#8DFF00]
+                  "
+                >
+                  #{index + 1}
                 </div>
 
-              </div>
-
-              {/* IMAGE */}
-              <div className="w-full md:w-[250px] h-[250px] overflow-hidden">
-
-                {contestant.image_url ? (
+                {member.avatar_url ? (
 
                   <img
-                    src={contestant.image_url}
-                    alt={contestant.child_name}
-                    className="w-full h-full object-cover"
+                    src={member.avatar_url}
+                    alt={member.full_name}
+                    className="
+                      w-14
+                      h-14
+                      rounded-full
+                      object-cover
+                    "
                   />
 
                 ) : (
 
-                  <div className="w-full h-full bg-gradient-to-br from-pink-500/20 to-cyan-500/10 flex items-center justify-center">
-
-                    <h2 className="text-4xl font-black text-pink-400 text-center px-6">
-                      {contestant.child_name}
-                    </h2>
-
+                  <div
+                    className="
+                      w-14
+                      h-14
+                      rounded-full
+                      bg-white/10
+                      flex
+                      items-center
+                      justify-center
+                      font-black
+                    "
+                  >
+                    {member.full_name?.charAt(0)}
                   </div>
 
                 )}
 
-              </div>
+                <div>
 
-              {/* INFO */}
-              <div className="flex-1 p-8">
+                  <h3 className="font-black text-xl">
+                    {member.full_name}
+                  </h3>
 
-                <h2 className="text-4xl font-black text-white">
-                  {contestant.child_name}
-                </h2>
-
-                <div className="mt-5 space-y-3 text-gray-300">
-
-                  <p>
-                    <span className="text-cyan-400 font-bold">
-                      Age:
-                    </span>{" "}
-                    {contestant.age}
+                  <p className="text-white/50">
+                    Level {member.member_level || 1}
                   </p>
 
                 </div>
 
               </div>
 
-              {/* ACTIONS */}
-              <div className="p-8 w-full md:w-auto">
+              <div className="text-right">
 
-                <Link
-                  href={`/contestant/${contestant.id}`}
-                  className="block text-center px-8 py-4 rounded-2xl bg-pink-500 hover:bg-pink-400 transition font-black"
+                <div
+                  className="
+                    text-3xl
+                    font-black
+                    text-[#8DFF00]
+                  "
                 >
-                  VIEW PROFILE
-                </Link>
+                  {member.breeze_points || 0}
+                </div>
+
+                <div className="text-white/50">
+                  Breeze Points
+                </div>
 
               </div>
 
@@ -153,8 +180,7 @@ export default function LeaderboardPage() {
 
         </div>
 
-      </section>
-
+      </div>
     </main>
   );
 }

@@ -15,11 +15,19 @@ export default function PortalPage() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
+
   const [memberName, setMemberName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
+
   const [breezePoints, setBreezePoints] = useState(0);
-const [memberLevel, setMemberLevel] = useState(1);
-const [loginStreak, setLoginStreak] = useState(0);
+  const [memberLevel, setMemberLevel] = useState(1);
+  const [loginStreak, setLoginStreak] = useState(0);
+
+  const [activities, setActivities] = useState<any[]>([]);
+  const [kotwLeader, setKotwLeader] = useState<any>(null);
+  const [topMembers, setTopMembers] = useState<any[]>([]);
+  const [achievementCount, setAchievementCount] = useState(0);
+const [latestAchievement, setLatestAchievement] = useState("");
 
   useEffect(() => {
     const loadUser = async () => {
@@ -39,11 +47,82 @@ const [loginStreak, setLoginStreak] = useState(0);
         .single();
 
       if (data) {
-  setMemberName(data.full_name || "");
-  setAvatarUrl(data.avatar_url || "");
-  setBreezePoints(data.breeze_points || 0);
-  setMemberLevel(data.member_level || 1);
-  setLoginStreak(data.login_streak || 0);
+        setMemberName(data.full_name || "");
+        setAvatarUrl(data.avatar_url || "");
+        setBreezePoints(data.breeze_points || 0);
+        setMemberLevel(data.member_level || 1);
+        setLoginStreak(data.login_streak || 0);
+      }
+
+      const { data: leader } = await supabase
+        .from("kill_of_the_week")
+        .select("*")
+        .order("votes", { ascending: false })
+        .limit(1)
+        .single();
+
+      if (leader) {
+        setKotwLeader(leader);
+      }
+
+      const { data: activityData } = await supabase
+        .from("activity_feed")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      if (activityData) {
+        const formattedActivities = [];
+
+        for (const activity of activityData) {
+          const { data: member } = await supabase
+            .from("members")
+            .select("full_name, avatar_url")
+            .eq("id", activity.member_id)
+            .single();
+
+          formattedActivities.push({
+            ...activity,
+            member,
+          });
+        }
+
+        setActivities(formattedActivities);
+      }
+
+      const { data: leaderboard } = await supabase
+        .from("members")
+        .select("*")
+        .order("breeze_points", {
+          ascending: false,
+        })
+        .limit(3);
+
+      setTopMembers(leaderboard || []);
+      const { data: memberAchievements } = await supabase
+  .from("member_achievements")
+  .select(`
+    unlocked_at,
+    achievements (
+      badge_name
+    )
+  `)
+  .eq("member_id", data.id)
+  .order("unlocked_at", {
+    ascending: false,
+  });
+
+if (memberAchievements) {
+  setAchievementCount(
+    memberAchievements.length
+  );
+
+  if (memberAchievements.length > 0) {
+    setLatestAchievement(
+      (memberAchievements[0] as any)
+        ?.achievements?.badge_name || ""
+    );
+  }
 }
 
       setLoading(false);
@@ -112,60 +191,50 @@ const [loginStreak, setLoginStreak] = useState(0);
           </div>
 
         </div>
+
+        {/* STATS */}
+
         <div className="grid md:grid-cols-3 gap-6 mb-8">
 
-  <div className="bg-white/5 border border-white/10 rounded-[24px] p-6">
-    <p className="text-white/50">Breeze Points</p>
-    <h3 className="text-4xl font-black text-[#8DFF00]">
-      {breezePoints}
-    </h3>
-  </div>
+          <div className="bg-white/5 border border-white/10 rounded-[24px] p-6">
+            <p className="text-white/50">Breeze Points</p>
+            <h3 className="text-4xl font-black text-[#8DFF00]">
+              {breezePoints}
+            </h3>
+          </div>
 
-  <div className="bg-white/5 border border-white/10 rounded-[24px] p-6">
-    <p className="text-white/50">Member Level</p>
-    <h3 className="text-4xl font-black">
-      {memberLevel}
-    </h3>
-  </div>
+          <div className="bg-white/5 border border-white/10 rounded-[24px] p-6">
+            <p className="text-white/50">Member Level</p>
+            <h3 className="text-4xl font-black">
+              {memberLevel}
+            </h3>
+          </div>
 
-  <div className="bg-white/5 border border-white/10 rounded-[24px] p-6">
-    <p className="text-white/50">Login Streak</p>
-    <h3 className="text-4xl font-black">
-      🔥 {loginStreak}
-    </h3>
-  </div>
+          <div className="bg-white/5 border border-white/10 rounded-[24px] p-6">
+            <p className="text-white/50">Login Streak</p>
+            <h3 className="text-4xl font-black">
+              🔥 {loginStreak}
+            </h3>
+          </div>
 
-</div>
+        </div>
 
         {/* PROFILE + DISCORD */}
 
-        <div className="grid lg:grid-cols-2 gap-6 mb-8">
-
-          <div className="bg-white/5 border border-white/10 rounded-[28px] p-8">
+        <div className="grid lg:grid-cols-2 gap-6 mb-8">          <div className="bg-white/5 border border-white/10 rounded-[28px] p-8">
 
             <div className="flex items-center gap-5">
 
               {avatarUrl ? (
-
                 <img
                   src={avatarUrl}
                   alt="Profile"
-                  className="
-                    w-24
-                    h-24
-                    rounded-full
-                    object-cover
-                    border
-                    border-[#8DFF00]/30
-                  "
+                  className="w-24 h-24 rounded-full object-cover border border-[#8DFF00]/30"
                 />
-
               ) : (
-
                 <div className="w-24 h-24 rounded-full bg-[#8DFF00]/20 border border-[#8DFF00]/30 flex items-center justify-center text-4xl font-black text-[#8DFF00]">
                   {memberName?.charAt(0)}
                 </div>
-
               )}
 
               <div>
@@ -179,18 +248,20 @@ const [loginStreak, setLoginStreak] = useState(0);
                 </h3>
 
                 <div className="space-y-1 mt-1">
-  <p className="text-white/50">
-    ⭐ Level {memberLevel}
-  </p>
 
-  <p className="text-[#8DFF00] font-bold">
-    🏆 {breezePoints} Breeze Points
-  </p>
+                  <p className="text-white/50">
+                    ⭐ Level {memberLevel}
+                  </p>
 
-  <p className="text-orange-400">
-    🔥 {loginStreak} Day Streak
-  </p>
-</div>
+                  <p className="text-[#8DFF00] font-bold">
+                    🏆 {breezePoints} Breeze Points
+                  </p>
+
+                  <p className="text-orange-400">
+                    🔥 {loginStreak} Day Streak
+                  </p>
+
+                </div>
 
               </div>
 
@@ -198,15 +269,7 @@ const [loginStreak, setLoginStreak] = useState(0);
 
             <button
               onClick={() => router.push("/profile")}
-              className="
-                mt-6
-                px-5
-                py-3
-                rounded-full
-                bg-[#8DFF00]
-                text-black
-                font-black
-              "
+              className="mt-6 px-5 py-3 rounded-full bg-[#8DFF00] text-black font-black"
             >
               EDIT PROFILE
             </button>
@@ -227,15 +290,7 @@ const [loginStreak, setLoginStreak] = useState(0);
               href="https://discord.gg/cKbz3nQDV"
               target="_blank"
               rel="noopener noreferrer"
-              className="
-                inline-block
-                px-6
-                py-3
-                rounded-full
-                bg-[#8DFF00]
-                text-black
-                font-black
-              "
+              className="inline-block px-6 py-3 rounded-full bg-[#8DFF00] text-black font-black"
             >
               JOIN DISCORD
             </a>
@@ -282,6 +337,153 @@ const [loginStreak, setLoginStreak] = useState(0);
 
         </div>
 
+        {/* KOTW LEADER */}
+
+        {kotwLeader && (
+          <div className="rounded-[32px] border border-[#8DFF00]/30 bg-white/5 p-8 mb-8">
+
+            <p className="uppercase tracking-widest text-[#8DFF00] text-sm font-bold">
+              Kill Of The Week Leader
+            </p>
+
+            <h2 className="text-4xl font-black mt-2">
+              {kotwLeader.clip_title}
+            </h2>
+
+            <div className="mt-4 text-2xl font-bold text-[#8DFF00]">
+              🏆 {kotwLeader.votes} Votes
+            </div>
+
+            <a
+              href={kotwLeader.clip_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-6 px-6 py-3 rounded-full bg-[#8DFF00] text-black font-black"
+            >
+              WATCH CLIP
+            </a>
+
+          </div>
+        )}
+
+        {/* TOP MEMBERS */}
+
+        <div className="rounded-[32px] border border-[#8DFF00]/30 bg-white/5 p-8 mb-8">
+
+          <div className="flex items-center justify-between mb-6">
+
+            <h2 className="text-3xl font-black">
+              🏅 Top Members
+            </h2>
+
+            <button
+              onClick={() => router.push("/leaderboard")}
+              className="px-5 py-2 rounded-full bg-[#8DFF00] text-black font-black"
+            >
+              VIEW LEADERBOARD
+            </button>
+
+          </div>
+
+          <div className="space-y-4">
+
+            {topMembers.map((member, index) => (
+
+              <div
+                key={member.id}
+                className="flex items-center justify-between border-b border-white/10 pb-4"
+              >
+
+                <div className="flex items-center gap-4">
+
+                  <div className="text-2xl">
+                    {index === 0 && "🥇"}
+                    {index === 1 && "🥈"}
+                    {index === 2 && "🥉"}
+                  </div>
+
+                  <div>
+
+                    <p className="font-bold">
+                      {member.full_name}
+                    </p>
+
+                    <p className="text-white/50 text-sm">
+                      Level {member.member_level || 1}
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <div className="text-[#8DFF00] font-black text-xl">
+                  {member.breeze_points || 0}
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+        {/* ACHIEVEMENTS */}
+
+<div className="rounded-[32px] border border-[#8DFF00]/30 bg-white/5 p-8 mb-8">
+
+  <div className="flex items-center justify-between mb-6">
+
+    <h2 className="text-3xl font-black">
+      🎖 Achievements
+    </h2>
+
+    <button
+      onClick={() =>
+        router.push("/achievements")
+      }
+      className="px-5 py-2 rounded-full bg-[#8DFF00] text-black font-black"
+    >
+      VIEW ALL
+    </button>
+
+  </div>
+
+  <div className="grid md:grid-cols-3 gap-6">
+
+    <div>
+      <p className="text-white/50 text-sm">
+        Unlocked
+      </p>
+
+      <h3 className="text-4xl font-black text-[#8DFF00]">
+        {achievementCount}/8
+      </h3>
+    </div>
+
+    <div>
+      <p className="text-white/50 text-sm">
+        Latest Badge
+      </p>
+
+      <h3 className="text-2xl font-black">
+        {latestAchievement || "None Yet"}
+      </h3>
+    </div>
+
+    <div>
+      <p className="text-white/50 text-sm">
+        Next Goal
+      </p>
+
+      <h3 className="text-2xl font-black">
+        Social Butterfly
+      </h3>
+    </div>
+
+  </div>
+
+</div>
+
         {/* ACTIVITY + REWARDS */}
 
         <div className="grid lg:grid-cols-2 gap-6 mb-8">
@@ -294,25 +496,54 @@ const [loginStreak, setLoginStreak] = useState(0);
 
             <div className="space-y-4">
 
-              <div className="border-b border-white/10 pb-3">
-                Leon joined the family
-              </div>
+              {activities.length > 0 ? (
 
-              <div className="border-b border-white/10 pb-3">
-                Sarah uploaded a prized pet
-              </div>
+                activities.map((activity, index) => (
 
-              <div className="border-b border-white/10 pb-3">
-                Team Alpha registered
-              </div>
+                  <div
+                    key={index}
+                    className="flex items-center gap-3 border-b border-white/10 pb-3"
+                  >
 
-              <div className="border-b border-white/10 pb-3">
-                New merchandise added
-              </div>
+                    {activity.member?.avatar_url ? (
 
-              <div>
-                Kill Of The Week voting opens Friday
-              </div>
+                      <img
+                        src={activity.member.avatar_url}
+                        alt=""
+                        className="w-10 h-10 rounded-full object-cover border border-[#8DFF00]/30"
+                      />
+
+                    ) : (
+
+                      <div className="w-10 h-10 rounded-full bg-[#8DFF00]/20 flex items-center justify-center text-[#8DFF00] font-bold">
+                        {activity.member?.full_name?.charAt(0)}
+                      </div>
+
+                    )}
+
+                    <div>
+
+                      <p className="font-medium">
+                        {activity.member?.full_name}
+                      </p>
+
+                      <p className="text-sm text-white/50">
+                        {activity.activity_text}
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                ))
+
+              ) : (
+
+                <p className="text-white/50">
+                  No activity yet.
+                </p>
+
+              )}
 
             </div>
 
@@ -345,7 +576,7 @@ const [loginStreak, setLoginStreak] = useState(0);
           Quick Access
         </h3>
 
-        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 xl:grid-cols-5 gap-6">
 
           <div
             onClick={() => router.push("/prized-pets")}
@@ -377,6 +608,14 @@ const [loginStreak, setLoginStreak] = useState(0);
           >
             <div className="text-4xl mb-3">🎬</div>
             <h4 className="font-black">Kill Of The Week</h4>
+          </div>
+
+          <div
+            onClick={() => router.push("/leaderboard")}
+            className="cursor-pointer rounded-[24px] bg-white/5 border border-[#8DFF00]/30 p-6 hover:border-[#8DFF00] transition"
+          >
+            <div className="text-4xl mb-3">🏅</div>
+            <h4 className="font-black">Leaderboard</h4>
           </div>
 
         </div>

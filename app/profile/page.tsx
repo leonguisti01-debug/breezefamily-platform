@@ -114,15 +114,30 @@ if (error) {
       );
 
       await supabase
-        .from("members")
-        .update({
-          avatar_url:
-            publicUrl,
-        })
-        .eq(
-          "auth_user_id",
-          user.id
-        );
+  .from("members")
+  .update({
+    avatar_url: publicUrl,
+  })
+  .eq(
+    "auth_user_id",
+    user.id
+  );
+
+const { data: member } = await supabase
+  .from("members")
+  .select("*")
+  .eq("auth_user_id", user.id)
+  .single();
+
+if (member) {
+  await supabase
+    .from("activity_feed")
+    .insert({
+      member_id: member.id,
+      activity_type: "avatar_update",
+      activity_text: "Updated profile photo",
+    });
+}
 
       alert(
         "Profile photo uploaded!"
@@ -143,37 +158,99 @@ if (error) {
     setUploading(false);
   };
 
-  const saveProfile =
-    async () => {
+ const saveProfile = async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-      const {
-        data: { user },
-      } =
-        await supabase.auth.getUser();
+  if (!user) return;
 
-      if (!user) return;
+  const { data: member } = await supabase
+    .from("members")
+    .select("*")
+    .eq("auth_user_id", user.id)
+    .single();
 
-      await supabase
-        .from("members")
-        .update({
-          bio,
-          discord_username:
-            discord,
-          tiktok_username:
-            tiktok,
-          favorite_game:
-            favoriteGame,
-        })
-        .eq(
-          "auth_user_id",
-          user.id
-        );
+  await supabase
+    .from("members")
+    .update({
+      bio,
+      discord_username: discord,
+      tiktok_username: tiktok,
+      favorite_game: favoriteGame,
+    })
+    .eq("auth_user_id", user.id);
 
-      alert(
-        "Profile Saved"
+  if (member) {
+
+    await supabase
+      .from("activity_feed")
+      .insert({
+        member_id: member.id,
+        activity_type: "profile_update",
+        activity_text: "Updated profile",
+      });
+
+    const { data: achievements } = await supabase
+      .from("achievements")
+      .select("*");
+
+    const { data: unlocked } = await supabase
+      .from("member_achievements")
+      .select("*")
+      .eq("member_id", member.id);
+
+    const alreadyUnlocked =
+      unlocked?.map(
+        (x) => x.achievement_id
+      ) || [];
+
+    const firstSteps = achievements?.find(
+      (a) => a.badge_name === "First Steps"
+    );
+
+    const socialButterfly =
+      achievements?.find(
+        (a) =>
+          a.badge_name ===
+          "Social Butterfly"
       );
 
-    };
+    if (
+      bio.trim() !== "" &&
+      firstSteps &&
+      !alreadyUnlocked.includes(
+        firstSteps.id
+      )
+    ) {
+      await supabase
+        .from("member_achievements")
+        .insert({
+          member_id: member.id,
+          achievement_id:
+            firstSteps.id,
+        });
+    }
+
+    if (
+      discord.trim() !== "" &&
+      socialButterfly &&
+      !alreadyUnlocked.includes(
+        socialButterfly.id
+      )
+    ) {
+      await supabase
+        .from("member_achievements")
+        .insert({
+          member_id: member.id,
+          achievement_id:
+            socialButterfly.id,
+        });
+    }
+  }
+
+  alert("Profile Saved");
+};
 
   if (loading) {
 
