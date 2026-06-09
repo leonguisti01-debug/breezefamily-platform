@@ -3,10 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
-import { motion } from "framer-motion";
-import HallOfFame from "./components/HallOfFame";
-
-const BREEZE_GREEN = "#8DFF00";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,6 +11,12 @@ const supabase = createClient(
 
 export default function PrizedPetsPage() {
   const router = useRouter();
+
+  const [member, setMember] =
+    useState<any>(null);
+
+  const [entries, setEntries] =
+    useState<any[]>([]);
 
   const [loading, setLoading] =
     useState(false);
@@ -29,26 +31,7 @@ export default function PrizedPetsPage() {
   const [error, setError] =
     useState("");
 
-  const [entries, setEntries] =
-    useState<any[]>([]);
-
-  const [winners, setWinners] =
-    useState<any[]>([]);
-
-  const [selectedImage,
-    setSelectedImage] =
-    useState<any | null>(
-      null
-    );
-
-  const [member,
-    setMember] =
-    useState<any | null>(
-      null
-    );
-
-  const [petName,
-    setPetName] =
+  const [petName, setPetName] =
     useState("");
 
   const [petPhoto,
@@ -57,10 +40,15 @@ export default function PrizedPetsPage() {
       null
     );
 
+  const [selectedImage,
+    setSelectedImage] =
+    useState<any | null>(
+      null
+    );
+
   useEffect(() => {
     loadMember();
     fetchEntries();
-    fetchWinners();
   }, []);
 
   const loadMember =
@@ -70,8 +58,6 @@ export default function PrizedPetsPage() {
         data: { user },
       } =
         await supabase.auth.getUser();
-
-        console.log("USER", user);
 
       if (!user) {
         router.push("/login");
@@ -90,9 +76,7 @@ export default function PrizedPetsPage() {
           )
           .single();
 
-      if (
-        !memberData
-      ) {
+      if (!memberData) {
         router.push("/portal");
         return;
       }
@@ -104,6 +88,10 @@ export default function PrizedPetsPage() {
 
   const fetchEntries =
     async () => {
+
+      setEntriesLoading(
+        true
+      );
 
       const { data } =
         await supabase
@@ -119,35 +107,13 @@ export default function PrizedPetsPage() {
             }
           );
 
-      if (data) {
-        setEntries(data);
-      }
+      setEntries(
+        data || []
+      );
 
       setEntriesLoading(
         false
       );
-    };
-
-  const fetchWinners =
-    async () => {
-
-      const { data } =
-        await supabase
-          .from(
-            "prized_pets_winners"
-          )
-          .select("*")
-          .order(
-            "created_at",
-            {
-              ascending:
-                false,
-            }
-          );
-
-      if (data) {
-        setWinners(data);
-      }
     };
 
   const handleSubmit =
@@ -157,10 +123,10 @@ export default function PrizedPetsPage() {
 
       e.preventDefault();
 
-      if (!member) {
-        alert(
-          "Please login."
-        );
+      if (
+        !member ||
+        !petPhoto
+      ) {
         return;
       }
 
@@ -168,57 +134,49 @@ export default function PrizedPetsPage() {
       setError("");
       setSuccess("");
 
-      let photoUrl = "";
+      const fileName =
+        `${Date.now()}-${petPhoto.name}`;
 
-      if (petPhoto) {
-
-        const fileName =
-          `${Date.now()}-${petPhoto.name}`;
-
-        const {
-          error:
-            uploadError,
-        } =
-          await supabase.storage
-            .from(
-              "prized-pets"
-            )
-            .upload(
-              fileName,
-              petPhoto
-            );
-
-        if (
-          uploadError
-        ) {
-
-          setError(
-            uploadError.message
+      const {
+        error:
+          uploadError,
+      } =
+        await supabase.storage
+          .from(
+            "prized-pets"
+          )
+          .upload(
+            fileName,
+            petPhoto
           );
 
-          setLoading(
-            false
-          );
+      if (
+        uploadError
+      ) {
 
-          return;
-        }
+        setError(
+          uploadError.message
+        );
 
-        const {
-          data: {
-            publicUrl,
-          },
-        } =
-          supabase.storage
-            .from(
-              "prized-pets"
-            )
-            .getPublicUrl(
-              fileName
-            );
+        setLoading(
+          false
+        );
 
-        photoUrl =
-          publicUrl;
+        return;
       }
+
+      const {
+        data: {
+          publicUrl,
+        },
+      } =
+        supabase.storage
+          .from(
+            "prized-pets"
+          )
+          .getPublicUrl(
+            fileName
+          );
 
       const {
         error:
@@ -237,9 +195,7 @@ export default function PrizedPetsPage() {
               pet_name:
                 petName,
               photo_url:
-                photoUrl,
-              created_at:
-                new Date().toISOString(),
+                publicUrl,
             },
           ]);
 
@@ -271,13 +227,15 @@ export default function PrizedPetsPage() {
             "badge_name",
             "Pet Lover"
           )
-          .single();      if (
+          .single();
+
+      if (
         petAchievement
       ) {
 
         const {
           data:
-            existingBadge,
+            existing,
         } =
           await supabase
             .from(
@@ -294,8 +252,8 @@ export default function PrizedPetsPage() {
             );
 
         if (
-          !existingBadge ||
-          existingBadge.length === 0
+          !existing ||
+          existing.length === 0
         ) {
 
           await supabase
@@ -326,27 +284,40 @@ export default function PrizedPetsPage() {
         });
 
       setSuccess(
-        "Your pet has officially been entered into Prized Pets!"
+        "Pet submitted successfully!"
       );
 
       setPetName("");
       setPetPhoto(null);
 
-      setLoading(false);
-
       fetchEntries();
-    };
 
-  return (
-    <main className="min-h-screen bg-black text-white relative overflow-x-hidden">
+      setLoading(false);
+    };  return (
+    <main
+      className="min-h-screen bg-black text-white px-4 py-24"
+      style={{
+        background:
+          "radial-gradient(circle at top, rgba(141,255,0,0.10), #000 50%)",
+      }}
+    >
+      <div className="max-w-7xl mx-auto">
 
-      <HallOfFame />
+        <div className="mb-10 text-center">
 
-      <section className="relative z-20 px-4 pt-16">
+          <h1 className="text-5xl md:text-6xl font-black mb-4">
+            🐾 PRIZED PETS
+          </h1>
 
-        <div className="max-w-3xl mx-auto">
+          <p className="text-white/60">
+            Share your favourite companion with the Breeze Family.
+          </p>
 
-          <div className="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-[34px] p-5">
+        </div>
+
+        <div className="max-w-2xl mx-auto mb-12">
+
+          <div className="rounded-[32px] border border-[#8DFF00]/20 bg-white/5 p-8">
 
             <div className="mb-6">
 
@@ -354,29 +325,27 @@ export default function PrizedPetsPage() {
                 Logged in as
               </p>
 
-              <h2 className="text-3xl font-black text-[#8DFF00]">
+              <h2 className="text-2xl font-black text-[#8DFF00]">
                 {member?.full_name}
               </h2>
 
             </div>
 
             {success && (
-              <div className="mb-4 p-4 rounded-xl bg-[#8DFF00]/20 border border-[#8DFF00]/30">
+              <div className="mb-4 p-4 rounded-2xl bg-[#8DFF00]/20 border border-[#8DFF00]/30">
                 {success}
               </div>
             )}
 
             {error && (
-              <div className="mb-4 p-4 rounded-xl bg-red-500/20 border border-red-500/30">
+              <div className="mb-4 p-4 rounded-2xl bg-red-500/20 border border-red-500/30">
                 {error}
               </div>
             )}
 
             <form
-              onSubmit={
-                handleSubmit
-              }
-              className="mt-8 space-y-4"
+              onSubmit={handleSubmit}
+              className="space-y-4"
             >
 
               <input
@@ -384,42 +353,57 @@ export default function PrizedPetsPage() {
                 required
                 placeholder="Pet Name"
                 value={petName}
-                onChange={(
-                  e
-                ) =>
+                onChange={(e) =>
                   setPetName(
                     e.target.value
                   )
                 }
-                className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10"
+                className="
+                  w-full
+                  p-4
+                  rounded-2xl
+                  bg-black/40
+                  border
+                  border-white/10
+                "
               />
 
               <input
                 type="file"
-                accept="image/*"
                 required
-                onChange={(
-                  e
-                ) =>
+                accept="image/*"
+                onChange={(e) =>
                   setPetPhoto(
-                    e.target
-                      .files?.[0] ||
+                    e.target.files?.[0] ||
                       null
                   )
                 }
-                className="w-full px-5 py-4 rounded-2xl bg-black/40 border border-white/10"
+                className="
+                  w-full
+                  p-4
+                  rounded-2xl
+                  bg-black/40
+                  border
+                  border-white/10
+                "
               />
 
               <button
                 type="submit"
-                disabled={
-                  loading
-                }
-                className="w-full py-4 rounded-2xl bg-[#8DFF00] text-black font-black uppercase tracking-[4px]"
+                disabled={loading}
+                className="
+                  w-full
+                  py-4
+                  rounded-2xl
+                  bg-[#8DFF00]
+                  text-black
+                  font-black
+                  uppercase
+                "
               >
                 {loading
                   ? "Submitting..."
-                  : "Submit Entry"}
+                  : "Submit Pet"}
               </button>
 
             </form>
@@ -428,9 +412,145 @@ export default function PrizedPetsPage() {
 
         </div>
 
-      </section>
+        <div className="mb-8">
 
-      {/* KEEP THE REST OF YOUR EXISTING GALLERY, MODAL AND HALL OF FAME CODE EXACTLY AS IT IS BELOW THIS POINT */}
+          <h2 className="text-4xl font-black">
+            Latest Pets
+          </h2>
+
+        </div>
+
+        {entriesLoading ? (
+
+          <div className="text-center text-white/50">
+            Loading pets...
+          </div>
+
+        ) : entries.length === 0 ? (
+
+          <div className="text-center text-white/50">
+            No pets submitted yet.
+          </div>
+
+        ) : (
+
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+            {entries.map((pet) => (
+
+              <div
+                key={pet.id}
+                className="
+                  rounded-[28px]
+                  overflow-hidden
+                  border
+                  border-white/10
+                  bg-white/5
+                "
+              >
+
+                <button
+                  onClick={() =>
+                    setSelectedImage(
+                      pet
+                    )
+                  }
+                  className="w-full"
+                >
+
+                  <img
+                    src={pet.photo_url}
+                    alt={pet.pet_name}
+                    className="
+                      w-full
+                      h-[320px]
+                      object-cover
+                    "
+                  />
+
+                </button>
+
+                <div className="p-5">
+
+                  <h3 className="text-2xl font-black">
+                    {pet.pet_name}
+                  </h3>
+
+                  <p className="text-white/60 mt-2">
+                    Owner: {pet.name}
+                  </p>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        )}
+
+        {selectedImage && (
+
+          <div
+            className="
+              fixed
+              inset-0
+              bg-black/90
+              z-[999]
+              flex
+              items-center
+              justify-center
+              p-4
+            "
+            onClick={() =>
+              setSelectedImage(
+                null
+              )
+            }
+          >
+
+            <div className="max-w-5xl w-full">
+
+              <img
+                src={
+                  selectedImage.photo_url
+                }
+                alt={
+                  selectedImage.pet_name
+                }
+                className="
+                  w-full
+                  max-h-[85vh]
+                  object-contain
+                  rounded-3xl
+                "
+              />
+
+              <div className="text-center mt-4">
+
+                <h3 className="text-3xl font-black">
+                  {
+                    selectedImage.pet_name
+                  }
+                </h3>
+
+                <p className="text-white/60">
+                  Owner:{" "}
+                  {
+                    selectedImage.name
+                  }
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        )}
+
+      </div>
 
     </main>
   );
