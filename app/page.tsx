@@ -1,6 +1,23 @@
+import Link from "next/link";
 export default function HomePageV2() {
   return (
     <main className="min-h-screen bg-black text-white pb-12">
+
+<Link href="/kids-edition/register">
+  <img
+    src="/tiktok-stars-kids-banner.jpg"
+    alt="TikTok Stars Kids Edition"
+    className="
+      w-full
+      rounded-[24px]
+      border
+      border-white/10
+      hover:scale-[1.01]
+      transition
+      cursor-pointer
+    "
+  />
+</Link>
 
       {/* KAI ALERT */}
 
