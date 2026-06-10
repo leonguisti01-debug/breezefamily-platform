@@ -12,13 +12,15 @@ export async function POST(
     const body = await req.json();
 
     const {
-      player_name,
-      whatsapp,
-      email,
-      platform,
-      team_id,
-      agreed_rules,
-    } = body;
+  player_name,
+  whatsapp,
+  email,
+  clan_tag,
+  gamertag,
+  platform,
+  team_id,
+  agreed_rules,
+} = body;
 
     if (
   !player_name ||
@@ -62,14 +64,16 @@ export async function POST(
       .from("cod_players")
       .insert([
         {
-          team_id,
-          player_name,
-          whatsapp,
-          email,
-          platform,
-          status: "pending",
-          agreed_rules,
-        },
+  team_id,
+  player_name,
+  whatsapp,
+  email,
+  clan_tag,
+  gamertag,
+  platform,
+  status: "pending",
+  agreed_rules,
+},
       ]);
 
     if (error) {
