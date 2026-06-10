@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-black pt-[80px] pb-10">
+    <main className="min-h-screen bg-black pt-[20px] pb-10">
 
       {/* HERO */}
 
