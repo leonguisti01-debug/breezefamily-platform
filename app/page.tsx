@@ -1,9 +1,9 @@
 import Link from "next/link";
 export default function HomePageV2() {
   return (
-    <main className="min-h-screen bg-black text-white pb-12">
+    <main className="max-w-6xl mx-auto px-6 mt-8">
 
-<Link href="/kids-edition/register">
+<a href="/kids-edition/register">
   <img
     src="/tiktok-stars-kids-banner.jpg"
     alt="TikTok Stars Kids Edition"
@@ -12,13 +12,12 @@ export default function HomePageV2() {
       rounded-[24px]
       border
       border-white/10
-      hover:scale-[1.01]
-      transition
       cursor-pointer
+      hover:opacity-95
+      transition
     "
   />
-</Link>
-
+</a>
       {/* KAI ALERT */}
 
       <section className="max-w-6xl mx-auto px-6 pt-6">
@@ -90,17 +89,7 @@ export default function HomePageV2() {
           />
 
         </div>
-        <div className="absolute inset-0 flex items-center justify-center">
-  <a
-    href="YOUR_DISCORD_LINK"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="rounded-full bg-[#8cc63f] px-10 py-5 text-xl font-bold text-black shadow-lg transition-all hover:scale-105"
-  >
-    JOIN OUR COMMUNITY
-  </a>
-</div>
-
+        
       </section>
 
       {/* PELLEGRINI VALLEY */}
