@@ -15,20 +15,18 @@ export async function POST(
       player_name,
       whatsapp,
       email,
-      activision_id,
       platform,
       team_id,
       agreed_rules,
     } = body;
 
     if (
-      !player_name ||
-      !whatsapp ||
-      !email ||
-      !activision_id ||
-      !platform ||
-      !team_id
-    ) {
+  !player_name ||
+  !whatsapp ||
+  !email ||
+  !platform ||
+  !team_id
+){
       return Response.json(
         {
           success: false,
@@ -68,7 +66,6 @@ export async function POST(
           player_name,
           whatsapp,
           email,
-          activision_id,
           platform,
           status: "pending",
           agreed_rules,

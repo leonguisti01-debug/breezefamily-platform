@@ -192,6 +192,91 @@ if (memberAchievements) {
 
         </div>
 
+        <div
+  className="
+    rounded-[32px]
+    border
+    border-[#8DFF00]/20
+    bg-white/5
+    p-8
+    mb-6
+  "
+>
+
+  <h2
+    className="
+      text-3xl
+      md:text-4xl
+      font-black
+      uppercase
+      text-center
+      mb-8
+    "
+  >
+    YOUR TROPHY ROOM
+  </h2>
+
+  <div
+    className="
+      grid
+      grid-cols-2
+      md:grid-cols-3
+      gap-6
+    "
+  >
+
+    <img
+      src="/achievements/first-steps.png"
+      alt="First Steps"
+      className="w-full"
+    />
+
+    <img
+      src="/achievements/pet-lover.png"
+      alt="Pet Lover"
+      className="w-full"
+    />
+
+    <img
+      src="/achievements/community-member.png"
+      alt="Community Member"
+      className="w-full"
+    />
+
+    <img
+      src="/achievements/rising-star.png"
+      alt="Rising Star"
+      className="
+        w-full
+        opacity-30
+        grayscale
+      "
+    />
+
+    <img
+      src="/achievements/competitor.png"
+      alt="Competitor"
+      className="
+        w-full
+        opacity-30
+        grayscale
+      "
+    />
+
+    <img
+      src="/achievements/legend-rank.png"
+      alt="Legend"
+      className="
+        w-full
+        opacity-30
+        grayscale
+      "
+    />
+
+  </div>
+
+</div>
+
         {/* STATS */}
 
         <div className="grid md:grid-cols-3 gap-6 mb-8">
