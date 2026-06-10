@@ -2,18 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-const BREEZE_GREEN = "#8DFF00";
-
 export default function LeaderboardPage() {
-  const router = useRouter();
-
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<any[]>([]);
 
@@ -33,59 +28,177 @@ export default function LeaderboardPage() {
     setLoading(false);
   };
 
+  const getRankImage = (rank: string) => {
+    switch (rank?.toUpperCase()) {
+      case "LEGEND":
+        return "/ranks/legend.png";
+
+      case "PLATINUM":
+        return "/ranks/platinum.png";
+
+      case "GOLD":
+        return "/ranks/gold.png";
+
+      case "SILVER":
+        return "/ranks/silver.png";
+
+      default:
+        return "/ranks/bronze.png";
+    }
+  };
+
   if (loading) {
     return (
-      <main className="min-h-screen bg-black text-white flex items-center justify-center">
-        Loading...
+      <main className="min-h-screen bg-black flex items-center justify-center text-white">
+        Loading Hall Of Legends...
       </main>
     );
   }
 
-  return (
-    <main
-      className="min-h-screen text-white px-4 md:px-8 py-8"
-      style={{
-        background:
-          "radial-gradient(circle at top, rgba(141,255,0,0.10), #000 50%)",
-      }}
-    >
-      <div className="max-w-6xl mx-auto">
+  const topThree = members.slice(0, 3);
+  const remaining = members.slice(3);
 
-        <button
-          onClick={() => router.push("/portal")}
+  return (
+    <main className="min-h-screen bg-black pt-[20px] pb-10">
+
+      {/* HERO */}
+
+      <section className="max-w-[1200px] mx-auto px-3 mb-6">
+
+        <div
           className="
-            px-5
-            py-3
-            rounded-full
-            bg-white/10
+            rounded-[24px]
+            overflow-hidden
             border
-            border-white/10
-            mb-8
+            border-[#8DFF00]/20
+            bg-gradient-to-r
+            from-black
+            via-[#101900]
+            to-black
           "
         >
-          ← Back To Portal
-        </button>
 
-        <h1 className="text-5xl font-black uppercase mb-2">
-          🏅 Breeze Leaderboard
-        </h1>
+          <div className="py-12 text-center">
 
-        <p className="text-white/60 mb-10">
-          Top members ranked by Breeze Points.
-        </p>
+            <h1
+              className="
+                text-4xl
+                md:text-7xl
+                font-black
+                uppercase
+                text-white
+              "
+            >
+              HALL OF LEGENDS
+            </h1>
 
-        <div className="space-y-4">
+            <p className="text-white/70 mt-3">
+              Earn Breeze Points.
+              Climb the ranks.
+              Become a Legend.
+            </p>
 
-          {members.map((member, index) => (
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* TOP 3 */}
+
+      <section className="max-w-[1200px] mx-auto px-3 mb-8">
+
+        <div className="grid md:grid-cols-3 gap-4">
+
+          {topThree.map((member, index) => (
 
             <div
               key={member.id}
               className="
-                bg-white/5
+                bg-[#050505]
                 border
-                border-white/10
+                border-[#8DFF00]/20
                 rounded-[24px]
                 p-6
+                text-center
+              "
+            >
+
+              <div className="text-[#8DFF00] font-black text-xl mb-4">
+                #{index + 1}
+              </div>
+
+              <img
+                src={getRankImage(member.rank)}
+                alt={member.rank}
+                className="
+                  w-[140px]
+                  mx-auto
+                  mb-4
+                "
+              />
+
+              <h2
+                className="
+                  text-2xl
+                  font-black
+                  uppercase
+                  text-white
+                "
+              >
+                {member.full_name}
+              </h2>
+
+              <div
+                className="
+                  text-[#8DFF00]
+                  uppercase
+                  font-bold
+                  mt-2
+                "
+              >
+                {member.rank || "BRONZE"}
+              </div>
+
+              <div
+                className="
+                  text-3xl
+                  font-black
+                  mt-4
+                  text-white
+                "
+              >
+                {member.breeze_points || 0}
+              </div>
+
+              <div className="text-white/50">
+                Breeze Points
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </section>
+
+      {/* REMAINING MEMBERS */}
+
+      <section className="max-w-[1200px] mx-auto px-3">
+
+        <div className="space-y-3">
+
+          {remaining.map((member, index) => (
+
+            <div
+              key={member.id}
+              className="
+                bg-[#050505]
+                border
+                border-white/10
+                rounded-[20px]
+                p-4
                 flex
                 items-center
                 justify-between
@@ -96,61 +209,44 @@ export default function LeaderboardPage() {
 
                 <div
                   className="
-                    w-12
-                    h-12
-                    rounded-full
-                    bg-[#8DFF00]/20
-                    flex
-                    items-center
-                    justify-center
-                    font-black
                     text-[#8DFF00]
+                    font-black
+                    text-xl
+                    w-[50px]
                   "
                 >
-                  #{index + 1}
+                  #{index + 4}
                 </div>
 
-                {member.avatar_url ? (
-
-                  <img
-                    src={member.avatar_url}
-                    alt={member.full_name}
-                    className="
-                      w-14
-                      h-14
-                      rounded-full
-                      object-cover
-                    "
-                  />
-
-                ) : (
-
-                  <div
-                    className="
-                      w-14
-                      h-14
-                      rounded-full
-                      bg-white/10
-                      flex
-                      items-center
-                      justify-center
-                      font-black
-                    "
-                  >
-                    {member.full_name?.charAt(0)}
-                  </div>
-
-                )}
+                <img
+                  src={getRankImage(member.rank)}
+                  alt={member.rank}
+                  className="
+                    w-[70px]
+                  "
+                />
 
                 <div>
 
-                  <h3 className="font-black text-xl">
+                  <div
+                    className="
+                      text-white
+                      font-black
+                      uppercase
+                    "
+                  >
                     {member.full_name}
-                  </h3>
+                  </div>
 
-                  <p className="text-white/50">
-                    Level {member.member_level || 1}
-                  </p>
+                  <div
+                    className="
+                      text-[#8DFF00]
+                      text-sm
+                      uppercase
+                    "
+                  >
+                    {member.rank || "BRONZE"}
+                  </div>
 
                 </div>
 
@@ -160,16 +256,16 @@ export default function LeaderboardPage() {
 
                 <div
                   className="
-                    text-3xl
+                    text-2xl
                     font-black
-                    text-[#8DFF00]
+                    text-white
                   "
                 >
                   {member.breeze_points || 0}
                 </div>
 
-                <div className="text-white/50">
-                  Breeze Points
+                <div className="text-white/50 text-sm">
+                  BP
                 </div>
 
               </div>
@@ -180,7 +276,8 @@ export default function LeaderboardPage() {
 
         </div>
 
-      </div>
+      </section>
+
     </main>
   );
 }

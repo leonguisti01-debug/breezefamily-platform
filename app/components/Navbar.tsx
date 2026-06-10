@@ -70,6 +70,10 @@ export default function Navbar() {
     label: "Prized Pets",
   },
   {
+  label: "MERCH",
+  href: "/merch",
+},
+  {
     href: "/leaderboard",
     label: "Leaderboard",
   },

@@ -23,6 +23,9 @@ export default function ProfilePage() {
   const [tiktok, setTiktok] = useState("");
   const [favoriteGame, setFavoriteGame] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [rank, setRank] = useState("BRONZE");
+const [points, setPoints] = useState(0);
+const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -42,13 +45,17 @@ export default function ProfilePage() {
         .single();
 
       if (data) {
-        setFullName(data.full_name || "");
-        setBio(data.bio || "");
-        setDiscord(data.discord_username || "");
-        setTiktok(data.tiktok_username || "");
-        setFavoriteGame(data.favorite_game || "");
-        setAvatarUrl(data.avatar_url || "");
-      }
+  setFullName(data.full_name || "");
+  setBio(data.bio || "");
+  setDiscord(data.discord_username || "");
+  setTiktok(data.tiktok_username || "");
+  setFavoriteGame(data.favorite_game || "");
+  setAvatarUrl(data.avatar_url || "");
+
+  setRank(data.rank || "BRONZE");
+  setPoints(data.breeze_points || 0);
+  setStreak(data.login_streak || 0);
+}
 
       setLoading(false);
     };
@@ -84,19 +91,15 @@ export default function ProfilePage() {
       const filePath =
         fileName;
 
-      const { data, error } = await supabase.storage
-  .from("avatars")
-  .upload(filePath, file, {
-    upsert: true,
-  });
-
-console.log("UPLOAD DATA", data);
-console.log("UPLOAD ERROR", error);
-
-if (error) {
-  alert(error.message);
-  throw error;
-}
+      await supabase.storage
+        .from("avatars")
+        .upload(
+          filePath,
+          file,
+          {
+            upsert: true,
+          }
+        );
 
       const {
         data: publicUrlData,
@@ -114,30 +117,15 @@ if (error) {
       );
 
       await supabase
-  .from("members")
-  .update({
-    avatar_url: publicUrl,
-  })
-  .eq(
-    "auth_user_id",
-    user.id
-  );
-
-const { data: member } = await supabase
-  .from("members")
-  .select("*")
-  .eq("auth_user_id", user.id)
-  .single();
-
-if (member) {
-  await supabase
-    .from("activity_feed")
-    .insert({
-      member_id: member.id,
-      activity_type: "avatar_update",
-      activity_text: "Updated profile photo",
-    });
-}
+        .from("members")
+        .update({
+          avatar_url:
+            publicUrl,
+        })
+        .eq(
+          "auth_user_id",
+          user.id
+        );
 
       alert(
         "Profile photo uploaded!"
@@ -158,100 +146,51 @@ if (member) {
     setUploading(false);
   };
 
- const saveProfile = async () => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const saveProfile =
+    async () => {
 
-  if (!user) return;
+      const {
+        data: { user },
+      } =
+        await supabase.auth.getUser();
 
-  const { data: member } = await supabase
-    .from("members")
-    .select("*")
-    .eq("auth_user_id", user.id)
-    .single();
+      if (!user) return;
 
-  await supabase
-    .from("members")
-    .update({
-      bio,
-      discord_username: discord,
-      tiktok_username: tiktok,
-      favorite_game: favoriteGame,
-    })
-    .eq("auth_user_id", user.id);
+      await supabase
+        .from("members")
+        .update({
+          bio,
+          discord_username:
+            discord,
+          tiktok_username:
+            tiktok,
+          favorite_game:
+            favoriteGame,
+        })
+        .eq(
+          "auth_user_id",
+          user.id
+        );
 
-  if (member) {
-
-    await supabase
-      .from("activity_feed")
-      .insert({
-        member_id: member.id,
-        activity_type: "profile_update",
-        activity_text: "Updated profile",
-      });
-
-    const { data: achievements } = await supabase
-      .from("achievements")
-      .select("*");
-
-    const { data: unlocked } = await supabase
-      .from("member_achievements")
-      .select("*")
-      .eq("member_id", member.id);
-
-    const alreadyUnlocked =
-      unlocked?.map(
-        (x) => x.achievement_id
-      ) || [];
-
-    const firstSteps = achievements?.find(
-      (a) => a.badge_name === "First Steps"
-    );
-
-    const socialButterfly =
-      achievements?.find(
-        (a) =>
-          a.badge_name ===
-          "Social Butterfly"
+      alert(
+        "Profile Saved"
       );
 
-    if (
-      bio.trim() !== "" &&
-      firstSteps &&
-      !alreadyUnlocked.includes(
-        firstSteps.id
-      )
-    ) {
-      await supabase
-        .from("member_achievements")
-        .insert({
-          member_id: member.id,
-          achievement_id:
-            firstSteps.id,
-        });
-    }
-
-    if (
-      discord.trim() !== "" &&
-      socialButterfly &&
-      !alreadyUnlocked.includes(
-        socialButterfly.id
-      )
-    ) {
-      await supabase
-        .from("member_achievements")
-        .insert({
-          member_id: member.id,
-          achievement_id:
-            socialButterfly.id,
-        });
-    }
+    };
+const getRankImage = () => {
+  switch (rank?.toUpperCase()) {
+    case "LEGEND":
+      return "/ranks/legend.png";
+    case "PLATINUM":
+      return "/ranks/platinum.png";
+    case "GOLD":
+      return "/ranks/gold.png";
+    case "SILVER":
+      return "/ranks/silver.png";
+    default:
+      return "/ranks/bronze.png";
   }
-
-  alert("Profile Saved");
 };
-
   if (loading) {
 
     return (
@@ -277,7 +216,83 @@ if (member) {
       }}
     >
       <div className="max-w-4xl mx-auto">
+<div
+  className="
+    rounded-[32px]
+    border
+    border-[#8DFF00]/20
+    bg-white/5
+    p-8
+    mb-6
+  "
+>
+  <div className="text-center">
 
+    <img
+      src={getRankImage()}
+      alt={rank}
+      className="
+        w-[220px]
+        mx-auto
+        mb-4
+      "
+    />
+
+    <h1
+      className="
+        text-4xl
+        md:text-6xl
+        font-black
+        uppercase
+        text-white
+      "
+    >
+      {fullName}
+    </h1>
+
+    <div
+      className="
+        text-[#8DFF00]
+        text-2xl
+        font-bold
+        uppercase
+        mt-2
+      "
+    >
+      {rank}
+    </div>
+
+    <div
+      className="
+        text-6xl
+        font-black
+        mt-6
+      "
+    >
+      {points}
+    </div>
+
+    <div className="text-white/50">
+      Breeze Points
+    </div>
+
+    <div
+      className="
+        mt-6
+        inline-block
+        px-6
+        py-3
+        rounded-full
+        bg-[#8DFF00]/10
+        border
+        border-[#8DFF00]/20
+      "
+    >
+      Login Streak: {streak} Days
+    </div>
+
+  </div>
+</div>
         <div className="mb-8">
 
           <button
