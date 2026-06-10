@@ -8,19 +8,57 @@ export default function HomePage() {
 
       {/* HERO */}
 
-      <section className="w-full max-w-[900px] mx-auto px-3 mb-4">
+<section className="w-full max-w-[900px] mx-auto px-3 mb-4">
 
-        <div className="overflow-hidden rounded-[18px] border border-white/10">
+  <div className="relative overflow-hidden rounded-[18px] border border-white/10">
 
-          <img
-            src="/hero-banner.png"
-            alt="Breeze Family"
-            className="w-full h-auto object-cover"
-          />
+    <img
+      src="/hero-banner.png"
+      alt="Breeze Family"
+      className="w-full h-auto object-cover"
+    />
 
-        </div>
+    <Link
+  href="/merch"
+  className="
+    absolute
 
-      </section>
+    left-1/2
+    bottom-4
+    md:bottom-8
+
+    -translate-x-1/2
+    transform
+
+    px-5
+    py-3
+
+    md:px-7
+    md:py-4
+
+    rounded-full
+
+    bg-black/90
+    border-2
+    border-[#8DFF00]
+
+    text-[#8DFF00]
+    font-black
+    uppercase
+
+    hover:bg-[#8DFF00]
+    hover:text-black
+
+    transition-all
+    duration-300
+  "
+>
+  🛒 GET YOUR MERCH
+</Link>
+
+  </div>
+
+</section>
 
       {/* COD TOURNAMENT */}
 
