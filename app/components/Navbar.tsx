@@ -5,8 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-const BREEZE_GREEN = "#8DFF00";
-
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -22,43 +20,16 @@ export default function Navbar() {
   const [loggedIn, setLoggedIn] =
     useState(false);
 
-  const [isAdmin, setIsAdmin] =
-    useState(false);
-
   useEffect(() => {
     checkUser();
   }, []);
 
   const checkUser = async () => {
-
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user) {
-      setLoggedIn(false);
-      setIsAdmin(false);
-      return;
-    }
-
-    setLoggedIn(true);
-
-    const { data: member } =
-      await supabase
-        .from("members")
-        .select("role")
-        .eq(
-          "auth_user_id",
-          user.id
-        )
-        .single();
-
-    if (
-      member?.role ===
-      "admin"
-    ) {
-      setIsAdmin(true);
-    }
+    setLoggedIn(!!user);
   };
 
   const logout =
@@ -66,15 +37,21 @@ export default function Navbar() {
 
       await supabase.auth.signOut();
 
+      setLoggedIn(false);
+
       router.push("/");
 
       router.refresh();
     };
 
-  const publicNavItems = [
+  const navItems = [
   {
     href: "/",
     label: "Home",
+  },
+  {
+    href: "/tiktok-stars",
+    label: "TikTok Stars",
   },
   {
     href: "/call-of-duty",
@@ -85,77 +62,28 @@ export default function Navbar() {
     label: "COD Admin",
   },
   {
-    href: "/tiktok-stars",
-    label: "TikTok Stars",
+    href: "/prized-pets",
+    label: "Prized Pets",
   },
   {
-    href: "/about",
-    label: "About",
-  },
-  {
-    href: "/contact",
-    label: "Contact",
+    href: "/leaderboard",
+    label: "Leaderboard",
   },
 ];
 
-  const memberNavItems = [
-    {
-      href: "/",
-      label: "Home",
-    },
-    {
-      href: "/portal",
-      label: "Portal",
-    },
-    {
-      href: "/prized-pets",
-      label: "Prized Pets",
-    },
-    {
-      href: "/achievements",
-      label: "Achievements",
-    },
-    {
-      href: "/leaderboard",
-      label: "Leaderboard",
-    },
-    {
-      href: "/profile",
-      label: "Profile",
-    },
-    {
-      href: "/tiktok-stars",
-      label: "TikTok Stars",
-    },
-  ];
-
-  const navItems =
-    loggedIn
-      ? memberNavItems
-      : publicNavItems;
-
-  if (
-    loggedIn &&
-    isAdmin
-  ) {
-    navItems.splice(
-      2,
-      0,
-      {
-        href:
-          "/cod-admin",
-        label:
-          "COD Admin",
-      }
-    );
-  }  return (
+  return (
     <header className="fixed top-0 left-0 w-full z-50 px-2 md:px-4 pt-3">
 
       <div className="w-full max-w-[1400px] mx-auto rounded-[12px] border border-white/10 bg-black/90 backdrop-blur-2xl">
 
         <div className="h-[56px] flex items-center justify-between px-4 md:px-6">
 
-          <Link href="/" className="shrink-0">
+          {/* LOGO */}
+
+          <Link
+            href="/"
+            className="shrink-0"
+          >
 
             <img
               src="/breeze-logo-new.png"
@@ -165,7 +93,9 @@ export default function Navbar() {
 
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8">
+          {/* DESKTOP NAV */}
+
+          <nav className="hidden md:flex items-center gap-6">
 
             {navItems.map((item) => (
 
@@ -219,6 +149,8 @@ export default function Navbar() {
             ))}
 
           </nav>
+
+          {/* RIGHT SIDE */}
 
           <div className="hidden md:flex items-center gap-3">
 
@@ -320,26 +252,51 @@ export default function Navbar() {
 
             ) : (
 
-              <button
-                onClick={logout}
-                className="
-                  bg-[#8DFF00]
-                  text-black
-                  uppercase
-                  font-black
-                  tracking-[1px]
-                  text-[10px]
-                  px-5
-                  h-[38px]
-                  rounded-full
-                "
-              >
-                LOGOUT
-              </button>
+              <>
+                <Link href="/portal">
 
+                  <button
+                    className="
+                      border
+                      border-[#8DFF00]
+                      text-[#8DFF00]
+                      uppercase
+                      font-black
+                      tracking-[1px]
+                      text-[10px]
+                      px-5
+                      h-[38px]
+                      rounded-full
+                    "
+                  >
+                    MY ACCOUNT
+                  </button>
+
+                </Link>
+
+                <button
+                  onClick={logout}
+                  className="
+                    bg-[#8DFF00]
+                    text-black
+                    uppercase
+                    font-black
+                    tracking-[1px]
+                    text-[10px]
+                    px-5
+                    h-[38px]
+                    rounded-full
+                  "
+                >
+                  LOGOUT
+                </button>
+
+              </>
             )}
 
           </div>
+
+          {/* MOBILE MENU BUTTON */}
 
           <button
             onClick={() =>
@@ -353,6 +310,8 @@ export default function Navbar() {
           </button>
 
         </div>
+
+        {/* MOBILE MENU */}
 
         {mobileMenuOpen && (
 
@@ -373,9 +332,7 @@ export default function Navbar() {
                   key={item.href}
                   href={item.href}
                   onClick={() =>
-                    setMobileMenuOpen(
-                      false
-                    )
+                    setMobileMenuOpen(false)
                   }
                 >
 
@@ -391,9 +348,7 @@ export default function Navbar() {
                       }
                     `}
                   >
-
                     {item.label}
-
                   </span>
 
                 </Link>
@@ -406,22 +361,31 @@ export default function Navbar() {
                   <Link
                     href="/login"
                     onClick={() =>
-                      setMobileMenuOpen(
-                        false
-                      )
+                      setMobileMenuOpen(false)
                     }
                   >
-                    <span className="uppercase tracking-[2px] font-bold text-[#8DFF00]">
-                      Login
-                    </span>
+
+                    <button
+                      className="
+                        w-full
+                        h-[44px]
+                        border
+                        border-[#8DFF00]
+                        text-[#8DFF00]
+                        uppercase
+                        font-black
+                        rounded-full
+                      "
+                    >
+                      LOGIN
+                    </button>
+
                   </Link>
 
                   <Link
                     href="/register"
                     onClick={() =>
-                      setMobileMenuOpen(
-                        false
-                      )
+                      setMobileMenuOpen(false)
                     }
                   >
 
@@ -440,25 +404,52 @@ export default function Navbar() {
                     </button>
 
                   </Link>
+
                 </>
 
               ) : (
 
-                <button
-                  onClick={logout}
-                  className="
-                    w-full
-                    h-[44px]
-                    bg-[#8DFF00]
-                    text-black
-                    uppercase
-                    font-black
-                    rounded-full
-                  "
-                >
-                  LOGOUT
-                </button>
+                <>
+                  <Link
+                    href="/portal"
+                    onClick={() =>
+                      setMobileMenuOpen(false)
+                    }
+                  >
 
+                    <button
+                      className="
+                        w-full
+                        h-[44px]
+                        border
+                        border-[#8DFF00]
+                        text-[#8DFF00]
+                        uppercase
+                        font-black
+                        rounded-full
+                      "
+                    >
+                      MY ACCOUNT
+                    </button>
+
+                  </Link>
+
+                  <button
+                    onClick={logout}
+                    className="
+                      w-full
+                      h-[44px]
+                      bg-[#8DFF00]
+                      text-black
+                      uppercase
+                      font-black
+                      rounded-full
+                    "
+                  >
+                    LOGOUT
+                  </button>
+
+                </>
               )}
 
             </div>
