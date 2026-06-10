@@ -54,6 +54,10 @@ export default function Navbar() {
     label: "TikTok Stars",
   },
   {
+  href: "/mental-health",
+  label: "YOU MATTER",
+},
+  {
     href: "/call-of-duty",
     label: "COD Tournament",
   },
