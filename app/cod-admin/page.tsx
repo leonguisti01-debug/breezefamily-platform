@@ -26,10 +26,6 @@ export default function AdminCodPage() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    console.log(
-  "LOGGED IN EMAIL:",
-  user?.email
-);
 
     if (!user) {
 
@@ -51,22 +47,24 @@ export default function AdminCodPage() {
         .single();
 
     if (
-  !admin ||
-  !admin.active ||
-  (
-    admin.role !== "super_admin" &&
-    admin.role !== "cod_admin"
-  )
-) {
+      !admin ||
+      !admin.active ||
+      (
+        admin.role !== "super_admin" &&
+        admin.role !== "cod_admin"
+      )
+    ) {
 
-  alert("Access Denied");
+      alert(
+        "Access Denied"
+      );
 
-  router.push(
-    "/cod-admin/login"
-  );
+      router.push(
+        "/cod-admin/login"
+      );
 
-  return;
-}
+      return;
+    }
 
     setUserEmail(
       user.email || ""
@@ -79,15 +77,20 @@ export default function AdminCodPage() {
 
   async function loadPlayers() {
 
-    const { data, error } =
-  await supabase
-    .from("cod_players")
-    .select("*");
+    const { data } =
+      await supabase
+        .from("cod_players")
+        .select("*")
+        .order(
+          "team_id",
+          {
+            ascending: true,
+          }
+        );
 
-console.log("PLAYERS:", data);
-console.log("ERROR:", error);
-
-    setPlayers(data || []);
+    setPlayers(
+      data || []
+    );
   }
 
   async function approvePlayer(
@@ -100,12 +103,15 @@ console.log("ERROR:", error);
         status:
           "approved",
       })
-      .eq("id", id);
+      .eq(
+        "id",
+        id
+      );
 
     loadPlayers();
   }
 
-  async function rejectPlayer(
+  async function disqualifyPlayer(
     id: number
   ) {
 
@@ -113,9 +119,30 @@ console.log("ERROR:", error);
       .from("cod_players")
       .update({
         status:
-          "rejected",
+          "disqualified",
       })
-      .eq("id", id);
+      .eq(
+        "id",
+        id
+      );
+
+    loadPlayers();
+  }
+
+  async function reinstatePlayer(
+    id: number
+  ) {
+
+    await supabase
+      .from("cod_players")
+      .update({
+        status:
+          "approved",
+      })
+      .eq(
+        "id",
+        id
+      );
 
     loadPlayers();
   }
@@ -153,11 +180,11 @@ console.log("ERROR:", error);
         "approved"
     );
 
-  const rejected =
+  const disqualified =
     players.filter(
       (p) =>
         p.status ===
-        "rejected"
+        "disqualified"
     );
 
   return (
@@ -166,7 +193,7 @@ console.log("ERROR:", error);
 
       <div className="max-w-7xl mx-auto">
 
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-10">
 
           <div>
 
@@ -174,7 +201,7 @@ console.log("ERROR:", error);
               COD ADMIN
             </h1>
 
-            <p className="text-white/60 mt-2">
+            <p className="text-white/50 mt-2">
               {userEmail}
             </p>
 
@@ -195,45 +222,51 @@ console.log("ERROR:", error);
 
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mt-10">
+        <div className="grid md:grid-cols-3 gap-6">
 
-          <div className="border border-[#8DFF00]/20 rounded-3xl p-6">
+          <div className="border border-[#8DFF00]/20 rounded-2xl p-5">
+
             <div className="text-white/60">
               Pending
             </div>
 
-            <div className="text-5xl font-black text-[#8DFF00]">
+            <div className="text-4xl font-black text-[#8DFF00]">
               {pending.length}
             </div>
+
           </div>
 
-          <div className="border border-[#8DFF00]/20 rounded-3xl p-6">
+          <div className="border border-[#8DFF00]/20 rounded-2xl p-5">
+
             <div className="text-white/60">
               Approved
             </div>
 
-            <div className="text-5xl font-black text-[#8DFF00]">
+            <div className="text-4xl font-black text-[#8DFF00]">
               {approved.length}
             </div>
+
           </div>
 
-          <div className="border border-[#8DFF00]/20 rounded-3xl p-6">
+          <div className="border border-red-600/20 rounded-2xl p-5">
+
             <div className="text-white/60">
-              Rejected
+              Disqualified
             </div>
 
-            <div className="text-5xl font-black text-[#8DFF00]">
-              {rejected.length}
+            <div className="text-4xl font-black text-red-500">
+              {disqualified.length}
             </div>
+
           </div>
 
         </div>
 
-        <h2 className="text-3xl font-black mt-16 mb-6">
+        <h2 className="text-3xl font-black mt-14 mb-5">
           PENDING APPROVAL
         </h2>
 
-        <div className="grid gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
 
           {pending.map(
             (player) => (
@@ -244,33 +277,65 @@ console.log("ERROR:", error);
                   border
                   border-white/10
                   rounded-2xl
-                  p-6
+p-5
                 "
               >
 
-                <div className="font-black text-xl">
-                  {player.player_name}
-                </div>
+                <div className="flex items-center justify-between">
 
-                <div className="mt-2 text-white/70">
-                  Team {player.team_id}
-                </div>
+                  <div>
 
-                <div className="text-white/70">
-                  {player.platform}
-                </div>
+  <div className="text-xs text-white/50">
+    FULL NAME
+  </div>
 
-                <div className="text-white/70">
-                  {player.activision_id}
-                </div>
+  <div className="font-bold">
+    {player.player_name}
+  </div>
 
-                <div className="text-white/70">
-                  {player.email}
-                </div>
+  <div className="mt-3 text-xs text-white/50">
+    GAMERTAG
+  </div>
 
-                <div className="flex gap-3 mt-5">
+  <div>
+    {player.gamertag}
+  </div>
 
-                  <button
+  <div className="mt-3 text-xs text-white/50">
+    WHATSAPP
+  </div>
+
+  <div>
+    {player.whatsapp}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    EMAIL
+  </div>
+
+  <div className="break-all">
+    {player.email}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    TEAM
+  </div>
+
+  <div>
+    {player.team_id}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    PLATFORM
+  </div>
+
+  <div>
+    {player.platform}
+  </div>
+
+</div>
+
+                  <div className="flex gap-2">                  <button
                     onClick={() =>
                       approvePlayer(
                         player.id
@@ -280,9 +345,9 @@ console.log("ERROR:", error);
                       bg-[#8DFF00]
                       text-black
                       font-black
-                      px-5
-                      py-3
-                      rounded-xl
+                      px-4
+                      py-2
+                      rounded-lg
                     "
                   >
                     APPROVE
@@ -290,7 +355,7 @@ console.log("ERROR:", error);
 
                   <button
                     onClick={() =>
-                      rejectPlayer(
+                      disqualifyPlayer(
                         player.id
                       )
                     }
@@ -298,12 +363,214 @@ console.log("ERROR:", error);
                       bg-red-600
                       text-white
                       font-black
-                      px-5
-                      py-3
-                      rounded-xl
+                      px-4
+                      py-2
+                      rounded-lg
                     "
                   >
-                    REJECT
+                    DQ
+                  </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            )
+          )}
+
+        </div>
+
+        <h2 className="text-3xl font-black mt-14 mb-5">
+          APPROVED PLAYERS
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+
+          {approved.map(
+            (player) => (
+
+              <div
+                key={player.id}
+                className="
+                  border
+                  border-[#8DFF00]/20
+                  rounded-2xl
+p-5
+                "
+              >
+
+                <div className="flex items-center justify-between">
+
+                  <div>
+
+  <div className="text-xs text-white/50">
+    FULL NAME
+  </div>
+
+  <div className="font-bold">
+    {player.player_name}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    GAMERTAG
+  </div>
+
+  <div>
+    {player.gamertag}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    WHATSAPP
+  </div>
+
+  <div>
+    {player.whatsapp}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    EMAIL
+  </div>
+
+  <div className="break-all">
+    {player.email}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    TEAM
+  </div>
+
+  <div>
+    {player.team_id}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    PLATFORM
+  </div>
+
+  <div>
+    {player.platform}
+  </div>
+
+</div>
+
+                  <button
+                    onClick={() =>
+                      disqualifyPlayer(
+                        player.id
+                      )
+                    }
+                    className="
+                      bg-red-600
+                      text-white
+                      font-black
+                      px-4
+                      py-2
+                      rounded-lg
+                    "
+                  >
+                    DQ
+                  </button>
+
+                </div>
+
+              </div>
+
+            )
+          )}
+
+        </div>
+
+        <h2 className="text-3xl font-black mt-14 mb-5">
+          DISQUALIFIED PLAYERS
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+
+          {disqualified.map(
+            (player) => (
+
+              <div
+                key={player.id}
+                className="
+                  border
+                  border-red-600/30
+                  rounded-2xl
+p-5
+                "
+              >
+
+                <div className="flex items-center justify-between">
+
+                  <div>
+
+  <div className="text-xs text-white/50">
+    FULL NAME
+  </div>
+
+  <div className="font-bold">
+    {player.player_name}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    GAMERTAG
+  </div>
+
+  <div>
+    {player.gamertag}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    WHATSAPP
+  </div>
+
+  <div>
+    {player.whatsapp}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    EMAIL
+  </div>
+
+  <div className="break-all">
+    {player.email}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    TEAM
+  </div>
+
+  <div>
+    {player.team_id}
+  </div>
+
+  <div className="mt-3 text-xs text-white/50">
+    PLATFORM
+  </div>
+
+  <div>
+    {player.platform}
+  </div>
+
+</div>
+
+                  <button
+                    onClick={() =>
+                      reinstatePlayer(
+                        player.id
+                      )
+                    }
+                    className="
+                      bg-[#8DFF00]
+                      text-black
+                      font-black
+                      px-4
+                      py-2
+                      rounded-lg
+                    "
+                  >
+                    REINSTATE
                   </button>
 
                 </div>
