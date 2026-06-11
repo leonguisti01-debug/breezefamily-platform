@@ -24,8 +24,8 @@ export default function ProfilePage() {
   const [favoriteGame, setFavoriteGame] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [rank, setRank] = useState("BRONZE");
-const [points, setPoints] = useState(0);
-const [streak, setStreak] = useState(0);
+  const [points, setPoints] = useState(0);
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -45,17 +45,17 @@ const [streak, setStreak] = useState(0);
         .single();
 
       if (data) {
-  setFullName(data.full_name || "");
-  setBio(data.bio || "");
-  setDiscord(data.discord_username || "");
-  setTiktok(data.tiktok_username || "");
-  setFavoriteGame(data.favorite_game || "");
-  setAvatarUrl(data.avatar_url || "");
+        setFullName(data.full_name || "");
+        setBio(data.bio || "");
+        setDiscord(data.discord_username || "");
+        setTiktok(data.tiktok_username || "");
+        setFavoriteGame(data.favorite_game || "");
+        setAvatarUrl(data.avatar_url || "");
 
-  setRank(data.rank || "BRONZE");
-  setPoints(data.breeze_points || 0);
-  setStreak(data.login_streak || 0);
-}
+        setRank(data.rank || "BRONZE");
+        setPoints(data.breeze_points || 0);
+        setStreak(data.login_streak || 0);
+      }
 
       setLoading(false);
     };
@@ -177,28 +177,56 @@ const [streak, setStreak] = useState(0);
       );
 
     };
-const getRankImage = () => {
-  switch (rank?.toUpperCase()) {
-    case "LEGEND":
-      return "/ranks/legend.png";
-    case "PLATINUM":
-      return "/ranks/platinum.png";
-    case "GOLD":
-      return "/ranks/gold.png";
-    case "SILVER":
-      return "/ranks/silver.png";
-    default:
-      return "/ranks/bronze.png";
-  }
-};
-  if (loading) {
 
+  const getRankImage = () => {
+    switch (rank?.toUpperCase()) {
+      case "LEGEND":
+        return "/ranks/legend.png";
+      case "PLATINUM":
+        return "/ranks/platinum.png";
+      case "GOLD":
+        return "/ranks/gold.png";
+      case "SILVER":
+        return "/ranks/silver.png";
+      default:
+        return "/ranks/bronze.png";
+    }
+  };
+
+  const nextRank =
+    rank === "BRONZE"
+      ? "SILVER"
+      : rank === "SILVER"
+      ? "GOLD"
+      : rank === "GOLD"
+      ? "PLATINUM"
+      : rank === "PLATINUM"
+      ? "LEGEND"
+      : "MAX";
+
+  const nextRankPoints =
+    rank === "BRONZE"
+      ? 100
+      : rank === "SILVER"
+      ? 500
+      : rank === "GOLD"
+      ? 1000
+      : rank === "PLATINUM"
+      ? 2500
+      : 2500;
+
+  const progress =
+    Math.min(
+      (points / nextRankPoints) * 100,
+      100
+    );
+
+  if (loading) {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
         Loading...
       </main>
     );
-
   }
 
   return (
@@ -215,91 +243,303 @@ const getRankImage = () => {
           "radial-gradient(circle at top, rgba(141,255,0,0.10), #000 50%)",
       }}
     >
-      <div className="max-w-4xl mx-auto">
-<div
-  className="
-    rounded-[32px]
-    border
-    border-[#8DFF00]/20
-    bg-white/5
-    p-8
-    mb-6
-  "
->
-  <div className="text-center">
+      <div className="max-w-3xl mx-auto">
 
-    <img
-      src={getRankImage()}
-      alt={rank}
-      className="
-        w-[220px]
-        mx-auto
-        mb-4
-      "
-    />
+        {/* HERO */}
 
-    <h1
-      className="
-        text-4xl
-        md:text-6xl
-        font-black
-        uppercase
-        text-white
-      "
-    >
-      {fullName}
-    </h1>
+        <div
+          className="
+            rounded-[32px]
+            border
+            border-[#8DFF00]/20
+            bg-white/5
+            p-5
+            mb-5
+          "
+        >
+          <div className="text-center">
 
-    <div
-      className="
-        text-[#8DFF00]
-        text-2xl
-        font-bold
-        uppercase
-        mt-2
-      "
-    >
-      {rank}
-    </div>
+            <img
+              src={getRankImage()}
+              alt={rank}
+              className="
+                w-[120px]
+                mx-auto
+                mb-4
+              "
+            />
 
-    <div
-      className="
-        text-6xl
-        font-black
-        mt-6
-      "
-    >
-      {points}
-    </div>
+            <h1
+              className="
+                text-2xl
+                md:text-4xl
+                font-black
+                uppercase
+                text-white
+              "
+            >
+              {fullName}
+            </h1>
 
-    <div className="text-white/50">
-      Breeze Points
-    </div>
+            <div
+              className="
+                text-[#8DFF00]
+                text-2xl
+                font-bold
+                uppercase
+                mt-2
+              "
+            >
+              {rank}
+            </div>
 
-    <div
-      className="
-        mt-6
-        inline-block
-        px-6
-        py-3
-        rounded-full
-        bg-[#8DFF00]/10
-        border
-        border-[#8DFF00]/20
-      "
-    >
-      Login Streak: {streak} Days
-    </div>
+            <div
+              className="
+                text-6xl
+                font-black
+                mt-6
+              "
+            >
+              {points}
+            </div>
 
-  </div>
-</div>
-        <div className="mb-8">
+            <div className="text-white/50">
+              Breeze Points
+            </div>
+
+            <div
+              className="
+                mt-6
+                inline-block
+                px-6
+                py-3
+                rounded-full
+                bg-[#8DFF00]/10
+                border
+                border-[#8DFF00]/20
+              "
+            >
+              Login Streak: {streak} Days
+            </div>
+
+          </div>
+        </div>
+
+        {/* ACHIEVEMENTS */}
+
+        <div
+          className="
+            rounded-[32px]
+            border
+            border-[#8DFF00]/20
+            bg-white/5
+            p-8
+            mb-5
+          "
+        >
+
+          <div className="text-center mb-8">
+
+            <h2
+              className="
+                text-4xl
+                font-black
+                uppercase
+              "
+            >
+              Achievements
+            </h2>
+
+            <p className="text-white/50 mt-2">
+              Unlock badges through participation and events.
+            </p>
+
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+
+            <div className="text-center">
+              <img
+                src="/achievements/first-steps.png"
+                alt=""
+                className="w-full max-w-[100px] mx-auto"
+              />
+              <div className="mt-2 font-bold">
+                First Steps
+              </div>
+            </div>
+
+            <div className="text-center">
+              <img
+                src="/achievements/community-member.png"
+                alt=""
+                className="w-full max-w-[180px] mx-auto"
+              />
+              <div className="mt-2 font-bold">
+                Community Member
+              </div>
+            </div>
+
+            <div className="text-center">
+              <img
+                src="/achievements/rising-star.png"
+                alt=""
+                className="w-full max-w-[180px] mx-auto"
+              />
+              <div className="mt-2 font-bold">
+                Rising Star
+              </div>
+            </div>            <div className="text-center">
+              <img
+                src="/achievements/competitor.png"
+                alt=""
+                className="w-full max-w-[180px] mx-auto opacity-30 grayscale"
+              />
+              <div className="mt-2 font-bold text-white/50">
+                Competitor
+              </div>
+            </div>
+
+            <div className="text-center">
+              <img
+                src="/achievements/pet-lover.png"
+                alt=""
+                className="w-full max-w-[180px] mx-auto opacity-30 grayscale"
+              />
+              <div className="mt-2 font-bold text-white/50">
+                Pet Lover
+              </div>
+            </div>
+
+            <div className="text-center">
+              <img
+                src="/achievements/legend-rank.png"
+                alt=""
+                className="w-full max-w-[180px] mx-auto opacity-30 grayscale"
+              />
+              <div className="mt-2 font-bold text-white/50">
+                Legend Rank
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* RANK PROGRESS */}
+
+        <div
+          className="
+            rounded-[32px]
+            border
+            border-[#8DFF00]/20
+            bg-white/5
+            p-8
+            mb-5
+          "
+        >
+
+          <h2
+            className="
+              text-4xl
+              font-black
+              uppercase
+              text-center
+              mb-5
+            "
+          >
+            Rank Progress
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-6 items-center">
+
+            <div className="text-center">
+
+              <img
+                src={getRankImage()}
+                alt=""
+                className="w-[140px] mx-auto"
+              />
+
+              <div className="mt-3 font-black text-xl">
+                {rank}
+              </div>
+
+            </div>
+
+            <div>
+
+              <div
+                className="
+                  w-full
+                  h-5
+                  bg-white/10
+                  rounded-full
+                  overflow-hidden
+                "
+              >
+
+                <div
+                  className="
+                    h-full
+                    bg-[#8DFF00]
+                    rounded-full
+                  "
+                  style={{
+                    width: `${progress}%`,
+                  }}
+                />
+
+              </div>
+
+              <div className="text-center mt-4">
+
+                <div className="text-3xl font-black">
+                  {points} / {nextRankPoints}
+                </div>
+
+                <div className="text-white/50 mt-2">
+                  {Math.max(
+                    nextRankPoints - points,
+                    0
+                  )} Points Until {nextRank}
+                </div>
+
+              </div>
+
+            </div>
+
+            <div className="text-center">
+
+              {nextRank !== "MAX" && (
+
+                <>
+                  <img
+                    src={`/ranks/${nextRank.toLowerCase()}.png`}
+                    alt=""
+                    className="w-[140px] mx-auto opacity-70"
+                  />
+
+                  <div className="mt-3 font-black text-xl">
+                    {nextRank}
+                  </div>
+                </>
+
+              )}
+
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* BACK HOME */}
+
+        <div className="mb-5">
 
           <button
             onClick={() =>
-              router.push(
-                "/portal"
-              )
+              router.push("/")
             }
             className="
               px-5
@@ -310,10 +550,12 @@ const getRankImage = () => {
               border-white/10
             "
           >
-            ← Back To Portal
+            ← Back Home
           </button>
 
         </div>
+
+        {/* PROFILE EDITOR */}
 
         <div
           className="
@@ -332,9 +574,11 @@ const getRankImage = () => {
               md:flex-row
               gap-8
               items-center
-              mb-8
+              mb-5
             "
-          >            <div>
+          >
+
+            <div>
 
               {avatarUrl ? (
 
@@ -405,9 +649,7 @@ const getRankImage = () => {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={
-                    uploadAvatar
-                  }
+                  onChange={uploadAvatar}
                   className="hidden"
                 />
               </label>
