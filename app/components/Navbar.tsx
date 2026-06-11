@@ -264,21 +264,12 @@ export default function Navbar() {
                 <Link href="/portal">
 
                   <button
-                    className="
-                      border
-                      border-[#8DFF00]
-                      text-[#8DFF00]
-                      uppercase
-                      font-black
-                      tracking-[1px]
-                      text-[10px]
-                      px-5
-                      h-[38px]
-                      rounded-full
-                    "
-                  >
-                    MY ACCOUNT
-                  </button>
+  onClick={() =>
+    router.push("/profile")
+  }
+>
+  MY ACCOUNT
+</button>
 
                 </Link>
 
@@ -426,19 +417,12 @@ export default function Navbar() {
                   >
 
                     <button
-                      className="
-                        w-full
-                        h-[44px]
-                        border
-                        border-[#8DFF00]
-                        text-[#8DFF00]
-                        uppercase
-                        font-black
-                        rounded-full
-                      "
-                    >
-                      MY ACCOUNT
-                    </button>
+  onClick={() =>
+    router.push("/profile")
+  }
+>
+  MY ACCOUNT
+</button>
 
                   </Link>
 
