@@ -53,7 +53,91 @@ export default function LoginPage() {
           throw error;
 
         }
+        const {
+  data: { user },
+} = await supabase.auth.getUser();
 
+if (user) {
+
+  const { data: member } =
+    await supabase
+      .from("members")
+      .select("*")
+      .eq(
+        "auth_user_id",
+        user.id
+      )
+      .single();
+
+  if (member) {
+
+    const today =
+      new Date()
+        .toISOString()
+        .split("T")[0];
+
+    const lastLogin =
+      member.last_login
+        ? new Date(
+            member.last_login
+          )
+            .toISOString()
+            .split("T")[0]
+        : null;
+
+    if (
+      lastLogin !== today
+    ) {
+
+      const newPoints =
+        (member.breeze_points || 0) + 10;
+
+      const newStreak =
+        (member.login_streak || 0) + 1;
+
+      let newRank =
+        "BRONZE";
+
+      if (
+        newPoints >= 2500
+      )
+        newRank =
+          "LEGEND";
+      else if (
+        newPoints >= 1000
+      )
+        newRank =
+          "PLATINUM";
+      else if (
+        newPoints >= 500
+      )
+        newRank =
+          "GOLD";
+      else if (
+        newPoints >= 100
+      )
+        newRank =
+          "SILVER";
+
+      await supabase
+        .from("members")
+        .update({
+          breeze_points:
+            newPoints,
+          login_streak:
+            newStreak,
+          last_login:
+            new Date(),
+          rank:
+            newRank,
+        })
+        .eq(
+          "auth_user_id",
+          user.id
+        );
+    }
+  }
+}
         const { data: member } =
   await supabase
     .from("members")
@@ -73,7 +157,7 @@ if (
 } else {
 
   router.push(
-    "/portal"
+    "/profile"
   );
 
 }
