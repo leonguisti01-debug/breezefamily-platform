@@ -135,13 +135,21 @@ if (user) {
           "auth_user_id",
           user.id
         );
-        await supabase
-  .from("breeze_points_log")
-  .insert({
-    member_id: member.id,
-    points: 10,
-    reason: "Daily Login",
-  });
+        const { error: pointsError } =
+  await supabase
+    .from("breeze_points_log")
+    .insert({
+      member_id: member.id,
+      points: 10,
+      reason: "Daily Login",
+    });
+
+if (pointsError) {
+  console.error(
+    "POINTS LOG ERROR:",
+    pointsError
+  );
+}
     }
   }
 }
