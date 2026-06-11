@@ -22,29 +22,31 @@ export default function HomePage() {
   href="/merch"
   className="
     absolute
-
-    left-1/2
+    left-4
     bottom-4
+
+    px-3
+    py-2
+
+    md:left-6
     md:bottom-8
 
-    -translate-x-1/2
-    transform
-
-    px-5
-    py-3
-
-    md:px-7
-    md:py-4
+    md:px-5
+    md:py-3
 
     rounded-full
 
-    bg-black/90
-    border-2
+    bg-black/85
+    border
     border-[#8DFF00]
 
     text-[#8DFF00]
+    text-[11px]
+    md:text-sm
+
     font-black
     uppercase
+    whitespace-nowrap
 
     hover:bg-[#8DFF00]
     hover:text-black
@@ -53,14 +55,14 @@ export default function HomePage() {
     duration-300
   "
 >
-  🛒 GET YOUR MERCH
+  SHOP MERCH
 </Link>
 
   </div>
 
 </section>
 
-      {/* COD TOURNAMENT */}
+{/* COD TOURNAMENT */}
 
       <section className="w-full max-w-[900px] mx-auto px-3 mb-4">
 
