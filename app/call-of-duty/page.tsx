@@ -714,8 +714,8 @@ setGamertag("");
                           >
 
                             {player
-  ? player.player_name
-  : "EMPTY SLOT"}
+  ? player.gamertag
+  : "--"}
 
                           </div>
 
