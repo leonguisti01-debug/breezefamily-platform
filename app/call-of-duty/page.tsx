@@ -46,10 +46,11 @@ export default function CallOfDutyPage() {
   async function loadPlayers() {
 
     const { data } =
-      await supabase
-        .from("cod_players")
-        .select("*")
-        .order("team_id");
+  await supabase
+    .from("cod_players")
+    .select("*")
+    .eq("status", "approved")
+    .order("team_id");
 
     setPlayers(data || []);
   }

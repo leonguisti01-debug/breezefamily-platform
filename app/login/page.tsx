@@ -135,7 +135,7 @@ if (user) {
           "auth_user_id",
           user.id
         );
-        const { error: pointsError } =
+        const result =
   await supabase
     .from("breeze_points_log")
     .insert({
@@ -144,12 +144,16 @@ if (user) {
       reason: "Daily Login",
     });
 
-if (pointsError) {
+console.log("MEMBER ID:", member.id);
+console.log("POINTS LOG RESULT:", result);
+
+if (result.error) {
   console.error(
     "POINTS LOG ERROR:",
-    pointsError
+    result.error
   );
 }
+
     }
   }
 }
