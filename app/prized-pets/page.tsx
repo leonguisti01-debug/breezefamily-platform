@@ -46,10 +46,23 @@ export default function PrizedPetsPage() {
       null
     );
 
+const [showKentModal,
+  setShowKentModal] =
+  useState(false);
+
+  const [winner, setWinner] =
+  useState<any>(null);
+
+const [silver, setSilver] =
+  useState<any>(null);
+
+const [bronze, setBronze] =
+  useState<any>(null);
+
   useEffect(() => {
-    loadMember();
-    fetchEntries();
-  }, []);
+  loadMember();
+  fetchEntries();
+}, []);
 
   const loadMember =
     async () => {
@@ -92,6 +105,50 @@ export default function PrizedPetsPage() {
       setEntriesLoading(
         true
       );
+      const loadWinners =
+  async () => {
+
+    const { data } =
+      await supabase
+        .from(
+          "pet_weekly_winners"
+        )
+        .select("*")
+        .order(
+          "week_number",
+          {
+            ascending:
+              false,
+          }
+        );
+
+    if (!data?.length)
+      return;
+
+    setWinner(
+      data.find(
+        (x) =>
+          x.position ===
+          "winner"
+      )
+    );
+
+    setSilver(
+      data.find(
+        (x) =>
+          x.position ===
+          "runner_up"
+      )
+    );
+
+    setBronze(
+      data.find(
+        (x) =>
+          x.position ===
+          "third_place"
+      )
+    );
+  };
 
       const { data } =
         await supabase
@@ -411,6 +468,28 @@ export default function PrizedPetsPage() {
           </div>
 
         </div>
+        <div className="text-center mb-10">
+
+  <button
+    onClick={() =>
+      setShowKentModal(
+        true
+      )
+    }
+    className="
+      px-10
+      py-5
+      rounded-full
+      bg-[#8DFF00]
+      text-black
+      text-2xl
+      font-black
+    "
+  >
+    KOM ONS DOEN DIT!!
+  </button>
+
+</div>
 
         <div className="mb-8">
 
@@ -551,7 +630,85 @@ export default function PrizedPetsPage() {
         )}
 
       </div>
+{showKentModal && (
 
+  <div
+    className="
+      fixed
+      inset-0
+      bg-black/90
+      z-[9999]
+      flex
+      items-center
+      justify-center
+      p-4
+    "
+  >
+
+    <div
+      className="
+        max-w-md
+        w-full
+        rounded-[32px]
+        bg-[#111]
+        border
+        border-[#8DFF00]/20
+        p-8
+        text-center
+      "
+    >
+
+      <h2 className="text-3xl font-black mb-4">
+        ARE YOU REALLY KENT?
+      </h2>
+
+      <p className="text-white/60 mb-8">
+        This area is for the official Pet Draw.
+      </p>
+
+      <div className="flex gap-4">
+
+        <button
+          onClick={() =>
+            setShowKentModal(
+              false
+            )
+          }
+          className="
+            flex-1
+            py-4
+            rounded-full
+            bg-white/10
+          "
+        >
+          NO
+        </button>
+
+        <button
+          onClick={() =>
+            router.push(
+              "/pets-draw-login"
+            )
+          }
+          className="
+            flex-1
+            py-4
+            rounded-full
+            bg-[#8DFF00]
+            text-black
+            font-black
+          "
+        >
+          YES
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
     </main>
   );
 }
