@@ -16,16 +16,30 @@ export default function PetsDrawPage() {
     useState(true);
 
   const [spinning, setSpinning] =
-    useState(false);
+  useState(false);
 
-  const [gold, setGold] =
-    useState<any>(null);
+const [currentWinner, setCurrentWinner] =
+  useState<any>(null);
 
-  const [silver, setSilver] =
-    useState<any>(null);
+const [drawStage, setDrawStage] =
+  useState<
+    "bronze" |
+    "silver" |
+    "gold" |
+    "complete"
+  >("bronze");
 
-  const [bronze, setBronze] =
-    useState<any>(null);
+const [confirmedBronze, setConfirmedBronze] =
+  useState<any>(null);
+
+const [confirmedSilver, setConfirmedSilver] =
+  useState<any>(null);
+
+const [confirmedGold, setConfirmedGold] =
+  useState<any>(null);
+
+const [excludedIds, setExcludedIds] =
+  useState<number[]>([]);
 
   useEffect(() => {
     loadEntries();
@@ -45,12 +59,19 @@ export default function PetsDrawPage() {
 
   const spinMachine = () => {
 
+  const available =
+    entries.filter(
+      (pet) =>
+        !excludedIds.includes(
+          pet.id
+        )
+    );
+
   if (
-    !entries ||
-    entries.length < 3
+    available.length < 1
   ) {
     alert(
-      "Need at least 3 pet entries."
+      "No entries left."
     );
     return;
   }
@@ -60,22 +81,16 @@ export default function PetsDrawPage() {
   const animation =
     setInterval(() => {
 
-      const shuffled =
-        [...entries].sort(
-          () =>
-            Math.random() - 0.5
-        );
+      const random =
+        available[
+          Math.floor(
+            Math.random() *
+            available.length
+          )
+        ];
 
-      setGold(
-        shuffled[0]
-      );
-
-      setSilver(
-        shuffled[1]
-      );
-
-      setBronze(
-        shuffled[2]
+      setCurrentWinner(
+        random
       );
 
     }, 80);
@@ -86,104 +101,160 @@ export default function PetsDrawPage() {
       animation
     );
 
-    const finalShuffle =
-      [...entries].sort(
-        () =>
-          Math.random() - 0.5
-      );
+    const winner =
+      available[
+        Math.floor(
+          Math.random() *
+          available.length
+        )
+      ];
 
-    setGold(
-      finalShuffle[0]
-    );
-
-    setSilver(
-      finalShuffle[1]
-    );
-
-    setBronze(
-      finalShuffle[2]
+    setCurrentWinner(
+      winner
     );
 
     setSpinning(false);
 
-  }, 8000);
+  }, 6000);
 
 };
-  const saveWinners =
-    async () => {
+const confirmWinner = () => {
 
-      const weekNumber =
-        Math.ceil(
-          (
-            new Date().getTime() -
-            new Date(
-              new Date().getFullYear(),
-              0,
-              1
-            ).getTime()
-          ) /
-            604800000
-        );
+  if (
+    !currentWinner
+  ) return;
 
-      await supabase
-        .from(
-          "pet_weekly_winners"
-        )
-        .insert([
-          {
-            week_number:
-              weekNumber,
-            position:
-              "gold",
-            entry_id:
-              gold.id,
-            owner_name:
-              gold.name,
-            pet_name:
-              gold.pet_name,
-            photo_url:
-              gold.photo_url,
-            selected_by:
-              "Kent",
-          },
-          {
-            week_number:
-              weekNumber,
-            position:
-              "silver",
-            entry_id:
-              silver.id,
-            owner_name:
-              silver.name,
-            pet_name:
-              silver.pet_name,
-            photo_url:
-              silver.photo_url,
-            selected_by:
-              "Kent",
-          },
-          {
-            week_number:
-              weekNumber,
-            position:
-              "bronze",
-            entry_id:
-              bronze.id,
-            owner_name:
-              bronze.name,
-            pet_name:
-              bronze.pet_name,
-            photo_url:
-              bronze.photo_url,
-            selected_by:
-              "Kent",
-          },
-        ]);
+  setExcludedIds(
+    [
+      ...excludedIds,
+      currentWinner.id,
+    ]
+  );
 
-      alert(
-        "Winners Saved!"
-      );
-    };
+  if (
+    drawStage ===
+    "bronze"
+  ) {
+
+    setConfirmedBronze(
+      currentWinner
+    );
+
+    setDrawStage(
+      "silver"
+    );
+
+  } else if (
+    drawStage ===
+    "silver"
+  ) {
+
+    setConfirmedSilver(
+      currentWinner
+    );
+
+    setDrawStage(
+      "gold"
+    );
+
+  } else {
+
+    setConfirmedGold(
+      currentWinner
+    );
+
+    setDrawStage(
+      "complete"
+    );
+
+  }
+
+  setCurrentWinner(
+    null
+  );
+};
+const spinAgain = () => {
+
+  if (
+    !currentWinner
+  ) return;
+
+  setExcludedIds(
+    [
+      ...excludedIds,
+      currentWinner.id,
+    ]
+  );
+
+  setCurrentWinner(
+    null
+  );
+
+  spinMachine();
+};
+  const saveWinners = async () => {
+
+  if (
+    !confirmedBronze ||
+    !confirmedSilver ||
+    !confirmedGold
+  ) {
+    alert(
+      "Complete all draws first."
+    );
+    return;
+  }
+
+  const weekNumber =
+    Math.ceil(
+      (
+        new Date().getTime() -
+        new Date(
+          new Date().getFullYear(),
+          0,
+          1
+        ).getTime()
+      ) / 604800000
+    );
+
+  await supabase
+    .from(
+      "pet_weekly_winners"
+    )
+    .insert([
+      {
+        week_number: weekNumber,
+        position: "bronze",
+        entry_id: confirmedBronze.id,
+        owner_name: confirmedBronze.name,
+        pet_name: confirmedBronze.pet_name,
+        photo_url: confirmedBronze.photo_url,
+        selected_by: "Kent",
+      },
+      {
+        week_number: weekNumber,
+        position: "silver",
+        entry_id: confirmedSilver.id,
+        owner_name: confirmedSilver.name,
+        pet_name: confirmedSilver.pet_name,
+        photo_url: confirmedSilver.photo_url,
+        selected_by: "Kent",
+      },
+      {
+        week_number: weekNumber,
+        position: "gold",
+        entry_id: confirmedGold.id,
+        owner_name: confirmedGold.name,
+        pet_name: confirmedGold.pet_name,
+        photo_url: confirmedGold.photo_url,
+        selected_by: "Kent",
+      },
+    ]);
+
+  alert(
+    "Winners Saved!"
+  );
+};
 
   if (loading) {
     return (
@@ -215,9 +286,9 @@ export default function PetsDrawPage() {
             </h2>
 
             <>
-  {gold?.photo_url && (
+  {currentWinner?.photo_url && (
     <img
-      src={gold.photo_url}
+      src={currentWinner?.photo_url}
       alt=""
       className="
   w-full
@@ -229,16 +300,16 @@ export default function PetsDrawPage() {
   )}
 
   <div className="text-3xl font-black">
-    {gold?.pet_name || "???"}
+    {currentWinner?.pet_name || "???"}
   </div>
 
   <div className="text-white/50 mt-2">
-    {gold?.name}
+    {currentWinner?.name}
   </div>
 </>
 
             <div className="text-white/50 mt-2">
-              {gold?.name}
+              {currentWinner?.name}
             </div>
 
           </div>
@@ -250,9 +321,9 @@ export default function PetsDrawPage() {
             </h2>
 
             <>
-  {gold?.photo_url && (
+  {currentWinner?.photo_url && (
     <img
-      src={silver.photo_url}
+      src={currentWinner?.photo_url}
       alt=""
       className="
   w-full
@@ -264,16 +335,16 @@ export default function PetsDrawPage() {
   )}
 
   <div className="text-3xl font-black">
-    {silver?.pet_name || "???"}
+    {currentWinner?.pet_name || "???"}
   </div>
 
   <div className="text-white/50 mt-2">
-    {silver?.name}
+    {currentWinner?.name}
   </div>
 </>
 
             <div className="text-white/50 mt-2">
-              {silver?.name}
+              {currentWinner?.name}
             </div>
 
           </div>
@@ -285,9 +356,9 @@ export default function PetsDrawPage() {
             </h2>
 
             <>
-  {gold?.photo_url && (
+  {currentWinner?.photo_url && (
     <img
-      src={bronze.photo_url}
+      src={currentWinner?.photo_url}
       alt=""
       className="
   w-full
@@ -299,16 +370,16 @@ export default function PetsDrawPage() {
   )}
 
   <div className="text-3xl font-black">
-    {bronze?.pet_name || "???"}
+    {currentWinner?.pet_name || "???"}
   </div>
 
   <div className="text-white/50 mt-2">
-    {bronze?.name}
+    {currentWinner?.name}
   </div>
 </>
 
             <div className="text-white/50 mt-2">
-              {bronze?.name}
+              {currentWinner?.name}
             </div>
 
           </div>
@@ -337,9 +408,8 @@ export default function PetsDrawPage() {
             SPIN THE MACHINE
           </button>
 
-          {gold &&
-            silver &&
-            bronze && (
+          {drawStage ===
+  "complete" && (
 
             <div className="mt-6">
 
