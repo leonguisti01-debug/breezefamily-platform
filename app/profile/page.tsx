@@ -26,6 +26,8 @@ export default function ProfilePage() {
   const [rank, setRank] = useState("BRONZE");
   const [points, setPoints] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [bucksEarned, setBucksEarned] = useState(0);
+const [bucksRedeemed, setBucksRedeemed] = useState(0);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -55,6 +57,13 @@ export default function ProfilePage() {
         setRank(data.rank || "BRONZE");
         setPoints(data.breeze_points || 0);
         setStreak(data.login_streak || 0);
+        setBucksEarned(
+  data.breeze_bucks_earned || 0
+);
+
+setBucksRedeemed(
+  data.breeze_bucks_redeemed || 0
+);
       }
 
       setLoading(false);
@@ -215,11 +224,19 @@ export default function ProfilePage() {
       ? 2500
       : 2500;
 
-  const progress =
-    Math.min(
-      (points / nextRankPoints) * 100,
-      100
-    );
+  const progress = Math.min(
+  (points / nextRankPoints) * 100,
+  100
+);
+
+const availableRewards =
+  bucksEarned - bucksRedeemed;
+
+const nextRewardProgress =
+  points % 10000;
+
+const pointsToNextReward =
+  10000 - nextRewardProgress;
 
   if (loading) {
     return (
@@ -324,6 +341,97 @@ export default function ProfilePage() {
 
           </div>
         </div>
+        <div
+  className="
+    rounded-[32px]
+    border
+    border-[#8DFF00]/20
+    bg-white/5
+    p-6
+    mb-5
+  "
+>
+
+  <h2
+    className="
+      text-3xl
+      font-black
+      uppercase
+      text-center
+      mb-6
+    "
+  >
+    Breeze Rewards Wallet
+  </h2>
+
+  <div className="grid md:grid-cols-3 gap-4">
+
+    <div
+      className="
+        bg-black/30
+        rounded-2xl
+        p-5
+        text-center
+      "
+    >
+      <div className="text-white/50">
+        Available
+      </div>
+
+      <div className="text-4xl font-black text-[#8DFF00]">
+        R{availableRewards}
+      </div>
+    </div>
+
+    <div
+      className="
+        bg-black/30
+        rounded-2xl
+        p-5
+        text-center
+      "
+    >
+      <div className="text-white/50">
+        Earned
+      </div>
+
+      <div className="text-4xl font-black">
+        R{bucksEarned}
+      </div>
+    </div>
+
+    <div
+      className="
+        bg-black/30
+        rounded-2xl
+        p-5
+        text-center
+      "
+    >
+      <div className="text-white/50">
+        Redeemed
+      </div>
+
+      <div className="text-4xl font-black">
+        R{bucksRedeemed}
+      </div>
+    </div>
+
+  </div>
+
+  <div className="mt-6 text-center">
+
+    <div className="text-white/50">
+      Next Reward
+    </div>
+
+    <div className="text-2xl font-black text-[#8DFF00]">
+      {pointsToNextReward} BP Remaining
+    </div>
+
+  </div>
+
+</div>
 
         {/* ACHIEVEMENTS */}
 
