@@ -112,22 +112,29 @@ export default function AdminCodPage() {
   }
 
   async function disqualifyPlayer(
-    id: number
-  ) {
+  id: number
+) {
 
-    await supabase
-      .from("cod_players")
-      .update({
-        status:
-          "disqualified",
-      })
-      .eq(
-        "id",
-        id
-      );
+  const confirmed =
+    window.confirm(
+      "Disqualify this player and free their slot?"
+    );
 
-    loadPlayers();
-  }
+  if (!confirmed) return;
+
+  await supabase
+    .from("cod_players")
+    .update({
+      status: "disqualified",
+      team_id: null,
+    })
+    .eq(
+      "id",
+      id
+    );
+
+  loadPlayers();
+}
 
   async function reinstatePlayer(
     id: number

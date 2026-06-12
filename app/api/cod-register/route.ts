@@ -59,7 +59,33 @@ export async function POST(
         }
       );
     }
+const { data: blockedPlayer } =
+  await supabase
+    .from("cod_players")
+    .select("id")
+    .eq(
+      "status",
+      "disqualified"
+    )
+    .or(
+      `whatsapp.eq.${whatsapp},email.eq.${email},gamertag.eq.${gamertag}`
+    )
+    .maybeSingle();
 
+if (blockedPlayer) {
+
+  return Response.json(
+    {
+      success: false,
+      error:
+        "This player has been disqualified and cannot enter again.",
+    },
+    {
+      status: 403,
+    }
+  );
+
+}
     const { error } = await supabase
       .from("cod_players")
       .insert([
