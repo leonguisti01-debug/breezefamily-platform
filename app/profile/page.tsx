@@ -229,8 +229,11 @@ setBucksRedeemed(
   100
 );
 
+const earnedRewards =
+  Math.floor(points / 10000) * 10;
+
 const availableRewards =
-  bucksEarned - bucksRedeemed;
+  earnedRewards - bucksRedeemed;
 
 const nextRewardProgress =
   points % 10000;
@@ -419,7 +422,44 @@ const pointsToNextReward =
 
   </div>
 
-  <div className="mt-6 text-center">
+  <div className="mt-6">
+
+  <div className="flex justify-between text-sm mb-2">
+
+    <span className="text-white/50">
+      Progress To Next Reward
+    </span>
+
+    <span className="text-[#8DFF00] font-bold">
+      {nextRewardProgress} / 10000 BP
+    </span>
+
+  </div>
+
+  <div
+    className="
+      w-full
+      h-4
+      bg-white/10
+      rounded-full
+      overflow-hidden
+    "
+  >
+
+    <div
+      className="
+        h-full
+        bg-[#8DFF00]
+        rounded-full
+      "
+      style={{
+        width: `${(nextRewardProgress / 10000) * 100}%`,
+      }}
+    />
+
+  </div>
+
+  <div className="text-center mt-4">
 
     <div className="text-white/50">
       Next Reward
@@ -430,6 +470,8 @@ const pointsToNextReward =
     </div>
 
   </div>
+
+</div>
 
 </div>
 
