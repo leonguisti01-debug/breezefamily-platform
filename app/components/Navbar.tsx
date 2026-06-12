@@ -53,11 +53,7 @@ export default function Navbar() {
     href: "/tiktok-stars",
     label: "TikTok Stars",
   },
-  {
-  href: "/mental-health",
-  label: "YOU MATTER",
-},
-  {
+    {
     href: "/call-of-duty",
     label: "COD Tournament",
   },
@@ -73,6 +69,14 @@ export default function Navbar() {
     href: "/leaderboard",
     label: "Leaderboard",
   },
+  {
+  href: "/mental-health",
+  label: "YOU MATTER",
+},
+  {
+  label: "Merch",
+  href: "/merch"
+}
 ];
 
   return (
