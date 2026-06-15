@@ -28,24 +28,34 @@ export default function LeaderboardPage() {
     setLoading(false);
   };
 
-  const getRankImage = (rank: string) => {
-    switch (rank?.toUpperCase()) {
-      case "LEGEND":
-        return "/ranks/legend.png";
+  const getRank = (points: number) => {
+  if (points >= 10000) return "LEGEND";
+  if (points >= 5000) return "PLATINUM";
+  if (points >= 2500) return "GOLD";
+  if (points >= 1000) return "SILVER";
+  return "BRONZE";
+};
 
-      case "PLATINUM":
-        return "/ranks/platinum.png";
+const getRankImage = (points: number) => {
+  const rank = getRank(points);
 
-      case "GOLD":
-        return "/ranks/gold.png";
+  switch (rank) {
+    case "LEGEND":
+      return "/ranks/legend.png";
 
-      case "SILVER":
-        return "/ranks/silver.png";
+    case "PLATINUM":
+      return "/ranks/platinum.png";
 
-      default:
-        return "/ranks/bronze.png";
-    }
-  };
+    case "GOLD":
+      return "/ranks/gold.png";
+
+    case "SILVER":
+      return "/ranks/silver.png";
+
+    default:
+      return "/ranks/bronze.png";
+  }
+};
 
   if (loading) {
     return (
@@ -129,7 +139,7 @@ export default function LeaderboardPage() {
               </div>
 
               <img
-                src={getRankImage(member.rank)}
+                src={getRankImage(member.breeze_points || 0)}
                 alt={member.rank}
                 className="
                   w-[140px]
@@ -220,7 +230,7 @@ export default function LeaderboardPage() {
 
                 <img
                   src={getRankImage(member.rank)}
-                  alt={member.rank}
+                  alt={getRank(member.breeze_points || 0)}
                   className="
                     w-[70px]
                   "
@@ -245,7 +255,7 @@ export default function LeaderboardPage() {
                       uppercase
                     "
                   >
-                    {member.rank || "BRONZE"}
+                    {getRank(member.breeze_points || 0)}
                   </div>
 
                 </div>
