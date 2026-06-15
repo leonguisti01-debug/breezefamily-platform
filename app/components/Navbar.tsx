@@ -10,6 +10,17 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+type NavChild = {
+  label: string;
+  href: string;
+};
+
+type NavItem = {
+  label: string;
+  href?: string;
+  children?: NavChild[];
+};
+
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -19,6 +30,12 @@ export default function Navbar() {
 
   const [loggedIn, setLoggedIn] =
     useState(false);
+
+  const [openDropdown, setOpenDropdown] =
+    useState<string | null>(null);
+
+  const [openMobileDropdown, setOpenMobileDropdown] =
+    useState<string | null>(null);
 
   useEffect(() => {
     checkUser();
@@ -32,88 +49,206 @@ export default function Navbar() {
     setLoggedIn(!!user);
   };
 
-  const logout =
-    async () => {
+  const logout = async () => {
+    await supabase.auth.signOut();
 
-      await supabase.auth.signOut();
+    setLoggedIn(false);
 
-      setLoggedIn(false);
+    router.push("/");
 
-      router.push("/");
+    router.refresh();
+  };
 
-      router.refresh();
-    };
-
-  const navItems = [
-  {
-    href: "/",
-    label: "Home",
-  },
-  {
-    href: "/tiktok-stars",
-    label: "TikTok Stars",
-  },
+  const navItems: NavItem[] = [
     {
-    href: "/call-of-duty",
-    label: "COD Tournament",
-  },
-  {
-    href: "/cod-admin/login",
-    label: "COD Admin",
-  },
-  {
-    href: "/prized-pets",
-    label: "Prized Pets",
-  },
-  {
-    href: "/leaderboard",
-    label: "Leaderboard",
-  },
-  {
-  href: "/mental-health",
-  label: "YOU MATTER",
-},
-  {
-  label: "Merch",
-  href: "/merch"
-}
-];
+      label: "Home",
+      href: "/",
+    },
 
-  return (
-    <header className="fixed top-0 left-0 w-full z-50 px-2 md:px-4 pt-3">
+    {
+      label: "TikTok Stars",
+      href: "/tiktok-stars",
+    },
+
+    {
+      label: "Game Night",
+      children: [
+        {
+          label: "Prized Pets",
+          href: "/prized-pets",
+        },
+        {
+          label: "Scavenger Hunt Olympics",
+          href: "/scavenger-hunt",
+        },
+      ],
+    },
+
+    {
+      label: "COD",
+      children: [
+        {
+          label: "COD Tournament",
+          href: "/call-of-duty",
+        },
+        {
+          label: "COD Admin",
+          href: "/cod-admin/login",
+        },
+      ],
+    },
+
+    {
+      label: "Merch",
+      href: "/merch",
+    },
+
+    {
+      label: "More",
+      children: [
+        {
+          label: "Leaderboard",
+          href: "/leaderboard",
+        },
+        {
+          label: "YOU MATTER",
+          href: "/mental-health",
+        },
+      ],
+    },
+
+    {
+      label: "Become A Sponsor",
+      href: "/become-a-sponsor",
+    },
+  ];
+
+  const isDropdownActive = (
+    children: NavChild[]
+  ) => {
+    return children.some(
+      (child) => pathname === child.href
+    );
+  };
+
+  return (    <header className="fixed top-0 left-0 w-full z-50 px-2 md:px-4 pt-3">
 
       <div className="w-full max-w-[1400px] mx-auto rounded-[12px] border border-white/10 bg-black/90 backdrop-blur-2xl">
 
         <div className="h-[56px] flex items-center justify-between px-4 md:px-6">
 
-          {/* LOGO */}
-
           <Link
             href="/"
             className="shrink-0"
           >
-
             <img
               src="/breeze-logo-new.png"
               alt="Breeze Family"
               className="h-8 md:h-9 w-auto object-contain"
             />
-
           </Link>
 
           {/* DESKTOP NAV */}
 
           <nav className="hidden md:flex items-center gap-6">
 
-            {navItems.map((item) => (
+            {navItems.map((item) => {
 
-              <Link
-                key={item.href}
-                href={item.href}
-              >
+              if (item.children) {
+                const active =
+                  isDropdownActive(item.children);
 
-                <div className="relative pb-1">
+                return (
+                  <div
+                    key={item.label}
+                    className="relative"
+                  >
 
+                    <button
+                      onClick={() =>
+                        setOpenDropdown(
+                          openDropdown === item.label
+                            ? null
+                            : item.label
+                        )
+                      }
+                      className={`
+                        text-[11px]
+                        uppercase
+                        tracking-[2px]
+                        font-bold
+                        whitespace-nowrap
+                        transition
+                        ${
+                          active
+                            ? "text-white"
+                            : "text-white/80 hover:text-[#8DFF00]"
+                        }
+                      `}
+                    >
+                      {item.label} ▼
+                    </button>
+
+                    {openDropdown === item.label && (
+
+                      <div
+                        className="
+                          absolute
+                          top-full
+                          left-0
+                          mt-2
+                          min-w-[230px]
+                          rounded-xl
+                          border
+                          border-white/10
+                          bg-black/95
+                          backdrop-blur-xl
+                          overflow-hidden
+                          z-50
+                        "
+                      >
+
+                        {item.children.map((child) => (
+
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            onClick={() =>
+                              setOpenDropdown(null)
+                            }
+                            className={`
+                              block
+                              px-4
+                              py-3
+                              text-[11px]
+                              uppercase
+                              tracking-[2px]
+                              transition
+                              ${
+                                pathname === child.href
+                                  ? "text-[#8DFF00] bg-white/5"
+                                  : "text-white/80 hover:text-[#8DFF00] hover:bg-white/5"
+                              }
+                            `}
+                          >
+                            {child.label}
+                          </Link>
+
+                        ))}
+
+                      </div>
+
+                    )}
+
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href!}
+                >
                   <span
                     className={`
                       text-[11px]
@@ -129,32 +264,12 @@ export default function Navbar() {
                       }
                     `}
                   >
-
                     {item.label}
-
                   </span>
+                </Link>
+              );
 
-                  {pathname === item.href && (
-
-                    <div
-                      className="
-                        absolute
-                        left-0
-                        bottom-0
-                        w-full
-                        h-[2px]
-                        bg-[#8DFF00]
-                        rounded-full
-                      "
-                    />
-
-                  )}
-
-                </div>
-
-              </Link>
-
-            ))}
+            })}
 
           </nav>
 
@@ -211,10 +326,8 @@ export default function Navbar() {
             </a>
 
             {!loggedIn ? (
-
               <>
                 <Link href="/login">
-
                   <button
                     className="
                       border
@@ -231,11 +344,9 @@ export default function Navbar() {
                   >
                     LOGIN
                   </button>
-
                 </Link>
 
                 <Link href="/register">
-
                   <button
                     className="
                       bg-[#8DFF00]
@@ -254,31 +365,28 @@ export default function Navbar() {
                   >
                     JOIN THE FAMILY
                   </button>
-
                 </Link>
               </>
-
             ) : (
-
               <>
                 <Link href="/profile">
-  <button
-    className="
-      border
-      border-[#8DFF00]
-      text-[#8DFF00]
-      uppercase
-      font-black
-      tracking-[1px]
-      text-[10px]
-      px-5
-      h-[38px]
-      rounded-full
-    "
-  >
-    MY ACCOUNT
-  </button>
-</Link>
+                  <button
+                    className="
+                      border
+                      border-[#8DFF00]
+                      text-[#8DFF00]
+                      uppercase
+                      font-black
+                      tracking-[1px]
+                      text-[10px]
+                      px-5
+                      h-[38px]
+                      rounded-full
+                    "
+                  >
+                    MY ACCOUNT
+                  </button>
+                </Link>
 
                 <button
                   onClick={logout}
@@ -296,13 +404,10 @@ export default function Navbar() {
                 >
                   LOGOUT
                 </button>
-
               </>
             )}
 
           </div>
-
-          {/* MOBILE MENU BUTTON */}
 
           <button
             onClick={() =>
@@ -317,8 +422,6 @@ export default function Navbar() {
 
         </div>
 
-        {/* MOBILE MENU */}
-
         {mobileMenuOpen && (
 
           <div
@@ -332,45 +435,90 @@ export default function Navbar() {
 
             <div className="flex flex-col gap-5">
 
-              {navItems.map((item) => (
+              {navItems.map((item) => {
 
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() =>
-                    setMobileMenuOpen(false)
-                  }
-                >
+                if (item.children) {
+                  return (
+                    <div key={item.label}>
 
-                  <span
-                    className={`
-                      uppercase
-                      tracking-[2px]
-                      font-bold
-                      ${
-                        pathname === item.href
-                          ? "text-[#8DFF00]"
-                          : "text-white"
-                      }
-                    `}
-                  >
-                    {item.label}
-                  </span>
+                      <button
+                        onClick={() =>
+                          setOpenMobileDropdown(
+                            openMobileDropdown === item.label
+                              ? null
+                              : item.label
+                          )
+                        }
+                        className="
+                          w-full
+                          text-left
+                          uppercase
+                          tracking-[2px]
+                          font-bold
+                          text-white
+                        "
+                      >
+                        {item.label} ▼
+                      </button>
 
-                </Link>
+                      {openMobileDropdown === item.label && (
 
-              ))}
+                        <div className="pl-4 pt-3 flex flex-col gap-3">
 
-              {!loggedIn ? (
+                          {item.children.map((child) => (
 
-                <>
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              onClick={() =>
+                                setMobileMenuOpen(false)
+                              }
+                            >
+                              <span className="text-white/80">
+                                {child.label}
+                              </span>
+                            </Link>
+
+                          ))}
+
+                        </div>
+
+                      )}
+
+                    </div>
+                  );
+                }
+
+                return (
                   <Link
-                    href="/login"
+                    key={item.href}
+                    href={item.href!}
                     onClick={() =>
                       setMobileMenuOpen(false)
                     }
                   >
+                    <span
+                      className={`
+                        uppercase
+                        tracking-[2px]
+                        font-bold
+                        ${
+                          pathname === item.href
+                            ? "text-[#8DFF00]"
+                            : "text-white"
+                        }
+                      `}
+                    >
+                      {item.label}
+                    </span>
+                  </Link>
+                );
 
+              })}
+
+              {!loggedIn ? (
+                <>
+                  <Link href="/login">
                     <button
                       className="
                         w-full
@@ -385,16 +533,9 @@ export default function Navbar() {
                     >
                       LOGIN
                     </button>
-
                   </Link>
 
-                  <Link
-                    href="/register"
-                    onClick={() =>
-                      setMobileMenuOpen(false)
-                    }
-                  >
-
+                  <Link href="/register">
                     <button
                       className="
                         w-full
@@ -408,37 +549,26 @@ export default function Navbar() {
                     >
                       JOIN THE FAMILY
                     </button>
-
                   </Link>
-
                 </>
-
               ) : (
-
                 <>
-                  <Link
-  href="/profile"
-  onClick={() =>
-    setMobileMenuOpen(false)
-  }
->
-
-  <button
-    className="
-      w-full
-      h-[44px]
-      border
-      border-[#8DFF00]
-      text-[#8DFF00]
-      uppercase
-      font-black
-      rounded-full
-    "
-  >
-    MY ACCOUNT
-  </button>
-
-</Link>
+                  <Link href="/profile">
+                    <button
+                      className="
+                        w-full
+                        h-[44px]
+                        border
+                        border-[#8DFF00]
+                        text-[#8DFF00]
+                        uppercase
+                        font-black
+                        rounded-full
+                      "
+                    >
+                      MY ACCOUNT
+                    </button>
+                  </Link>
 
                   <button
                     onClick={logout}
@@ -454,7 +584,6 @@ export default function Navbar() {
                   >
                     LOGOUT
                   </button>
-
                 </>
               )}
 
