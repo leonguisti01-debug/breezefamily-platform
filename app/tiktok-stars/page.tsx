@@ -99,11 +99,9 @@ async function loadContestants() {
 {/* MENTORS */}
 
 <section className="relative z-20 px-5 pb-24">
-
   <div className="max-w-7xl mx-auto">
 
     <div className="text-center mb-10">
-
       <p className="uppercase tracking-[4px] text-cyan-400 text-xs font-black">
         Meet The Mentors
       </p>
@@ -117,7 +115,6 @@ async function loadContestants() {
       >
         THE MENTORS
       </h2>
-
     </div>
 
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
@@ -140,25 +137,34 @@ async function loadContestants() {
             border-white/10
             bg-white/5
             backdrop-blur-xl
+            transition-all
+            duration-300
+            hover:-translate-y-1
+            hover:border-cyan-400/40
           "
         >
 
-          <img
-  src={`/mentors/${mentor.toLowerCase()}-mentor.jpg`}
-  alt={mentor}
-  className="w-full aspect-square object-cover"
-/>
+          <div className="bg-black/20">
+            <img
+              src={`/mentors/${mentor.toLowerCase()}-mentor.jpg`}
+              alt={mentor}
+              className="
+                w-full
+                h-[320px]
+                object-contain
+                object-center
+              "
+            />
+          </div>
 
           <div className="p-4 text-center">
-
-            <h3 className="font-black uppercase">
+            <h3 className="font-black uppercase text-lg">
               {mentor}
             </h3>
 
             <p className="text-white/50 text-xs uppercase mt-1">
               Team Mentor
             </p>
-
           </div>
 
         </div>
@@ -168,9 +174,7 @@ async function loadContestants() {
     </div>
 
   </div>
-
 </section>
-
 {/* TEAMS */}
 
 <section className="relative z-20 px-5 pb-24">
