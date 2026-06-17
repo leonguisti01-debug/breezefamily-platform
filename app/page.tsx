@@ -74,6 +74,34 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-black pt-[20px] pb-10">
 
+{/* TikTok Stars Kids Edition Countdown */}
+<section className="w-full max-w-5xl mx-auto px-4 mt-6 mb-6">
+  <div className="relative overflow-hidden rounded-3xl border border-pink-500/30 bg-gradient-to-r from-pink-500/10 via-blue-500/10 to-yellow-500/10 p-8 text-center">
+    
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_70%)]" />
+
+    <div className="relative z-10">
+      <p className="text-sm uppercase tracking-[0.3em] text-pink-300 mb-2">
+        Tonight at 7:00 PM
+      </p>
+
+      <h2 className="text-3xl md:text-5xl font-black mb-3">
+        TikTok Stars Kids Edition
+      </h2>
+
+      <p className="text-xl md:text-2xl text-yellow-300 font-bold mb-6">
+        Episode 1 Starts In
+      </p>
+
+      <CountdownToSeven />
+
+      <div className="mt-6 text-zinc-300">
+        Meet the contestants • Watch the performances • Enjoy the show
+      </div>
+    </div>
+  </div>
+</section>
+
       {/* HERO */}
 
 <section className="w-full max-w-[900px] mx-auto px-3 mb-4">
@@ -128,34 +156,6 @@ export default function HomePage() {
 
   </div>
 
-</section>
-
-{/* TikTok Stars Kids Edition Countdown */}
-<section className="w-full max-w-5xl mx-auto px-4 mt-6 mb-6">
-  <div className="relative overflow-hidden rounded-3xl border border-pink-500/30 bg-gradient-to-r from-pink-500/10 via-blue-500/10 to-yellow-500/10 p-8 text-center">
-    
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_70%)]" />
-
-    <div className="relative z-10">
-      <p className="text-sm uppercase tracking-[0.3em] text-pink-300 mb-2">
-        Tonight at 7:00 PM
-      </p>
-
-      <h2 className="text-3xl md:text-5xl font-black mb-3">
-        TikTok Stars Kids Edition
-      </h2>
-
-      <p className="text-xl md:text-2xl text-yellow-300 font-bold mb-6">
-        Episode 1 Starts In
-      </p>
-
-      <CountdownToSeven />
-
-      <div className="mt-6 text-zinc-300">
-        Meet the contestants • Watch the performances • Enjoy the show
-      </div>
-    </div>
-  </div>
 </section>
 
 {/* COD TOURNAMENT */}
