@@ -69,7 +69,7 @@ async function loadContestants() {
       </p>
 
       <h2 className="text-7xl font-black text-pink-500">
-        R40 000
+        R70 000
       </h2>
 
     </div>

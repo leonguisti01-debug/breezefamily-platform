@@ -66,9 +66,22 @@ export default function Navbar() {
     },
 
     {
+  label: "TikTok Stars",
+  children: [
+    {
+      label: "Kids Edition",
+      href: "/kids-edition",
+    },
+    {
       label: "TikTok Stars",
       href: "/tiktok-stars",
     },
+    {
+      label: "TikTok Admin",
+      href: "/admin/tiktok-kids",
+    },
+  ],
+},
 
     {
       label: "Game Night",
