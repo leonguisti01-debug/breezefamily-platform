@@ -152,7 +152,7 @@ export default function HomePage() {
       <CountdownToSeven />
 
       <div className="mt-6 text-zinc-300">
-        Meet the contestants • Watch the performances • Vote for your favourites
+        Meet the contestants • Watch the performances • Enjoy the show
       </div>
     </div>
   </div>
