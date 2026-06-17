@@ -2,8 +2,30 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function TikTokStarsPage() {
+  const [contestants, setContestants] = useState<any[]>([]);
+
+useEffect(() => {
+  loadContestants();
+}, []);
+
+async function loadContestants() {
+  const { data } = await supabase
+    .from("contestants")
+    .select("*")
+    .eq("audition_status", "through")
+    .order("full_name");
+
+  setContestants(data || []);
+}
   return (
     <main className="min-h-screen bg-[#050816] text-white overflow-hidden relative">
 
@@ -13,306 +35,481 @@ export default function TikTokStarsPage() {
       <div className="absolute top-[100px] right-[-80px] w-[300px] h-[300px] bg-cyan-500/20 blur-[90px] rounded-full pointer-events-none" />
 
       <div className="absolute bottom-[-150px] left-[20%] w-[350px] h-[350px] bg-purple-500/20 blur-[110px] rounded-full pointer-events-none" />
+<section className="relative z-20 min-h-screen flex items-center px-5">
 
-      {/* HERO */}
-      <section className="relative z-20 min-h-screen flex items-center px-5 py-14">
+  <div className="max-w-5xl mx-auto text-center">
 
-        <div className="max-w-7xl mx-auto w-full">
+    <p className="uppercase tracking-[5px] text-cyan-400 text-xs font-black">
+      South Africa's Biggest Kids Talent Search
+    </p>
 
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
+    <h1
+      className="mt-6 uppercase italic font-black leading-[0.9]"
+      style={{
+        fontFamily: "Bebas Neue, sans-serif",
+        fontSize: "clamp(80px,12vw,180px)",
+      }}
+    >
+      TIKTOK STARS
 
-            {/* LEFT */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
+      <span className="block text-pink-500">
+        SEASON 2
+      </span>
 
-              <p className="uppercase tracking-[5px] text-[11px] text-cyan-400 font-black">
-                South Africa's Biggest Kids Talent Search
-              </p>
+      <span className="block text-cyan-400">
+        KIDS EDITION
+      </span>
 
-              <h1
-                className="mt-5 uppercase font-black italic leading-[0.9]"
-                style={{
-                  fontFamily: "Bebas Neue, sans-serif",
-                  fontSize: "clamp(64px,10vw,150px)",
-                }}
-              >
-                BE THE NEXT
+    </h1>
 
-                <span className="block text-cyan-400">
-                  TIKTOK
-                </span>
+    <div className="mt-8">
 
-                <span className="block text-pink-500">
-                  STAR
-                </span>
-              </h1>
+      <p className="uppercase tracking-[4px] text-white/60 text-xs">
+        Starting Prize
+      </p>
 
-              <h2 className="mt-6 text-xl md:text-3xl font-black uppercase">
-                Sing. Dance. Perform. Shine.
-              </h2>
+      <h2 className="text-7xl font-black text-pink-500">
+        R40 000
+      </h2>
 
-              <p className="mt-4 text-white/70 max-w-xl leading-relaxed text-sm md:text-lg">
-                The Ultimate Kids Talent Search for Ages 2–17.
-                Apply online, grow your audience,
-                and stand a chance to become South Africa's
-                next digital superstar.
-              </p>
+    </div>
 
-              <div className="mt-8 space-y-3">
+    <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
 
-                {[
-                  "Open to all young talent in South Africa",
-                  "Apply online",
-                  "Win massive prizes",
-                  "Be seen live on TikTok",
-                ].map((item, index) => (
+      <Link
+        href="/tiktok-stars/enter"
+        className="rounded-2xl bg-pink-500 px-8 py-5 font-black uppercase"
+      >
+        Enter Now
+      </Link>
+
+      <Link
+        href="/tiktok-stars/contestants"
+        className="rounded-2xl border border-white/10 px-8 py-5 font-black uppercase"
+      >
+        View Entries
+      </Link>
+
+    </div>
+
+  </div>
+
+</section>
+
+{/* MENTORS */}
+
+<section className="relative z-20 px-5 pb-24">
+
+  <div className="max-w-7xl mx-auto">
+
+    <div className="text-center mb-10">
+
+      <p className="uppercase tracking-[4px] text-cyan-400 text-xs font-black">
+        Meet The Mentors
+      </p>
+
+      <h2
+        className="mt-2 uppercase italic font-black"
+        style={{
+          fontFamily: "Bebas Neue, sans-serif",
+          fontSize: "clamp(48px,6vw,90px)",
+        }}
+      >
+        THE MENTORS
+      </h2>
+
+    </div>
+
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+
+      {[
+        "Billy",
+        "Global",
+        "Kent",
+        "Moi",
+        "Makoya",
+        "Terry",
+      ].map((mentor) => (
+
+        <div
+          key={mentor}
+          className="
+            overflow-hidden
+            rounded-[24px]
+            border
+            border-white/10
+            bg-white/5
+            backdrop-blur-xl
+          "
+        >
+
+          <img
+  src={`/mentors/${mentor.toLowerCase()}-mentor.jpg`}
+  alt={mentor}
+  className="w-full aspect-square object-cover"
+/>
+
+          <div className="p-4 text-center">
+
+            <h3 className="font-black uppercase">
+              {mentor}
+            </h3>
+
+            <p className="text-white/50 text-xs uppercase mt-1">
+              Team Mentor
+            </p>
+
+          </div>
+
+        </div>
+
+      ))}
+
+    </div>
+
+  </div>
+
+</section>
+
+{/* TEAMS */}
+
+<section className="relative z-20 px-5 pb-24">
+
+  <div className="max-w-7xl mx-auto">
+
+    <div className="text-center mb-10">
+
+      <p className="uppercase tracking-[4px] text-pink-500 text-xs font-black">
+        Qualified Contestants
+      </p>
+
+      <h2
+        className="mt-2 uppercase italic font-black"
+        style={{
+          fontFamily: "Bebas Neue, sans-serif",
+          fontSize: "clamp(48px,6vw,90px)",
+        }}
+      >
+        THE TEAMS
+      </h2>
+
+    </div>
+
+    {[
+      "Billy",
+      "Global",
+      "Kent",
+      "Moi",
+      "Makoya",
+      "Terry",
+    ].map((mentor) => {
+
+      const teamContestants =
+        contestants.filter(
+          (c) => c.mentor === mentor
+        );
+
+      return (
+
+        <div
+          key={mentor}
+          className="mb-16"
+        >
+
+          <h3 className="text-5xl font-black uppercase mb-6">
+            Team {mentor}
+          </h3>
+
+          {teamContestants.length === 0 ? (
+
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-white/50">
+              No contestants through yet.
+            </div>
+
+          ) : (
+
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
+
+              {teamContestants.map(
+                (contestant) => (
 
                   <div
-                    key={index}
-                    className="flex items-center gap-3"
+                    key={contestant.id}
+                    className="
+                      overflow-hidden
+                      rounded-[24px]
+                      border
+                      border-white/10
+                      bg-white/5
+                    "
                   >
 
-                    <div className="w-5 h-5 rounded-full bg-pink-500 flex items-center justify-center text-[10px] font-black">
-                      ✓
-                    </div>
+                    <img
+                      src={
+                        contestant.photo_url
+                      }
+                      alt={
+                        contestant.full_name
+                      }
+                      className="
+                        w-full
+                        aspect-[3/4]
+                        object-cover
+                      "
+                    />
 
-                    <p className="text-sm md:text-base text-white/80">
-                      {item}
-                    </p>
+                    <div className="p-4">
+
+                      <h4 className="font-black uppercase">
+                        {
+                          contestant.full_name
+                        }
+                      </h4>
+
+                      <p className="text-white/60 text-sm">
+                        Age {contestant.age}
+                      </p>
+
+                      <p className="text-cyan-400 text-xs uppercase mt-2">
+                        {
+                          contestant.talent_category
+                        }
+                      </p>
+
+                    </div>
 
                   </div>
 
-                ))}
-
-              </div>
-
-              {/* BUTTONS */}
-              <div className="mt-10 flex flex-col sm:flex-row gap-4">
-
-                <Link
-                  href="/kids-edition/register"
-                  className="
-                    rounded-2xl
-                    bg-gradient-to-r
-                    from-pink-500
-                    to-pink-600
-                    px-8
-                    py-5
-                    uppercase
-                    font-black
-                    tracking-[3px]
-                    text-sm
-                    text-center
-                    shadow-[0_0_35px_rgba(236,72,153,0.6)]
-                    transition
-                    hover:scale-[1.02]
-                  "
-                >
-                  ENTER NOW
-                </Link>
-
-                <Link
-                  href="/kids-edition/entries"
-                  className="
-                    rounded-2xl
-                    border
-                    border-white/15
-                    bg-white/5
-                    backdrop-blur-xl
-                    px-8
-                    py-5
-                    uppercase
-                    font-black
-                    tracking-[3px]
-                    text-sm
-                    text-center
-                    hover:bg-white/10
-                    transition
-                  "
-                >
-                  VIEW ENTRIES
-                </Link>
-
-              </div>
-
-              <p className="mt-6 text-white/40 text-sm">
-                ENTRIES CLOSE 31 MAY 2026
-              </p>
-
-            </motion.div>
-
-            {/* DESKTOP IMAGE ONLY */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4 }}
-              className="relative hidden lg:block"
-            >
-
-              <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/20 via-cyan-500/10 to-purple-500/20 blur-[70px] rounded-full scale-110" />
-
-              <div className="relative rounded-[40px] overflow-hidden border border-white/10">
-
-                <img
-                  src="/kids-edition-poster.jpg"
-                  alt="TikTok Stars"
-                  className="w-full h-auto object-cover"
-                />
-
-              </div>
-
-            </motion.div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* STATUS */}
-      <section className="relative z-20 px-5 pb-16">
-
-        <div className="max-w-7xl mx-auto">
-
-          <div className="rounded-[40px] border border-white/10 bg-white/5 backdrop-blur-xl p-8">
-
-            <div className="flex items-center justify-between flex-wrap gap-4">
-
-              <div>
-
-                <p className="uppercase tracking-[4px] text-[10px] text-cyan-400">
-                  Competition Status
-                </p>
-
-                <h2
-                  className="mt-3 uppercase italic font-black"
-                  style={{
-                    fontFamily: "Bebas Neue, sans-serif",
-                    fontSize: "clamp(42px,7vw,90px)",
-                    lineHeight: "0.9",
-                  }}
-                >
-                  SEASON 2
-
-                  <span className="block text-pink-500">
-                    KIDS EDITION
-                  </span>
-
-                </h2>
-
-              </div>
-
-              <div className="rounded-2xl bg-gradient-to-r from-cyan-500 to-pink-500 px-6 py-5 text-center min-w-[180px]">
-
-                <p className="uppercase text-[10px] tracking-[3px] font-black">
-                  Starting Prize
-                </p>
-
-                <h3
-                  className="mt-2 font-black"
-                  style={{
-                    fontSize: "clamp(36px,6vw,60px)",
-                  }}
-                >
-                  R40K
-                </h3>
-
-              </div>
+                )
+              )}
 
             </div>
 
+          )}
+
+        </div>
+
+      );
+    })}
+
+  </div>
+
+</section>
+
+{/* TEAMS */}
+
+<section className="relative z-20 px-5 pb-24">
+
+  <div className="max-w-7xl mx-auto">
+
+    <div className="text-center mb-10">
+
+      <p className="uppercase tracking-[4px] text-pink-500 text-xs font-black">
+        Competition Structure
+      </p>
+
+      <h2
+        className="mt-2 uppercase italic font-black"
+        style={{
+          fontFamily: "Bebas Neue, sans-serif",
+          fontSize: "clamp(48px,6vw,90px)",
+        }}
+      >
+        THE TEAMS
+      </h2>
+
+    </div>
+
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      {[
+        "Billy",
+        "Global",
+        "Kent",
+        "Moi",
+        "Makoya",
+        "Terry",
+      ].map((team) => (
+
+        <div
+          key={team}
+          className="
+            rounded-[30px]
+            border
+            border-white/10
+            bg-white/5
+            backdrop-blur-xl
+            p-6
+          "
+        >
+
+          <h3 className="text-4xl font-black uppercase">
+            {team}
+          </h3>
+
+          <p className="mt-4 text-white/50 uppercase tracking-[3px] text-xs">
+            Contestants
+          </p>
+
+          <div className="text-5xl font-black text-cyan-400">
+            0
           </div>
 
         </div>
 
-      </section>
+      ))}
 
-      {/* DESKTOP ONLY SEASONS */}
-      <section className="hidden md:block relative z-20 px-5 pb-24">
+    </div>
 
-        <div className="max-w-7xl mx-auto">
+  </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+</section>
 
-            <Link href="/tiktok-stars/season-1">
+{/* EPISODE 1 */}
 
-              <div className="group relative overflow-hidden rounded-[32px] border border-cyan-400/30 bg-black h-[300px] cursor-pointer">
+<section className="relative z-20 px-5 pb-24">
 
-                <img
-                  loading="lazy"
-                  src="/season-1-card.jpg"
-                  alt="Season 1"
-                  className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition duration-500"
-                />
+  <div className="max-w-7xl mx-auto">
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+    <div className="rounded-[40px] overflow-hidden border border-pink-500/20">
 
-                <div className="absolute bottom-6 left-6">
+      <div className="bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-cyan-500/20 p-10 text-center">
 
-                  <p className="uppercase tracking-[4px] text-cyan-400 text-xs font-black">
-                    TIKTOK STARS
-                  </p>
+        <p className="uppercase tracking-[4px] text-cyan-400 text-xs font-black">
+          Episode 1
+        </p>
 
-                  <h2
-                    className="mt-2 uppercase italic font-black leading-none"
-                    style={{
-                      fontFamily: "Bebas Neue, sans-serif",
-                      fontSize: "clamp(48px,6vw,90px)",
-                    }}
-                  >
-                    SEASON 1
-                  </h2>
+        <h2
+          className="mt-3 uppercase italic font-black"
+          style={{
+            fontFamily: "Bebas Neue, sans-serif",
+            fontSize: "clamp(60px,8vw,120px)",
+            lineHeight: "0.9",
+          }}
+        >
+          TONIGHT
+        </h2>
 
-                </div>
+        <p className="mt-4 text-white/70 uppercase tracking-[3px]">
+          Live On TikTok
+        </p>
 
-              </div>
+      </div>
 
-            </Link>
+    </div>
 
-            <Link href="/tiktok-stars/season-2">
+  </div>
 
-              <div className="group relative overflow-hidden rounded-[32px] border border-pink-500/30 bg-black h-[300px] cursor-pointer">
+</section>
 
-                <img
-                  loading="lazy"
-                  src="/season-2-card.jpg"
-                  alt="Season 2"
-                  className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition duration-500"
-                />
+{/* LATEST RESULTS */}
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+<section className="relative z-20 px-5 pb-24">
 
-                <div className="absolute bottom-6 left-6">
+  <div className="max-w-7xl mx-auto">
 
-                  <p className="uppercase tracking-[4px] text-pink-500 text-xs font-black">
-                    TIKTOK STARS
-                  </p>
+    <div className="text-center mb-10">
 
-                  <h2
-                    className="mt-2 uppercase italic font-black leading-none"
-                    style={{
-                      fontFamily: "Bebas Neue, sans-serif",
-                      fontSize: "clamp(48px,6vw,90px)",
-                    }}
-                  >
-                    SEASON 2
-                  </h2>
+      <p className="uppercase tracking-[4px] text-cyan-400 text-xs font-black">
+        Latest Results
+      </p>
 
-                </div>
+      <h2
+        className="mt-2 uppercase italic font-black"
+        style={{
+          fontFamily: "Bebas Neue, sans-serif",
+          fontSize: "clamp(48px,6vw,90px)",
+        }}
+      >
+        EPISODE 1
+      </h2>
 
-              </div>
+    </div>
 
-            </Link>
+    <div className="grid md:grid-cols-3 gap-5">
 
-          </div>
+      <div className="rounded-[30px] border border-green-500/20 bg-green-500/5 p-8">
 
+        <p className="text-xs uppercase tracking-[3px] text-green-400">
+          Through
+        </p>
+
+        <div className="mt-3 text-6xl font-black">
+          0
         </div>
 
-      </section>
+      </div>
 
+      <div className="rounded-[30px] border border-yellow-500/20 bg-yellow-500/5 p-8">
+
+        <p className="text-xs uppercase tracking-[3px] text-yellow-400">
+          Reserve
+        </p>
+
+        <div className="mt-3 text-6xl font-black">
+          0
+        </div>
+
+      </div>
+
+      <div className="rounded-[30px] border border-red-500/20 bg-red-500/5 p-8">
+
+        <p className="text-xs uppercase tracking-[3px] text-red-400">
+          Out
+        </p>
+
+        <div className="mt-3 text-6xl font-black">
+          0
+        </div>
+
+      </div>
+
+    </div>
+
+    <div className="mt-8 rounded-[30px] border border-white/10 bg-white/5 p-8 text-center">
+
+      <h3 className="text-3xl font-black uppercase">
+        Results Coming Tonight
+      </h3>
+
+      <p className="mt-3 text-white/60">
+        Follow TikTok Stars Season 2 – Kids Edition
+        to see who makes it through to the next round.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+{/* FOOTER */}
+
+<footer className="border-t border-white/10">
+
+  <div className="max-w-7xl mx-auto px-5 py-10 text-center">
+
+    <h3
+      className="uppercase italic font-black"
+      style={{
+        fontFamily: "Bebas Neue, sans-serif",
+        fontSize: "48px",
+      }}
+    >
+      TIKTOK STARS
+    </h3>
+
+    <p className="mt-2 text-white/60">
+      Season 2 – Kids Edition
+    </p>
+
+    <p className="mt-6 text-white/40 text-sm">
+      © 2026 TikTok Stars Season 2
+    </p>
+
+  </div>
+
+</footer>
     </main>
   );
 }

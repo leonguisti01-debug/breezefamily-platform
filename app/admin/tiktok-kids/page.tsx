@@ -1,23 +1,24 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 type Contestant = {
   id: number;
   full_name: string | null;
   age: string | null;
+  photo_url: string | null;
   tiktok_username: string | null;
   parent_full_name: string | null;
   parent_phone: string | null;
   parent_email: string | null;
   contact_number: string | null;
   talent_category: string | null;
+  mentor: string | null;
   audition_status:
     | "waiting"
     | "through"
-    | "reserve"
     | "out"
     | null;
 };
@@ -25,11 +26,20 @@ type Contestant = {
 export default function TikTokKidsAdminPage() {
   const router = useRouter();
 
-  const [loading, setLoading] = useState(true);
-  const [userEmail, setUserEmail] = useState("");
-  const [contestants, setContestants] = useState<Contestant[]>([]);
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("all");
+  const [loading, setLoading] =
+    useState(true);
+
+  const [userEmail, setUserEmail] =
+    useState("");
+
+  const [contestants, setContestants] =
+    useState<Contestant[]>([]);
+
+  const [search, setSearch] =
+    useState("");
+
+  const [filter, setFilter] =
+    useState("all");
 
   useEffect(() => {
     checkAccess();
@@ -45,18 +55,19 @@ export default function TikTokKidsAdminPage() {
       return;
     }
 
-    const { data: admin } = await supabase
-      .from("admin_users")
-      .select("*")
-      .eq("email", user.email)
-      .single();
+    const { data: admin } =
+      await supabase
+        .from("admin_users")
+        .select("*")
+        .eq("email", user.email)
+        .single();
 
     if (
       !admin ||
       !admin.active ||
       (
-        admin.role !== "super_admin" &&
-        admin.role !== "admin"
+        admin.role !== "admin" &&
+        admin.role !== "super_admin"
       )
     ) {
       alert("Access Denied");
@@ -64,7 +75,9 @@ export default function TikTokKidsAdminPage() {
       return;
     }
 
-    setUserEmail(user.email || "");
+    setUserEmail(
+      user.email || ""
+    );
 
     await loadContestants();
 
@@ -72,138 +85,227 @@ export default function TikTokKidsAdminPage() {
   }
 
   async function loadContestants() {
-    const { data } = await supabase
-      .from("contestants")
-      .select("*")
-      .order("created_at", {
-        ascending: false,
-      });
+    const { data, error } =
+      await supabase
+        .from("contestants")
+        .select("*")
+        .order("created_at", {
+          ascending: false,
+        });
+
+    if (error) {
+      console.error(error);
+      return;
+    }
 
     setContestants(data || []);
   }
 
-  async function updateStatus(
+  async function updateMentor(
     id: number,
-    status:
-      | "waiting"
-      | "through"
-      | "reserve"
-      | "out"
+    mentor: string
   ) {
-    await supabase
-      .from("contestants")
-      .update({
-        audition_status: status,
-      })
-      .eq("id", id);
+    const { error } =
+      await supabase
+        .from("contestants")
+        .update({
+          mentor,
+        })
+        .eq("id", id);
 
-    loadContestants();
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    setContestants((current) =>
+      current.map((c) =>
+        c.id === id
+          ? {
+              ...c,
+              mentor,
+            }
+          : c
+      )
+    );
   }
 
-  async function exportThrough() {
-    const finalists = contestants.filter(
-      (c) => c.audition_status === "through"
+  async function updateStatus(
+    contestant: Contestant,
+    status: "through" | "out"
+  ) {
+    if (
+      status === "through" &&
+      !contestant.mentor
+    ) {
+      alert(
+        "Please select a mentor first."
+      );
+      return;
+    }
+
+    const { error } =
+      await supabase
+        .from("contestants")
+        .update({
+          audition_status:
+            status,
+        })
+        .eq(
+          "id",
+          contestant.id
+        );
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    setContestants((current) =>
+      current.map((c) =>
+        c.id === contestant.id
+          ? {
+              ...c,
+              audition_status:
+                status,
+            }
+          : c
+      )
     );
+  }
+
+  async function exportPass() {
+    const passedContestants =
+      contestants.filter(
+        (c) =>
+          c.audition_status ===
+          "through"
+      );
 
     const rows = [
       [
         "Name",
         "Age",
+        "Mentor",
         "TikTok",
         "Parent",
         "Phone",
       ],
-      ...finalists.map((c) => [
-        c.full_name || "",
-        c.age || "",
-        c.tiktok_username || "",
-        c.parent_full_name || "",
-        c.parent_phone || "",
-      ]),
+
+      ...passedContestants.map(
+        (c) => [
+          c.full_name || "",
+          c.age || "",
+          c.mentor || "",
+          c.tiktok_username ||
+            "",
+          c.parent_full_name ||
+            "",
+          c.parent_phone || "",
+        ]
+      ),
     ];
 
     const csv = rows
-      .map((row) => row.join(","))
+      .map((row) =>
+        row.join(",")
+      )
       .join("\n");
 
     const blob = new Blob(
       [csv],
       {
-        type: "text/csv;charset=utf-8;",
+        type:
+          "text/csv;charset=utf-8;",
       }
     );
 
     const url =
-      window.URL.createObjectURL(blob);
+      window.URL.createObjectURL(
+        blob
+      );
 
     const link =
       document.createElement("a");
 
     link.href = url;
     link.download =
-      "tiktok-kids-through.csv";
+      "passed-contestants.csv";
+
+    document.body.appendChild(
+      link
+    );
 
     link.click();
 
-    window.URL.revokeObjectURL(url);
+    document.body.removeChild(
+      link
+    );
+
+    window.URL.revokeObjectURL(
+      url
+    );
   }
 
   async function logout() {
     await supabase.auth.signOut();
-    router.push("/admin/login");
+
+    router.push(
+      "/admin/login"
+    );
   }
 
-  const filteredContestants = useMemo(() => {
-    return contestants.filter((c) => {
-      const matchesSearch =
-        (
-          c.full_name || ""
-        )
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
-          ) ||
-        (
-          c.tiktok_username || ""
-        )
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
-          ) ||
-        (
-          c.parent_full_name || ""
-        )
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
-          ) ||
-        (
-          c.parent_phone || ""
-        )
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
+  const filteredContestants =
+    useMemo(() => {
+      return contestants.filter(
+        (contestant) => {
+          const matchesSearch =
+            (
+              contestant.full_name ||
+              ""
+            )
+              .toLowerCase()
+              .includes(
+                search.toLowerCase()
+              ) ||
+            (
+              contestant.tiktok_username ||
+              ""
+            )
+              .toLowerCase()
+              .includes(
+                search.toLowerCase()
+              ) ||
+            (
+              contestant.parent_full_name ||
+              ""
+            )
+              .toLowerCase()
+              .includes(
+                search.toLowerCase()
+              );
+
+          const currentStatus =
+            contestant.audition_status ||
+            "waiting";
+
+          const matchesFilter =
+            filter === "all"
+              ? true
+              : currentStatus ===
+                filter;
+
+          return (
+            matchesSearch &&
+            matchesFilter
           );
-
-      const status =
-        c.audition_status ||
-        "waiting";
-
-      const matchesFilter =
-        filter === "all"
-          ? true
-          : status === filter;
-
-      return (
-        matchesSearch &&
-        matchesFilter
+        }
       );
-    });
-  }, [
-    contestants,
-    search,
-    filter,
-  ]);
+    }, [
+      contestants,
+      search,
+      filter,
+    ]);
 
   const waiting =
     contestants.filter(
@@ -213,18 +315,11 @@ export default function TikTokKidsAdminPage() {
           "waiting"
     ).length;
 
-  const through =
+  const passed =
     contestants.filter(
       (c) =>
         c.audition_status ===
         "through"
-    ).length;
-
-  const reserve =
-    contestants.filter(
-      (c) =>
-        c.audition_status ===
-        "reserve"
     ).length;
 
   const out =
@@ -240,14 +335,15 @@ export default function TikTokKidsAdminPage() {
         Loading...
       </main>
     );
-  }
-
-  return (
+  }  return (
     <main className="min-h-screen bg-black text-white p-6">
+
       <div className="max-w-7xl mx-auto">
 
-        <div className="flex justify-between items-center mb-10">
+        <div className="flex flex-col md:flex-row justify-between gap-5 mb-10">
+
           <div>
+
             <h1 className="text-5xl font-black">
               TIKTOK KIDS ADMIN
             </h1>
@@ -255,31 +351,36 @@ export default function TikTokKidsAdminPage() {
             <p className="text-white/50 mt-2">
               {userEmail}
             </p>
+
           </div>
 
           <div className="flex gap-3">
+
             <button
-              onClick={exportThrough}
+              onClick={exportPass}
               className="bg-[#8DFF00] text-black font-black px-5 py-3 rounded-xl"
             >
-              EXPORT THROUGH
+              EXPORT PASS
             </button>
 
             <button
               onClick={logout}
-              className="bg-red-600 px-5 py-3 rounded-xl font-bold"
+              className="bg-red-600 text-white font-black px-5 py-3 rounded-xl"
             >
               LOGOUT
             </button>
+
           </div>
+
         </div>
 
-        <div className="grid md:grid-cols-5 gap-4 mb-8">
+        <div className="grid md:grid-cols-4 gap-4 mb-8">
 
           <div className="border border-white/10 rounded-2xl p-5">
             <div className="text-white/50">
               Total
             </div>
+
             <div className="text-4xl font-black">
               {contestants.length}
             </div>
@@ -289,6 +390,7 @@ export default function TikTokKidsAdminPage() {
             <div className="text-white/50">
               Waiting
             </div>
+
             <div className="text-4xl font-black">
               {waiting}
             </div>
@@ -296,19 +398,11 @@ export default function TikTokKidsAdminPage() {
 
           <div className="border border-green-500/20 rounded-2xl p-5">
             <div className="text-green-400">
-              Through
+              Passed
             </div>
-            <div className="text-4xl font-black text-green-400">
-              {through}
-            </div>
-          </div>
 
-          <div className="border border-yellow-500/20 rounded-2xl p-5">
-            <div className="text-yellow-400">
-              Reserve
-            </div>
-            <div className="text-4xl font-black text-yellow-400">
-              {reserve}
+            <div className="text-4xl font-black text-green-400">
+              {passed}
             </div>
           </div>
 
@@ -316,6 +410,7 @@ export default function TikTokKidsAdminPage() {
             <div className="text-red-400">
               Out
             </div>
+
             <div className="text-4xl font-black text-red-400">
               {out}
             </div>
@@ -332,7 +427,7 @@ export default function TikTokKidsAdminPage() {
                 e.target.value
               )
             }
-            placeholder="Search name, TikTok, parent or phone..."
+            placeholder="Search contestant..."
             className="flex-1 bg-zinc-900 border border-white/10 rounded-xl px-4 py-3"
           />
 
@@ -343,140 +438,255 @@ export default function TikTokKidsAdminPage() {
                 e.target.value
               )
             }
-            className="bg-zinc-900 border border-white/10 rounded-xl px-4 py-3"
+            className="bg-zinc-900 text-white border border-white/10 rounded-xl px-4 py-3"
           >
             <option value="all">
               All
             </option>
+
             <option value="waiting">
               Waiting
             </option>
+
             <option value="through">
-              Through
+              Passed
             </option>
-            <option value="reserve">
-              Reserve
-            </option>
+
             <option value="out">
               Out
             </option>
+
           </select>
 
         </div>
 
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
 
           {filteredContestants.map(
-            (
-              contestant
-            ) => (
+            (contestant) => (
+
               <div
-                key={
-                  contestant.id
-                }
-                className="border border-white/10 rounded-2xl p-5"
+                key={contestant.id}
+                className="border border-white/10 rounded-2xl overflow-hidden bg-black"
               >
-                <div className="font-black text-xl mb-4">
-                  {
-                    contestant.full_name
-                  }
+
+                {contestant.photo_url ? (
+
+                  <img
+                    src={contestant.photo_url}
+                    alt={
+                      contestant.full_name ||
+                      ""
+                    }
+                    className="w-full h-72 object-cover"
+                  />
+
+                ) : (
+
+                  <div className="w-full h-72 bg-zinc-900 flex items-center justify-center text-white/30">
+                    No Photo
+                  </div>
+
+                )}
+
+                <div className="p-5">
+
+                  <h2 className="text-2xl font-black mb-4">
+                    {
+                      contestant.full_name
+                    }
+                  </h2>
+
+                  <div className="space-y-2 text-white/80">
+
+                    <div>
+                      Age:{" "}
+                      {
+                        contestant.age
+                      }
+                    </div>
+
+                    <div>
+                      Category:{" "}
+                      {
+                        contestant.talent_category
+                      }
+                    </div>
+
+                    <div>
+                      TikTok:{" "}
+                      {
+                        contestant.tiktok_username
+                      }
+                    </div>
+
+                    <div>
+                      Parent:{" "}
+                      {
+                        contestant.parent_full_name
+                      }
+                    </div>
+
+                    <div>
+                      Phone:{" "}
+                      {
+                        contestant.parent_phone
+                      }
+                    </div>
+
+                  </div>
+
+                  <div className="mt-6">
+
+                    <label className="block text-white/50 text-sm mb-2 uppercase">
+                      Mentor
+                    </label>
+
+                    <select
+                      value={
+                        contestant.mentor ||
+                        ""
+                      }
+                      onChange={(e) =>
+                        updateMentor(
+                          contestant.id,
+                          e.target.value
+                        )
+                      }
+                      className="w-full bg-zinc-900 text-white border border-white/10 rounded-xl px-4 py-3"
+                    >
+                      <option value="">
+                        Select Mentor
+                      </option>
+
+                      <option value="billy">
+                        Billy
+                      </option>
+
+                      <option value="global">
+                        Global
+                      </option>
+
+                      <option value="kent">
+                        Kent
+                      </option>
+
+                      <option value="moi">
+                        Moi
+                      </option>
+
+                      <option value="makoya">
+                        Makoya
+                      </option>
+
+                      <option value="terry">
+                        Terry
+                      </option>
+
+                    </select>
+
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mt-6">
+
+                    <button
+                      onClick={() =>
+                        updateStatus(
+                          contestant,
+                          "through"
+                        )
+                      }
+                      style={{
+                        backgroundColor:
+                          contestant.audition_status ===
+                          "through"
+                            ? "#16a34a"
+                            : "#27272a",
+                        color: "#ffffff",
+                        padding:
+                          "14px",
+                        borderRadius:
+                          "12px",
+                        fontWeight:
+                          "900",
+                      }}
+                    >
+                      PASS
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateStatus(
+                          contestant,
+                          "out"
+                        )
+                      }
+                      style={{
+                        backgroundColor:
+                          contestant.audition_status ===
+                          "out"
+                            ? "#dc2626"
+                            : "#27272a",
+                        color: "#ffffff",
+                        padding:
+                          "14px",
+                        borderRadius:
+                          "12px",
+                        fontWeight:
+                          "900",
+                      }}
+                    >
+                      OUT
+                    </button>
+
+                  </div>
+
+                  <div className="mt-4 text-center">
+
+                    <span
+                      style={{
+                        backgroundColor:
+                          contestant.audition_status ===
+                          "through"
+                            ? "#16a34a"
+                            : contestant.audition_status ===
+                              "out"
+                            ? "#dc2626"
+                            : "#3f3f46",
+                        color:
+                          "#ffffff",
+                        padding:
+                          "8px 14px",
+                        borderRadius:
+                          "999px",
+                        fontWeight:
+                          "900",
+                        display:
+                          "inline-block",
+                      }}
+                    >
+                      {contestant.audition_status ===
+                      "through"
+                        ? "PASS"
+                        : contestant.audition_status ===
+                          "out"
+                        ? "OUT"
+                        : "WAITING"}
+                    </span>
+
+                  </div>
+
                 </div>
 
-                <div className="space-y-2 text-sm">
-                  <div>
-                    Age:{" "}
-                    {
-                      contestant.age
-                    }
-                  </div>
-
-                  <div>
-                    TikTok:{" "}
-                    {
-                      contestant.tiktok_username
-                    }
-                  </div>
-
-                  <div>
-                    Parent:{" "}
-                    {
-                      contestant.parent_full_name
-                    }
-                  </div>
-
-                  <div>
-                    Phone:{" "}
-                    {
-                      contestant.parent_phone
-                    }
-                  </div>
-
-                  <div>
-                    Category:{" "}
-                    {
-                      contestant.talent_category
-                    }
-                  </div>
-                </div>
-
-                <div className="mt-5 flex flex-wrap gap-2">
-
-                  <button
-                    onClick={() =>
-                      updateStatus(
-                        contestant.id,
-                        "through"
-                      )
-                    }
-                    className="bg-green-600 px-3 py-2 rounded-lg font-bold"
-                  >
-                    THROUGH
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      updateStatus(
-                        contestant.id,
-                        "reserve"
-                      )
-                    }
-                    className="bg-yellow-500 text-black px-3 py-2 rounded-lg font-bold"
-                  >
-                    RESERVE
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      updateStatus(
-                        contestant.id,
-                        "out"
-                      )
-                    }
-                    className="bg-red-600 px-3 py-2 rounded-lg font-bold"
-                  >
-                    OUT
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      updateStatus(
-                        contestant.id,
-                        "waiting"
-                      )
-                    }
-                    className="bg-zinc-700 px-3 py-2 rounded-lg font-bold"
-                  >
-                    RESET
-                  </button>
-
-                </div>
               </div>
+
             )
           )}
 
         </div>
 
       </div>
+
     </main>
   );
 }
