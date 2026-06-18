@@ -124,7 +124,7 @@ async function loadContestants() {
         "Global",
         "Kent",
         "Moi",
-        "Makoya",
+        "Piwe",
         "Terry",
       ].map((mentor) => (
 
@@ -204,7 +204,7 @@ async function loadContestants() {
       "Global",
       "Kent",
       "Moi",
-      "Makoya",
+      "Piwe",
       "Terry",
     ].map((mentor) => {
 
@@ -333,7 +333,7 @@ async function loadContestants() {
         "Global",
         "Kent",
         "Moi",
-        "Makoya",
+        "Piwe",
         "Terry",
       ].map((team) => (
 
