@@ -74,23 +74,23 @@ async function loadContestants() {
 
     </div>
 
-    <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-
-      <Link
-        href="/tiktok-stars/enter"
-        className="rounded-2xl bg-pink-500 px-8 py-5 font-black uppercase"
-      >
-        Enter Now
-      </Link>
-
-      <Link
-        href="/tiktok-stars/contestants"
-        className="rounded-2xl border border-white/10 px-8 py-5 font-black uppercase"
-      >
-        View Entries
-      </Link>
-
-    </div>
+    <div className="flex justify-center mt-8">
+  <Link
+    href="/tiktok-stars/enter"
+    className="inline-flex items-center justify-center
+      px-16 py-6
+      rounded-3xl
+      bg-pink-500
+      text-white
+      font-black
+      text-xl
+      uppercase
+      transition-all
+      hover:scale-105"
+  >
+    ENTER NOW
+  </Link>
+</div>
 
   </div>
 
