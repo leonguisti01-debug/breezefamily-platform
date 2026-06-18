@@ -575,8 +575,8 @@ export default function TikTokKidsAdminPage() {
                         Moi
                       </option>
 
-                      <option value="makoya">
-                        Makoya
+                      <option value="piwe">
+                        Piwe
                       </option>
 
                       <option value="terry">
