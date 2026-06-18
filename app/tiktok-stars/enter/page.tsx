@@ -159,68 +159,70 @@ export default function TikTokStarsEntryPage() {
         .from("contestant-photos")
         .getPublicUrl(fileName);
 
-        const autoApproved =
-  !!publicUrl &&
-  form.popia_accepted &&
-  form.media_release &&
-  form.indemnity_accepted;
-      const { error: insertError } =
-        await supabase
-          .from("contestants")
-          .insert([
-            {
-              full_name:
-                form.full_name,
+        const { error: insertError } =
+  await supabase
+    .from("contestants")
+    .insert([
+      {
+        full_name: form.full_name,
 
-              age: form.age,
+        age: form.age,
 
-              talent_category:
-                form.talent_category,
+        talent_category:
+          form.talent_category,
 
-              tiktok_username:
-                form.tiktok_username,
+        tiktok_username:
+          form.tiktok_username,
 
-              photo_url:
-                publicUrl,
+        photo_url:
+          publicUrl,
 
-              parent_full_name:
-                form.parent_full_name,
+        parent_full_name:
+          form.parent_full_name,
 
-              parent_id_number:
-                form.parent_id_number,
+        parent_id_number:
+          form.parent_id_number,
 
-              parent_phone:
-                form.parent_phone,
+        parent_phone:
+          form.parent_phone,
 
-              parent_email:
-                form.parent_email,
+        parent_email:
+          form.parent_email,
 
-              guardian_consent:
-                form.guardian_consent,
+        guardian_consent:
+          form.guardian_consent,
 
-              popia_accepted:
-                form.popia_accepted,
+        popia_accepted:
+          form.popia_accepted,
 
-              media_release:
-                form.media_release,
+        media_release:
+          form.media_release,
 
-              indemnity_accepted:
-                form.indemnity_accepted,
+        indemnity_accepted:
+          form.indemnity_accepted,
 
-              status: autoApproved
-  ? "approved"
-  : "pending",
+        status: "approved",
 
-audition_status:
-  autoApproved
-    ? "approved"
-    : "waiting",
-            },
-          ]);
+        audition_status:
+          "approved",
+      },
+    ]);
 
-      if (insertError) {
-        throw insertError;
-      }
+if (insertError) {
+  throw insertError;
+}
+
+await supabase
+  .from("contestants")
+  .update({
+    status: "approved",
+    audition_status:
+      "approved",
+  })
+  .eq(
+    "photo_url",
+    publicUrl
+  );
 await fetch("/api/discord", {
   method: "POST",
   headers: {
@@ -236,9 +238,7 @@ await fetch("/api/discord", {
     parent_phone:
       form.parent_phone,
     photo_url: publicUrl,
-    status: autoApproved
-      ? "approved"
-      : "pending",
+    status: "approved",
   }),
 });
       router.push(
