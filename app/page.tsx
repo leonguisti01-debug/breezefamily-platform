@@ -95,7 +95,7 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
 
-          <Link href="/kids-edition/register">
+          <Link href="/tiktok-stars/enter">
 
             <div className="group overflow-hidden rounded-[18px] border border-white/10 hover:border-[#8DFF00]/50 transition">
 
