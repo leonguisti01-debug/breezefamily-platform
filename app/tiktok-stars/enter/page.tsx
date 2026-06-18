@@ -140,6 +140,21 @@ export default function TikTokStarsEntryPage() {
         );
       }
 
+// duplicate check
+
+const { data: existingContestant } =
+  await supabase
+    .from("contestants")
+    .select("id")
+    .eq("parent_phone", form.parent_phone.trim())
+    .eq("full_name", form.full_name.trim())
+    .maybeSingle();
+
+if (existingContestant) {
+  throw new Error(
+    "An entry has already been submitted for this contestant using this cellphone number."
+  );
+}
       const fileName =
         `${Date.now()}-${photo.name}`;
 
