@@ -16,9 +16,9 @@ export default function PetsDrawLoginPage() {
 
     if (
       email.toLowerCase() ===
-        "kent@breezefamily.co.za" &&
+        "dekentbrown@gmail.com" &&
       password ===
-        "KomOnsDoenDit"
+        "Breeze2026"
     ) {
 
       router.push(
