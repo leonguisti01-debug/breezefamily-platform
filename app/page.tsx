@@ -1,106 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import Link from "next/link";
-
-function CountdownToSeven() {
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  useEffect(() => {
-    const updateTimer = () => {
-      const now = new Date();
-
-      const target = new Date();
-      target.setHours(19, 0, 0, 0);
-
-      const difference = target.getTime() - now.getTime();
-
-      if (difference <= 0) {
-        setTimeLeft({
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-        });
-        return;
-      }
-
-      setTimeLeft({
-        hours: Math.floor(difference / (1000 * 60 * 60)),
-        minutes: Math.floor(
-          (difference % (1000 * 60 * 60)) / (1000 * 60)
-        ),
-        seconds: Math.floor((difference % (1000 * 60)) / 1000),
-      });
-    };
-
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="flex justify-center gap-4">
-      <div className="rounded-2xl bg-black/60 border border-pink-500/30 px-6 py-4 min-w-[90px]">
-        <div className="text-4xl font-black text-white">
-          {String(timeLeft.hours).padStart(2, "0")}
-        </div>
-        <div className="text-xs uppercase text-zinc-400">Hours</div>
-      </div>
-
-      <div className="rounded-2xl bg-black/60 border border-blue-500/30 px-6 py-4 min-w-[90px]">
-        <div className="text-4xl font-black text-white">
-          {String(timeLeft.minutes).padStart(2, "0")}
-        </div>
-        <div className="text-xs uppercase text-zinc-400">Minutes</div>
-      </div>
-
-      <div className="rounded-2xl bg-black/60 border border-yellow-500/30 px-6 py-4 min-w-[90px]">
-        <div className="text-4xl font-black text-white">
-          {String(timeLeft.seconds).padStart(2, "0")}
-        </div>
-        <div className="text-xs uppercase text-zinc-400">Seconds</div>
-      </div>
-    </div>
-  );
-}
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-black pt-[20px] pb-10">
 
-{/* TikTok Stars Kids Edition Countdown */}
-<section className="w-full max-w-5xl mx-auto px-4 mt-6 mb-6">
-  <div className="relative overflow-hidden rounded-3xl border border-pink-500/30 bg-gradient-to-r from-pink-500/10 via-blue-500/10 to-yellow-500/10 p-8 text-center">
-    
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_70%)]" />
+{/* COD TOURNAMENT */}
 
-    <div className="relative z-10">
-      <p className="text-sm uppercase tracking-[0.3em] text-pink-300 mb-2">
-        Tonight at 7:00 PM
-      </p>
+      <section className="w-full max-w-[900px] mx-auto px-3 mb-4">
 
-      <h2 className="text-3xl md:text-5xl font-black mb-3">
-        TikTok Stars Kids Edition
-      </h2>
+        <Link href="/call-of-duty">
 
-      <p className="text-xl md:text-2xl text-yellow-300 font-bold mb-6">
-        Episode 1 Starts In
-      </p>
+          <div className="group overflow-hidden rounded-[18px] border border-white/10 hover:border-[#8DFF00]/50 transition">
 
-      <CountdownToSeven />
+            <img
+              src="/cod-banner.png"
+              alt="COD Tournament"
+              className="
+                w-full
+                h-auto
+                object-cover
+                transition
+                duration-300
+                group-hover:scale-105
+              "
+            />
 
-      <div className="mt-6 text-zinc-300">
-        Meet the contestants • Watch the performances • Enjoy the show
-      </div>
-    </div>
-  </div>
-</section>
+          </div>
+
+        </Link>
+
+      </section>
 
       {/* HERO */}
 
@@ -157,33 +88,6 @@ export default function HomePage() {
   </div>
 
 </section>
-
-{/* COD TOURNAMENT */}
-
-      <section className="w-full max-w-[900px] mx-auto px-3 mb-4">
-
-        <Link href="/call-of-duty">
-
-          <div className="group overflow-hidden rounded-[18px] border border-white/10 hover:border-[#8DFF00]/50 transition">
-
-            <img
-              src="/cod-banner.png"
-              alt="COD Tournament"
-              className="
-                w-full
-                h-auto
-                object-cover
-                transition
-                duration-300
-                group-hover:scale-105
-              "
-            />
-
-          </div>
-
-        </Link>
-
-      </section>
 
       {/* ROW 1 */}
 
