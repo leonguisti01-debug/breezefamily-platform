@@ -159,6 +159,11 @@ export default function TikTokStarsEntryPage() {
         .from("contestant-photos")
         .getPublicUrl(fileName);
 
+        const autoApproved =
+  !!publicUrl &&
+  form.popia_accepted &&
+  form.media_release &&
+  form.indemnity_accepted;
       const { error: insertError } =
         await supabase
           .from("contestants")
@@ -202,17 +207,40 @@ export default function TikTokStarsEntryPage() {
               indemnity_accepted:
                 form.indemnity_accepted,
 
-              status: "pending",
+              status: autoApproved
+  ? "approved"
+  : "pending",
 
-              audition_status:
-                "waiting",
+audition_status:
+  autoApproved
+    ? "approved"
+    : "waiting",
             },
           ]);
 
       if (insertError) {
         throw insertError;
       }
-
+await fetch("/api/discord", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    full_name: form.full_name,
+    age: form.age,
+    talent_category:
+      form.talent_category,
+    tiktok_username:
+      form.tiktok_username,
+    parent_phone:
+      form.parent_phone,
+    photo_url: publicUrl,
+    status: autoApproved
+      ? "approved"
+      : "pending",
+  }),
+});
       router.push(
         "/tiktok-stars/entry-success"
       );

@@ -22,15 +22,32 @@ export default function EntrySuccessPage() {
           </span>
         </h1>
 
-        <p className="mt-6 text-white/70 text-lg">
-          Thank you for entering
-          TikTok Stars Season 2 - Kids Edition.
-        </p>
+        <p className="mt-6 text-white/70">
+  Thank you for entering TikTok Stars Season 2 - Kids Edition.
+</p>
 
-        <p className="mt-4 text-white/50">
-          Your entry has been successfully submitted
-          and is now awaiting review.
-        </p>
+<p className="mt-3 text-white/50">
+  Your entry has been successfully submitted.
+</p>
+
+<div className="mt-8 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-5">
+  <p className="font-bold text-cyan-300">
+    Here is your Discord link.
+  </p>
+
+  <p className="mt-2 text-white/70 text-sm">
+    Please join our Discord server to confirm your entry and receive important competition updates.
+  </p>
+
+  <a
+  href="https://discord.gg/zFKNTUBB"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="mt-4 inline-flex items-center justify-center rounded-xl bg-cyan-500 px-6 py-3 font-black uppercase text-black transition hover:scale-105"
+>
+  Join Discord
+</a>
+</div>
 
         <a
           href="/tiktok-stars"
