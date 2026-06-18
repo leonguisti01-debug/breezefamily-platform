@@ -203,8 +203,8 @@ export default function TikTokStarsEntryPage() {
 
         status: "approved",
 
-        audition_status:
-          "approved",
+audition_status:
+  "waiting",
       },
     ]);
 
@@ -216,8 +216,6 @@ await supabase
   .from("contestants")
   .update({
     status: "approved",
-    audition_status:
-      "approved",
   })
   .eq(
     "photo_url",
