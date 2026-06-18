@@ -209,9 +209,11 @@ async function loadContestants() {
     ].map((mentor) => {
 
       const teamContestants =
-        contestants.filter(
-          (c) => c.mentor === mentor
-        );
+  contestants.filter(
+    (c) =>
+      c.mentor?.toLowerCase() ===
+      mentor.toLowerCase()
+  );
 
       return (
 
