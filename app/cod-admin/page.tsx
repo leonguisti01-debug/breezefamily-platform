@@ -483,12 +483,38 @@ p-5
   </div>
 
   <div className="mt-3 text-xs text-white/50">
-    TEAM
-  </div>
+  TEAM
+</div>
 
-  <div>
-    {player.team_id}
-  </div>
+<select
+  value={player.team_id || ""}
+  onChange={(e) =>
+    changeTeam(
+      player.id,
+      Number(e.target.value)
+    )
+  }
+  className="
+    mt-1
+    w-full
+    bg-black
+    border
+    border-[#8DFF00]/30
+    rounded-lg
+    px-3
+    py-2
+    text-white
+  "
+>
+  {Array.from({ length: 38 }, (_, i) => i + 1).map((team) => (
+    <option
+      key={team}
+      value={team}
+    >
+      Team {team}
+    </option>
+  ))}
+</select>
 
   <div className="mt-3 text-xs text-white/50">
     PLATFORM
