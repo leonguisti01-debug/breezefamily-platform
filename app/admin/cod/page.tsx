@@ -112,7 +112,19 @@ console.log("ERROR:", error);
 
     loadPlayers();
   }
+async function changeTeam(
+  playerId: number,
+  teamId: number
+) {
+  await supabase
+    .from("cod_players")
+    .update({
+      team_id: teamId,
+    })
+    .eq("id", playerId);
 
+  loadPlayers();
+}
   async function logout() {
 
     await supabase.auth.signOut();
@@ -245,9 +257,43 @@ console.log("ERROR:", error);
                   {player.player_name}
                 </div>
 
-                <div className="mt-2 text-white/70">
-                  Team {player.team_id}
-                </div>
+                <div className="mt-3">
+  <div className="text-white/50 text-sm mb-1">
+    TEAM
+  </div>
+
+  <select
+    value={player.team_id || ""}
+    onChange={(e) =>
+      changeTeam(
+        player.id,
+        Number(e.target.value)
+      )
+    }
+    className="
+      bg-black
+      border
+      border-[#8DFF00]/20
+      rounded-lg
+      px-3
+      py-2
+      text-white
+      w-full
+    "
+  >
+    {Array.from(
+      { length: 38 },
+      (_, i) => i + 1
+    ).map((team) => (
+      <option
+        key={team}
+        value={team}
+      >
+        Team {team}
+      </option>
+    ))}
+  </select>
+</div>
 
                 <div className="text-white/70">
                   {player.platform}
