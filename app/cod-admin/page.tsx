@@ -166,6 +166,21 @@ async function changeTeam(
 
   loadPlayers();
 }
+
+async function toggleCaptain(
+  playerId: number,
+  currentValue: boolean
+) {
+
+  await supabase
+    .from("cod_players")
+    .update({
+      is_captain: !currentValue,
+    })
+    .eq("id", playerId);
+
+  loadPlayers();
+}
   async function logout() {
 
     await supabase.auth.signOut();
@@ -308,9 +323,21 @@ p-5
     FULL NAME
   </div>
 
+  <div className="flex items-center gap-2">
+
   <div className="font-bold">
     {player.player_name}
   </div>
+
+  {player.is_captain && (
+    <img
+      src="/captain-badge.png"
+      alt="Captain"
+      className="h-7 w-auto"
+    />
+  )}
+
+</div>
 
   <div className="mt-3 text-xs text-white/50">
     GAMERTAG
@@ -375,8 +402,64 @@ p-5
   </div>
 
   <div>
-    {player.platform}
-  </div>
+  {player.platform}
+</div>
+
+<div className="mt-4">
+
+  <button
+    onClick={() =>
+      toggleCaptain(
+        player.id,
+        player.is_captain
+      )
+    }
+    className={`
+      px-4
+      py-2
+      rounded-lg
+      font-black
+      ${
+        player.is_captain
+          ? "bg-[#8DFF00] text-black"
+          : "bg-zinc-800 text-white"
+      }
+    `}
+  >
+    {player.is_captain
+      ? "REMOVE CAPTAIN"
+      : "MAKE CAPTAIN"}
+  </button>
+
+</div>
+
+<div className="mt-4">
+
+  <button
+    onClick={() =>
+      toggleCaptain(
+        player.id,
+        player.is_captain
+      )
+    }
+    className={`
+      px-4
+      py-2
+      rounded-lg
+      font-black
+      ${
+        player.is_captain
+          ? "bg-[#8DFF00] text-black"
+          : "bg-zinc-800 text-white"
+      }
+    `}
+  >
+    {player.is_captain
+      ? "REMOVE CAPTAIN"
+      : "MAKE CAPTAIN"}
+  </button>
+
+</div>
 
 </div>
 
@@ -454,9 +537,21 @@ p-5
     FULL NAME
   </div>
 
+  <div className="flex items-center gap-2">
+
   <div className="font-bold">
     {player.player_name}
   </div>
+
+  {player.is_captain && (
+    <img
+      src="/captain-badge.png"
+      alt="Captain"
+      className="h-7 w-auto"
+    />
+  )}
+
+</div>
 
   <div className="mt-3 text-xs text-white/50">
     GAMERTAG
@@ -483,46 +578,32 @@ p-5
   </div>
 
   <div className="mt-3 text-xs text-white/50">
-  TEAM
-</div>
+    TEAM
+  </div>
 
-<select
-  value={player.team_id || ""}
-  onChange={(e) =>
-    changeTeam(
-      player.id,
-      Number(e.target.value)
-    )
-  }
-  className="
-    mt-1
-    w-full
-    bg-black
-    border
-    border-[#8DFF00]/30
-    rounded-lg
-    px-3
-    py-2
-    text-white
-  "
->
-  {Array.from({ length: 38 }, (_, i) => i + 1).map((team) => (
-    <option
-      key={team}
-      value={team}
-    >
-      Team {team}
-    </option>
-  ))}
-</select>
+  <div>
+    {player.team_id}
+  </div>
 
   <div className="mt-3 text-xs text-white/50">
     PLATFORM
   </div>
 
-  <div>
-    {player.platform}
+  <div className="flex items-center gap-2">
+
+  <div className="font-bold">
+    {player.player_name}
   </div>
+
+  {player.is_captain && (
+    <img
+      src="/captain-badge.png"
+      alt="Captain"
+      className="h-7 w-auto"
+    />
+  )}
+
+</div>
 
 </div>
 

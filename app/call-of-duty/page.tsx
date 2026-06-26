@@ -38,6 +38,7 @@ export default function CallOfDutyPage() {
 
   const [players, setPlayers] =
     useState<any[]>([]);
+const ENTRIES_OPEN = false;
 
   useEffect(() => {
     loadPlayers();
@@ -177,248 +178,80 @@ setGamertag("");
 
       {/* REGISTRATION */}
 
-      <section
-        id="register"
-        className="
-          max-w-4xl
-          mx-auto
-          px-6
-          mt-16
-        "
-      >
-
-        <div
+<section
+  id="register"
   className="
-    bg-white/5
-    border
-    border-[#8DFF00]/20
-    rounded-[24px]
-    p-8
-    backdrop-blur-sm
+    max-w-4xl
+    mx-auto
+    px-6
+    mt-16
   "
 >
 
-          <h2 className="text-4xl font-black">
-            REGISTER FOR WARZONE QUADS
-          </h2>
+  {ENTRIES_OPEN ? (
 
-          <p className="mt-3 text-white/70">
-            Select a team and join the tournament.
-          </p>
+    <div
+      className="
+        bg-white/5
+        border
+        border-[#8DFF00]/20
+        rounded-[24px]
+        p-8
+        backdrop-blur-sm
+      "
+    >
 
-          <form
-            onSubmit={handleSubmit}
-            className="grid gap-4 mt-8"
-          >
+      <h2 className="text-4xl font-black">
+        REGISTER FOR WARZONE QUADS
+      </h2>
 
-            <input
-              value={playerName}
-              onChange={(e) =>
-                setPlayerName(
-                  e.target.value
-                )
-              }
-              placeholder="Full Name"
-              className="bg-black border border-white/20 rounded-xl p-4"
-              required
-            />
+      <p className="mt-3 text-white/70">
+        Select a team and join the tournament.
+      </p>
 
-            <input
-              value={whatsapp}
-              onChange={(e) =>
-                setWhatsapp(
-                  e.target.value
-                )
-              }
-              placeholder="WhatsApp Number"
-              className="bg-black border border-white/20 rounded-xl p-4"
-              required
-            />
+      {/* KEEP YOUR EXISTING FORM HERE */}
 
-            <input
-              value={email}
-              onChange={(e) =>
-                setEmail(
-                  e.target.value
-                )
-              }
-              placeholder="Email Address"
-              className="bg-black border border-white/20 rounded-xl p-4"
-              required
-            />
+    </div>
 
-            <input
-  value={clanTag}
-  onChange={(e) =>
-    setClanTag(
-      e.target.value
-    )
-  }
-  placeholder="Clan Tag"
-  className="bg-black border border-white/20 rounded-xl p-4"
-/>
+  ) : (
 
-<input
-  value={gamertag}
-  onChange={(e) =>
-    setGamertag(
-      e.target.value
-    )
-  }
-  placeholder="Gamertag"
-  className="bg-black border border-white/20 rounded-xl p-4"
-  required
-/>
+    <div
+      className="
+        bg-white/5
+        border
+        border-red-500
+        rounded-[24px]
+        p-10
+        text-center
+      "
+    >
 
-            <select
-              value={platform}
-              onChange={(e) =>
-                setPlatform(
-                  e.target.value
-                )
-              }
-              className="bg-black border border-white/20 rounded-xl p-4"
-            >
-              <option value="PC">
-                PC
-              </option>
+      <div className="text-6xl mb-4">
+        🔒
+      </div>
 
-              <option value="PlayStation">
-                PlayStation
-              </option>
+      <h2 className="text-5xl font-black text-red-500">
+        ENTRIES CLOSED
+      </h2>
 
-              <option value="Xbox">
-                Xbox
-              </option>
-            </select>
+      <p className="mt-6 text-xl text-white/80">
+        Registration for the
+        <span className="text-[#8DFF00] font-bold">
+          {" "}Warzone Quads Tournament{" "}
+        </span>
+        has now closed.
+      </p>
 
-            <select
-              value={teamId}
-              onChange={(e) =>
-                setTeamId(
-                  e.target.value
-                )
-              }
-              className="bg-black border border-white/20 rounded-xl p-4"
-              required
-            >
+      <p className="mt-4 text-white/60">
+        Thank you to everyone who entered.
+        
+      </p>
 
-              <option value="">
-                Select Team
-              </option>
+    </div>
 
-              {Array.from(
-                { length: 38 },
-                (_, i) => {
+  )}
 
-                  const teamNumber =
-                    i + 1;
-
-                  const count =
-                    players.filter(
-                      (player) =>
-                        player.team_id ===
-                        teamNumber
-                    ).length;
-
-                  return (
-
-                    <option
-                      key={teamNumber}
-                      value={teamNumber}
-                    >
-                      Team {teamNumber}
-                      {" "}
-                      ({count}/4)
-                    </option>
-
-                  );
-
-                }
-              )}
-
-            </select>
-
-            <div
-              className="
-                border
-                border-[#8DFF00]/20
-                rounded-2xl
-                p-6
-                mt-4
-              "
-            >
-
-              <h3 className="text-[#8DFF00] font-black text-xl">
-                TOURNAMENT RULES
-              </h3>
-
-              <ul className="mt-4 space-y-2 text-white/80 text-sm">
-
-                <li>
-                  • No cheating, hacks, scripts or exploits.
-                </li>
-
-                <li>
-                  • Toxic behaviour may result in removal.
-                </li>
-
-                <li>
-                  • Teams may be disqualified for misconduct.
-                </li>
-
-                <li>
-                  • Players must be reachable on WhatsApp.
-                </li>
-
-                <li>
-                  • Admin decisions are final.
-                </li>
-
-              </ul>
-
-            </div>
-
-            <label className="flex gap-3 items-start mt-2">
-
-              <input
-                type="checkbox"
-                checked={agreedRules}
-                onChange={(e) =>
-                  setAgreedRules(
-                    e.target.checked
-                  )
-                }
-              />
-
-              <span>
-                I agree to the tournament rules.
-              </span>
-
-            </label>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="
-                bg-[#8DFF00]
-                text-black
-                font-black
-                p-4
-                rounded-xl
-                mt-4
-              "
-            >
-              {loading
-                ? "REGISTERING..."
-                : "REGISTER FOR TOURNAMENT"}
-            </button>
-
-          </form>
-
-        </div>
-
-      </section>
+</section>
 
       {/* TOURNAMENT TEAMS */}
 

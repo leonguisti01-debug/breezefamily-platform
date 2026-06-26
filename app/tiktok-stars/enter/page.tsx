@@ -11,9 +11,12 @@ const supabase = createClient(
 
 const PINK = "#ec4899";
 const CYAN = "#22d3ee";
+const ENTRIES_CLOSE_DATE = new Date("2026-06-28T12:00:00+02:00");
 
 export default function TikTokStarsEntryPage() {
   const router = useRouter();
+  const entriesClosed =
+  new Date() >= ENTRIES_CLOSE_DATE;
 
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -267,7 +270,36 @@ await fetch("/api/discord", {
     }
   };
 
+  if (entriesClosed) {
   return (
+    <main className="min-h-screen bg-[#050816] text-white flex items-center justify-center px-6">
+
+      <div className="max-w-2xl text-center">
+
+        <div className="text-8xl mb-8">
+          🔒
+        </div>
+
+        <h1 className="text-6xl font-black text-pink-500 uppercase">
+          Entries Closed
+        </h1>
+
+        <p className="mt-8 text-2xl text-white/80">
+          Entries for TikTok Stars Kids Edition have now closed.
+        </p>
+
+        <p className="mt-4 text-white/50">
+          Thank you to every contestant and family who entered.
+          Successful contestants will be contacted soon.
+        </p>
+
+      </div>
+
+    </main>
+  );
+}
+  return (
+    
     <main className="min-h-screen bg-[#050816] text-white">
 
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -349,11 +381,11 @@ await fetch("/api/discord", {
 
           </div>
 
-          <div className="mt-10 rounded-[32px] border border-white/10 bg-white/5 backdrop-blur-xl p-6 md:p-10">            {error && (
+          <div className="mt-10 rounded-[32px] border border-white/10 bg-white/5 backdrop-blur-xl p-6 md:p-10">
+
               <div className="mb-6 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-red-300">
                 {error}
               </div>
-            )}
 
             {/* STEP 1 */}
 
@@ -684,11 +716,12 @@ await fetch("/api/discord", {
                 </div>
 
               </div>
+              
             )}
 
-          </div>
-
         </div>
+
+      </div>
 
       </section>
 
