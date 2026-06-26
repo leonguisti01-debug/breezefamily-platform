@@ -37,24 +37,44 @@ export default function CallOfDutyPage() {
     useState(false);
 
   const [players, setPlayers] =
-    useState<any[]>([]);
+  useState<any[]>([]);
+
+const [results, setResults] =
+  useState<any[]>([]);
 const ENTRIES_OPEN = false;
 
   useEffect(() => {
-    loadPlayers();
-  }, []);
+
+  loadPlayers();
+  loadResults();
+
+}, []);
 
   async function loadPlayers() {
 
-    const { data } =
-  await supabase
-    .from("cod_players")
-    .select("*")
-    .eq("status", "approved")
-    .order("team_id");
+  const { data } =
+    await supabase
+      .from("cod_players")
+      .select("*")
+      .eq("status", "approved")
+      .order("team_id");
 
-    setPlayers(data || []);
-  }
+  setPlayers(data || []);
+
+}
+
+async function loadResults() {
+
+  const { data } =
+    await supabase
+      .from("cod_tournament_results")
+.select("*")
+.eq("published", true)
+.order("position");
+
+  setResults(data || []);
+
+}
 
   async function handleSubmit(
     e: React.FormEvent
@@ -253,6 +273,83 @@ setGamertag("");
 
 </section>
 
+{/* TOURNAMENT WINNERS */}
+
+{results.length > 0 && (
+
+<section className="max-w-7xl mx-auto px-6 mt-20">
+
+<h2 className="text-5xl font-black mb-8 text-center">
+
+🏆 TOURNAMENT WINNERS
+
+</h2>
+
+<div className="grid md:grid-cols-3 gap-8">
+
+{results.map((winner) => {
+
+const teamPlayers =
+players.filter(
+(player)=>
+player.team_id===winner.team_id
+);
+
+const medal =
+winner.position===1
+? "🥇"
+: winner.position===2
+? "🥈"
+: "🥉";
+
+return(
+
+<div
+key={winner.position}
+className="border border-[#8DFF00]/20 rounded-[28px] p-8 bg-white/5 text-center"
+>
+
+<div className="text-6xl">
+{medal}
+</div>
+
+<div className="text-3xl font-black mt-4">
+
+TEAM {winner.team_id}
+
+</div>
+
+<div className="mt-6 space-y-2">
+
+{teamPlayers.map(player=>(
+
+<div key={player.id}>
+
+{player.gamertag}
+
+</div>
+
+))}
+
+</div>
+
+<div className="mt-8 text-[#8DFF00] text-2xl font-black">
+
+{winner.prize}
+
+</div>
+
+</div>
+
+);
+
+})}
+
+</div>
+
+</section>
+
+)}
       {/* TOURNAMENT TEAMS */}
 
       <section className="max-w-7xl mx-auto px-6 mt-20">
