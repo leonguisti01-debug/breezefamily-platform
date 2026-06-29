@@ -6,32 +6,6 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-black pt-[20px] pb-10">
 
-{/* COD TOURNAMENT */}
-
-      <section className="w-full max-w-[900px] mx-auto px-3 mb-4">
-
-        <Link href="/call-of-duty">
-
-          <div className="group overflow-hidden rounded-[18px] border border-white/10 hover:border-[#8DFF00]/50 transition">
-
-            <img
-              src="/cod-banner.png"
-              alt="COD Tournament"
-              className="
-                w-full
-                h-auto
-                object-cover
-                transition
-                duration-300
-                group-hover:scale-105
-              "
-            />
-
-          </div>
-
-        </Link>
-
-      </section>
 
       {/* HERO */}
 
