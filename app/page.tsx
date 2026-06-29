@@ -6,6 +6,61 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-black pt-[20px] pb-10">
 
+{/* HERO TEMP */}
+
+<section className="w-full max-w-[900px] mx-auto px-3 mb-4">
+
+  <div className="relative overflow-hidden rounded-[18px] border border-white/10">
+
+    <img
+      src="/gta-banner.png"
+      alt="Breeze Family"
+      className="w-full h-auto object-cover"
+    />
+
+    <Link
+  href="https://discord.gg/225XJadNu"
+  className="
+    absolute
+    left-4
+    bottom-4
+
+    px-3
+    py-2
+
+    md:left-6
+    md:bottom-8
+
+    md:px-5
+    md:py-3
+
+    rounded-full
+
+    bg-black/85
+    border
+    border-[#8DFF00]
+
+    text-[#8DFF00]
+    text-[11px]
+    md:text-sm
+
+    font-black
+    uppercase
+    whitespace-nowrap
+
+    hover:bg-[#8DFF00]
+    hover:text-black
+
+    transition-all
+    duration-300
+  "
+>
+  FIND OUT MORE
+</Link>
+
+  </div>
+
+</section>
 
       {/* HERO */}
 
