@@ -561,11 +561,11 @@ export default function PrizedPetsAdminPage() {
                       }
                       alt=""
                       className="
-                        w-[220px]
-                        h-[320px]
-                        object-cover
-                        object-center
-                      "
+  w-[220px]
+  h-[320px]
+  object-contain
+  bg-black
+"
                     />
 
                   </div>
@@ -577,12 +577,11 @@ export default function PrizedPetsAdminPage() {
 
           <div
             className="
-              text-center
-              text-[#8DFF00]
-              text-5xl
-              font-black
-              mt-6
-            "
+  w-full
+  h-[350px]
+  object-contain
+  bg-black
+"
           >
             ▲
           </div>
