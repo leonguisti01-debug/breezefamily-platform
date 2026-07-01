@@ -1,0 +1,262 @@
+.page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #050505;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, #1b1b1b 0%, #090909 45%, #050505 100%);
+}
+
+/* GOLD LIGHTS */
+
+.leftLight,
+.rightLight {
+  position: absolute;
+  top: -250px;
+  width: 650px;
+  height: 1200px;
+  filter: blur(45px);
+  pointer-events: none;
+  opacity: .8;
+
+  background:
+    radial-gradient(
+      ellipse,
+      rgba(255,213,74,.16),
+      transparent 72%
+    );
+}
+
+.leftLight {
+  left: -220px;
+  transform: rotate(-18deg);
+  animation: sweepLeft 10s ease-in-out infinite;
+}
+
+.rightLight {
+  right: -220px;
+  transform: rotate(18deg);
+  animation: sweepRight 10s ease-in-out infinite;
+}
+
+@keyframes sweepLeft {
+
+  0%,100%{
+    transform:rotate(-18deg);
+  }
+
+  50%{
+    transform:rotate(-6deg);
+  }
+
+}
+
+@keyframes sweepRight {
+
+  0%,100%{
+    transform:rotate(18deg);
+  }
+
+  50%{
+    transform:rotate(6deg);
+  }
+
+}
+
+/* CONTENT */
+
+.content {
+  position: relative;
+  z-index: 10;
+  width: min(1200px, 92%);
+  text-align: center;
+}
+
+.logoWrap {
+  position: relative;
+  display: inline-block;
+}
+
+.logo {
+  width: min(900px, 92vw);
+  height: auto;
+
+  filter:
+    drop-shadow(0 0 30px rgba(255,213,74,.28))
+    drop-shadow(0 0 80px rgba(255,180,0,.18));
+
+  animation: floatLogo 6s ease-in-out infinite;
+}
+
+@keyframes floatLogo {
+
+  0%,100%{
+    transform:translateY(0px);
+  }
+
+  50%{
+    transform:translateY(-10px);
+  }
+
+}
+
+/* GOLD SHINE */
+
+.shine {
+  position: absolute;
+  top: -15%;
+  left: -35%;
+  width: 22%;
+  height: 150%;
+
+  transform: skewX(-22deg);
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.95),
+    rgba(255,245,180,.95),
+    transparent
+  );
+
+  animation: shineMove 5s infinite;
+}
+
+@keyframes shineMove {
+
+  0%,70%{
+    left:-35%;
+    opacity:0;
+  }
+
+  75%{
+    opacity:1;
+  }
+
+  100%{
+    left:140%;
+    opacity:0;
+  }
+
+}
+
+/* TAGLINE */
+
+.tagline {
+  margin-top: 45px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tagline span {
+  font-size: clamp(22px,2vw,34px);
+  font-weight: 300;
+  letter-spacing: .45em;
+}
+
+/* BUTTONS */
+
+.buttons {
+  margin-top: 60px;
+
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.primary {
+
+  border: none;
+
+  padding: 18px 44px;
+
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  font-size: 1rem;
+
+  font-weight: 700;
+
+  background: linear-gradient(
+      135deg,
+      #FFF3AF,
+      #FFD54A,
+      #F4B400
+  );
+
+  color: black;
+
+  box-shadow:
+      0 0 35px rgba(255,213,74,.35);
+
+  transition: .3s;
+}
+
+.primary:hover {
+
+  transform: translateY(-3px);
+
+}
+
+.secondary {
+
+  border: 1px solid rgba(255,255,255,.2);
+
+  background: transparent;
+
+  color: white;
+
+  cursor: pointer;
+
+  border-radius: 999px;
+
+  padding: 18px 44px;
+
+  transition: .3s;
+
+}
+
+.secondary:hover {
+
+  background: white;
+
+  color: black;
+
+}
+
+@media (max-width:900px){
+
+  .buttons{
+
+    flex-direction:column;
+
+  }
+
+  .primary,
+  .secondary{
+
+    width:100%;
+
+  }
+
+  .tagline span{
+
+    letter-spacing:.2em;
+    font-size:18px;
+
+  }
+
+}

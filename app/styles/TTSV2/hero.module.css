@@ -1,0 +1,306 @@
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #050505;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, #1b1b1b 0%, #0c0c0c 45%, #050505 100%);
+}
+
+/* ===========================
+   CONTENT
+=========================== */
+
+.content {
+  position: relative;
+  z-index: 20;
+  width: min(1200px, 92%);
+  text-align: center;
+}
+
+.logoWrap {
+  position: relative;
+  display: inline-block;
+}
+
+.logo {
+  width: min(900px, 90vw);
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+
+  filter:
+    drop-shadow(0 0 25px rgba(255, 210, 90, .25))
+    drop-shadow(0 0 80px rgba(255, 180, 0, .15));
+}
+
+/* ===========================
+   GOLD SHINE
+=========================== */
+
+.goldShine {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.shine {
+  position: absolute;
+  top: -20%;
+  left: -30%;
+  width: 22%;
+  height: 160%;
+
+  transform: skewX(-22deg);
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.95),
+    rgba(255,240,180,.95),
+    transparent
+  );
+
+  filter: blur(2px);
+}
+
+/* ===========================
+   TAGLINE
+=========================== */
+
+.tagline {
+  margin-top: 45px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tagline span {
+
+  font-size: clamp(22px,2vw,34px);
+
+  letter-spacing: .55em;
+
+  color: white;
+
+  font-weight: 300;
+
+}
+
+/* ===========================
+   BUTTONS
+=========================== */
+
+.buttons {
+
+  margin-top: 60px;
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 24px;
+
+}
+
+.primary {
+
+  padding: 18px 48px;
+
+  border-radius: 999px;
+
+  text-decoration: none;
+
+  background: linear-gradient(
+      135deg,
+      #FFF3AF,
+      #FFD54A,
+      #F4B400
+  );
+
+  color: black;
+
+  font-weight: 700;
+
+  letter-spacing: .08em;
+
+  transition: .35s;
+
+  box-shadow:
+      0 0 35px rgba(255,213,74,.35);
+
+}
+
+.primary:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+    0 0 55px rgba(255,213,74,.55);
+
+}
+
+.secondary{
+
+    padding:18px 48px;
+
+    border-radius:999px;
+
+    color:white;
+
+    text-decoration:none;
+
+    border:1px solid rgba(255,255,255,.15);
+
+    transition:.35s;
+
+}
+
+.secondary:hover{
+
+    background:white;
+
+    color:black;
+
+}
+
+/* ===========================
+   LIGHTS
+=========================== */
+
+.spotlight{
+
+    position:absolute;
+
+    top:-250px;
+
+    width:700px;
+
+    height:1300px;
+
+    filter:blur(40px);
+
+    background:
+    radial-gradient(
+        ellipse,
+        rgba(255,215,70,.18),
+        transparent 72%
+    );
+
+}
+
+.left{
+
+    left:-250px;
+
+    transform-origin:top center;
+
+    transform:rotate(-18deg);
+
+}
+
+.right{
+
+    right:-250px;
+
+    transform-origin:top center;
+
+    transform:rotate(18deg);
+
+}
+
+/* ===========================
+   PARTICLES
+=========================== */
+
+.particles{
+
+    position:absolute;
+
+    inset:0;
+
+    opacity:.15;
+
+    background-image:
+    radial-gradient(
+        rgba(255,255,255,.75) 1px,
+        transparent 1px
+    );
+
+    background-size:70px 70px;
+
+    animation:drift 25s linear infinite;
+
+}
+
+@keyframes drift{
+
+from{
+
+transform:translateY(0);
+
+}
+
+to{
+
+transform:translateY(-250px);
+
+}
+
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:900px){
+
+.tagline span{
+
+font-size:18px;
+
+letter-spacing:.18em;
+
+}
+
+.buttons{
+
+flex-direction:column;
+
+padding:0 20px;
+
+}
+
+.primary,
+.secondary{
+
+width:100%;
+
+}
+
+.logo{
+
+width:95vw;
+
+}
+
+.spotlight{
+
+width:450px;
+
+height:900px;
+
+}
+
+}
