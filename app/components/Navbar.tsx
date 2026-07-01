@@ -94,20 +94,6 @@ export default function Navbar() {
     },
 
     {
-      label: "COD",
-      children: [
-        {
-          label: "COD Tournament",
-          href: "/call-of-duty",
-        },
-        {
-          label: "COD Admin",
-          href: "/cod-admin/login",
-        },
-      ],
-    },
-
-    {
       label: "Merch",
       href: "/merch",
     },
