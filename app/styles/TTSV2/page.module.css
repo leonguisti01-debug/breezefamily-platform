@@ -75,11 +75,23 @@
 
 /* CONTENT */
 
-.content {
-  position: relative;
-  z-index: 10;
-  width: min(1200px, 92%);
-  text-align: center;
+.content{
+    position:relative;
+    z-index:10;
+
+    width:100%;
+    max-width:1400px;
+
+    min-height:100vh;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    padding:120px 30px 80px;
 }
 
 .logoWrap {
@@ -87,15 +99,22 @@
   display: inline-block;
 }
 
-.logo {
-  width: min(900px, 92vw);
-  height: auto;
+.logo{
 
-  filter:
-    drop-shadow(0 0 30px rgba(255,213,74,.28))
-    drop-shadow(0 0 80px rgba(255,180,0,.18));
+    width:min(700px,70vw);
 
-  animation: floatLogo 6s ease-in-out infinite;
+    height:auto;
+
+    display:block;
+
+    margin:0 auto;
+
+    filter:
+        drop-shadow(0 0 30px rgba(255,215,74,.35))
+        drop-shadow(0 0 80px rgba(255,180,0,.22));
+
+    animation:floatLogo 6s ease-in-out infinite;
+
 }
 
 @keyframes floatLogo {
@@ -258,5 +277,44 @@
     font-size:18px;
 
   }
+
+}
+.title{
+
+    margin-top:40px;
+
+    font-size:clamp(2.2rem,4vw,4.6rem);
+
+    font-weight:900;
+
+    line-height:1.05;
+
+    color:white;
+
+}
+
+.subtitle{
+
+    margin-top:18px;
+
+    font-size:1.2rem;
+
+    color:#d6d6d6;
+
+    max-width:700px;
+
+}
+
+.scroll{
+
+    margin-top:90px;
+
+    letter-spacing:.6em;
+
+    font-size:.8rem;
+
+    opacity:.45;
+
+    color:white;
 
 }

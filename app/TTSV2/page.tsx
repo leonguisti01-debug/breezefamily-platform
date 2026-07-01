@@ -23,11 +23,15 @@ export default function TTSV2Page() {
           />
         </div>
 
-        <h2 className={styles.tagline}>
-          <span>BE SEEN.</span>
-          <span>BE HEARD.</span>
-          <span>BE A STAR.</span>
-        </h2>
+        <h1 className={styles.title}>
+          South Africa's Biggest
+          <br />
+          TikTok Talent Competition
+        </h1>
+
+        <p className={styles.subtitle}>
+          Season 2 is here. Bigger prizes. Bigger stages. Bigger dreams.
+        </p>
 
         <div className={styles.buttons}>
           <button className={styles.primary}>
@@ -35,8 +39,12 @@ export default function TTSV2Page() {
           </button>
 
           <button className={styles.secondary}>
-            WATCH TRAILER
+            WATCH SEASON 2
           </button>
+        </div>
+
+        <div className={styles.scroll}>
+          SCROLL
         </div>
       </div>
     </main>
