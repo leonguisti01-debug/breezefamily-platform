@@ -288,9 +288,25 @@ export default function TikTokStarsPage() {
                 {contestant.talent_category}
               </p>
 
-              <p className="mt-3 text-yellow-300 font-black uppercase">
-                Team {contestant.mentor}
-              </p>
+              <div className="mt-4 border-t border-yellow-400/30 pt-4">
+
+  <p className="text-white/50 text-xs uppercase tracking-wider">
+    Awarded By
+  </p>
+
+  <p className="text-yellow-300 font-black uppercase">
+    {contestant.golden_buzzer_by || "TBA"}
+  </p>
+
+  <p className="mt-3 text-white/50 text-xs uppercase tracking-wider">
+    Joined Team
+  </p>
+
+  <p className="text-cyan-400 font-black uppercase">
+    {contestant.mentor}
+  </p>
+
+</div>
 
             </div>
 
