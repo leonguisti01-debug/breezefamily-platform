@@ -17,6 +17,7 @@ type Contestant = {
   talent_category: string | null;
   mentor: string | null;
   golden_buzzer: boolean | null;
+  golden_buzzer_by: string | null;
   audition_status:
     | "waiting"
     | "through"
@@ -103,34 +104,60 @@ export default function TikTokKidsAdminPage() {
   }
 
   async function updateMentor(
-    id: number,
-    mentor: string
-  ) {
-    const { error } =
-      await supabase
-        .from("contestants")
-        .update({
-          mentor,
-        })
-        .eq("id", id);
+  id: number,
+  mentor: string
+) {
+  const { error } = await supabase
+    .from("contestants")
+    .update({
+      mentor,
+    })
+    .eq("id", id);
 
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    setContestants((current) =>
-      current.map((c) =>
-        c.id === id
-          ? {
-              ...c,
-              mentor,
-            }
-          : c
-      )
-    );
+  if (error) {
+    alert(error.message);
+    return;
   }
 
+  setContestants((current) =>
+    current.map((c) =>
+      c.id === id
+        ? {
+            ...c,
+            mentor,
+          }
+        : c
+    )
+  );
+}
+
+async function updateGoldenBuzzerBy(
+  id: number,
+  golden_buzzer_by: string
+) {
+  const { error } = await supabase
+    .from("contestants")
+    .update({
+      golden_buzzer_by,
+    })
+    .eq("id", id);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  setContestants((current) =>
+    current.map((c) =>
+      c.id === id
+        ? {
+            ...c,
+            golden_buzzer_by,
+          }
+        : c
+    )
+  );
+}
   async function updateStatus(
   contestant: Contestant,
   status: "through" | "out"
@@ -604,6 +631,54 @@ async function toggleGoldenBuzzer(contestant: Contestant) {
                     </select>
 
                   </div>
+
+<div className="mt-4">
+
+  <label className="block text-yellow-400 text-sm mb-2 uppercase">
+    ⭐ Golden Buzzer Awarded By
+  </label>
+
+  <select
+    value={contestant.golden_buzzer_by || ""}
+    onChange={(e) =>
+      updateGoldenBuzzerBy(
+        contestant.id,
+        e.target.value
+      )
+    }
+    className="w-full bg-zinc-900 text-white border border-yellow-400/30 rounded-xl px-4 py-3"
+  >
+    <option value="">
+      Select Judge
+    </option>
+
+    <option value="Billy">
+      Billy
+    </option>
+
+    <option value="Global">
+      Global
+    </option>
+
+    <option value="Kent">
+      Kent
+    </option>
+
+    <option value="Moi">
+      Moi
+    </option>
+
+    <option value="Piwe">
+      Piwe
+    </option>
+
+    <option value="Terry">
+      Terry
+    </option>
+
+  </select>
+
+</div>
 
                  <div className="grid grid-cols-3 gap-3 mt-6">
 
