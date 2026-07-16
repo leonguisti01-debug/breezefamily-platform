@@ -11,7 +11,7 @@ const supabase = createClient(
 
 const PINK = "#ec4899";
 const CYAN = "#22d3ee";
-const ENTRIES_CLOSE_DATE = new Date("2026-06-28T12:00:00+02:00");
+const ENTRIES_CLOSE_DATE = new Date("2026-07-19T12:00:00+02:00");
 
 export default function TikTokStarsEntryPage() {
   const router = useRouter();
