@@ -654,6 +654,7 @@ async function toggleGoldenBuzzer(contestant: Contestant) {
                           "900",
                       }}
                     >
+                      
                       <button
   onClick={() =>
     toggleGoldenBuzzer(contestant)
@@ -672,6 +673,7 @@ async function toggleGoldenBuzzer(contestant: Contestant) {
 >
   ⭐ GB
 </button>
+
                       OUT
                     </button>
 
