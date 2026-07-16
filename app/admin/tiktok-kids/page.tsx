@@ -16,6 +16,7 @@ type Contestant = {
   contact_number: string | null;
   talent_category: string | null;
   mentor: string | null;
+  golden_buzzer: boolean | null;
   audition_status:
     | "waiting"
     | "through"
@@ -131,48 +132,65 @@ export default function TikTokKidsAdminPage() {
   }
 
   async function updateStatus(
-    contestant: Contestant,
-    status: "through" | "out"
+  contestant: Contestant,
+  status: "through" | "out"
+) {
+  if (
+    status === "through" &&
+    !contestant.mentor
   ) {
-    if (
-      status === "through" &&
-      !contestant.mentor
-    ) {
-      alert(
-        "Please select a mentor first."
-      );
-      return;
-    }
-
-    const { error } =
-      await supabase
-        .from("contestants")
-        .update({
-          audition_status:
-            status,
-        })
-        .eq(
-          "id",
-          contestant.id
-        );
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    setContestants((current) =>
-      current.map((c) =>
-        c.id === contestant.id
-          ? {
-              ...c,
-              audition_status:
-                status,
-            }
-          : c
-      )
-    );
+    alert("Please select a mentor first.");
+    return;
   }
+
+  const { error } = await supabase
+    .from("contestants")
+    .update({
+      audition_status: status,
+    })
+    .eq("id", contestant.id);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  setContestants((current) =>
+    current.map((c) =>
+      c.id === contestant.id
+        ? {
+            ...c,
+            audition_status: status,
+          }
+        : c
+    )
+  );
+}
+
+async function toggleGoldenBuzzer(contestant: Contestant) {
+  const { error } = await supabase
+    .from("contestants")
+    .update({
+      golden_buzzer: !contestant.golden_buzzer,
+    })
+    .eq("id", contestant.id);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  setContestants((current) =>
+    current.map((c) =>
+      c.id === contestant.id
+        ? {
+            ...c,
+            golden_buzzer: !c.golden_buzzer,
+          }
+        : c
+    )
+  );
+}
 
   async function exportPass() {
     const passedContestants =
@@ -587,7 +605,7 @@ export default function TikTokKidsAdminPage() {
 
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 mt-6">
+                  <div className="grid grid-cols-3 gap-3 mt-6">
 
                     <button
                       onClick={() =>
@@ -636,6 +654,24 @@ export default function TikTokKidsAdminPage() {
                           "900",
                       }}
                     >
+                      <button
+  onClick={() =>
+    toggleGoldenBuzzer(contestant)
+  }
+  style={{
+    backgroundColor: contestant.golden_buzzer
+      ? "#facc15"
+      : "#27272a",
+    color: contestant.golden_buzzer
+      ? "#000"
+      : "#fff",
+    padding: "14px",
+    borderRadius: "12px",
+    fontWeight: "900",
+  }}
+>
+  ⭐ GB
+</button>
                       OUT
                     </button>
 

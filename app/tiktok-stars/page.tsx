@@ -19,10 +19,10 @@ export default function TikTokStarsPage() {
 
   async function loadContestants() {
     const { data } = await supabase
-      .from("contestants")
-      .select("*")
-      .eq("audition_status", "through")
-      .order("full_name");
+  .from("contestants")
+  .select("*")
+  .in("audition_status", ["through", "waiting"])
+  .order("full_name");
 
     setContestants(data || []);
   }
@@ -224,6 +224,85 @@ export default function TikTokStarsPage() {
 
         </div>
 
+{/* GOLDEN BUZZER WINNERS */}
+
+<section className="relative z-20 px-5 pb-24">
+
+  <div className="max-w-7xl mx-auto">
+
+    <div className="text-center mb-10">
+
+      <p className="uppercase tracking-[4px] text-yellow-400 text-xs font-black">
+        Top 20 Contestants
+      </p>
+
+      <h2
+        className="mt-2 uppercase italic font-black text-yellow-300"
+        style={{
+          fontFamily: "Bebas Neue, sans-serif",
+          fontSize: "clamp(48px,6vw,90px)",
+        }}
+      >
+        ⭐ GOLDEN BUZZER WINNERS ⭐
+      </h2>
+
+      <p className="mt-4 text-white/70 max-w-3xl mx-auto">
+        These contestants impressed the judges and earned a Golden Buzzer,
+        securing their place in the live competition.
+      </p>
+
+    </div>
+
+    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
+
+      {contestants
+        .filter((c) => c.golden_buzzer)
+        .map((contestant) => (
+
+          <div
+            key={contestant.id}
+            className="overflow-hidden rounded-[24px] border-2 border-yellow-400 bg-yellow-500/10 shadow-[0_0_25px_rgba(250,204,21,.35)]"
+          >
+
+            <div className="bg-yellow-400 text-black text-center font-black py-2 uppercase">
+              ⭐ GOLDEN BUZZER
+            </div>
+
+            <img
+              src={contestant.photo_url}
+              alt={contestant.full_name}
+              className="w-full aspect-[3/4] object-cover"
+            />
+
+            <div className="p-4 text-center">
+
+              <h3 className="font-black uppercase text-lg">
+                {contestant.full_name}
+              </h3>
+
+              <p className="text-white/70">
+                Age {contestant.age}
+              </p>
+
+              <p className="text-cyan-400 uppercase text-sm mt-2">
+                {contestant.talent_category}
+              </p>
+
+              <p className="mt-3 text-yellow-300 font-black uppercase">
+                Team {contestant.mentor}
+              </p>
+
+            </div>
+
+          </div>
+
+      ))}
+
+    </div>
+
+  </div>
+
+</section>
       </section>{/* TEAMS */}
 
 <section className="relative z-20 px-5 pb-24">
