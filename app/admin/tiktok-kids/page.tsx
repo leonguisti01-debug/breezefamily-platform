@@ -605,81 +605,7 @@ async function toggleGoldenBuzzer(contestant: Contestant) {
 
                   </div>
 
-                  <div className="grid grid-cols-3 gap-3 mt-6">
-
-                    <button
-                      onClick={() =>
-                        updateStatus(
-                          contestant,
-                          "through"
-                        )
-                      }
-                      style={{
-                        backgroundColor:
-                          contestant.audition_status ===
-                          "through"
-                            ? "#16a34a"
-                            : "#27272a",
-                        color: "#ffffff",
-                        padding:
-                          "14px",
-                        borderRadius:
-                          "12px",
-                        fontWeight:
-                          "900",
-                      }}
-                    >
-                      PASS
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        updateStatus(
-                          contestant,
-                          "out"
-                        )
-                      }
-                      style={{
-                        backgroundColor:
-                          contestant.audition_status ===
-                          "out"
-                            ? "#dc2626"
-                            : "#27272a",
-                        color: "#ffffff",
-                        padding:
-                          "14px",
-                        borderRadius:
-                          "12px",
-                        fontWeight:
-                          "900",
-                      }}
-                    >
-                      
-                      <button
-  onClick={() =>
-    toggleGoldenBuzzer(contestant)
-  }
-  style={{
-    backgroundColor: contestant.golden_buzzer
-      ? "#facc15"
-      : "#27272a",
-    color: contestant.golden_buzzer
-      ? "#000"
-      : "#fff",
-    padding: "14px",
-    borderRadius: "12px",
-    fontWeight: "900",
-  }}
->
-  ⭐ GB
-</button>
-
-                      OUT
-                    </button>
-
-                  </div>
-
-                  <div className="mt-4 text-center">
+                                    <div className="mt-4 text-center">
 
                     <span
                       style={{
@@ -691,16 +617,11 @@ async function toggleGoldenBuzzer(contestant: Contestant) {
                               "out"
                             ? "#dc2626"
                             : "#3f3f46",
-                        color:
-                          "#ffffff",
-                        padding:
-                          "8px 14px",
-                        borderRadius:
-                          "999px",
-                        fontWeight:
-                          "900",
-                        display:
-                          "inline-block",
+                        color: "#ffffff",
+                        padding: "8px 14px",
+                        borderRadius: "999px",
+                        fontWeight: "900",
+                        display: "inline-block",
                       }}
                     >
                       {contestant.audition_status ===
