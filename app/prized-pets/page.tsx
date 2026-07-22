@@ -369,7 +369,20 @@ const [bronze, setBronze] =
           <p className="text-white/60">
             Share your favourite companion with the Breeze Family.
           </p>
+<div className="max-w-2xl mx-auto mb-8">
+  <div className="rounded-2xl border border-[#8DFF00]/20 bg-[#8DFF00]/10 p-5 text-center">
+    <p className="text-lg font-bold text-[#8DFF00]">
+      Keep sharing your pets with us!
+    </p>
 
+    <p className="mt-2 text-white/70">
+      We absolutely love seeing your furry, feathered and scaly family members.
+      Although our Prized Pets competitions are taking a short break, they'll
+      be back soon. Keep uploading your favourite companions for the whole
+      Breeze Family to enjoy!
+    </p>
+  </div>
+</div>
         </div>
 
         <div className="max-w-2xl mx-auto mb-12">
