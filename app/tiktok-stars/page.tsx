@@ -87,7 +87,7 @@ export default function TikTokStarsPage() {
     </p>
 
     <h3 className="mt-3 text-4xl md:text-5xl font-black uppercase text-white">
-      Thank You South Africa!
+      Thank You Everyone!
     </h3>
 
     <p className="mt-5 text-white/80 leading-relaxed text-lg">
