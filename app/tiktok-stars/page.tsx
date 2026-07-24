@@ -83,30 +83,28 @@ export default function TikTokStarsPage() {
   <div className="max-w-3xl rounded-[28px] border border-cyan-400/30 bg-cyan-500/10 backdrop-blur-xl px-10 py-8 text-center">
 
     <p className="uppercase tracking-[4px] text-cyan-400 text-sm font-black">
-      AUDITIONS ARE NOW CLOSED
+      AUDITIONS ARE NOW OPEN
     </p>
 
     <h3 className="mt-3 text-4xl md:text-5xl font-black uppercase text-white">
-      Thank You Everyone!
+      Enter Now!
     </h3>
 
     <p className="mt-5 text-white/80 leading-relaxed text-lg">
       Entries for <strong>TikTok Stars Season 2 – Kids Edition</strong>
-      have officially closed.
+      are officially open again for a limited time.
     </p>
 
     <p className="mt-4 text-white/80 leading-relaxed">
-      Our judges are now reviewing every audition to select the
-      contestants who will compete in the
-      <strong> Live Elimination Battles.</strong>
+      Complete your audition and stand a chance to compete for the <strong>R70 000 Grand Prize.</strong>
     </p>
 
     <p className="mt-4 text-white/80 leading-relaxed">
-      The first episode and contestants will be announced soon.
+      Think you have what it takes to become the next <strong>TikTok Stars Kids Edition Champion?</strong>
     </p>
 
     <p className="mt-6 text-cyan-300 font-black uppercase tracking-wide">
-      Good luck to everyone who entered!
+      Don't miss your chance!
     </p>
 
   </div>
@@ -115,8 +113,8 @@ export default function TikTokStarsPage() {
 
 <div className="flex justify-center mt-8">
 
-  <button
-    disabled
+  <Link
+    href="/tiktok-stars-kids/register"
     className="
       inline-flex
       items-center
@@ -124,17 +122,19 @@ export default function TikTokStarsPage() {
       px-16
       py-6
       rounded-3xl
-      bg-gray-700
+      bg-gradient-to-r
+      from-pink-500
+      to-cyan-500
       text-white
       font-black
       text-xl
       uppercase
-      opacity-70
-      cursor-not-allowed
+      transition
+      hover:scale-105
     "
   >
-    Auditions Closed
-  </button>
+    Enter Auditions
+  </Link>
 
 </div>
 
