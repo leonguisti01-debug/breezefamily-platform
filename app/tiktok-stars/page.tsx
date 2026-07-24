@@ -76,55 +76,67 @@ export default function TikTokStarsPage() {
 
           </div>
 
-          {/* LIMITED TIME BANNER */}
+          {/* AUDITIONS CLOSED */}
 
-          <div className="mt-10 mb-8 flex justify-center">
+<div className="mt-10 mb-8 flex justify-center">
 
-            <div className="max-w-2xl rounded-[28px] border border-pink-500/40 bg-pink-500/10 backdrop-blur-xl px-8 py-7">
+  <div className="max-w-3xl rounded-[28px] border border-cyan-400/30 bg-cyan-500/10 backdrop-blur-xl px-10 py-8 text-center">
 
-              <p className="uppercase tracking-[4px] text-pink-400 text-sm font-black">
-                LIMITED TIME ONLY
-              </p>
+    <p className="uppercase tracking-[4px] text-cyan-400 text-sm font-black">
+      AUDITIONS ARE NOW CLOSED
+    </p>
 
-              <h3 className="mt-2 text-4xl font-black uppercase">
-                Entries Are Open Again!
-              </h3>
+    <h3 className="mt-3 text-4xl md:text-5xl font-black uppercase text-white">
+      Thank You South Africa!
+    </h3>
 
-              <p className="mt-4 text-white/80 leading-relaxed">
-                Due to overwhelming demand, entries have officially reopened for
-                a limited time. If you missed your chance before, this is your
-                final opportunity to audition for TikTok Stars Season 2 –
-                Kids Edition.
-              </p>
+    <p className="mt-5 text-white/80 leading-relaxed text-lg">
+      Entries for <strong>TikTok Stars Season 2 – Kids Edition</strong>
+      have officially closed.
+    </p>
 
-            </div>
+    <p className="mt-4 text-white/80 leading-relaxed">
+      Our judges are now reviewing every audition to select the
+      contestants who will compete in the
+      <strong> Live Elimination Battles.</strong>
+    </p>
 
-          </div>
+    <p className="mt-4 text-white/80 leading-relaxed">
+      The first episode and contestants will be announced soon.
+    </p>
 
-          <div className="flex justify-center mt-8">
+    <p className="mt-6 text-cyan-300 font-black uppercase tracking-wide">
+      Good luck to everyone who entered!
+    </p>
 
-            <Link
-              href="/tiktok-stars/enter"
-              className="
-                inline-flex
-                items-center
-                justify-center
-                px-16
-                py-6
-                rounded-3xl
-                bg-pink-500
-                text-white
-                font-black
-                text-xl
-                uppercase
-                transition-all
-                hover:scale-105
-              "
-            >
-              ENTER NOW
-            </Link>
+  </div>
 
-          </div>
+</div>
+
+<div className="flex justify-center mt-8">
+
+  <button
+    disabled
+    className="
+      inline-flex
+      items-center
+      justify-center
+      px-16
+      py-6
+      rounded-3xl
+      bg-gray-700
+      text-white
+      font-black
+      text-xl
+      uppercase
+      opacity-70
+      cursor-not-allowed
+    "
+  >
+    Auditions Closed
+  </button>
+
+</div>
 
         </div>
 
@@ -307,6 +319,7 @@ export default function TikTokStarsPage() {
   </p>
 
 </div>
+
 
             </div>
 
