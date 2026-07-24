@@ -114,7 +114,7 @@ export default function TikTokStarsPage() {
 <div className="flex justify-center mt-8">
 
   <Link
-    href="/tiktok-stars/register"
+    href="/tiktok-stars/enter"
     className="
       inline-flex
       items-center
