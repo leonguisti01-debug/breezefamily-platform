@@ -66,18 +66,22 @@ export default function Navbar() {
     },
 
     {
-  label: "TikTok Stars",
-  children: [
-    {
       label: "TikTok Stars",
-      href: "/tiktok-stars",
+      children: [
+        {
+          label: "TikTok Stars",
+          href: "/tiktok-stars",
+        },
+        {
+          label: "Rules",
+          href: "/documents/tiktok-stars-kids-rules.pdf",
+        },
+        {
+          label: "TikTok Admin",
+          href: "/admin/tiktok-kids",
+        },
+      ],
     },
-    {
-      label: "TikTok Admin",
-      href: "/admin/tiktok-kids",
-    },
-  ],
-},
 
     {
       label: "Game Night",
@@ -126,7 +130,8 @@ export default function Navbar() {
     );
   };
 
-  return (    <header className="fixed top-0 left-0 w-full z-50 px-2 md:px-4 pt-3">
+  return (
+    <header className="fixed top-0 left-0 w-full z-50 px-2 md:px-4 pt-3">
 
       <div className="w-full max-w-[1400px] mx-auto rounded-[12px] border border-white/10 bg-black/90 backdrop-blur-2xl">
 
@@ -205,29 +210,55 @@ export default function Navbar() {
 
                         {item.children.map((child) => (
 
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            onClick={() =>
-                              setOpenDropdown(null)
-                            }
-                            className={`
-                              block
-                              px-4
-                              py-3
-                              text-[11px]
-                              uppercase
-                              tracking-[2px]
-                              transition
-                              ${
-                                pathname === child.href
-                                  ? "text-[#8DFF00] bg-white/5"
-                                  : "text-white/80 hover:text-[#8DFF00] hover:bg-white/5"
+                          child.href.endsWith(".pdf") ? (
+                            <a
+                              key={child.href}
+                              href={child.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() =>
+                                setOpenDropdown(null)
                               }
-                            `}
-                          >
-                            {child.label}
-                          </Link>
+                              className="
+                                block
+                                px-4
+                                py-3
+                                text-[11px]
+                                uppercase
+                                tracking-[2px]
+                                transition
+                                text-white/80
+                                hover:text-[#8DFF00]
+                                hover:bg-white/5
+                              "
+                            >
+                              {child.label}
+                            </a>
+                          ) : (
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              onClick={() =>
+                                setOpenDropdown(null)
+                              }
+                              className={`
+                                block
+                                px-4
+                                py-3
+                                text-[11px]
+                                uppercase
+                                tracking-[2px]
+                                transition
+                                ${
+                                  pathname === child.href
+                                    ? "text-[#8DFF00] bg-white/5"
+                                    : "text-white/80 hover:text-[#8DFF00] hover:bg-white/5"
+                                }
+                              `}
+                            >
+                              {child.label}
+                            </Link>
+                          )
 
                         ))}
 
@@ -462,17 +493,33 @@ export default function Navbar() {
 
                           {item.children.map((child) => (
 
-                            <Link
-                              key={child.href}
-                              href={child.href}
-                              onClick={() =>
-                                setMobileMenuOpen(false)
-                              }
-                            >
-                              <span className="text-white/80">
-                                {child.label}
-                              </span>
-                            </Link>
+                            child.href.endsWith(".pdf") ? (
+                              <a
+                                key={child.href}
+                                href={child.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() =>
+                                  setMobileMenuOpen(false)
+                                }
+                              >
+                                <span className="text-white/80">
+                                  {child.label}
+                                </span>
+                              </a>
+                            ) : (
+                              <Link
+                                key={child.href}
+                                href={child.href}
+                                onClick={() =>
+                                  setMobileMenuOpen(false)
+                                }
+                              >
+                                <span className="text-white/80">
+                                  {child.label}
+                                </span>
+                              </Link>
+                            )
 
                           ))}
 
