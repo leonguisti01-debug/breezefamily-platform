@@ -80,6 +80,10 @@ export default function Navbar() {
           label: "TikTok Admin",
           href: "/admin/tiktok-kids",
         },
+        {
+          label: "Battle Judging",
+          href: "/admin/tiktok-kids/battles",
+        },
       ],
     },
 
@@ -137,6 +141,8 @@ export default function Navbar() {
 
         <div className="h-[56px] flex items-center justify-between px-4 md:px-6">
 
+          {/* LOGO */}
+
           <Link
             href="/"
             className="shrink-0"
@@ -148,7 +154,9 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* DESKTOP NAV */}
+          {/* =================================================
+              DESKTOP NAV
+          ================================================= */}
 
           <nav className="hidden md:flex items-center gap-6">
 
@@ -197,7 +205,7 @@ export default function Navbar() {
                           top-full
                           left-0
                           mt-2
-                          min-w-[230px]
+                          min-w-[250px]
                           rounded-xl
                           border
                           border-white/10
@@ -211,6 +219,7 @@ export default function Navbar() {
                         {item.children.map((child) => (
 
                           child.href.endsWith(".pdf") ? (
+
                             <a
                               key={child.href}
                               href={child.href}
@@ -234,7 +243,9 @@ export default function Navbar() {
                             >
                               {child.label}
                             </a>
+
                           ) : (
+
                             <Link
                               key={child.href}
                               href={child.href}
@@ -254,10 +265,17 @@ export default function Navbar() {
                                     ? "text-[#8DFF00] bg-white/5"
                                     : "text-white/80 hover:text-[#8DFF00] hover:bg-white/5"
                                 }
+                                ${
+                                  child.href ===
+                                  "/admin/tiktok-kids/battles"
+                                    ? "border-t border-white/10 text-cyan-400 font-black"
+                                    : ""
+                                }
                               `}
                             >
                               {child.label}
                             </Link>
+
                           )
 
                         ))}
@@ -299,9 +317,13 @@ export default function Navbar() {
 
           </nav>
 
-          {/* RIGHT SIDE */}
+          {/* =================================================
+              RIGHT SIDE DESKTOP
+          ================================================= */}
 
           <div className="hidden md:flex items-center gap-3">
+
+            {/* SOCIAL ICONS */}
 
             <a
               href="https://www.tiktok.com/@itskentbreezy"
@@ -350,6 +372,32 @@ export default function Navbar() {
                 className="w-4 h-4 object-contain opacity-80 hover:opacity-100 transition"
               />
             </a>
+
+            {/* ADMIN LOGIN */}
+
+            <Link href="/admin/login">
+              <button
+                className="
+                  border
+                  border-cyan-400
+                  text-cyan-400
+                  uppercase
+                  font-black
+                  tracking-[1px]
+                  text-[9px]
+                  px-4
+                  h-[34px]
+                  rounded-full
+                  hover:bg-cyan-400
+                  hover:text-black
+                  transition
+                "
+              >
+                ADMIN LOGIN
+              </button>
+            </Link>
+
+            {/* MEMBER LOGIN */}
 
             {!loggedIn ? (
               <>
@@ -435,6 +483,10 @@ export default function Navbar() {
 
           </div>
 
+          {/* =================================================
+              MOBILE MENU BUTTON
+          ================================================= */}
+
           <button
             onClick={() =>
               setMobileMenuOpen(
@@ -447,6 +499,10 @@ export default function Navbar() {
           </button>
 
         </div>
+
+        {/* ===================================================
+            MOBILE MENU
+        =================================================== */}
 
         {mobileMenuOpen && (
 
@@ -494,6 +550,7 @@ export default function Navbar() {
                           {item.children.map((child) => (
 
                             child.href.endsWith(".pdf") ? (
+
                               <a
                                 key={child.href}
                                 href={child.href}
@@ -507,7 +564,9 @@ export default function Navbar() {
                                   {child.label}
                                 </span>
                               </a>
+
                             ) : (
+
                               <Link
                                 key={child.href}
                                 href={child.href}
@@ -515,10 +574,18 @@ export default function Navbar() {
                                   setMobileMenuOpen(false)
                                 }
                               >
-                                <span className="text-white/80">
+                                <span
+                                  className={
+                                    child.href ===
+                                    "/admin/tiktok-kids/battles"
+                                      ? "text-cyan-400 font-black"
+                                      : "text-white/80"
+                                  }
+                                >
                                   {child.label}
                                 </span>
                               </Link>
+
                             )
 
                           ))}
@@ -558,9 +625,52 @@ export default function Navbar() {
 
               })}
 
+              {/* =============================================
+                  MOBILE ADMIN LOGIN
+              ============================================= */}
+
+              <div className="border-t border-white/10 pt-5">
+
+                <Link
+                  href="/admin/login"
+                  onClick={() =>
+                    setMobileMenuOpen(false)
+                  }
+                >
+                  <button
+                    className="
+                      w-full
+                      h-[44px]
+                      border
+                      border-cyan-400
+                      text-cyan-400
+                      uppercase
+                      font-black
+                      rounded-full
+                      hover:bg-cyan-400
+                      hover:text-black
+                      transition
+                    "
+                  >
+                    ADMIN LOGIN
+                  </button>
+                </Link>
+
+              </div>
+
+              {/* =============================================
+                  MEMBER LOGIN
+              ============================================= */}
+
               {!loggedIn ? (
                 <>
-                  <Link href="/login">
+
+                  <Link
+                    href="/login"
+                    onClick={() =>
+                      setMobileMenuOpen(false)
+                    }
+                  >
                     <button
                       className="
                         w-full
@@ -577,7 +687,12 @@ export default function Navbar() {
                     </button>
                   </Link>
 
-                  <Link href="/register">
+                  <Link
+                    href="/register"
+                    onClick={() =>
+                      setMobileMenuOpen(false)
+                    }
+                  >
                     <button
                       className="
                         w-full
@@ -592,10 +707,17 @@ export default function Navbar() {
                       JOIN THE FAMILY
                     </button>
                   </Link>
+
                 </>
               ) : (
                 <>
-                  <Link href="/profile">
+
+                  <Link
+                    href="/profile"
+                    onClick={() =>
+                      setMobileMenuOpen(false)
+                    }
+                  >
                     <button
                       className="
                         w-full
@@ -626,6 +748,7 @@ export default function Navbar() {
                   >
                     LOGOUT
                   </button>
+
                 </>
               )}
 
