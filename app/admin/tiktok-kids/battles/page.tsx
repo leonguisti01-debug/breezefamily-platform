@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
@@ -26,7 +26,7 @@ type Round = {
   season_id: number;
   name: string;
   battle_date: string;
-  status: "pending" | "active" | "completed";
+  status: string;
 };
 
 type Battle = {
@@ -47,7 +47,10 @@ export default function KidsBattlesPage() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
-  const [userEmail, setUserEmail] = useState("");
+
+  const [userEmail, setUserEmail] =
+    useState("");
+
   const [isSuperAdmin, setIsSuperAdmin] =
     useState(false);
 
@@ -65,115 +68,170 @@ export default function KidsBattlesPage() {
   }, []);
 
   async function checkAccess() {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    if (!user) {
-      router.push("/admin/login");
-      return;
-    }
+      if (!user) {
+        router.push("/admin/login");
+        return;
+      }
 
-    const { data: admin, error } =
-      await supabase
-        .from("admin_users")
-        .select("*")
-        .eq("email", user.email)
-        .single();
+      const { data: admin, error } =
+        await supabase
+          .from("admin_users")
+          .select("*")
+          .eq("email", user.email)
+          .single();
 
-    if (
-      error ||
-      !admin ||
-      !admin.active ||
-      (admin.role !== "admin" &&
-        admin.role !== "super_admin")
-    ) {
-      alert("Access Denied");
-      router.push("/admin/login");
-      return;
-    }
+      if (
+        error ||
+        !admin ||
+        !admin.active ||
+        (admin.role !== "admin" &&
+          admin.role !== "super_admin")
+      ) {
+        alert("Access Denied");
+        router.push("/admin/login");
+        return;
+      }
 
-    setUserEmail(user.email || "");
+      setUserEmail(user.email || "");
 
-    setIsSuperAdmin(
-      admin.role === "super_admin"
-    );
-
-    await loadRounds();
-  }
-
-  async function loadRounds() {
-    const { data, error } =
-      await supabase
-        .from("tiktok_rounds")
-        .select(`
-          id,
-          season_id,
-          name,
-          battle_date,
-          status
-        `)
-        .eq(
-          "season_id",
-          (
-            await supabase
-              .from("tiktok_seasons")
-              .select("id")
-              .eq(
-                "name",
-                "Season 2 - Kids Edition"
-              )
-              .single()
-          ).data?.id
-        )
-        .order("battle_date", {
-          ascending: false,
-        });
-
-    if (error) {
-      console.error(error);
-      alert(error.message);
-      setLoading(false);
-      return;
-    }
-
-    const roundData = data || [];
-
-    setRounds(roundData);
-
-    if (roundData.length > 0) {
-      setSelectedRoundId(
-        roundData[0].id
+      setIsSuperAdmin(
+        admin.role === "super_admin"
       );
 
-      await loadBattles(roundData[0].id);
-    } else {
-      setBattles([]);
+      await loadRounds();
+    } catch (error) {
+      console.error(error);
+      alert("Could not load battle system.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   }
 
-  async function loadBattles(roundId: number) {
-    const { data: battleRows, error } =
-      await supabase
-        .from("kids_battles")
-        .select(`
-          id,
-          round_id,
-          battle_number,
-          contestant_left_id,
-          contestant_right_id,
-          winner_id,
-          loser_id,
-          status,
-          judged_by,
-          judged_at
-        `)
-        .eq("round_id", roundId)
-        .order("battle_number", {
-          ascending: true,
-        });
+  /*
+   * =========================================================
+   * LOAD ROUNDS
+   * =========================================================
+   */
+
+  async function loadRounds() {
+    // FIRST get the Season 2 Kids Edition ID.
+    // This prevents "undefined" being passed into Supabase.
+
+    const {
+      data: season,
+      error: seasonError,
+    } = await supabase
+      .from("tiktok_seasons")
+      .select("id")
+      .eq(
+        "name",
+        "Season 2 - Kids Edition"
+      )
+      .maybeSingle();
+
+    if (seasonError) {
+      console.error(seasonError);
+      alert(seasonError.message);
+      return;
+    }
+
+    if (!season?.id) {
+      alert(
+        "Season 2 - Kids Edition could not be found."
+      );
+      return;
+    }
+
+    // NOW load only rounds belonging to this season.
+
+    const {
+      data: roundRows,
+      error: roundsError,
+    } = await supabase
+      .from("tiktok_rounds")
+      .select(`
+        id,
+        season_id,
+        name,
+        battle_date,
+        status
+      `)
+      .eq("season_id", season.id)
+      .order("battle_date", {
+        ascending: false,
+      });
+
+    if (roundsError) {
+      console.error(roundsError);
+      alert(roundsError.message);
+      return;
+    }
+
+    const loadedRounds =
+      roundRows || [];
+
+    setRounds(loadedRounds);
+
+    if (loadedRounds.length === 0) {
+      setSelectedRoundId(null);
+      setBattles([]);
+      return;
+    }
+
+    // Default to the newest round.
+
+    const firstRound =
+      loadedRounds[0];
+
+    setSelectedRoundId(
+      firstRound.id
+    );
+
+    await loadBattles(
+      firstRound.id
+    );
+  }
+
+  /*
+   * =========================================================
+   * LOAD BATTLES FOR ONE ROUND ONLY
+   * =========================================================
+   */
+
+  async function loadBattles(
+    roundId: number
+  ) {
+    if (!roundId) {
+      setBattles([]);
+      return;
+    }
+
+    const {
+      data: battleRows,
+      error,
+    } = await supabase
+      .from("kids_battles")
+      .select(`
+        id,
+        round_id,
+        battle_number,
+        contestant_left_id,
+        contestant_right_id,
+        winner_id,
+        loser_id,
+        status,
+        judged_by,
+        judged_at
+      `)
+      .eq("round_id", roundId)
+      .order("battle_number", {
+        ascending: true,
+      });
 
     if (error) {
       console.error(error);
@@ -186,20 +244,24 @@ export default function KidsBattlesPage() {
       return;
     }
 
-    const contestantIds = Array.from(
-      new Set(
-        battleRows.flatMap((battle) => [
-          battle.contestant_left_id,
-          battle.contestant_right_id,
-          battle.winner_id,
-          battle.loser_id,
-        ])
-      )
-    ).filter(
-      (id): id is number => id !== null
-    );
+    const contestantIds =
+      Array.from(
+        new Set(
+          battleRows.flatMap(
+            (battle) => [
+              battle.contestant_left_id,
+              battle.contestant_right_id,
+              battle.winner_id,
+              battle.loser_id,
+            ]
+          )
+        )
+      ).filter(
+        (id): id is number =>
+          id !== null
+      );
 
-    let contestantMap =
+    const contestantMap =
       new Map<number, Contestant>();
 
     if (contestantIds.length > 0) {
@@ -222,7 +284,9 @@ export default function KidsBattlesPage() {
 
       if (contestantError) {
         console.error(contestantError);
-        alert(contestantError.message);
+        alert(
+          contestantError.message
+        );
         return;
       }
 
@@ -236,33 +300,40 @@ export default function KidsBattlesPage() {
       );
     }
 
-    const judgeIds = Array.from(
-      new Set(
-        battleRows
-          .map(
-            (battle) =>
-              battle.judged_by
-          )
-          .filter(
-            (id): id is number =>
-              id !== null
-          )
-      )
-    );
+    const judgeIds =
+      Array.from(
+        new Set(
+          battleRows
+            .map(
+              (battle) =>
+                battle.judged_by
+            )
+            .filter(
+              (id): id is number =>
+                id !== null
+            )
+        )
+      );
 
     const judgeMap =
       new Map<number, Judge>();
 
     if (judgeIds.length > 0) {
-      const { data: judges } =
-        await supabase
-          .from("admin_users")
-          .select(`
-            id,
-            email,
-            role
-          `)
-          .in("id", judgeIds);
+      const {
+        data: judges,
+        error: judgeError,
+      } = await supabase
+        .from("admin_users")
+        .select(`
+          id,
+          email,
+          role
+        `)
+        .in("id", judgeIds);
+
+      if (judgeError) {
+        console.error(judgeError);
+      }
 
       (judges || []).forEach(
         (judge) => {
@@ -293,11 +364,15 @@ export default function KidsBattlesPage() {
 
           return {
             id: battle.id,
-            round_id: battle.round_id,
+
+            round_id:
+              battle.round_id,
+
             battle_number:
               battle.battle_number,
 
             contestant_left: left,
+
             contestant_right: right,
 
             winner: battle.winner_id
@@ -312,7 +387,8 @@ export default function KidsBattlesPage() {
                 ) || null
               : null,
 
-            status: battle.status,
+            status:
+              battle.status,
 
             judged_by:
               battle.judged_by,
@@ -328,19 +404,44 @@ export default function KidsBattlesPage() {
           };
         })
         .filter(
-          (battle): battle is Battle =>
+          (
+            battle
+          ): battle is Battle =>
             battle !== null
         );
 
-    setBattles(formattedBattles);
+    setBattles(
+      formattedBattles
+    );
   }
+
+  /*
+   * =========================================================
+   * CHANGE ROUND
+   * =========================================================
+   */
 
   async function changeRound(
     roundId: number
   ) {
-    setSelectedRoundId(roundId);
-    await loadBattles(roundId);
+    if (!roundId) return;
+
+    setSelectedRoundId(
+      roundId
+    );
+
+    setBattles([]);
+
+    await loadBattles(
+      roundId
+    );
   }
+
+  /*
+   * =========================================================
+   * OPEN INDIVIDUAL BATTLE
+   * =========================================================
+   */
 
   function openBattle(
     battle: Battle
@@ -350,10 +451,25 @@ export default function KidsBattlesPage() {
     );
   }
 
+  /*
+   * =========================================================
+   * LOGOUT
+   * =========================================================
+   */
+
   async function logout() {
     await supabase.auth.signOut();
-    router.push("/admin/login");
+
+    router.push(
+      "/admin/login"
+    );
   }
+
+  /*
+   * =========================================================
+   * DATE
+   * =========================================================
+   */
 
   function formatDate(
     date: string | null
@@ -372,22 +488,11 @@ export default function KidsBattlesPage() {
     );
   }
 
-  const selectedRound =
-    rounds.find(
-      (round) =>
-        round.id ===
-        selectedRoundId
-    ) || null;
-
-  const completed = battles.filter(
-    (battle) =>
-      battle.status === "completed"
-  ).length;
-
-  const pending = battles.filter(
-    (battle) =>
-      battle.status === "pending"
-  ).length;
+  /*
+   * =========================================================
+   * LOADING
+   * =========================================================
+   */
 
   if (loading) {
     return (
@@ -399,12 +504,37 @@ export default function KidsBattlesPage() {
     );
   }
 
+  const selectedRound =
+    rounds.find(
+      (round) =>
+        round.id ===
+        selectedRoundId
+    ) || null;
+
+  const completed =
+    battles.filter(
+      (battle) =>
+        battle.status ===
+        "completed"
+    ).length;
+
+  const pending =
+    battles.filter(
+      (battle) =>
+        battle.status ===
+        "pending"
+    ).length;
+
+  /*
+   * =========================================================
+   * PAGE
+   * =========================================================
+   */
+
   return (
     <main className="min-h-screen bg-black text-white">
 
-      {/* =====================================================
-          HEADER
-      ===================================================== */}
+      {/* HEADER */}
 
       <header className="border-b border-white/10 bg-zinc-950">
 
@@ -427,6 +557,7 @@ export default function KidsBattlesPage() {
               </p>
 
               <p className="text-white/20 text-xs mt-2">
+
                 {userEmail}
 
                 {isSuperAdmin && (
@@ -434,11 +565,13 @@ export default function KidsBattlesPage() {
                     SUPER ADMIN
                   </span>
                 )}
+
               </p>
 
             </div>
 
-            <div className="flex gap-2">
+
+            <div className="flex flex-wrap gap-2">
 
               {isSuperAdmin && (
                 <button
@@ -507,9 +640,7 @@ export default function KidsBattlesPage() {
       </header>
 
 
-      {/* =====================================================
-          ROUND SELECTOR
-      ===================================================== */}
+      {/* ROUND SELECTOR */}
 
       <div className="max-w-7xl mx-auto px-5 pt-8">
 
@@ -524,10 +655,10 @@ export default function KidsBattlesPage() {
 
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
 
-            <div className="flex-1">
+            <div>
 
               <p className="text-cyan-400 text-xs font-black uppercase tracking-[3px]">
-                Competition Round
+                Current Round
               </p>
 
               <h2 className="text-2xl md:text-3xl font-black uppercase mt-1">
@@ -536,7 +667,7 @@ export default function KidsBattlesPage() {
               </h2>
 
               {selectedRound && (
-                <p className="text-white/40 mt-1">
+                <p className="text-white/40 mt-2">
                   Battle Date:{" "}
                   {formatDate(
                     selectedRound.battle_date
@@ -546,9 +677,10 @@ export default function KidsBattlesPage() {
 
             </div>
 
-            <div className="w-full md:w-[360px]">
 
-              <label className="block text-white/40 text-xs uppercase font-black tracking-wider mb-2">
+            <div className="w-full md:w-[420px]">
+
+              <label className="block text-white/40 text-xs uppercase font-black mb-2">
                 Select Round
               </label>
 
@@ -557,10 +689,10 @@ export default function KidsBattlesPage() {
                   selectedRoundId ??
                   ""
                 }
-                onChange={(e) =>
+                onChange={(event) =>
                   changeRound(
                     Number(
-                      e.target.value
+                      event.target.value
                     )
                   )
                 }
@@ -604,12 +736,9 @@ export default function KidsBattlesPage() {
       </div>
 
 
-      {/* =====================================================
-          CONTENT
-      ===================================================== */}
+      {/* CONTENT */}
 
       <div className="max-w-7xl mx-auto px-5 py-8">
-
 
         {/* STATS */}
 
@@ -617,7 +746,9 @@ export default function KidsBattlesPage() {
 
           <StatCard
             label="Battles"
-            value={battles.length}
+            value={
+              battles.length
+            }
           />
 
           <StatCard
@@ -642,7 +773,7 @@ export default function KidsBattlesPage() {
           <div className="flex justify-between text-xs uppercase font-black mb-2">
 
             <span className="text-white/40">
-              Round Progress
+              Battle Progress
             </span>
 
             <span className="text-white/70">
@@ -659,7 +790,6 @@ export default function KidsBattlesPage() {
                 h-full
                 bg-cyan-400
                 transition-all
-                duration-500
               "
               style={{
                 width:
@@ -678,9 +808,7 @@ export default function KidsBattlesPage() {
         </div>
 
 
-        {/* ===================================================
-            BATTLES
-        =================================================== */}
+        {/* BATTLES */}
 
         <div className="space-y-5">
 
@@ -699,7 +827,6 @@ export default function KidsBattlesPage() {
                     border
                     rounded-3xl
                     overflow-hidden
-                    transition
                     ${
                       isCompleted
                         ? "border-green-500/20"
@@ -758,31 +885,23 @@ export default function KidsBattlesPage() {
 
                   <div className="grid md:grid-cols-[1fr_auto_1fr] items-stretch">
 
-                    {/* LEFT */}
-
                     <ContestantResultCard
                       contestant={
                         battle.contestant_left
                       }
                       winner={
                         battle.winner?.id ===
-                        battle
-                          .contestant_left
-                          .id
+                        battle.contestant_left.id
                       }
                       loser={
                         battle.loser?.id ===
-                        battle
-                          .contestant_left
-                          .id
+                        battle.contestant_left.id
                       }
                       completed={
                         isCompleted
                       }
                     />
 
-
-                    {/* VS */}
 
                     <div className="hidden md:flex items-center justify-center px-5">
 
@@ -797,17 +916,13 @@ export default function KidsBattlesPage() {
                         items-center
                         justify-center
                       ">
-
                         <span className="text-white/30 font-black text-xs">
                           VS
                         </span>
-
                       </div>
 
                     </div>
 
-
-                    {/* RIGHT */}
 
                     <ContestantResultCard
                       contestant={
@@ -815,15 +930,11 @@ export default function KidsBattlesPage() {
                       }
                       winner={
                         battle.winner?.id ===
-                        battle
-                          .contestant_right
-                          .id
+                        battle.contestant_right.id
                       }
                       loser={
                         battle.loser?.id ===
-                        battle
-                          .contestant_right
-                          .id
+                        battle.contestant_right.id
                       }
                       completed={
                         isCompleted
@@ -840,45 +951,19 @@ export default function KidsBattlesPage() {
                     battle.winner &&
                     battle.loser && (
 
-                      <div className="
-                        border-t
-                        border-white/10
-                        px-5
-                        md:px-7
-                        py-5
-                      ">
+                      <div className="border-t border-white/10 px-5 md:px-7 py-5">
 
-                        <div className="
-                          flex
-                          flex-col
-                          md:flex-row
-                          md:items-center
-                          md:justify-between
-                          gap-4
-                        ">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
                           <div>
 
-                            <p className="
-                              text-green-400
-                              text-xs
-                              font-black
-                              uppercase
-                              tracking-[3px]
-                            ">
+                            <p className="text-green-400 text-xs font-black uppercase tracking-[3px]">
                               Goes Through
                             </p>
 
-                            <p className="
-                              text-xl
-                              font-black
-                              uppercase
-                              mt-1
-                            ">
+                            <p className="text-xl font-black uppercase mt-1">
                               {
-                                battle
-                                  .winner
-                                  .full_name
+                                battle.winner.full_name
                               }
                             </p>
 
@@ -886,32 +971,17 @@ export default function KidsBattlesPage() {
 
                           <div className="text-left md:text-right">
 
-                            <p className="
-                              text-white/30
-                              text-xs
-                              font-black
-                              uppercase
-                              tracking-wider
-                            ">
+                            <p className="text-white/30 text-xs font-black uppercase tracking-wider">
                               Judged By
                             </p>
 
-                            <p className="
-                              text-white/70
-                              text-sm
-                              font-bold
-                              mt-1
-                            ">
+                            <p className="text-white/70 text-sm font-bold mt-1">
                               {battle.judge?.email ||
                                 "Unknown"}
                             </p>
 
                             {battle.judged_at && (
-                              <p className="
-                                text-white/30
-                                text-xs
-                                mt-1
-                              ">
+                              <p className="text-white/30 text-xs mt-1">
                                 {formatDateTime(
                                   battle.judged_at
                                 )}
@@ -950,15 +1020,11 @@ export default function KidsBattlesPage() {
                     )}
 
 
-                  {/* PENDING ACTION */}
+                  {/* PENDING */}
 
                   {!isCompleted && (
 
-                    <div className="
-                      border-t
-                      border-white/10
-                      p-5
-                    ">
+                    <div className="border-t border-white/10 p-5">
 
                       <button
                         onClick={() =>
@@ -994,6 +1060,8 @@ export default function KidsBattlesPage() {
         </div>
 
 
+        {/* EMPTY */}
+
         {battles.length === 0 && (
 
           <div className="
@@ -1005,21 +1073,12 @@ export default function KidsBattlesPage() {
             text-center
           ">
 
-            <p className="
-              text-yellow-400
-              font-black
-              uppercase
-            ">
+            <p className="text-yellow-400 font-black uppercase">
               No battles in this round
             </p>
 
-            <p className="
-              text-white/30
-              text-sm
-              mt-2
-            ">
-              Use Round Manager to add
-              battles to this round.
+            <p className="text-white/30 text-sm mt-2">
+              Add battles using Round Manager.
             </p>
 
           </div>
@@ -1106,7 +1165,7 @@ function StatCard({
 
 
 /* =========================================================
-   CONTESTANT RESULT CARD
+   CONTESTANT CARD
 ========================================================= */
 
 function ContestantResultCard({
@@ -1143,8 +1202,6 @@ function ContestantResultCard({
     >
 
       <div className="flex gap-4 items-center">
-
-        {/* PHOTO */}
 
         <div className="
           w-20
@@ -1192,8 +1249,6 @@ function ContestantResultCard({
 
         </div>
 
-
-        {/* DETAILS */}
 
         <div className="min-w-0 flex-1">
 
@@ -1243,8 +1298,6 @@ function ContestantResultCard({
 
         </div>
 
-
-        {/* STATUS */}
 
         {completed && (
 
@@ -1297,10 +1350,16 @@ function ContestantResultCard({
 }
 
 
+/* =========================================================
+   DATE/TIME
+========================================================= */
+
 function formatDateTime(
   date: string
 ) {
-  return new Date(date).toLocaleString(
+  return new Date(
+    date
+  ).toLocaleString(
     "en-ZA",
     {
       day: "2-digit",
