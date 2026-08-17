@@ -113,21 +113,7 @@ export default function Navbar() {
       ],
     },
 
-    {
-      label: "Game Night",
-      children: [
         {
-          label: "Prized Pets",
-          href: "/prized-pets",
-        },
-        {
-          label: "Scavenger Hunt Olympics",
-          href: "/scavenger-hunt",
-        },
-      ],
-    },
-
-    {
       label: "Merch",
       href: "/merch",
     },
@@ -144,11 +130,6 @@ export default function Navbar() {
           href: "/mental-health",
         },
       ],
-    },
-
-    {
-      label: "Become A Sponsor",
-      href: "/become-a-sponsor",
     },
   ];
 
