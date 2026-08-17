@@ -46,7 +46,8 @@ type Battle = {
 export default function KidsBattlesPage() {
   const router = useRouter();
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] =
+    useState(true);
 
   const [userEmail, setUserEmail] =
     useState("");
@@ -66,6 +67,12 @@ export default function KidsBattlesPage() {
   useEffect(() => {
     checkAccess();
   }, []);
+
+  /*
+   * =========================================================
+   * CHECK ADMIN ACCESS
+   * =========================================================
+   */
 
   async function checkAccess() {
     try {
@@ -97,16 +104,23 @@ export default function KidsBattlesPage() {
         return;
       }
 
-      setUserEmail(user.email || "");
+      setUserEmail(
+        user.email || ""
+      );
 
       setIsSuperAdmin(
         admin.role === "super_admin"
       );
 
       await loadRounds();
+
     } catch (error) {
       console.error(error);
-      alert("Could not load battle system.");
+
+      alert(
+        "Could not load the battle system."
+      );
+
     } finally {
       setLoading(false);
     }
@@ -114,40 +128,14 @@ export default function KidsBattlesPage() {
 
   /*
    * =========================================================
-   * LOAD ROUNDS
+   * LOAD SEASON 2 KIDS EDITION ROUNDS
+   *
+   * Season 2 - Kids Edition = season ID 1
    * =========================================================
    */
 
   async function loadRounds() {
-    // FIRST get the Season 2 Kids Edition ID.
-    // This prevents "undefined" being passed into Supabase.
-
-    const {
-      data: season,
-      error: seasonError,
-    } = await supabase
-      .from("tiktok_seasons")
-      .select("id")
-      .eq(
-        "name",
-        "Season 2 - Kids Edition"
-      )
-      .maybeSingle();
-
-    if (seasonError) {
-      console.error(seasonError);
-      alert(seasonError.message);
-      return;
-    }
-
-    if (!season?.id) {
-      alert(
-        "Season 2 - Kids Edition could not be found."
-      );
-      return;
-    }
-
-    // NOW load only rounds belonging to this season.
+    const SEASON_ID = 1;
 
     const {
       data: roundRows,
@@ -161,29 +149,47 @@ export default function KidsBattlesPage() {
         battle_date,
         status
       `)
-      .eq("season_id", season.id)
+      .eq(
+        "season_id",
+        SEASON_ID
+      )
       .order("battle_date", {
         ascending: false,
       });
 
     if (roundsError) {
       console.error(roundsError);
-      alert(roundsError.message);
+
+      alert(
+        roundsError.message
+      );
+
       return;
     }
 
     const loadedRounds =
       roundRows || [];
 
-    setRounds(loadedRounds);
+    setRounds(
+      loadedRounds
+    );
 
-    if (loadedRounds.length === 0) {
+    /*
+     * If there are no rounds yet,
+     * show an empty state.
+     */
+
+    if (
+      loadedRounds.length === 0
+    ) {
       setSelectedRoundId(null);
       setBattles([]);
       return;
     }
 
-    // Default to the newest round.
+    /*
+     * Automatically select the newest round.
+     */
 
     const firstRound =
       loadedRounds[0];
@@ -199,7 +205,7 @@ export default function KidsBattlesPage() {
 
   /*
    * =========================================================
-   * LOAD BATTLES FOR ONE ROUND ONLY
+   * LOAD BATTLES FOR SELECTED ROUND ONLY
    * =========================================================
    */
 
@@ -228,14 +234,24 @@ export default function KidsBattlesPage() {
         judged_by,
         judged_at
       `)
-      .eq("round_id", roundId)
-      .order("battle_number", {
-        ascending: true,
-      });
+      .eq(
+        "round_id",
+        roundId
+      )
+      .order(
+        "battle_number",
+        {
+          ascending: true,
+        }
+      );
 
     if (error) {
       console.error(error);
-      alert(error.message);
+
+      alert(
+        error.message
+      );
+
       return;
     }
 
@@ -243,6 +259,11 @@ export default function KidsBattlesPage() {
       setBattles([]);
       return;
     }
+
+    /*
+     * Get every contestant ID used by
+     * this round's battles.
+     */
 
     const contestantIds =
       Array.from(
@@ -257,17 +278,25 @@ export default function KidsBattlesPage() {
           )
         )
       ).filter(
-        (id): id is number =>
+        (
+          id
+        ): id is number =>
           id !== null
       );
 
     const contestantMap =
-      new Map<number, Contestant>();
+      new Map<
+        number,
+        Contestant
+      >();
 
-    if (contestantIds.length > 0) {
+    if (
+      contestantIds.length > 0
+    ) {
       const {
         data: contestantRows,
-        error: contestantError,
+        error:
+          contestantError,
       } = await supabase
         .from("contestants")
         .select(`
@@ -280,17 +309,26 @@ export default function KidsBattlesPage() {
           mentor,
           audition_status
         `)
-        .in("id", contestantIds);
+        .in(
+          "id",
+          contestantIds
+        );
 
       if (contestantError) {
-        console.error(contestantError);
+        console.error(
+          contestantError
+        );
+
         alert(
           contestantError.message
         );
+
         return;
       }
 
-      (contestantRows || []).forEach(
+      (
+        contestantRows || []
+      ).forEach(
         (contestant) => {
           contestantMap.set(
             contestant.id,
@@ -299,6 +337,10 @@ export default function KidsBattlesPage() {
         }
       );
     }
+
+    /*
+     * Get judges.
+     */
 
     const judgeIds =
       Array.from(
@@ -309,16 +351,23 @@ export default function KidsBattlesPage() {
                 battle.judged_by
             )
             .filter(
-              (id): id is number =>
+              (
+                id
+              ): id is number =>
                 id !== null
             )
         )
       );
 
     const judgeMap =
-      new Map<number, Judge>();
+      new Map<
+        number,
+        Judge
+      >();
 
-    if (judgeIds.length > 0) {
+    if (
+      judgeIds.length > 0
+    ) {
       const {
         data: judges,
         error: judgeError,
@@ -329,13 +378,20 @@ export default function KidsBattlesPage() {
           email,
           role
         `)
-        .in("id", judgeIds);
+        .in(
+          "id",
+          judgeIds
+        );
 
       if (judgeError) {
-        console.error(judgeError);
+        console.error(
+          judgeError
+        );
       }
 
-      (judges || []).forEach(
+      (
+        judges || []
+      ).forEach(
         (judge) => {
           judgeMap.set(
             judge.id,
@@ -345,64 +401,78 @@ export default function KidsBattlesPage() {
       );
     }
 
-    const formattedBattles: Battle[] =
+    /*
+     * Build the final battle objects.
+     */
+
+    const formattedBattles =
       battleRows
-        .map((battle) => {
-          const left =
-            contestantMap.get(
-              battle.contestant_left_id
-            );
+        .map(
+          (battle) => {
+            const left =
+              contestantMap.get(
+                battle.contestant_left_id
+              );
 
-          const right =
-            contestantMap.get(
-              battle.contestant_right_id
-            );
+            const right =
+              contestantMap.get(
+                battle.contestant_right_id
+              );
 
-          if (!left || !right) {
-            return null;
+            if (
+              !left ||
+              !right
+            ) {
+              return null;
+            }
+
+            return {
+              id: battle.id,
+
+              round_id:
+                battle.round_id,
+
+              battle_number:
+                battle.battle_number,
+
+              contestant_left:
+                left,
+
+              contestant_right:
+                right,
+
+              winner:
+                battle.winner_id
+                  ? contestantMap.get(
+                      battle.winner_id
+                    ) || null
+                  : null,
+
+              loser:
+                battle.loser_id
+                  ? contestantMap.get(
+                      battle.loser_id
+                    ) || null
+                  : null,
+
+              status:
+                battle.status,
+
+              judged_by:
+                battle.judged_by,
+
+              judged_at:
+                battle.judged_at,
+
+              judge:
+                battle.judged_by
+                  ? judgeMap.get(
+                      battle.judged_by
+                    ) || null
+                  : null,
+            };
           }
-
-          return {
-            id: battle.id,
-
-            round_id:
-              battle.round_id,
-
-            battle_number:
-              battle.battle_number,
-
-            contestant_left: left,
-
-            contestant_right: right,
-
-            winner: battle.winner_id
-              ? contestantMap.get(
-                  battle.winner_id
-                ) || null
-              : null,
-
-            loser: battle.loser_id
-              ? contestantMap.get(
-                  battle.loser_id
-                ) || null
-              : null,
-
-            status:
-              battle.status,
-
-            judged_by:
-              battle.judged_by,
-
-            judged_at:
-              battle.judged_at,
-
-            judge: battle.judged_by
-              ? judgeMap.get(
-                  battle.judged_by
-                ) || null
-              : null,
-          };
-        })
+        )
         .filter(
           (
             battle
@@ -424,7 +494,9 @@ export default function KidsBattlesPage() {
   async function changeRound(
     roundId: number
   ) {
-    if (!roundId) return;
+    if (!roundId) {
+      return;
+    }
 
     setSelectedRoundId(
       roundId
@@ -439,7 +511,11 @@ export default function KidsBattlesPage() {
 
   /*
    * =========================================================
-   * OPEN INDIVIDUAL BATTLE
+   * OPEN BATTLE
+   *
+   * IMPORTANT:
+   * We send BOTH the battle number
+   * AND the round ID.
    * =========================================================
    */
 
@@ -467,14 +543,16 @@ export default function KidsBattlesPage() {
 
   /*
    * =========================================================
-   * DATE
+   * FORMAT DATE
    * =========================================================
    */
 
   function formatDate(
     date: string | null
   ) {
-    if (!date) return "";
+    if (!date) {
+      return "";
+    }
 
     return new Date(
       `${date}T12:00:00`
@@ -497,9 +575,11 @@ export default function KidsBattlesPage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
+
         <div className="text-xl font-black uppercase">
           Loading Battles...
         </div>
+
       </main>
     );
   }
@@ -534,7 +614,9 @@ export default function KidsBattlesPage() {
   return (
     <main className="min-h-screen bg-black text-white">
 
-      {/* HEADER */}
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
 
       <header className="border-b border-white/10 bg-zinc-950">
 
@@ -617,7 +699,9 @@ export default function KidsBattlesPage() {
               </button>
 
               <button
-                onClick={logout}
+                onClick={
+                  logout
+                }
                 className="
                   bg-red-600
                   px-5
@@ -640,7 +724,9 @@ export default function KidsBattlesPage() {
       </header>
 
 
-      {/* ROUND SELECTOR */}
+      {/* =====================================================
+          ROUND SELECTOR
+      ===================================================== */}
 
       <div className="max-w-7xl mx-auto px-5 pt-8">
 
@@ -658,7 +744,7 @@ export default function KidsBattlesPage() {
             <div>
 
               <p className="text-cyan-400 text-xs font-black uppercase tracking-[3px]">
-                Current Round
+                Competition Round
               </p>
 
               <h2 className="text-2xl md:text-3xl font-black uppercase mt-1">
@@ -714,8 +800,12 @@ export default function KidsBattlesPage() {
                 {rounds.map(
                   (round) => (
                     <option
-                      key={round.id}
-                      value={round.id}
+                      key={
+                        round.id
+                      }
+                      value={
+                        round.id
+                      }
                     >
                       {round.name} —{" "}
                       {formatDate(
@@ -736,9 +826,12 @@ export default function KidsBattlesPage() {
       </div>
 
 
-      {/* CONTENT */}
+      {/* =====================================================
+          CONTENT
+      ===================================================== */}
 
       <div className="max-w-7xl mx-auto px-5 py-8">
+
 
         {/* STATS */}
 
@@ -790,6 +883,7 @@ export default function KidsBattlesPage() {
                 h-full
                 bg-cyan-400
                 transition-all
+                duration-500
               "
               style={{
                 width:
@@ -808,7 +902,9 @@ export default function KidsBattlesPage() {
         </div>
 
 
-        {/* BATTLES */}
+        {/* ===================================================
+            BATTLES
+        =================================================== */}
 
         <div className="space-y-5">
 
@@ -821,7 +917,9 @@ export default function KidsBattlesPage() {
 
               return (
                 <div
-                  key={battle.id}
+                  key={
+                    battle.id
+                  }
                   className={`
                     bg-zinc-950
                     border
@@ -845,7 +943,9 @@ export default function KidsBattlesPage() {
 
                         <p className="text-cyan-400 text-xs font-black uppercase tracking-[3px]">
                           Battle{" "}
-                          {battle.battle_number}
+                          {
+                            battle.battle_number
+                          }
                         </p>
 
                         <p className="text-white/30 text-xs mt-1">
@@ -916,9 +1016,11 @@ export default function KidsBattlesPage() {
                         items-center
                         justify-center
                       ">
+
                         <span className="text-white/30 font-black text-xs">
                           VS
                         </span>
+
                       </div>
 
                     </div>
@@ -945,7 +1047,9 @@ export default function KidsBattlesPage() {
                   </div>
 
 
-                  {/* RESULT */}
+                  {/* =================================================
+                      RESULT
+                  ================================================= */}
 
                   {isCompleted &&
                     battle.winner &&
@@ -969,6 +1073,7 @@ export default function KidsBattlesPage() {
 
                           </div>
 
+
                           <div className="text-left md:text-right">
 
                             <p className="text-white/30 text-xs font-black uppercase tracking-wider">
@@ -989,6 +1094,7 @@ export default function KidsBattlesPage() {
                             )}
 
                           </div>
+
 
                           <button
                             onClick={() =>
@@ -1020,7 +1126,9 @@ export default function KidsBattlesPage() {
                     )}
 
 
-                  {/* PENDING */}
+                  {/* =================================================
+                      PENDING
+                  ================================================= */}
 
                   {!isCompleted && (
 
@@ -1060,7 +1168,9 @@ export default function KidsBattlesPage() {
         </div>
 
 
-        {/* EMPTY */}
+        {/* =====================================================
+            EMPTY ROUND
+        ===================================================== */}
 
         {battles.length === 0 && (
 
@@ -1203,6 +1313,8 @@ function ContestantResultCard({
 
       <div className="flex gap-4 items-center">
 
+        {/* PHOTO */}
+
         <div className="
           w-20
           h-24
@@ -1217,7 +1329,9 @@ function ContestantResultCard({
           {contestant.photo_url ? (
 
             <img
-              src={contestant.photo_url}
+              src={
+                contestant.photo_url
+              }
               alt={
                 contestant.full_name ||
                 ""
@@ -1250,6 +1364,8 @@ function ContestantResultCard({
         </div>
 
 
+        {/* DETAILS */}
+
         <div className="min-w-0 flex-1">
 
           <p className="
@@ -1272,7 +1388,9 @@ function ContestantResultCard({
             leading-tight
             mt-1
           ">
-            {contestant.full_name}
+            {
+              contestant.full_name
+            }
           </h3>
 
           <p className="
@@ -1282,8 +1400,10 @@ function ContestantResultCard({
             mt-1
             truncate
           ">
-            {contestant.tiktok_username ||
-              "No TikTok username"}
+            {
+              contestant.tiktok_username ||
+              "No TikTok username"
+            }
           </p>
 
           <p className="
@@ -1298,6 +1418,8 @@ function ContestantResultCard({
 
         </div>
 
+
+        {/* STATUS */}
 
         {completed && (
 
@@ -1351,7 +1473,7 @@ function ContestantResultCard({
 
 
 /* =========================================================
-   DATE/TIME
+   DATE / TIME
 ========================================================= */
 
 function formatDateTime(
