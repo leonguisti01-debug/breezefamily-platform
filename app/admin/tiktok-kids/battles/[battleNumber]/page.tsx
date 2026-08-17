@@ -214,6 +214,15 @@ export default function BattleJudgingPage() {
 
       setShowConfirmation(false);
 
+      // If this was already completed, this is a correction.
+      // Stay on the same battle so the corrected result can be verified.
+      if (battle.status === "completed") {
+        await loadBattle();
+        alert("Battle result corrected and saved.");
+        return;
+      }
+
+      // Normal first-time save: move to the next battle.
       const nextBattle = battleNumber + 1;
 
       if (nextBattle <= 15) {
@@ -241,11 +250,11 @@ export default function BattleJudgingPage() {
   }
 
   function selectWinner(id: number) {
-    if (battle?.status === "completed") {
-      return;
-    }
-
-    setSelectedWinner(id);
+    // Clicking the currently selected contestant again UNSELECTS them.
+    // This lets Kent recover from an accidental click before saving.
+    setSelectedWinner((current) =>
+      current === id ? null : id
+    );
   }
 
   function openConfirmation() {
@@ -368,7 +377,7 @@ export default function BattleJudgingPage() {
             </p>
 
             <p className="text-white/50 text-sm mt-1">
-              This result has already been saved.
+              This result is already saved. You can still change the selection and save a correction if needed.
             </p>
 
           </div>
@@ -383,7 +392,7 @@ export default function BattleJudgingPage() {
           <ContestantCard
             contestant={left}
             selected={selectedWinner === left.id}
-            disabled={completed}
+            disabled={false}
             onSelect={() =>
               selectWinner(left.id)
             }
@@ -392,7 +401,7 @@ export default function BattleJudgingPage() {
           <ContestantCard
             contestant={right}
             selected={selectedWinner === right.id}
-            disabled={completed}
+            disabled={false}
             onSelect={() =>
               selectWinner(right.id)
             }
@@ -416,7 +425,6 @@ export default function BattleJudgingPage() {
             <div className="grid md:grid-cols-2 gap-4 mt-5">
 
               <button
-                disabled={completed}
                 onClick={() =>
                   selectWinner(left.id)
                 }
@@ -447,7 +455,6 @@ export default function BattleJudgingPage() {
               </button>
 
               <button
-                disabled={completed}
                 onClick={() =>
                   selectWinner(right.id)
                 }
@@ -481,11 +488,10 @@ export default function BattleJudgingPage() {
 
             {/* SAVE */}
 
-            {!completed && (
-              <button
-                onClick={openConfirmation}
-                disabled={!selectedWinner || saving}
-                className="
+            <button
+              onClick={openConfirmation}
+              disabled={!selectedWinner || saving}
+              className="
                   w-full
                   mt-5
                   bg-cyan-400
@@ -502,9 +508,10 @@ export default function BattleJudgingPage() {
                   transition
                 "
               >
-                Save Result & Next Battle →
-              </button>
-            )}
+                {completed
+                  ? "Save Corrected Result"
+                  : "Save Result & Next Battle →"}
+            </button>
 
             {/* COMPLETED */}
 
@@ -609,7 +616,9 @@ export default function BattleJudgingPage() {
               </div>
 
               <p className="text-white/40 text-center text-sm mt-6 leading-relaxed">
-                This result will be saved and the next battle will open automatically.
+                {completed
+                  ? "This correction will replace the currently saved battle result."
+                  : "This result will be saved and the next battle will open automatically."}
               </p>
 
               {/* BUTTONS */}
