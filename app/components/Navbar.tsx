@@ -21,6 +21,8 @@ type NavItem = {
   children?: NavChild[];
 };
 
+type AdminRole = "admin" | "super_admin" | null;
+
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -30,6 +32,9 @@ export default function Navbar() {
 
   const [loggedIn, setLoggedIn] =
     useState(false);
+
+  const [adminRole, setAdminRole] =
+    useState<AdminRole>(null);
 
   const [openDropdown, setOpenDropdown] =
     useState<string | null>(null);
@@ -46,20 +51,49 @@ export default function Navbar() {
       data: { user },
     } = await supabase.auth.getUser();
 
-    setLoggedIn(!!user);
+    if (!user) {
+      setLoggedIn(false);
+      setAdminRole(null);
+      return;
+    }
+
+    setLoggedIn(true);
+
+    const { data: admin } = await supabase
+      .from("admin_users")
+      .select("role, active")
+      .eq("email", user.email)
+      .maybeSingle();
+
+    if (
+      admin &&
+      admin.active === true &&
+      (admin.role === "admin" ||
+        admin.role === "super_admin")
+    ) {
+      setAdminRole(admin.role);
+    } else {
+      setAdminRole(null);
+    }
   };
 
   const logout = async () => {
     await supabase.auth.signOut();
 
     setLoggedIn(false);
+    setAdminRole(null);
 
     router.push("/");
-
     router.refresh();
   };
 
-  const navItems: NavItem[] = [
+  /*
+   * =========================================================
+   * PUBLIC NAVIGATION
+   * =========================================================
+   */
+
+  const publicNavItems: NavItem[] = [
     {
       label: "Home",
       href: "/",
@@ -75,14 +109,6 @@ export default function Navbar() {
         {
           label: "Rules",
           href: "/documents/tiktok-stars-kids-rules.pdf",
-        },
-        {
-          label: "TikTok Admin",
-          href: "/admin/tiktok-kids",
-        },
-        {
-          label: "Battle Judging",
-          href: "/admin/tiktok-kids/battles",
         },
       ],
     },
@@ -126,6 +152,34 @@ export default function Navbar() {
     },
   ];
 
+  /*
+   * =========================================================
+   * ADMIN NAVIGATION
+   * =========================================================
+   */
+
+  const adminNavItems: NavItem[] = [];
+
+  if (adminRole === "admin" || adminRole === "super_admin") {
+    adminNavItems.push(
+      {
+        label: "TikTok Admin",
+        href: "/admin/tiktok-kids",
+      },
+      {
+        label: "Battle Judging",
+        href: "/admin/tiktok-kids/battles",
+      }
+    );
+  }
+
+  if (adminRole === "super_admin") {
+    adminNavItems.push({
+      label: "Round Manager",
+      href: "/admin/tiktok-kids/rounds",
+    });
+  }
+
   const isDropdownActive = (
     children: NavChild[]
   ) => {
@@ -141,7 +195,9 @@ export default function Navbar() {
 
         <div className="h-[56px] flex items-center justify-between px-4 md:px-6">
 
-          {/* LOGO */}
+          {/* =================================================
+              LOGO
+          ================================================= */}
 
           <Link
             href="/"
@@ -154,17 +210,20 @@ export default function Navbar() {
             />
           </Link>
 
+
           {/* =================================================
               DESKTOP NAV
           ================================================= */}
 
           <nav className="hidden md:flex items-center gap-6">
 
-            {navItems.map((item) => {
+            {publicNavItems.map((item) => {
 
               if (item.children) {
                 const active =
-                  isDropdownActive(item.children);
+                  isDropdownActive(
+                    item.children
+                  );
 
                 return (
                   <div
@@ -216,69 +275,65 @@ export default function Navbar() {
                         "
                       >
 
-                        {item.children.map((child) => (
+                        {item.children.map(
+                          (child) => (
 
-                          child.href.endsWith(".pdf") ? (
+                            child.href.endsWith(".pdf") ? (
 
-                            <a
-                              key={child.href}
-                              href={child.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={() =>
-                                setOpenDropdown(null)
-                              }
-                              className="
-                                block
-                                px-4
-                                py-3
-                                text-[11px]
-                                uppercase
-                                tracking-[2px]
-                                transition
-                                text-white/80
-                                hover:text-[#8DFF00]
-                                hover:bg-white/5
-                              "
-                            >
-                              {child.label}
-                            </a>
-
-                          ) : (
-
-                            <Link
-                              key={child.href}
-                              href={child.href}
-                              onClick={() =>
-                                setOpenDropdown(null)
-                              }
-                              className={`
-                                block
-                                px-4
-                                py-3
-                                text-[11px]
-                                uppercase
-                                tracking-[2px]
-                                transition
-                                ${
-                                  pathname === child.href
-                                    ? "text-[#8DFF00] bg-white/5"
-                                    : "text-white/80 hover:text-[#8DFF00] hover:bg-white/5"
+                              <a
+                                key={child.href}
+                                href={child.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() =>
+                                  setOpenDropdown(null)
                                 }
-                                ${
-                                  child.href ===
-                                  "/admin/tiktok-kids/battles"
-                                    ? "border-t border-white/10 text-cyan-400 font-black"
-                                    : ""
+                                className="
+                                  block
+                                  px-4
+                                  py-3
+                                  text-[11px]
+                                  uppercase
+                                  tracking-[2px]
+                                  transition
+                                  text-white/80
+                                  hover:text-[#8DFF00]
+                                  hover:bg-white/5
+                                "
+                              >
+                                {child.label}
+                              </a>
+
+                            ) : (
+
+                              <Link
+                                key={child.href}
+                                href={child.href}
+                                onClick={() =>
+                                  setOpenDropdown(null)
                                 }
-                              `}
-                            >
-                              {child.label}
-                            </Link>
+                                className={`
+                                  block
+                                  px-4
+                                  py-3
+                                  text-[11px]
+                                  uppercase
+                                  tracking-[2px]
+                                  transition
+                                  ${
+                                    pathname === child.href
+                                      ? "text-[#8DFF00] bg-white/5"
+                                      : "text-white/80 hover:text-[#8DFF00] hover:bg-white/5"
+                                  }
+                                `}
+                              >
+                                {child.label}
+                              </Link>
+
+                            )
 
                           )
-
-                        ))}
+                        )}
 
                       </div>
 
@@ -315,7 +370,96 @@ export default function Navbar() {
 
             })}
 
+
+            {/* =================================================
+                ADMIN NAVIGATION
+            ================================================= */}
+
+            {adminNavItems.length > 0 && (
+
+              <div className="relative">
+
+                <button
+                  onClick={() =>
+                    setOpenDropdown(
+                      openDropdown === "Admin"
+                        ? null
+                        : "Admin"
+                    )
+                  }
+                  className="
+                    text-[11px]
+                    uppercase
+                    tracking-[2px]
+                    font-black
+                    whitespace-nowrap
+                    text-cyan-400
+                    hover:text-cyan-300
+                    transition
+                  "
+                >
+                  Admin ▼
+                </button>
+
+                {openDropdown === "Admin" && (
+
+                  <div
+                    className="
+                      absolute
+                      top-full
+                      right-0
+                      mt-2
+                      min-w-[220px]
+                      rounded-xl
+                      border
+                      border-cyan-400/20
+                      bg-black/95
+                      backdrop-blur-xl
+                      overflow-hidden
+                      z-50
+                    "
+                  >
+
+                    {adminNavItems.map(
+                      (child) => (
+
+                        <Link
+                          key={child.href}
+                          href={child.href!}
+                          onClick={() =>
+                            setOpenDropdown(null)
+                          }
+                          className={`
+                            block
+                            px-4
+                            py-3
+                            text-[11px]
+                            uppercase
+                            tracking-[2px]
+                            transition
+                            ${
+                              pathname === child.href
+                                ? "text-cyan-400 bg-white/5 font-black"
+                                : "text-white/80 hover:text-cyan-400 hover:bg-white/5"
+                            }
+                          `}
+                        >
+                          {child.label}
+                        </Link>
+
+                      )
+                    )}
+
+                  </div>
+
+                )}
+
+              </div>
+
+            )}
+
           </nav>
+
 
           {/* =================================================
               RIGHT SIDE DESKTOP
@@ -373,9 +517,13 @@ export default function Navbar() {
               />
             </a>
 
-            {/* ADMIN LOGIN */}
+
+            {/* =================================================
+                ADMIN LOGIN
+            ================================================= */}
 
             <Link href="/admin/login">
+
               <button
                 className="
                   border
@@ -395,13 +543,20 @@ export default function Navbar() {
               >
                 ADMIN LOGIN
               </button>
+
             </Link>
 
-            {/* MEMBER LOGIN */}
+
+            {/* =================================================
+                MEMBER LOGIN
+            ================================================= */}
 
             {!loggedIn ? (
+
               <>
+
                 <Link href="/login">
+
                   <button
                     className="
                       border
@@ -418,9 +573,11 @@ export default function Navbar() {
                   >
                     LOGIN
                   </button>
+
                 </Link>
 
                 <Link href="/register">
+
                   <button
                     className="
                       bg-[#8DFF00]
@@ -439,11 +596,17 @@ export default function Navbar() {
                   >
                     JOIN THE FAMILY
                   </button>
+
                 </Link>
+
               </>
+
             ) : (
+
               <>
+
                 <Link href="/profile">
+
                   <button
                     className="
                       border
@@ -460,6 +623,7 @@ export default function Navbar() {
                   >
                     MY ACCOUNT
                   </button>
+
                 </Link>
 
                 <button
@@ -478,10 +642,13 @@ export default function Navbar() {
                 >
                   LOGOUT
                 </button>
+
               </>
+
             )}
 
           </div>
+
 
           {/* =================================================
               MOBILE MENU BUTTON
@@ -493,12 +660,18 @@ export default function Navbar() {
                 !mobileMenuOpen
               )
             }
-            className="md:hidden text-white text-3xl font-bold"
+            className="
+              md:hidden
+              text-white
+              text-3xl
+              font-bold
+            "
           >
             ☰
           </button>
 
         </div>
+
 
         {/* ===================================================
             MOBILE MENU
@@ -517,16 +690,25 @@ export default function Navbar() {
 
             <div className="flex flex-col gap-5">
 
-              {navItems.map((item) => {
+
+              {/* =================================================
+                  PUBLIC MOBILE NAV
+              ================================================= */}
+
+              {publicNavItems.map((item) => {
 
                 if (item.children) {
+
                   return (
-                    <div key={item.label}>
+                    <div
+                      key={item.label}
+                    >
 
                       <button
                         onClick={() =>
                           setOpenMobileDropdown(
-                            openMobileDropdown === item.label
+                            openMobileDropdown ===
+                              item.label
                               ? null
                               : item.label
                           )
@@ -543,52 +725,60 @@ export default function Navbar() {
                         {item.label} ▼
                       </button>
 
-                      {openMobileDropdown === item.label && (
+
+                      {openMobileDropdown ===
+                        item.label && (
 
                         <div className="pl-4 pt-3 flex flex-col gap-3">
 
-                          {item.children.map((child) => (
+                          {item.children.map(
+                            (child) => (
 
-                            child.href.endsWith(".pdf") ? (
+                              child.href.endsWith(".pdf") ? (
 
-                              <a
-                                key={child.href}
-                                href={child.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={() =>
-                                  setMobileMenuOpen(false)
-                                }
-                              >
-                                <span className="text-white/80">
-                                  {child.label}
-                                </span>
-                              </a>
-
-                            ) : (
-
-                              <Link
-                                key={child.href}
-                                href={child.href}
-                                onClick={() =>
-                                  setMobileMenuOpen(false)
-                                }
-                              >
-                                <span
-                                  className={
-                                    child.href ===
-                                    "/admin/tiktok-kids/battles"
-                                      ? "text-cyan-400 font-black"
-                                      : "text-white/80"
+                                <a
+                                  key={child.href}
+                                  href={child.href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={() =>
+                                    setMobileMenuOpen(
+                                      false
+                                    )
                                   }
                                 >
-                                  {child.label}
-                                </span>
-                              </Link>
+                                  <span className="text-white/80">
+                                    {child.label}
+                                  </span>
+                                </a>
+
+                              ) : (
+
+                                <Link
+                                  key={child.href}
+                                  href={child.href}
+                                  onClick={() =>
+                                    setMobileMenuOpen(
+                                      false
+                                    )
+                                  }
+                                >
+                                  <span
+                                    className={
+                                      pathname ===
+                                      child.href
+                                        ? "text-[#8DFF00]"
+                                        : "text-white/80"
+                                    }
+                                  >
+                                    {child.label}
+                                  </span>
+                                </Link>
+
+                              )
 
                             )
-
-                          ))}
+                          )}
 
                         </div>
 
@@ -596,6 +786,7 @@ export default function Navbar() {
 
                     </div>
                   );
+
                 }
 
                 return (
@@ -603,7 +794,9 @@ export default function Navbar() {
                     key={item.href}
                     href={item.href!}
                     onClick={() =>
-                      setMobileMenuOpen(false)
+                      setMobileMenuOpen(
+                        false
+                      )
                     }
                   >
                     <span
@@ -625,9 +818,86 @@ export default function Navbar() {
 
               })}
 
-              {/* =============================================
+
+              {/* =================================================
+                  MOBILE ADMIN NAV
+              ================================================= */}
+
+              {adminNavItems.length > 0 && (
+
+                <div className="border-t border-cyan-400/20 pt-5">
+
+                  <button
+                    onClick={() =>
+                      setOpenMobileDropdown(
+                        openMobileDropdown ===
+                          "Admin"
+                          ? null
+                          : "Admin"
+                      )
+                    }
+                    className="
+                      w-full
+                      text-left
+                      uppercase
+                      tracking-[2px]
+                      font-black
+                      text-cyan-400
+                    "
+                  >
+                    Admin ▼
+                  </button>
+
+
+                  {openMobileDropdown ===
+                    "Admin" && (
+
+                    <div className="pl-4 pt-3 flex flex-col gap-3">
+
+                      {adminNavItems.map(
+                        (child) => (
+
+                          <Link
+                            key={child.href}
+                            href={child.href!}
+                            onClick={() =>
+                              setMobileMenuOpen(
+                                false
+                              )
+                            }
+                          >
+                            <span
+                              className={`
+                                uppercase
+                                tracking-[2px]
+                                font-bold
+                                ${
+                                  pathname ===
+                                  child.href
+                                    ? "text-cyan-400"
+                                    : "text-white/80"
+                                }
+                              `}
+                            >
+                              {child.label}
+                            </span>
+                          </Link>
+
+                        )
+                      )}
+
+                    </div>
+
+                  )}
+
+                </div>
+
+              )}
+
+
+              {/* =================================================
                   MOBILE ADMIN LOGIN
-              ============================================= */}
+              ================================================= */}
 
               <div className="border-t border-white/10 pt-5">
 
@@ -637,6 +907,7 @@ export default function Navbar() {
                     setMobileMenuOpen(false)
                   }
                 >
+
                   <button
                     className="
                       w-full
@@ -654,15 +925,18 @@ export default function Navbar() {
                   >
                     ADMIN LOGIN
                   </button>
+
                 </Link>
 
               </div>
 
-              {/* =============================================
-                  MEMBER LOGIN
-              ============================================= */}
+
+              {/* =================================================
+                  MOBILE MEMBER LOGIN
+              ================================================= */}
 
               {!loggedIn ? (
+
                 <>
 
                   <Link
@@ -671,6 +945,7 @@ export default function Navbar() {
                       setMobileMenuOpen(false)
                     }
                   >
+
                     <button
                       className="
                         w-full
@@ -685,7 +960,9 @@ export default function Navbar() {
                     >
                       LOGIN
                     </button>
+
                   </Link>
+
 
                   <Link
                     href="/register"
@@ -693,6 +970,7 @@ export default function Navbar() {
                       setMobileMenuOpen(false)
                     }
                   >
+
                     <button
                       className="
                         w-full
@@ -706,10 +984,13 @@ export default function Navbar() {
                     >
                       JOIN THE FAMILY
                     </button>
+
                   </Link>
 
                 </>
+
               ) : (
+
                 <>
 
                   <Link
@@ -718,6 +999,7 @@ export default function Navbar() {
                       setMobileMenuOpen(false)
                     }
                   >
+
                     <button
                       className="
                         w-full
@@ -732,7 +1014,9 @@ export default function Navbar() {
                     >
                       MY ACCOUNT
                     </button>
+
                   </Link>
+
 
                   <button
                     onClick={logout}
@@ -750,6 +1034,7 @@ export default function Navbar() {
                   </button>
 
                 </>
+
               )}
 
             </div>
