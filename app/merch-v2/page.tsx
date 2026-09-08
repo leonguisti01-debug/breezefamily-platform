@@ -12,34 +12,12 @@ const BREEZE_GREEN = "#8DFF00";
 const COURIER_FEE = 150;
 const CART_KEY = "breeze_cart_v2";
 
-/*
-|--------------------------------------------------------------------------
-| CHRISTIAN COLLECTION
-|--------------------------------------------------------------------------
-|
-| Leave false until Kent confirms.
-| Change to true later when we intentionally add the Christian collection.
-|
-*/
-
 const ENABLE_CHRISTIAN_LINE = false;
-
-/*
-|--------------------------------------------------------------------------
-| SUPABASE
-|--------------------------------------------------------------------------
-*/
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
-
-/*
-|--------------------------------------------------------------------------
-| TYPES
-|--------------------------------------------------------------------------
-*/
 
 type Product = {
   id: number;
@@ -72,18 +50,8 @@ type Category = {
   icon: ReactNode;
 };
 
-/*
-|--------------------------------------------------------------------------
-| HELPERS
-|--------------------------------------------------------------------------
-*/
-
-function priceNumber(
-  value: string | number
-) {
-  if (
-    typeof value === "number"
-  ) {
+function priceNumber(value: string | number) {
+  if (typeof value === "number") {
     return value;
   }
 
@@ -91,39 +59,19 @@ function priceNumber(
     .replace(/[^\d.,]/g, "")
     .replace(",", ".");
 
+  return Number.parseFloat(cleaned) || 0;
+}
+
+function money(value: string | number) {
+  return `R${priceNumber(value).toFixed(0)}`;
+}
+
+function sameCategory(product: Product, category: string) {
   return (
-    Number.parseFloat(cleaned) ||
-    0
+    product.category?.trim().toLowerCase() ===
+    category.trim().toLowerCase()
   );
 }
-
-function money(
-  value: string | number
-) {
-  return `R${priceNumber(
-    value
-  ).toFixed(0)}`;
-}
-
-function sameCategory(
-  product: Product,
-  category: string
-) {
-  return (
-    product.category
-      ?.trim()
-      .toLowerCase() ===
-    category
-      .trim()
-      .toLowerCase()
-  );
-}
-
-/*
-|--------------------------------------------------------------------------
-| ICONS
-|--------------------------------------------------------------------------
-*/
 
 function BagIcon({
   className = "w-6 h-6",
@@ -161,58 +109,8 @@ function SearchIcon({
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <circle
-        cx="11"
-        cy="11"
-        r="7"
-      />
+      <circle cx="11" cy="11" r="7" />
       <path d="m20 20-4-4" />
-    </svg>
-  );
-}
-
-function UserIcon({
-  className = "w-6 h-6",
-}: {
-  className?: string;
-}) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle
-        cx="12"
-        cy="8"
-        r="4"
-      />
-      <path d="M4 21c.7-4 3.5-6 8-6s7.3 2 8 6" />
-    </svg>
-  );
-}
-
-function MenuIcon({
-  className = "w-6 h-6",
-}: {
-  className?: string;
-}) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
-      <path d="M4 7h16" />
-      <path d="M4 12h16" />
-      <path d="M4 17h16" />
     </svg>
   );
 }
@@ -230,16 +128,8 @@ function TruckIcon() {
     >
       <path d="M3 6h11v10H3V6Z" />
       <path d="M14 9h4l3 3v4h-7V9Z" />
-      <circle
-        cx="7"
-        cy="18"
-        r="2"
-      />
-      <circle
-        cx="18"
-        cy="18"
-        r="2"
-      />
+      <circle cx="7" cy="18" r="2" />
+      <circle cx="18" cy="18" r="2" />
     </svg>
   );
 }
@@ -275,20 +165,8 @@ function GameIcon() {
       <path d="M7 8h10c3 0 5 2.5 5 5.5S20.5 19 18 19c-2 0-3-2-6-2s-4 2-6 2c-2.5 0-4-2.5-4-5.5S4 8 7 8Z" />
       <path d="M7 12v4" />
       <path d="M5 14h4" />
-      <circle
-        cx="17"
-        cy="13"
-        r=".8"
-        fill="currentColor"
-        stroke="none"
-      />
-      <circle
-        cx="19"
-        cy="15"
-        r=".8"
-        fill="currentColor"
-        stroke="none"
-      />
+      <circle cx="17" cy="13" r=".8" fill="currentColor" stroke="none" />
+      <circle cx="19" cy="15" r=".8" fill="currentColor" stroke="none" />
     </svg>
   );
 }
@@ -304,25 +182,9 @@ function SmileIcon() {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <circle
-        cx="12"
-        cy="12"
-        r="9"
-      />
-      <circle
-        cx="9"
-        cy="10"
-        r=".8"
-        fill="currentColor"
-        stroke="none"
-      />
-      <circle
-        cx="15"
-        cy="10"
-        r=".8"
-        fill="currentColor"
-        stroke="none"
-      />
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="9" cy="10" r=".8" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="10" r=".8" fill="currentColor" stroke="none" />
       <path d="M8 15c1 1.4 2.3 2 4 2s3-.6 4-2" />
     </svg>
   );
@@ -390,65 +252,22 @@ function HeartIcon() {
   );
 }
 
-/*
-|--------------------------------------------------------------------------
-| PAGE
-|--------------------------------------------------------------------------
-*/
-
 export default function MerchV2Page() {
-  const [
-    products,
-    setProducts,
-  ] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [
-    loading,
-    setLoading,
-  ] = useState(true);
+  const [selectedCategory, setSelectedCategory] =
+    useState("All");
 
-  const [
-    selectedCategory,
-    setSelectedCategory,
-  ] = useState("All");
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cartOpen, setCartOpen] = useState(false);
 
-  const [
-    cart,
-    setCart,
-  ] = useState<CartItem[]>([]);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
-  const [
-    cartOpen,
-    setCartOpen,
-  ] = useState(false);
-
-  const [
-    mobileMenuOpen,
-    setMobileMenuOpen,
-  ] = useState(false);
-
-  const [
-    searchOpen,
-    setSearchOpen,
-  ] = useState(false);
-
-  const [
-    search,
-    setSearch,
-  ] = useState("");
-
-  const [
-    selectedSizes,
-    setSelectedSizes,
-  ] = useState<
+  const [selectedSizes, setSelectedSizes] = useState<
     Record<number, string>
   >({});
-
-  /*
-  |--------------------------------------------------------------------------
-  | LOAD
-  |--------------------------------------------------------------------------
-  */
 
   useEffect(() => {
     loadProducts();
@@ -458,30 +277,16 @@ export default function MerchV2Page() {
   async function loadProducts() {
     setLoading(true);
 
-    const {
-      data,
-      error,
-    } = await supabase
+    const { data, error } = await supabase
       .from("merch_products")
       .select("*")
-      .eq(
-        "status",
-        "active"
-      )
-      .order(
-        "featured",
-        {
-          ascending:
-            false,
-        }
-      )
-      .order(
-        "created_at",
-        {
-          ascending:
-            false,
-        }
-      );
+      .eq("status", "active")
+      .order("featured", {
+        ascending: false,
+      })
+      .order("created_at", {
+        ascending: false,
+      });
 
     if (error) {
       console.error(
@@ -490,145 +295,84 @@ export default function MerchV2Page() {
       );
     }
 
-    const loaded =
-      (data ||
-        []) as Product[];
+    const loaded = (data || []) as Product[];
 
     setProducts(loaded);
 
-    const defaults: Record<
-      number,
-      string
-    > = {};
+    const defaults: Record<number, string> = {};
 
-    loaded.forEach(
-      (product) => {
-        if (
-          product.has_sizes
-        ) {
-          defaults[
-            product.id
-          ] =
-            product.sizes?.[
-              0
-            ] || "M";
-        }
+    loaded.forEach((product) => {
+      if (product.has_sizes) {
+        defaults[product.id] =
+          product.sizes?.[0] || "M";
       }
-    );
+    });
 
-    setSelectedSizes(
-      defaults
-    );
-
+    setSelectedSizes(defaults);
     setLoading(false);
   }
 
   function loadCart() {
     try {
-      const raw =
-        localStorage.getItem(
-          CART_KEY
-        );
-
-      const stored =
-        raw
-          ? JSON.parse(raw)
-          : [];
+      const raw = localStorage.getItem(CART_KEY);
+      const stored = raw ? JSON.parse(raw) : [];
 
       setCart(
-        Array.isArray(
-          stored
-        )
-          ? stored
-          : []
+        Array.isArray(stored) ? stored : []
       );
     } catch {
       setCart([]);
     }
   }
 
-  function saveCart(
-    updated:
-      CartItem[]
-  ) {
+  function saveCart(updated: CartItem[]) {
     setCart(updated);
 
     localStorage.setItem(
       CART_KEY,
-      JSON.stringify(
-        updated
-      )
+      JSON.stringify(updated)
     );
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | CART ACTIONS
-  |--------------------------------------------------------------------------
-  */
+  function addToCart(product: Product) {
+    const size = product.has_sizes
+      ? selectedSizes[product.id] ||
+        product.sizes?.[0] ||
+        "M"
+      : undefined;
 
-  function addToCart(
-    product: Product
-  ) {
-    const size =
-      product.has_sizes
-        ? selectedSizes[
-            product.id
-          ] ||
-          product.sizes?.[
-            0
-          ] ||
-          "M"
-        : undefined;
+    const existing = cart.find(
+      (item) =>
+        item.id === product.id &&
+        item.size === size
+    );
 
-    const existing =
-      cart.find(
-        (item) =>
-          item.id ===
-            product.id &&
-          item.size ===
-            size
-      );
-
-    let updated:
-      CartItem[];
+    let updated: CartItem[];
 
     if (existing) {
-      updated =
-        cart.map(
-          (item) => {
-            if (
-              item.id ===
-                product.id &&
-              item.size ===
-                size
-            ) {
-              return {
-                ...item,
-                quantity:
-                  item.quantity +
-                  1,
-              };
-            }
+      updated = cart.map((item) => {
+        if (
+          item.id === product.id &&
+          item.size === size
+        ) {
+          return {
+            ...item,
+            quantity: item.quantity + 1,
+          };
+        }
 
-            return item;
-          }
-        );
+        return item;
+      });
     } else {
       updated = [
         ...cart,
         {
-          id:
-            product.id,
-          name:
-            product.name,
-          price:
-            product.price,
-          image_url:
-            product.image_url,
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image_url: product.image_url,
           quantity: 1,
-          category:
-            product.category,
+          category: product.category,
           size,
         },
       ];
@@ -642,58 +386,40 @@ export default function MerchV2Page() {
     item: CartItem,
     amount: number
   ) {
-    const updated =
-      cart
-        .map(
-          (cartItem) => {
-            if (
-              cartItem.id ===
-                item.id &&
-              cartItem.size ===
-                item.size
-            ) {
-              return {
-                ...cartItem,
-                quantity:
-                  cartItem.quantity +
-                  amount,
-              };
-            }
+    const updated = cart
+      .map((cartItem) => {
+        if (
+          cartItem.id === item.id &&
+          cartItem.size === item.size
+        ) {
+          return {
+            ...cartItem,
+            quantity:
+              cartItem.quantity + amount,
+          };
+        }
 
-            return cartItem;
-          }
-        )
-        .filter(
-          (cartItem) =>
-            cartItem.quantity >
-            0
-        );
-
-    saveCart(updated);
-  }
-
-  function removeFromCart(
-    item: CartItem
-  ) {
-    const updated =
-      cart.filter(
+        return cartItem;
+      })
+      .filter(
         (cartItem) =>
-          !(
-            cartItem.id ===
-              item.id &&
-            cartItem.size ===
-              item.size
-          )
+          cartItem.quantity > 0
       );
 
     saveCart(updated);
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | PRODUCT GROUPS
-  |--------------------------------------------------------------------------
-  */
+  function removeFromCart(item: CartItem) {
+    const updated = cart.filter(
+      (cartItem) =>
+        !(
+          cartItem.id === item.id &&
+          cartItem.size === item.size
+        )
+    );
+
+    saveCart(updated);
+  }
 
   const christianProducts =
     products.filter(
@@ -721,108 +447,110 @@ export default function MerchV2Page() {
       .slice(0, 4);
 
   const featured =
-    featuredProducts.length >
-    0
+    featuredProducts.length > 0
       ? featuredProducts
-      : products.slice(
-          0,
-          4
-        );
+      : products.slice(0, 4);
 
   const heroProduct:
     | Product
     | undefined =
     ENABLE_CHRISTIAN_LINE
-      ? christianProducts[
-          0
-        ] ||
+      ? christianProducts[0] ||
         products[0]
       : products[0];
 
   const filteredProducts =
     useMemo(() => {
-      let result =
-        [...products];
+      let result = [...products];
 
       if (
-        selectedCategory !==
-        "All"
+        selectedCategory !== "All"
       ) {
         if (
           selectedCategory ===
           "Christian Line"
         ) {
-          result =
-            result.filter(
-              (
-                product
-              ) =>
-                sameCategory(
-                  product,
-                  "Christian Line"
-                ) ||
-                sameCategory(
-                  product,
-                  "Christian"
-                ) ||
-                sameCategory(
-                  product,
-                  "Faith"
-                )
-            );
+          result = result.filter(
+            (product) =>
+              sameCategory(
+                product,
+                "Christian Line"
+              ) ||
+              sameCategory(
+                product,
+                "Christian"
+              ) ||
+              sameCategory(
+                product,
+                "Faith"
+              )
+          );
+        } else if (
+          selectedCategory === "My Merch"
+        ) {
+          result = result.filter(
+            (product) => {
+              const category =
+                product.category
+                  ?.trim()
+                  .toLowerCase() || "";
+
+              return [
+                "hoodies",
+                "hoodie",
+                "tees",
+                "tee",
+                "t-shirts",
+                "t-shirt",
+                "shirts",
+                "shirt",
+                "caps",
+                "cap",
+                "mugs",
+                "mug",
+                "accessories",
+                "accessory",
+                "my merch",
+              ].includes(category);
+            }
+          );
         } else {
-          result =
-            result.filter(
-              (
-                product
-              ) =>
-                sameCategory(
-                  product,
-                  selectedCategory
-                )
-            );
+          result = result.filter(
+            (product) =>
+              sameCategory(
+                product,
+                selectedCategory
+              )
+          );
         }
       }
 
-      const q =
-        search
-          .trim()
-          .toLowerCase();
+      const q = search
+        .trim()
+        .toLowerCase();
 
       if (q) {
-        result =
-          result.filter(
-            (
-              product
-            ) => {
-              const name =
-                product.name
-                  ?.toLowerCase() ||
-                "";
+        result = result.filter(
+          (product) => {
+            const name =
+              product.name?.toLowerCase() ||
+              "";
 
-              const category =
-                product.category
-                  ?.toLowerCase() ||
-                "";
+            const category =
+              product.category?.toLowerCase() ||
+              "";
 
-              const description =
-                product.description
-                  ?.toLowerCase() ||
-                "";
+            const description =
+              product.description?.toLowerCase() ||
+              "";
 
-              return (
-                name.includes(
-                  q
-                ) ||
-                category.includes(
-                  q
-                ) ||
-                description.includes(
-                  q
-                )
-              );
-            }
-          );
+            return (
+              name.includes(q) ||
+              category.includes(q) ||
+              description.includes(q)
+            );
+          }
+        );
       }
 
       return result;
@@ -832,36 +560,19 @@ export default function MerchV2Page() {
       search,
     ]);
 
-  /*
-  |--------------------------------------------------------------------------
-  | CART TOTALS
-  |--------------------------------------------------------------------------
-  */
+  const cartCount = cart.reduce(
+    (total, item) =>
+      total + item.quantity,
+    0
+  );
 
-  const cartCount =
-    cart.reduce(
-      (
-        total,
-        item
-      ) =>
-        total +
+  const subtotal = cart.reduce(
+    (total, item) =>
+      total +
+      priceNumber(item.price) *
         item.quantity,
-      0
-    );
-
-  const subtotal =
-    cart.reduce(
-      (
-        total,
-        item
-      ) =>
-        total +
-        priceNumber(
-          item.price
-        ) *
-          item.quantity,
-      0
-    );
+    0
+  );
 
   const delivery =
     cart.length > 0
@@ -869,22 +580,12 @@ export default function MerchV2Page() {
       : 0;
 
   const total =
-    subtotal +
-    delivery;
+    subtotal + delivery;
 
-  /*
-  |--------------------------------------------------------------------------
-  | CATEGORIES
-  |--------------------------------------------------------------------------
-  */
-
-  const categories:
-    Category[] = [
+  const categories: Category[] = [
     {
-      name:
-        "My Merch",
-      subtitle:
-        "Breeze Originals",
+      name: "My Merch",
+      subtitle: "Breeze Originals",
       icon: (
         <BagIcon className="w-8 h-8" />
       ),
@@ -893,355 +594,64 @@ export default function MerchV2Page() {
     ...(ENABLE_CHRISTIAN_LINE
       ? [
           {
-            name:
-              "Christian Line",
+            name: "Christian Line",
             subtitle:
               "Faith. Purpose. You.",
-            icon: (
-              <CrossIcon />
-            ),
+            icon: <CrossIcon />,
           },
         ]
       : []),
 
     {
       name: "Tech",
-      subtitle:
-        "Gear Up",
-      icon: (
-        <GameIcon />
-      ),
+      subtitle: "Gear Up",
+      icon: <GameIcon />,
     },
-
     {
-      name:
-        "Fun Stuff",
+      name: "Fun Stuff",
       subtitle:
         "Because Life's Better",
-      icon: (
-        <SmileIcon />
-      ),
+      icon: <SmileIcon />,
     },
-
     {
-      name:
-        "Affiliated",
+      name: "Affiliated",
       subtitle:
         "Support Great Brands",
-      icon: (
-        <HandsIcon />
-      ),
+      icon: <HandsIcon />,
     },
-
     {
-      name:
-        "Sponsors",
-      subtitle:
-        "Our Partners",
-      icon: (
-        <StarIcon />
-      ),
+      name: "Sponsors",
+      subtitle: "Our Partners",
+      icon: <StarIcon />,
     },
   ];
 
-  /*
-  |--------------------------------------------------------------------------
-  | NAVIGATION HELPERS
-  |--------------------------------------------------------------------------
-  */
-
   function scrollToProducts() {
-    setTimeout(
-      () => {
-        document
-          .getElementById(
-            "products"
-          )
-          ?.scrollIntoView(
-            {
-              behavior:
-                "smooth",
-              block:
-                "start",
-            }
-          );
-      },
-      30
-    );
+    setTimeout(() => {
+      document
+        .getElementById("products")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+    }, 30);
   }
 
   function selectCategory(
     category: string
   ) {
-    setSelectedCategory(
-      category
-    );
-
-    setMobileMenuOpen(
-      false
-    );
-
+    setSelectedCategory(category);
     scrollToProducts();
   }
-
-  /*
-  |--------------------------------------------------------------------------
-  | PAGE
-  |--------------------------------------------------------------------------
-  */
 
   return (
     <main className="min-h-screen bg-[#F7F8F8] text-[#0A0A0A] overflow-x-hidden">
 
-      {/* ================================================================
-          HEADER
-      ================================================================= */}
-
-      <header className="sticky top-0 z-50 bg-[#031016] text-white border-b border-white/10">
-
-        <div className="max-w-[1450px] mx-auto h-[72px] px-4 md:px-8 flex items-center justify-between">
-
-          {/* LOGO */}
-
-          <button
-            type="button"
-            onClick={() =>
-              window.scrollTo(
-                {
-                  top: 0,
-                  behavior:
-                    "smooth",
-                }
-              )
-            }
-            className="flex items-center"
-          >
-            <div>
-
-              <div className="flex items-center gap-2">
-
-                <span
-                  className="text-[24px] leading-none"
-                  style={{
-                    color:
-                      BREEZE_GREEN,
-                  }}
-                >
-                  ♛
-                </span>
-
-                <span className="font-black text-[25px] md:text-[30px] tracking-[-1.5px] leading-none">
-                  BREEZE
-                </span>
-
-              </div>
-
-              <div
-                className="text-[8px] md:text-[9px] tracking-[5px] font-black text-right mt-1"
-                style={{
-                  color:
-                    BREEZE_GREEN,
-                }}
-              >
-                STORE
-              </div>
-
-            </div>
-          </button>
-
-          {/* DESKTOP NAV */}
-
-          <nav className="hidden lg:flex items-center gap-7 text-[13px] font-semibold">
-
-            {categories.map(
-              (
-                category
-              ) => (
-                <button
-                  type="button"
-                  key={
-                    category.name
-                  }
-                  onClick={() =>
-                    selectCategory(
-                      category.name
-                    )
-                  }
-                  className="transition hover:text-[#8DFF00]"
-                >
-                  {
-                    category.name
-                  }
-                </button>
-              )
-            )}
-
-          </nav>
-
-          {/* ACTIONS */}
-
-          <div className="flex items-center gap-4 md:gap-6">
-
-            <button
-              type="button"
-              aria-label="Search"
-              onClick={() =>
-                setSearchOpen(
-                  (
-                    current
-                  ) =>
-                    !current
-                )
-              }
-              className="transition hover:text-[#8DFF00]"
-            >
-              <SearchIcon />
-            </button>
-
-            <button
-              type="button"
-              aria-label="My account"
-              onClick={() => {
-                window.location.href =
-                  "/portal";
-              }}
-              className="hidden sm:block transition hover:text-[#8DFF00]"
-            >
-              <UserIcon />
-            </button>
-
-            <button
-              type="button"
-              aria-label="Cart"
-              onClick={() =>
-                setCartOpen(
-                  true
-                )
-              }
-              className="relative transition hover:text-[#8DFF00]"
-            >
-              <BagIcon />
-
-              {cartCount >
-                0 && (
-                <span
-                  className="absolute -top-3 -right-3 min-w-[20px] h-[20px] px-1 flex items-center justify-center rounded-full text-black text-[10px] font-black"
-                  style={{
-                    background:
-                      BREEZE_GREEN,
-                  }}
-                >
-                  {cartCount}
-                </span>
-              )}
-
-            </button>
-
-            <button
-              type="button"
-              aria-label="Menu"
-              onClick={() =>
-                setMobileMenuOpen(
-                  (
-                    current
-                  ) =>
-                    !current
-                )
-              }
-              className="lg:hidden"
-            >
-              <MenuIcon />
-            </button>
-
-          </div>
-
-        </div>
-
-        {/* SEARCH BAR */}
-
-        {searchOpen && (
-          <div className="border-t border-white/10 px-4 py-4">
-
-            <div className="max-w-3xl mx-auto">
-
-              <input
-                autoFocus
-                value={search}
-                onChange={(
-                  event
-                ) =>
-                  setSearch(
-                    event
-                      .target
-                      .value
-                  )
-                }
-                placeholder="Search the Breeze Store..."
-                className="w-full bg-white text-black rounded-full px-6 py-3.5 outline-none text-sm"
-              />
-
-            </div>
-
-          </div>
-        )}
-
-        {/* MOBILE MENU */}
-
-        {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-white/10 px-4 py-4">
-
-            <div className="grid grid-cols-2 gap-2">
-
-              {categories.map(
-                (
-                  category
-                ) => (
-                  <button
-                    type="button"
-                    key={
-                      category.name
-                    }
-                    onClick={() =>
-                      selectCategory(
-                        category.name
-                      )
-                    }
-                    className="rounded-xl border border-white/10 px-4 py-3 text-left text-sm bg-white/[0.03]"
-                  >
-                    {
-                      category.name
-                    }
-                  </button>
-                )
-              )}
-
-              <button
-                type="button"
-                onClick={() => {
-                  window.location.href =
-                    "/portal";
-                }}
-                className="rounded-xl border border-white/10 px-4 py-3 text-left text-sm bg-white/[0.03]"
-              >
-                My Account
-              </button>
-
-            </div>
-
-          </div>
-        )}
-
-      </header>
-
-      {/* ================================================================
-          HERO
-      ================================================================= */}
+      {/* HERO */}
 
       <section className="relative bg-[#021017] text-white overflow-hidden">
 
-        <div className="grid lg:grid-cols-[0.78fr_1.22fr] min-h-[620px] sm:min-h-[640px] lg:min-h-[520px]">
-
-          {/* HERO COPY */}
+        <div className="grid lg:grid-cols-[0.78fr_1.22fr] min-h-[610px] sm:min-h-[640px] lg:min-h-[560px]">
 
           <div className="relative z-20 flex items-center">
 
@@ -1270,8 +680,7 @@ export default function MerchV2Page() {
                   </h1>
 
                   <p className="mt-6 text-lg md:text-xl text-white/90">
-                    Same Heart.
-                    A Higher
+                    Same Heart. A Higher
                     Purpose.
                   </p>
 
@@ -1302,18 +711,14 @@ export default function MerchV2Page() {
                   </h1>
 
                   <p className="mt-6 max-w-lg text-lg md:text-xl text-white/80">
-                    Official
-                    Breeze gear,
-                    drops, tech
-                    and more.
+                    Official Breeze gear,
+                    drops, tech and more.
                   </p>
 
                   <button
                     type="button"
                     onClick={() =>
-                      selectCategory(
-                        "All"
-                      )
+                      selectCategory("All")
                     }
                     className="mt-8 px-8 py-4 rounded-md text-xs md:text-sm font-black uppercase text-black transition hover:brightness-95"
                     style={{
@@ -1329,8 +734,6 @@ export default function MerchV2Page() {
             </div>
 
           </div>
-
-          {/* HERO IMAGE */}
 
           <div className="absolute lg:relative inset-0 lg:inset-auto min-h-full">
 
@@ -1361,20 +764,123 @@ export default function MerchV2Page() {
 
       </section>
 
-      {/* ================================================================
-          CATEGORIES
-      ================================================================= */}
+      {/* STORE TOOLBAR */}
+
+      <section className="bg-white border-b border-gray-200 sticky top-0 z-40">
+
+        <div className="max-w-[1450px] mx-auto px-4 md:px-8 py-4">
+
+          <div className="flex items-center justify-between gap-4">
+
+            <div className="min-w-0">
+
+              <div className="flex items-center gap-2">
+
+                <span
+                  className="font-black text-xl md:text-2xl tracking-[-1px]"
+                >
+                  BREEZE
+                </span>
+
+                <span
+                  className="text-[8px] md:text-[9px] font-black tracking-[3px]"
+                  style={{
+                    color:
+                      "#648E00",
+                  }}
+                >
+                  STORE
+                </span>
+
+              </div>
+
+            </div>
+
+            <div className="flex items-center gap-2 md:gap-3">
+
+              <button
+                type="button"
+                onClick={() =>
+                  setSearchOpen(
+                    (current) =>
+                      !current
+                  )
+                }
+                className="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-full border border-gray-200 hover:border-[#8DFF00] transition"
+                aria-label="Search store"
+              >
+                <SearchIcon className="w-5 h-5" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setCartOpen(true)
+                }
+                className="relative h-10 md:h-11 px-4 md:px-5 rounded-full bg-[#07161B] text-white flex items-center gap-2 font-black text-xs md:text-sm"
+              >
+                <BagIcon className="w-5 h-5" />
+
+                <span className="hidden sm:inline">
+                  Cart
+                </span>
+
+                {cartCount > 0 && (
+                  <span
+                    className="min-w-[20px] h-[20px] px-1 flex items-center justify-center rounded-full text-black text-[10px] font-black"
+                    style={{
+                      background:
+                        BREEZE_GREEN,
+                    }}
+                  >
+                    {cartCount}
+                  </span>
+                )}
+
+              </button>
+
+            </div>
+
+          </div>
+
+          {searchOpen && (
+            <div className="pt-4">
+
+              <div className="relative">
+
+                <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+
+                <input
+                  autoFocus
+                  value={search}
+                  onChange={(event) =>
+                    setSearch(
+                      event.target.value
+                    )
+                  }
+                  placeholder="Search Breeze products..."
+                  className="w-full bg-[#F4F5F5] border border-gray-200 rounded-xl pl-12 pr-4 py-3.5 outline-none text-sm focus:border-[#8DFF00]"
+                />
+
+              </div>
+
+            </div>
+          )}
+
+        </div>
+
+      </section>
+
+      {/* CATEGORIES */}
 
       <section className="bg-white">
 
         <div className="max-w-[1450px] mx-auto px-4 md:px-8 py-6 md:py-8">
 
-          <div className="flex md:grid md:grid-cols-5 lg:grid-cols-6 gap-3 overflow-x-auto pb-2 md:pb-0">
+          <div className="flex md:grid md:grid-cols-5 lg:grid-cols-5 gap-3 overflow-x-auto pb-2 md:pb-0">
 
             {categories.map(
-              (
-                category
-              ) => {
+              (category) => {
                 const active =
                   selectedCategory ===
                   category.name;
@@ -1391,7 +897,7 @@ export default function MerchV2Page() {
                       )
                     }
                     className={`
-                      min-w-[128px]
+                      min-w-[138px]
                       md:min-w-0
                       rounded-xl
                       border
@@ -1409,21 +915,15 @@ export default function MerchV2Page() {
                   >
 
                     <div className="h-10 flex items-center justify-center text-[#07161B]">
-                      {
-                        category.icon
-                      }
+                      {category.icon}
                     </div>
 
                     <div className="font-black text-[13px] mt-3">
-                      {
-                        category.name
-                      }
+                      {category.name}
                     </div>
 
-                    <div className="text-[10px] text-gray-500 mt-1 hidden md:block">
-                      {
-                        category.subtitle
-                      }
+                    <div className="text-[10px] text-gray-500 mt-1">
+                      {category.subtitle}
                     </div>
 
                   </button>
@@ -1437,9 +937,7 @@ export default function MerchV2Page() {
 
       </section>
 
-      {/* ================================================================
-          FEATURED
-      ================================================================= */}
+      {/* FEATURED */}
 
       <section className="bg-white px-4 md:px-8 pb-14">
 
@@ -1449,15 +947,23 @@ export default function MerchV2Page() {
 
             <div>
 
+              <p
+                className="text-[10px] uppercase tracking-[3px] font-black mb-2"
+                style={{
+                  color:
+                    "#648E00",
+                }}
+              >
+                Breeze Picks
+              </p>
+
               <h2 className="text-[26px] md:text-[34px] leading-none font-black uppercase tracking-[-1px]">
-                Featured
-                Products
+                Featured Products
               </h2>
 
               <p className="text-gray-500 mt-2 text-sm md:text-base">
-                Popular right
-                now in the
-                Breeze Family
+                Popular right now in
+                the Breeze Family
               </p>
 
             </div>
@@ -1465,9 +971,7 @@ export default function MerchV2Page() {
             <button
               type="button"
               onClick={() =>
-                selectCategory(
-                  "All"
-                )
+                selectCategory("All")
               }
               className="text-xs md:text-sm font-bold whitespace-nowrap"
             >
@@ -1478,23 +982,16 @@ export default function MerchV2Page() {
 
           {loading ? (
             <ProductSkeleton />
-          ) : featured.length ===
-            0 ? (
+          ) : featured.length === 0 ? (
             <EmptyProducts />
           ) : (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
 
               {featured.map(
-                (
-                  product
-                ) => (
+                (product) => (
                   <ProductCard
-                    key={
-                      product.id
-                    }
-                    product={
-                      product
-                    }
+                    key={product.id}
+                    product={product}
                     selectedSize={
                       selectedSizes[
                         product.id
@@ -1504,9 +1001,7 @@ export default function MerchV2Page() {
                       value
                     ) =>
                       setSelectedSizes(
-                        (
-                          current
-                        ) => ({
+                        (current) => ({
                           ...current,
                           [product.id]:
                             value,
@@ -1529,9 +1024,7 @@ export default function MerchV2Page() {
 
       </section>
 
-      {/* ================================================================
-          CHRISTIAN COLLECTION BANNER
-      ================================================================= */}
+      {/* CHRISTIAN BANNER */}
 
       {ENABLE_CHRISTIAN_LINE && (
         <section className="bg-white px-4 md:px-8 pb-14">
@@ -1540,14 +1033,11 @@ export default function MerchV2Page() {
 
             <div className="relative min-h-[340px] overflow-hidden rounded-2xl bg-[#07161B]">
 
-              {christianProducts[
-                0
-              ]?.image_url && (
+              {christianProducts[0]
+                ?.image_url && (
                 <img
                   src={
-                    christianProducts[
-                      0
-                    ]
+                    christianProducts[0]
                       .image_url
                   }
                   alt="Christian Collection"
@@ -1566,8 +1056,7 @@ export default function MerchV2Page() {
                       BREEZE_GREEN,
                   }}
                 >
-                  Christian
-                  Line
+                  Christian Line
                 </p>
 
                 <h2 className="mt-4 text-[44px] md:text-[62px] leading-[0.88] uppercase font-black tracking-[-2px]">
@@ -1579,8 +1068,7 @@ export default function MerchV2Page() {
                 </h2>
 
                 <p className="mt-5 text-lg">
-                  Wear what
-                  matters.
+                  Wear what matters.
                 </p>
 
                 <button
@@ -1610,10 +1098,6 @@ export default function MerchV2Page() {
         </section>
       )}
 
-      {/* ================================================================
-          TRUST PANEL
-      ================================================================= */}
-
       {!ENABLE_CHRISTIAN_LINE && (
         <section className="bg-white px-4 md:px-8 pb-14">
 
@@ -1626,13 +1110,11 @@ export default function MerchV2Page() {
         </section>
       )}
 
-      {/* ================================================================
-          SHOP
-      ================================================================= */}
+      {/* PRODUCTS */}
 
       <section
         id="products"
-        className="bg-[#F7F8F8] px-4 md:px-8 py-14 md:py-20 scroll-mt-24"
+        className="bg-[#F7F8F8] px-4 md:px-8 py-14 md:py-20 scroll-mt-28"
       >
 
         <div className="max-w-[1450px] mx-auto">
@@ -1659,9 +1141,7 @@ export default function MerchV2Page() {
               </h2>
 
               <p className="mt-3 text-sm text-gray-500">
-                {
-                  filteredProducts.length
-                }{" "}
+                {filteredProducts.length}{" "}
                 product
                 {filteredProducts.length ===
                 1
@@ -1682,8 +1162,7 @@ export default function MerchV2Page() {
                 }
                 className="text-sm font-bold underline underline-offset-4 self-start sm:self-auto"
               >
-                Clear
-                filter
+                Clear filter
               </button>
             )}
 
@@ -1698,16 +1177,10 @@ export default function MerchV2Page() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
 
               {filteredProducts.map(
-                (
-                  product
-                ) => (
+                (product) => (
                   <ProductCard
-                    key={
-                      product.id
-                    }
-                    product={
-                      product
-                    }
+                    key={product.id}
+                    product={product}
                     selectedSize={
                       selectedSizes[
                         product.id
@@ -1717,9 +1190,7 @@ export default function MerchV2Page() {
                       value
                     ) =>
                       setSelectedSizes(
-                        (
-                          current
-                        ) => ({
+                        (current) => ({
                           ...current,
                           [product.id]:
                             value,
@@ -1742,42 +1213,32 @@ export default function MerchV2Page() {
 
       </section>
 
-      {/* ================================================================
-          VALUES
-      ================================================================= */}
+      {/* VALUES */}
 
       <section className="bg-white px-4 md:px-8 py-12">
 
         <div className="max-w-[1450px] mx-auto grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
 
           <ValueItem
-            icon={
-              <ShieldIcon />
-            }
+            icon={<ShieldIcon />}
             title="QUALITY GEAR"
             text="Built to last"
           />
 
           <ValueItem
-            icon={
-              <HeartIcon />
-            }
+            icon={<HeartIcon />}
             title="SUPPORT THE FAMILY"
             text="Every purchase helps"
           />
 
           <ValueItem
-            icon={
-              <StarIcon />
-            }
+            icon={<StarIcon />}
             title="BREEZE POINTS"
             text="Earn while you shop"
           />
 
           <ValueItem
-            icon={
-              <HeartIcon />
-            }
+            icon={<HeartIcon />}
             title="MAKING A DIFFERENCE"
             text="More than just merch"
           />
@@ -1786,9 +1247,7 @@ export default function MerchV2Page() {
 
       </section>
 
-      {/* ================================================================
-          FOOTER
-      ================================================================= */}
+      {/* FOOTER */}
 
       <footer className="bg-[#031016] text-white">
 
@@ -1798,26 +1257,12 @@ export default function MerchV2Page() {
 
             <div>
 
-              <div className="flex items-center gap-2">
-
-                <span
-                  style={{
-                    color:
-                      BREEZE_GREEN,
-                  }}
-                  className="text-xl"
-                >
-                  ♛
-                </span>
-
-                <div className="text-2xl font-black">
-                  BREEZE
-                </div>
-
+              <div className="text-2xl font-black">
+                BREEZE
               </div>
 
               <div
-                className="text-[8px] tracking-[5px] font-black ml-8"
+                className="text-[8px] tracking-[5px] font-black mt-1"
                 style={{
                   color:
                     BREEZE_GREEN,
@@ -1831,9 +1276,7 @@ export default function MerchV2Page() {
             <div className="flex flex-wrap gap-x-6 gap-y-3 text-xs text-white/70">
 
               {categories.map(
-                (
-                  category
-                ) => (
+                (category) => (
                   <button
                     type="button"
                     key={
@@ -1846,9 +1289,7 @@ export default function MerchV2Page() {
                     }
                     className="hover:text-white"
                   >
-                    {
-                      category.name
-                    }
+                    {category.name}
                   </button>
                 )
               )}
@@ -1860,15 +1301,13 @@ export default function MerchV2Page() {
           <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-4 justify-between text-xs text-white/50">
 
             <div>
-              Same Family.
-              Bigger
+              Same Family. Bigger
               Purpose.
             </div>
 
             <div>
-              It Gets a Bit
-              Breezy in
-              Here.
+              It Gets a Bit Breezy
+              in Here.
             </div>
 
           </div>
@@ -1877,26 +1316,20 @@ export default function MerchV2Page() {
 
       </footer>
 
-      {/* ================================================================
-          CART OVERLAY
-      ================================================================= */}
+      {/* CART BACKDROP */}
 
       {cartOpen && (
         <button
           type="button"
           aria-label="Close cart"
           onClick={() =>
-            setCartOpen(
-              false
-            )
+            setCartOpen(false)
           }
           className="fixed inset-0 z-[90] bg-black/60 backdrop-blur-sm"
         />
       )}
 
-      {/* ================================================================
-          CART DRAWER
-      ================================================================= */}
+      {/* CART DRAWER */}
 
       <aside
         className={`
@@ -1923,8 +1356,6 @@ export default function MerchV2Page() {
 
         <div className="h-full flex flex-col">
 
-          {/* CART HEADER */}
-
           <div className="p-5 md:p-6 border-b border-gray-200 flex items-center justify-between">
 
             <div>
@@ -1936,8 +1367,7 @@ export default function MerchV2Page() {
               <p className="text-xs text-gray-500 mt-1">
                 {cartCount}{" "}
                 item
-                {cartCount ===
-                1
+                {cartCount === 1
                   ? ""
                   : "s"}
               </p>
@@ -1948,9 +1378,7 @@ export default function MerchV2Page() {
               type="button"
               aria-label="Close"
               onClick={() =>
-                setCartOpen(
-                  false
-                )
+                setCartOpen(false)
               }
               className="text-3xl leading-none w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
             >
@@ -1959,12 +1387,9 @@ export default function MerchV2Page() {
 
           </div>
 
-          {/* CART BODY */}
-
           <div className="flex-1 overflow-y-auto p-5 md:p-6">
 
-            {cart.length ===
-            0 ? (
+            {cart.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center">
 
                 <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
@@ -1972,26 +1397,19 @@ export default function MerchV2Page() {
                 </div>
 
                 <h3 className="font-black text-xl mt-5">
-                  Your cart
-                  is empty
+                  Your cart is empty
                 </h3>
 
                 <p className="text-gray-500 mt-2 text-sm">
-                  Go find
-                  something
+                  Go find something
                   Breezy.
                 </p>
 
                 <button
                   type="button"
                   onClick={() => {
-                    setCartOpen(
-                      false
-                    );
-
-                    selectCategory(
-                      "All"
-                    );
+                    setCartOpen(false);
+                    selectCategory("All");
                   }}
                   className="mt-6 px-6 py-3 rounded-md font-black text-sm text-black"
                   style={{
@@ -2006,131 +1424,116 @@ export default function MerchV2Page() {
             ) : (
               <div className="space-y-6">
 
-                {cart.map(
-                  (
-                    item
-                  ) => (
-                    <div
-                      key={`${item.id}-${item.size || "none"}`}
-                      className="flex gap-4 pb-6 border-b border-gray-100 last:border-0"
-                    >
+                {cart.map((item) => (
+                  <div
+                    key={`${item.id}-${item.size || "none"}`}
+                    className="flex gap-4 pb-6 border-b border-gray-100 last:border-0"
+                  >
 
-                      <div className="w-[90px] h-[105px] bg-[#F3F4F4] rounded-xl overflow-hidden flex-shrink-0">
+                    <div className="w-[90px] h-[105px] bg-[#F3F4F4] rounded-xl overflow-hidden flex-shrink-0">
 
-                        <img
-                          src={
-                            item.image_url
+                      <img
+                        src={
+                          item.image_url
+                        }
+                        alt={item.name}
+                        className="w-full h-full object-contain p-1"
+                      />
+
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+
+                      <div className="flex items-start justify-between gap-3">
+
+                        <div className="min-w-0">
+
+                          <h3 className="font-black text-sm leading-tight">
+                            {item.name}
+                          </h3>
+
+                          {item.size && (
+                            <p className="text-xs text-gray-500 mt-1">
+                              Size:{" "}
+                              {item.size}
+                            </p>
+                          )}
+
+                        </div>
+
+                        <button
+                          type="button"
+                          aria-label="Remove item"
+                          onClick={() =>
+                            removeFromCart(
+                              item
+                            )
                           }
-                          alt={
-                            item.name
-                          }
-                          className="w-full h-full object-contain p-1"
-                        />
+                          className="text-gray-400 hover:text-red-500 text-xl"
+                        >
+                          ×
+                        </button>
 
                       </div>
 
-                      <div className="flex-1 min-w-0">
+                      <div className="flex items-end justify-between mt-5 gap-3">
 
-                        <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center border border-gray-200 rounded-md overflow-hidden">
 
-                          <div className="min-w-0">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              changeQuantity(
+                                item,
+                                -1
+                              )
+                            }
+                            className="w-9 h-9 bg-gray-50 hover:bg-gray-100"
+                          >
+                            −
+                          </button>
 
-                            <h3 className="font-black text-sm leading-tight">
-                              {
-                                item.name
-                              }
-                            </h3>
-
-                            {item.size && (
-                              <p className="text-xs text-gray-500 mt-1">
-                                Size:{" "}
-                                {
-                                  item.size
-                                }
-                              </p>
-                            )}
-
+                          <div className="w-9 text-center font-bold text-sm">
+                            {item.quantity}
                           </div>
 
                           <button
                             type="button"
-                            aria-label="Remove item"
                             onClick={() =>
-                              removeFromCart(
-                                item
+                              changeQuantity(
+                                item,
+                                1
                               )
                             }
-                            className="text-gray-400 hover:text-red-500 text-xl"
+                            className="w-9 h-9 bg-gray-50 hover:bg-gray-100"
                           >
-                            ×
+                            +
                           </button>
 
                         </div>
 
-                        <div className="flex items-end justify-between mt-5 gap-3">
-
-                          <div className="flex items-center border border-gray-200 rounded-md overflow-hidden">
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                changeQuantity(
-                                  item,
-                                  -1
-                                )
-                              }
-                              className="w-9 h-9 bg-gray-50 hover:bg-gray-100"
-                            >
-                              −
-                            </button>
-
-                            <div className="w-9 text-center font-bold text-sm">
-                              {
-                                item.quantity
-                              }
-                            </div>
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                changeQuantity(
-                                  item,
-                                  1
-                                )
-                              }
-                              className="w-9 h-9 bg-gray-50 hover:bg-gray-100"
-                            >
-                              +
-                            </button>
-
-                          </div>
-
-                          <div className="font-black whitespace-nowrap">
-                            {money(
-                              priceNumber(
-                                item.price
-                              ) *
-                                item.quantity
-                            )}
-                          </div>
-
+                        <div className="font-black whitespace-nowrap">
+                          {money(
+                            priceNumber(
+                              item.price
+                            ) *
+                              item.quantity
+                          )}
                         </div>
 
                       </div>
 
                     </div>
-                  )
-                )}
+
+                  </div>
+                ))}
 
               </div>
             )}
 
           </div>
 
-          {/* CART TOTAL */}
-
-          {cart.length >
-            0 && (
+          {cart.length > 0 && (
             <div className="border-t border-gray-200 p-5 md:p-6 bg-white">
 
               <div className="space-y-3 text-sm">
@@ -2142,9 +1545,7 @@ export default function MerchV2Page() {
                   </span>
 
                   <strong>
-                    {money(
-                      subtotal
-                    )}
+                    {money(subtotal)}
                   </strong>
 
                 </div>
@@ -2153,16 +1554,18 @@ export default function MerchV2Page() {
 
                   <span className="text-gray-500">
                     Delivery
-                    (Flat
-                    Rate)
                   </span>
 
                   <strong>
-                    {money(
-                      delivery
-                    )}
+                    {money(delivery)}
                   </strong>
 
+                </div>
+
+                <div className="text-xs text-gray-400">
+                  R150 flat-rate
+                  nationwide delivery
+                  in South Africa.
                 </div>
 
                 <div className="pt-4 mt-4 border-t border-gray-200 flex justify-between text-lg">
@@ -2172,9 +1575,7 @@ export default function MerchV2Page() {
                   </strong>
 
                   <strong>
-                    {money(
-                      total
-                    )}
+                    {money(total)}
                   </strong>
 
                 </div>
@@ -2185,7 +1586,7 @@ export default function MerchV2Page() {
                 type="button"
                 onClick={() =>
                   alert(
-                    "V2 cart is ready. PayFast checkout is the next build."
+                    "PayFast checkout is the next build. No payment will be taken yet."
                   )
                 }
                 className="mt-6 w-full py-4 rounded-md text-black text-sm font-black uppercase transition hover:brightness-95 active:scale-[0.99]"
@@ -2194,14 +1595,12 @@ export default function MerchV2Page() {
                     BREEZE_GREEN,
                 }}
               >
-                Secure
-                Checkout →
+                Secure Checkout →
               </button>
 
               <div className="mt-4 text-center text-[11px] text-gray-500">
-                Secure
-                payments
-                powered by{" "}
+                Secure payments powered
+                by{" "}
                 <strong className="text-[#E33232]">
                   PayFast
                 </strong>
@@ -2218,12 +1617,6 @@ export default function MerchV2Page() {
   );
 }
 
-/*
-|--------------------------------------------------------------------------
-| PRODUCT CARD
-|--------------------------------------------------------------------------
-*/
-
 function ProductCard({
   product,
   selectedSize,
@@ -2239,8 +1632,7 @@ function ProductCard({
 }) {
   const sizes =
     product.sizes &&
-    product.sizes.length >
-      0
+    product.sizes.length > 0
       ? product.sizes
       : [
           "S",
@@ -2256,8 +1648,6 @@ function ProductCard({
 
   return (
     <article className="group min-w-0">
-
-      {/* IMAGE */}
 
       <div className="relative bg-[#F1F3F3] rounded-xl md:rounded-2xl overflow-hidden">
 
@@ -2287,9 +1677,7 @@ function ProductCard({
           )}
 
         <img
-          src={
-            product.image_url
-          }
+          src={product.image_url}
           alt={product.name}
           loading="lazy"
           className="
@@ -2307,14 +1695,10 @@ function ProductCard({
 
       </div>
 
-      {/* INFO */}
-
       <div className="pt-3">
 
         <div className="text-[9px] md:text-[10px] uppercase tracking-[1px] text-gray-400 font-bold truncate">
-          {
-            product.category
-          }
+          {product.category}
         </div>
 
         <h3 className="font-black text-[13px] md:text-[16px] leading-[1.15] mt-1 min-h-[31px] md:min-h-[38px]">
@@ -2322,22 +1706,18 @@ function ProductCard({
         </h3>
 
         <div className="font-black text-[17px] md:text-[20px] mt-2">
-          {money(
-            product.price
-          )}
+          {money(product.price)}
         </div>
 
         {product.breeze_points &&
-          product.breeze_points >
-            0 && (
+          product.breeze_points > 0 && (
             <div className="mt-1 text-[9px] md:text-[10px] text-gray-500 min-h-[14px]">
               Earn{" "}
               <strong className="text-black">
                 {
                   product.breeze_points
                 }{" "}
-                Breeze
-                Points
+                Breeze Points
               </strong>
             </div>
           )}
@@ -2348,31 +1728,21 @@ function ProductCard({
               selectedSize ||
               sizes[0]
             }
-            onChange={(
-              event
-            ) =>
+            onChange={(event) =>
               onSizeChange(
-                event.target
-                  .value
+                event.target.value
               )
             }
             className="mt-3 w-full border border-gray-200 bg-white rounded-md px-2 md:px-3 py-2 text-[10px] md:text-xs outline-none"
           >
-            {sizes.map(
-              (size) => (
-                <option
-                  key={
-                    size
-                  }
-                  value={
-                    size
-                  }
-                >
-                  Size{" "}
-                  {size}
-                </option>
-              )
-            )}
+            {sizes.map((size) => (
+              <option
+                key={size}
+                value={size}
+              >
+                Size {size}
+              </option>
+            ))}
           </select>
         )}
 
@@ -2406,12 +1776,6 @@ function ProductCard({
   );
 }
 
-/*
-|--------------------------------------------------------------------------
-| TRUST PANEL
-|--------------------------------------------------------------------------
-*/
-
 function TrustPanel() {
   return (
     <div className="bg-[#F7F8F8] rounded-2xl border border-gray-200 p-6 md:p-8 grid sm:grid-cols-3 gap-8">
@@ -2425,15 +1789,12 @@ function TrustPanel() {
         <div>
 
           <div className="font-black text-sm uppercase">
-            Nationwide
-            Delivery
+            Nationwide Delivery
           </div>
 
           <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-            R150 flat
-            rate anywhere
-            in South
-            Africa
+            R150 flat rate anywhere
+            in South Africa
           </p>
 
         </div>
@@ -2449,13 +1810,11 @@ function TrustPanel() {
         <div>
 
           <div className="font-black text-sm uppercase">
-            Secure
-            Payments
+            Secure Payments
           </div>
 
           <p className="text-xs text-gray-500 mt-1">
-            Safe. Simple.
-            Secure.
+            Safe. Simple. Secure.
           </p>
 
           <div className="mt-2 text-lg italic font-black text-[#E33232]">
@@ -2475,13 +1834,11 @@ function TrustPanel() {
         <div>
 
           <div className="font-black text-sm uppercase">
-            Breeze
-            Points
+            Breeze Points
           </div>
 
           <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-            Earn while
-            you shop
+            Earn while you shop
           </p>
 
         </div>
@@ -2491,12 +1848,6 @@ function TrustPanel() {
     </div>
   );
 }
-
-/*
-|--------------------------------------------------------------------------
-| VALUE ITEM
-|--------------------------------------------------------------------------
-*/
 
 function ValueItem({
   icon,
@@ -2530,12 +1881,6 @@ function ValueItem({
   );
 }
 
-/*
-|--------------------------------------------------------------------------
-| EMPTY STATE
-|--------------------------------------------------------------------------
-*/
-
 function EmptyProducts() {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-10 md:p-14 text-center">
@@ -2551,24 +1896,17 @@ function EmptyProducts() {
       </div>
 
       <h3 className="text-xl md:text-2xl font-black mt-5">
-        Nothing here
-        yet.
+        Nothing here yet.
       </h3>
 
       <p className="text-gray-500 mt-2 text-sm">
-        This collection
-        is coming soon.
+        This collection is coming
+        soon.
       </p>
 
     </div>
   );
 }
-
-/*
-|--------------------------------------------------------------------------
-| LOADING SKELETON
-|--------------------------------------------------------------------------
-*/
 
 function ProductSkeleton() {
   return (
